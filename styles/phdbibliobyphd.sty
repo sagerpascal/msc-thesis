@@ -1,0 +1,103 @@
+%% phdbibliobyphd.sty
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ProvidesPackage{styles/phdbibliobyphd}[2020/06/09 valpha-1.0 phdbibliobyphd]
+
+\RequirePackage{etoolbox}   % for programming LaTeX classes
+\RequirePackage{calc}       % for some math
+\RequirePackage{marginnote} % provides \marginnote ~ \marginpar
+\RequirePackage{perpage}    % for resetting counters
+\RequirePackage{xkeyval}    % for defining keys
+\RequirePackage{xparse}     % for \newcommand macros
+\RequirePackage{xstring}    % for string magic
+\RequirePackage{hyperref}   % for cross-referencing
+
+% use biber to compile references
+\PassOptionsToPackage{
+	%style=numeric-comp,
+	citestyle=numeric-comp,% authortitle-icomp,
+	bibstyle=numeric,% authoryear,
+	sorting=none,% nyt,
+	%sortcites=true,
+	backend=biber,
+	hyperref=true,
+	backref=true,
+	citecounter=true,
+	citetracker=true,
+	ibidtracker=context,
+}{biblatex}
+\DeclareOption*{\PassOptionsToPackage{\CurrentOption}{biblatex}}
+
+\ProcessOptions\relax
+
+\RequirePackage{biblatex}
+
+\AtEveryBibitem{
+	\clearfield{issn}
+	\clearfield{isbn}
+	\clearfield{archivePrefix}
+	\clearfield{arxivId}
+	\clearfield{pmid}
+	\clearfield{eprint}
+	\ifentrytype{online}{}{\ifentrytype{misc}{}{\clearfield{url}}}
+	\ifentrytype{book}{\clearfield{doi}}{}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Back references
+
+\newcommand\IfStringInList[2]{\IfSubStr{,#2,}{,#1,}}
+
+% add cite on page XX to references
+\IfStringInList{english}{\bbl@loaded}{%
+    \DefineBibliographyStrings{english}{%
+        backrefpage = {cited on page},
+        backrefpages = {cited on pages},
+    }
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Sidenote citations
+
+\newlength\sclen
+
+\NewDocumentCommand{\citeay}{m}{%
+	\citeauthor*{#1} \parencite*{#1}%
+}
+
+\NewDocumentCommand{\sideciteay}{O{}O{}O{0pt}m}{%
+	\citeauthor*[#1][#2]{#4} \parencite*{#4}%
+	\margincitation[#3]{#4}%
+}
+
+\NewDocumentCommand{\sidecite}{O{}O{}O{0pt}m}{%
+	\cite[#1][#2]{#4}%
+	\margincitation[#3]{#4}%
+}
+
+\NewDocumentCommand{\margincitation}{O{0pt}>{\SplitList{,}}m}{%
+	\setlength{\sclen}{#1-1pt}%
+	\marginnote[\sclen]{\ProcessList{#2}{\formatmargincitation}}%
+}
+
+\NewDocumentCommand{\formatmargincitation}{m}{%
+	\parencite{#1}: \citeauthor*{#1} (\citeyear{#1})\\%, \citetitle{#1}\\%
+}
+
+\newbibmacro*{volume+number+pp}{%
+	\printfield{volume}\setunit*{\adddot}%
+	\printfield{number}\setunit{\addcomma\space}%
+	\printfield{pages}\newunit}%
+
+\DeclareCiteCommand{\citejvpy}
+      {\usebibmacro{prenote}}
+      {\usebibmacro{citeindex}%
+		\usebibmacro{journal}%
+		\usebibmacro{volume+number+pp}
+		\setunit{\addcomma\space}
+         \usebibmacro{date}}
+      {\multicitedelim}
+	  {\usebibmacro{postnote}}
+
+
+
+\newcommand\citep{\cite} % Dummy command

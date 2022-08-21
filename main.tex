@@ -1,0 +1,147 @@
+%% main.tex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[
+    fontsize=10pt,
+    twoside=true,
+    numbers=noenddot
+]{cls/phdbyphd}
+
+\usepackage[english]{babel}
+\usepackage[english=british]{csquotes}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{fontawesome}
+
+\usepackage{styles/phdbibliobyphd}
+\addbibresource{main.bib}
+
+\graphicspath{{imgs/}{./}}
+\newcommand\home{./}  % for path adjustments 
+
+\makeindex[columns=3, title=Alphabetical Index, intoc]
+%\makeglossaries
+%\makenomenclature
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\pagenumbering{Alph}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\titlehead{Master of Science in Engineering with Specialisation in Data Science}
+
+\subject{Master Thesis}
+\title[The Effect of Dynamically Built Lateral Connection in Deep Learning Systems]{
+    The Effect of Dynamically Built Lateral Connection in Deep Learning Systems
+}
+\subtitle{On Bridging the Gap between Neuroscience and Deep Learning}
+
+\author[Pascal Sager]{Pascal Sager}
+\date{\today}
+
+\publishers{Zurich University of Applied Sciences}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frontmatter
+\setchapterstyle{plain}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\dedication{
+	Dedicated to the dedicated.\\
+	\flushright -- Pascal Sager
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\KOMAoptions{twoside=semi}
+\maketitle
+% \KOMAoptions{twoside=false}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Inspirational quote
+\input{tex/prequote}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter*{Zusammenfassung}
+\addcontentsline{toc}{chapter}{Zusammenfassung}
+    \input{tex/abstract_de}
+    
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+    \input{tex/abstract}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter*{Preface}
+\addcontentsline{toc}{chapter}{Preface}
+    \input{tex/preface}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% TOC / LOF / LOT
+\begingroup
+
+    \setlength{\textheight}{23cm}
+    \etocstandarddisplaystyle
+    \etocstandardlines
+
+    \tableofcontents
+
+    \listoffigures
+
+    \let\cleardoublepage\bigskip
+    \let\clearpage\bigskip
+
+    \listoftables
+
+    %\afterpage{\blankpage}
+
+\endgroup
+
+%\KOMAoptions{twoside=false}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\mainmatter
+\setchapterstyle{phdbyphd}
+
+% \afterpage{\blankpage}\addtocounter{page}{-1}
+
+\setchapterpreamble[u]{\margintoc}
+\chapter{Introduction}\chlbl{intro}
+\input{tex/intro}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\appendix
+
+% Transition page
+\pagelayout{wide}
+\addpart{Appendix}
+\pagelayout{margin}
+
+\renewcommand\home{./}
+\input{tex/appendix.tex}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\backmatter
+\setchapterstyle{plain}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\defbibnote{bibnote}{Here is the list of references in citation order.\par\bigskip}
+\printbibliography[heading=bibintoc, title=Bibliography, prenote=bibnote]
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\printindex
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+\thispagestyle{empty}
+\null%
+%\clearpage
+%\includepdf{cover-back.pdf}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
