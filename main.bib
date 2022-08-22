@@ -128,10 +128,105 @@
 
  @article{Lillicrap_Cownden_Tweed_Akerman_2016, title={Random synaptic feedback weights support error backpropagation for deep learning}, volume={7}, ISSN={2041-1723}, DOI={10.1038/ncomms13276}, number={1}, journal={Nature Communications}, author={Lillicrap, Timothy P. and Cownden, Daniel and Tweed, Douglas B. and Akerman, Colin J.}, year={2016}, month={Dec}, pages={13276}, language={en} }
 
+ @article{Hopfield_1982, title={Neural networks and physical systems with emergent collective computational abilities.}, volume={79}, ISSN={0027-8424, 1091-6490}, DOI={10.1073/pnas.79.8.2554}, abstractNote={Computational properties of use of biological organisms or to the construction of computers can emerge as collective properties of systems having a large number of simple equivalent components (or neurons). The physical meaning of content-addressable memory is described by an appropriate phase space flow of the state of a system. A model of such a system is given, based on aspects of neurobiology but readily adapted to integrated circuits. The collective properties of this model produce a content-addressable memory which correctly yields an entire memory from any subpart of sufficient size. The algorithm for the time evolution of the state of the system is based on asynchronous parallel processing. Additional emergent collective properties include some capacity for generalization, familiarity recognition, categorization, error correction, and time sequence retention. The collective properties are only weakly sensitive to details of the modeling or the failure of individual devices.}, number={8}, journal={Proceedings of the National Academy of Sciences}, author={Hopfield, J J}, year={1982}, month={Apr}, pages={2554–2558}, language={en} }
+
+ @article{Fix_Hodges_1989, title={Discriminatory Analysis. Nonparametric Discrimination: Consistency Properties}, volume={57}, ISSN={03067734}, DOI={10.2307/1403797}, number={3}, journal={International Statistical Review / Revue Internationale de Statistique}, author={Fix, Evelyn and Hodges, J. L.}, year={1989}, month={Dec}, pages={238} }
+
+ @article{Weston_Chopra_Bordes_2015, title={Memory Networks}, url={http://arxiv.org/abs/1410.3916}, abstractNote={We describe a new class of learning models called memory networks. Memory networks reason with inference components combined with a long-term memory component; they learn how to use these jointly. The long-term memory can be read and written to, with the goal of using it for prediction. We investigate these models in the context of question answering (QA) where the long-term memory effectively acts as a (dynamic) knowledge base, and the output is a textual response. We evaluate them on a large-scale QA task, and a smaller, but more complex, toy task generated from a simulated world. In the latter, we show the reasoning power of such models by chaining multiple supporting sentences to answer questions that require understanding the intension of verbs.}, note={arXiv:1410.3916 [cs, stat]}, number={arXiv:1410.3916}, publisher={arXiv}, author={Weston, Jason and Chopra, Sumit and Bordes, Antoine}, year={2015}, month={Nov} }
+
+@ARTICLE{1057328,
+  author={McEliece, R. and Posner, E. and Rodemich, E. and Venkatesh, S.},
+  journal={IEEE Transactions on Information Theory}, 
+  title={The capacity of the Hopfield associative memory}, 
+  year={1987},
+  volume={33},
+  number={4},
+  pages={461-482},
+  doi={10.1109/TIT.1987.1057328}}
+
+@Article{Hopfield1983,
+author={Hopfield, J. J.
+and Feinstein, D. I.
+and Palmer, R. G.},
+title={`Unlearning' has a stabilizing effect in collective memories},
+journal={Nature},
+year={1983},
+month={Jul},
+day={01},
+volume={304},
+number={5922},
+pages={158-159},
+abstract={Crick and Mitchison1 have presented a hypothesis for the functional role of dream sleep involving an `unlearning' process. We have independently carried out mathematical and computer modelling of learning and `unlearning' in a collective neural network of 30--1,000 neurones. The model network has a content-addressable memory or `associative memory' which allows it to learn and store many memories. A particular memory can be evoked in its entirety when the network is stimulated by any adequate-sized subpart of the information of that memory2. But different memories of the same size are not equally easy to recall. Also, when memories are learned, spurious memories are also created and can also be evoked. Applying an `unlearning' process, similar to the learning processes but with a reversed sign and starting from a noise input, enhances the performance of the network in accessing real memories and in minimizing spurious ones. Although our model was not motivated by higher nervous function, our system displays behaviours which are strikingly parallel to those needed for the hypothesized role of `unlearning' in rapid eye movement (REM) sleep.},
+issn={1476-4687},
+doi={10.1038/304158a0},
+url={https://doi.org/10.1038/304158a0}
+}
+
+@inproceedings{10.5555/3157096.3157228, author = {Krotov, Dmitry and Hopfield, John J.}, title = {Dense Associative Memory for Pattern Recognition}, year = {2016}, isbn = {9781510838819}, publisher = {Curran Associates Inc.}, address = {Red Hook, NY, USA}, abstract = {A model of associative memory is studied, which stores and reliably retrieves many more patterns than the number of neurons in the network. We propose a simple duality between this dense associative memory and neural networks commonly used in deep learning. On the associative memory side of this duality, a family of models that smoothly interpolates between two limiting cases can be constructed. One limit is referred to as the feature-matching mode of pattern recognition, and the other one as the prototype regime. On the deep learning side of the duality, this family corresponds to feedforward neural networks with one hidden layer and various activation functions, which transmit the activities of the visible neurons to the hidden layer. This family of activation functions includes logistics, rectified linear units, and rectified polynomials of higher degrees. The proposed duality makes it possible to apply energy-based intuition from associative memory to analyze computational properties of neural networks with unusual activation functions - the higher rectified polynomials which until now have not been used in deep learning. The utility of the dense memories is illustrated for two test cases: the logical gate XOR and the recognition of handwritten digits from the MNIST data set.}, booktitle = {Proceedings of the 30th International Conference on Neural Information Processing Systems}, pages = {1180–1188}, numpages = {9}, location = {Barcelona, Spain}, series = {NIPS'16} }
+
+ @article{Demircigil_Heusel_Löwe_Upgang_Vermet_2017, title={On a Model of Associative Memory with Huge Storage Capacity}, volume={168}, ISSN={0022-4715, 1572-9613}, DOI={10.1007/s10955-017-1806-y}, number={2}, journal={Journal of Statistical Physics}, author={Demircigil, Mete and Heusel, Judith and Löwe, Matthias and Upgang, Sven and Vermet, Franck}, year={2017}, month={Jul}, pages={288–299}, language={en} }
+
+ @article{Ramsauer, title={Hopfield Networks is All You Need}, url={http://arxiv.org/abs/2008.02217}, abstractNote={We introduce a modern Hopfield network with continuous states and a corresponding update rule. The new Hopfield network can store exponentially (with the dimension of the associative space) many patterns, retrieves the pattern with one update, and has exponentially small retrieval errors. It has three types of energy minima (fixed points of the update): (1) global fixed point averaging over all patterns, (2) metastable states averaging over a subset of patterns, and (3) fixed points which store a single pattern. The new update rule is equivalent to the attention mechanism used in transformers. This equivalence enables a characterization of the heads of transformer models. These heads perform in the first layers preferably global averaging and in higher layers partial averaging via metastable states. The new modern Hopfield network can be integrated into deep learning architectures as layers to allow the storage of and access to raw input data, intermediate results, or learned prototypes. These Hopfield layers enable new ways of deep learning, beyond fully-connected, convolutional, or recurrent networks, and provide pooling, memory, association, and attention mechanisms. We demonstrate the broad applicability of the Hopfield layers across various domains. Hopfield layers improved state-of-the-art on three out of four considered multiple instance learning problems as well as on immune repertoire classification with several hundreds of thousands of instances. On the UCI benchmark collections of small classification tasks, where deep learning methods typically struggle, Hopfield layers yielded a new state-of-the-art when compared to different machine learning methods. Finally, Hopfield layers achieved state-of-the-art on two drug design datasets. The implementation is available at: https://github.com/ml-jku/hopfield-layers}, note={arXiv:2008.02217 [cs, stat]}, number={arXiv:2008.02217}, publisher={arXiv}, author={Ramsauer, Hubert and Schäfl, Bernhard and Lehner, Johannes and Seidl, Philipp and Widrich, Michael and Adler, Thomas and Gruber, Lukas and Holzleitner, Markus and Pavlović, Milena and Sandve, Geir Kjetil and Greiff, Victor and Kreil, David and Kopp, Michael and Klambauer, Günter and Brandstetter, Johannes and Hochreiter, Sepp}, year={2021}, month={Apr} }
+
+ @book{Hebb_1949, address={Oxford,  England}, series={The organization of behavior; a neuropsychological theory.}, title={The organization of behavior; a neuropsychological theory.}, abstractNote={“This book presents a theory of behavior that is based as far as possible on the physiology of the nervous system, and makes a sedulous attempt to find some community of neurological and psychological conceptions.” Using the concept of the reverbatory circuit and the assumption that “some growth process or metabolic change” in neurones takes place as a result of repeated transmission across synapses, perceptual integration is described in terms of “cell-assemblies.” Of 11 chapters, 4 are devoted to perceptual problems, 2 to learning, 2 to motivation, and 1 each to emotional disturbances and intelligence. 14-page bibliography. (PsycINFO Database Record (c) 2016 APA, all rights reserved)}, publisher={Wiley}, author={Hebb, D. O.}, year={1949}, pages={xix, 335}, collection={The organization of behavior; a neuropsychological theory.} }
+
+ @article{Oja_1982, title={Simplified neuron model as a principal component analyzer}, volume={15}, ISSN={0303-6812, 1432-1416}, DOI={10.1007/BF00275687}, number={3}, journal={Journal of Mathematical Biology}, author={Oja, Erkki}, year={1982}, month={Nov}, pages={267–273}, language={en} }
+
+ @article{Bienenstock_Cooper_Munro_1982, title={Theory for the development of neuron selectivity: orientation specificity and binocular interaction in visual cortex}, volume={2}, ISSN={0270-6474, 1529-2401}, DOI={10.1523/JNEUROSCI.02-01-00032.1982}, number={1}, journal={The Journal of Neuroscience}, author={Bienenstock, El and Cooper, Ln and Munro, Pw}, year={1982}, month={Jan}, pages={32–48}, language={en} }
+
+ @article{Intrator_Cooper_1992, title={Objective function formulation of the BCM theory of visual cortical plasticity: Statistical connections, stability conditions}, volume={5}, ISSN={08936080}, DOI={10.1016/S0893-6080(05)80003-6}, number={1}, journal={Neural Networks}, author={Intrator, Nathan and Cooper, Leon N}, year={1992}, month={Jan}, pages={3–17}, language={en} }
+
+ @article{Simoncelli_Olshausen_2001, title={Natural Image Statistics and Neural Representation}, volume={24}, ISSN={0147-006X, 1545-4126}, DOI={10.1146/annurev.neuro.24.1.1193}, abstractNote={▪ Abstract  It has long been assumed that sensory neurons are adapted, through both evolutionary and developmental processes, to the statistical properties of the signals to which they are exposed. Attneave (1954) , Barlow (1961) proposed that information theory could provide a link between environmental statistics and neural responses through the concept of coding efficiency. Recent developments in statistical modeling, along with powerful computational tools, have enabled researchers to study more sophisticated statistical models for visual images, to validate these models empirically against large sets of data, and to begin experimentally testing the efficient coding hypothesis for both individual neurons and populations of neurons.}, number={1}, journal={Annual Review of Neuroscience}, author={Simoncelli, Eero P and Olshausen, Bruno A}, year={2001}, month={Mar}, pages={1193–1216}, language={en} }
+
+ @article{Vogels_Sprekeler_Zenke_Clopath_Gerstner_2011, title={Inhibitory Plasticity Balances Excitation and Inhibition in Sensory Pathways and Memory Networks}, volume={334}, ISSN={0036-8075, 1095-9203}, DOI={10.1126/science.1211095}, number={6062}, journal={Science}, author={Vogels, T. P. and Sprekeler, H. and Zenke, F. and Clopath, C. and Gerstner, W.}, year={2011}, month={Dec}, pages={1569–1573}, language={en} }
+
+@INPROCEEDINGS{5178625,
+  author={Joshi, Prashant and Triesch, Jochen},
+  booktitle={2009 International Joint Conference on Neural Networks}, 
+  title={Rules for information maximization in spiking neurons using intrinsic plasticity}, 
+  year={2009},
+  volume={},
+  number={},
+  pages={1456-1461},
+  doi={10.1109/IJCNN.2009.5178625}}
+
+@inproceedings{Teichmann,
+author = {Teichmann, Michael and Hamker, Fred},
+year = {2015},
+month = {03},
+pages = {},
+title = {Intrinsic plasticity: A simple mechanism to stabilize Hebbian learning in multilayer neural networks.}
+}
+
+ @article{Grossberg_1988, title={Nonlinear neural networks: Principles, mechanisms, and architectures}, volume={1}, ISSN={08936080}, DOI={10.1016/0893-6080(88)90021-4}, number={1}, journal={Neural Networks}, author={Grossberg, Stephen}, year={1988}, month={Jan}, pages={17–61}, language={en} }
+
+@article{esn,
+author = {Jaeger, Herbert},
+year = {2001},
+month = {01},
+pages = {},
+title = {The" echo state" approach to analysing and training recurrent neural networks-with an erratum note'},
+volume = {148},
+journal = {Bonn, Germany: German National Research Center for Information Technology GMD Technical Report}
+}
+
+ @article{Maass_Natschlager_Markram_2002, title={Real-Time Computing Without Stable States: A New Framework for Neural Computation Based on Perturbations}, volume={14}, ISSN={0899-7667, 1530-888X}, DOI={10.1162/089976602760407955}, abstractNote={A key challenge for neural modeling is to explain how a continuous stream of multimodal input from a rapidly changing environment can be processed by stereotypical recurrent circuits of integrate-and-fire neurons in real time. We propose a new computational model for real-time computing on time-varying input that provides an alternative to paradigms based on Turing machines or attractor neural networks. It does not require a task-dependent construction of neural circuits. Instead, it is based on principles of high-dimensional dynamical systems in combination with statistical learning theory and can be implemented on generic evolved or found recurrent circuitry. It is shown that the inherent transient dynamics of the high-dimensional dynamical system formed by a sufficiently large and heterogeneous neural circuit may serve as universal analog fading memory. Readout neurons can learn to extract in real time from the current state of such recurrent neural circuit information about current and past inputs that may be needed for diverse tasks. Stable internal states are not required for giving a stable output, since transient internal states can be transformed by readout neurons into stable target outputs due to the high dimensionality of the dynamical system. Our approach is based on a rigorous computational model, the liquid state machine, that, unlike Turing machines, does not require sequential transitions between well-defined discrete internal states. It is supported, as the Turing machine is, by rigorous mathematical results that predict universal computational power under idealized conditions, but for the biologically more realistic scenario of real-time processing of time-varying inputs. Our approach provides new perspectives for the interpretation of neural coding, the design of experiments and data analysis in neurophysiology, and the solution of problems in robotics and neurotechnology.}, number={11}, journal={Neural Computation}, author={Maass, Wolfgang and Natschläger, Thomas and Markram, Henry}, year={2002}, month={Nov}, pages={2531–2560}, language={en} }
+
+ @inbook{Konkoli_2018, address={New York, NY}, title={Reservoir Computing}, ISBN={978-1-4939-6882-4}, url={http://link.springer.com/10.1007/978-1-4939-6883-1_683}, DOI={10.1007/978-1-4939-6883-1_683}, booktitle={Unconventional Computing}, publisher={Springer US}, author={Konkoli, Zoran}, editor={Adamatzky, Andrew}, year={2018}, pages={619–629}, language={en} }
+
+ @article{Tanaka_Yamane_Héroux_Nakane_Kanazawa_Takeda_Numata_Nakano_Hirose_2019, title={Recent advances in physical reservoir computing: A review}, volume={115}, ISSN={08936080}, DOI={10.1016/j.neunet.2019.03.005}, journal={Neural Networks}, author={Tanaka, Gouhei and Yamane, Toshiyuki and Héroux, Jean Benoit and Nakane, Ryosho and Kanazawa, Naoki and Takeda, Seiji and Numata, Hidetoshi and Nakano, Daiju and Hirose, Akira}, year={2019}, month={Jul}, pages={100–123}, language={en} }
 
 
+@article{erdos59a,
+  author = {Erdös, P. and Rényi, A.},
+  journal = {Publicationes Mathematicae Debrecen},
+  keywords = {graph sna},
+  pages = 290,
+  title = {On Random Graphs I},
+  volume = 6,
+  year = 1959
+}
 
-
-
+ @inbook{Lukoševičius_2012, address={Berlin, Heidelberg}, series={Lecture Notes in Computer Science}, title={A Practical Guide to Applying Echo State Networks}, volume={7700}, ISBN={978-3-642-35288-1}, url={http://link.springer.com/10.1007/978-3-642-35289-8_36}, DOI={10.1007/978-3-642-35289-8_36}, booktitle={Neural Networks: Tricks of the Trade}, publisher={Springer Berlin Heidelberg}, author={Lukoševičius, Mantas}, editor={Montavon, Grégoire and Orr, Geneviève B. and Müller, Klaus-Robert}, year={2012}, pages={659–686}, collection={Lecture Notes in Computer Science}, language={en} }
 
 
