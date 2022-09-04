@@ -1,0 +1,91 @@
+%% related_work.tex
+
+\section{Natural Intelligence}
+This thesis is inspired by the work ''A Theory of Natural Intelligence` from von der Malsburg et al. \sidecite{von_der_Malsburg_Stadelmann_Grewe_2022}.
+Therefore, we dedicate this section to summarize their work in detail.
+
+According \cite{von_der_Malsburg_Stadelmann_Grewe_2022}, the process of learning is influenced by ``nature'', ``nurture'', and ``emergence''\sidenote{nature refers to the influence of genes and evolution, nurture to the influence of experience and education}.
+They point out that human genome (as of nature) only contain 1GB of information \sidecite{hbcrd} and humans only absorb a few GB into permanent memory over a lifetime (as of nurture) but it requires about 1PB to describe the connectivity in human brain.
+Therefore, it is important to distinguish the amount of information to describe a structure from the amount of information needed to generate it.
+Similar, nature and nurture only require a few GB to construct, respectively instruct the entire human brain.
+Therefore, they argue that the human brain must be highly structured (i.e. nature and nurture ``generate'' the human brain by selecting from a set pre-structured patterns).
+The authors call the process of generating the highly structured network in the human brain the ``Kolmogorov \sidecite{Kolmogorov_1998} Algorithm of the Brain''\sidenote{as the Kolmogorov complexity describes the number of bits required by the shortest algorithm that can generate the structure}.
+Network self-organization is the only mechanism that has not yet been disproved by experiments as the brains Kolmogorov algorithm \sidecite{Willshaw_VonDerMalsburg_1976, Willshaw_VonDerMalsburg_1979}.
+This mechanism loops between activity and connectivity, with activity acting back on connectivity through synaptic plasticity until a steady state, called an attractor network, is reached.
+The consistency property of an attractor network means that a network has many alternative signal pathways between pairs of neurons \sidecite{Malsburg_1987}.
+Thus, the brain develops as an overlay of attractor networks called net-fragments \sidecite{vonderMalsburg_2018}.
+Net-fragments consist of small sets of neurons, whereby each neuron can be part of several net fragments.
+The network self-organization has to start from an already established coarse global structure which is improved in a coarse-to-fine manner to avoid being caught in a local optima.
+
+Also, von der Malsburg et al. \cite{von_der_Malsburg_Stadelmann_Grewe_2022} discuss scene representation (i.e. how a scene is represented in the brain) even tough they point out that this is a contested concept \sidecite{freeman1990representations}.
+Scene representation is a organization framework to put abstract interpretation of scene layouts, elements, potential actions, and emotional responses in relation.
+The details are not rendered as in photographic images but the framework supports the detailed reconstructions of narrow sectors of the scene.
+The basic goal if learning is to integrate a behavioral schema into the flow of scene representations.
+They propose the hypothesis that the network structure resulting from self-organization together with the neural activation in the framework of scene representation are the inductive bias that tunes the brain to the natural environment.
+
+Finally, they discuss how net fragments can be used to implement such structures and processes using vision as an example.
+They point out that a neuron is grouped in one or multiple net fragments through network self-organization.
+The net fragments can be considered as filters that detect previously seen patterns in the visual input signal.
+An object is represented by multiple net fragments, where each fragment responds to the surface of that object and has shared neurons and connections with other net fragments representing that object.
+Thus, net fragments render the topological structure of the surfaces that dominate the environment.
+Von der Malsburg et al. \cite{von_der_Malsburg_Stadelmann_Grewe_2022} propose that net fragments represent shape primitives which can adapt to the shape of actual objects\sidenote{adapt in spite of metric deformations, depth rotation, and position}.
+Shifter circuits are one possible implementation of networks that enable invariant responses to the position- and shape-variant representations \sidecite{Arathorn_2002, Olshausen1995}.
+They are composed of net-fragments that can be formed by network self-organization \sidecite{Fernandes_vonderMalsburg_2015}.
+Ref. \cite{von_der_Malsburg_Stadelmann_Grewe_2022} also argue that net fragments are the compositional data structure used by the brain.
+A hierarchy of features may be represented by nested net fragments of different size.
+Complex objects, such as mental constructs, can thus be seen as larger net fragments composed as mergers of pre-existing smaller net fragments.
+
+
+\section{Self-Organization}
+The human brain is self-organizing \sidecite{kelso1995dynamic}.
+Self-organization is the process by which systems consisting of many units spontaneously acquire their structure or function without interference from a external agent or system.
+The absence of a central control unit allow self-organizing systems to quickly adjust to new environmental conditions.
+Additionally, such systems have in-built redundancy with a high degree of robustness as they  are made of many simpler individual units.
+These individual units can even fail without the overall system breaking down.
+Dresp \sidecite{Dresp2020SevenPO} describes seven clearly identified properties of self-organization in the human brain: (i) modular connectivity, (ii) unsupervised learning, (iii) adaptive ability, (iv) functional resiliency, (v) functional plasticity, (vi) from-local-to-global functional organization, and (vii) dynamic system growth.
+
+Before summarizing the literature specific to self-organization of neural networks, the general literature on self-organization with a focus on deep learning is described in the following.
+Many of these fundamental algorithms for self-organization serve as inspiration for how ANNs can be designed to be self-organizing.
+
+In nature, groups of millions units that solve complex tasks by using only local interactions can be observed.
+For example, ants can navigate difficult terrain with a local pheromone-based communication and thus form a collective type of intelligence.
+Such observations inspired researchers to build algorithms which are based on local communication and self-organization, for example ant colony optimization algorithms \sidecite{dorigo1997ant}.
+DeepSwarm \sidecite{Byla_Pang_2020} is a neural architecture search method that uses this algorithm to search for the best neural architecture.
+This methods achieves competitive performance on rather small datasets such as MNIST, Fashion-MNIST, and CIFAR-10.
+
+%Robotic is another research area that uses ideas from collective intelligence such as self-assembly or self-organization.
+%For example, swarm systems consist of multiple robots that work together to solve complex tasks \sidecite{Hamann_2018}.
+%A famous example of self-assembling robots was presented in 2014 by Rubenstein et al. \sidecite{Rubenstein_Cornejo_Nagpal_2014}.
+%They teach kilobots\sidenote{kilobots are 3.3cm tall low-cost swarm robots developed at Harvard University} to self-assemble into target shapes such as letters or stars solely based on local communication between robots.
+%However, the kilobots still rely on hand-crafted algorithms to determine their position in the global coordinate system.
+
+%TODO: Write more about swarm intelligence or delete thie paragraph above (does not really fit in here....)
+
+Cellular Automata mimic developmental processes in multi-cell organisms.
+They contain a grid of similar cells with an internal state which is updated periodically.
+The transition from a given state to a subsequent state is defined by some update rules.
+Such automata can be used to study biological pattern formations \sidecite{Wolfram1984} or physical systems \sidecite{VICHNIAC198496}.
+Neural Cellular Automata \sidecite{Wulff1992LearningCA} use neural networks to learn these update rules.
+
+
+%https://arxiv.org/abs/2006.06902
+%https://proceedings.neurips.cc/paper/2019/file/1e6e0a04d20f50967c64dac2d639a577-Paper.pdf
+
+
+%https://www.nature.com/articles/srep12866
+%https://sebastianrisi.com/self_assembling_ai/ + Video -> very good points at beginning + self organization (start at min. 30 also about self organizing networks)
+
+
+
+
+% Summarize work from Claude -> only if relevant...
+
+
+
+
+
+
+
+
+
+
