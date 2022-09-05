@@ -1,438 +1,112 @@
 %% intro.tex
+Mankind has always tried to simplify its life through technological progress.
+Thousands of years before Christ the wheel was invented, later the pulley, the printing press, and the steam locomotive.
+At the beginning of the 19th century, the first generators were built to produce electricity, and in 1835, the first light bulb was invented by James Bowman Lindsay\sidenote{and not, as so often falsely claimed, by Thomas Alva Edision}.
+In the course of time more and more complex electrical circuits were produced and finally in 1941 the first digital calculating machine, the computer was developed.
+This calculating machine is able to perform various arithmetic operations on the basis of commands.
+Through the development of transistors, more and more complex computers could be produced, which are able to execute various tasks.
+The definition of these tasks are captured in software.
+The computer has been so successful in fact that it has spawned its own scientific discipline, Computer Science.
+Nowadays it is impossible to imagine life without computers: almost every household and company owns computers.
+Computers facilitate various tasks, from communication to the acquisition of knowledge.
+For all these tasks, software developers have created appropriate tools.
+Software development is the process of writing a script with a programming language to specify how the computer should behave for a given input.
+Simply put: A software program tells the computer what to do if the user enters a command.
+This works very well if the tasks is clearly defined and can be described precisely.
+However, there exists tasks which are almost impossible to program.
+For example, writing a script that detects cats in images is almost impossible because we cannot describe how a cat looks like\sidenote{at least not on a pixel-level basis so that we can simply compare a given image with our description}.
+
+Therefore, computer scientists came up with the idea to not just program such tasks but to let the computer learn them instead.
+Machine learning (ML) are algorithms that are able to learn and adapt without following explicit instructions such as program code.
+Instead, they use statistical models to analyse data, to find patterns in the data and to draw inferences out of it.
+Machine learning has become an indispensable part of our everyday lives.
+For example, we use it for machine translation, transport and logistics organization, product recommendations, fraud detection, self-driving cars, unlocking smartphones, improving video games, speech recognition, and much more.
+A sub-branch of Machine Learning, namely Deep Learning, has made waves in the last decade.
+Breakthroughs are being made with this technology are made almost monthly and allows us to execute more and more tasks.
+
+However, such DL system are usually good at one ore a few closely related tasks.
+In fact, they have they have some crucial flaws by definition (c.f. Section \secref{limitationsDL}) which cannot be resolved for sure in the current DL framework.
+One of the Godfathers of Deep Learning is the Turing Award winner Geoffrey Hinton. 
+Especially his contribution to back propagation (c.f. Section \secref{ann}) has shaped the field.
+Back propagation is \emph{the} core learning algorithm of DL systems and was developed in 1986.
+More than 30 years later, in 2017, Hinton says that he is ``deeply suspicious'' about back propagation and in his view we have to ``throw it all away and start again'' to improve current systems fundamentally \sidecite{axios_hinton}.
+Considering what DL systems have achieved, this seems a bit extreme.
+However, it also shows that the current learning algorithm of such systems has serious flaws.
+
+Mankind is often inspired by nature when it comes to developing novel systems.
+The development of artificial intelligence (AI) and Deep Learning has been strongly influenced by, according to our perception, one of (if not the) most intelligent systems on planet Earth, the human brain.
+The brain is studied by the scientific field of neuroscience\sidenote{there exist many additional (sub-)fields studying the brain such as cognitive science, cognitive psychology, neurology, and neuropsychology}.
+From neuroscience or related fields come various insights on how the human nervous system and especially the brain works.
+Much of this knowledge has been gained through observations and experiments on humans or other living creatures.
+Often these findings are only what can be measured from the outside, the real core, the mechanism that causes intelligence, remains unknown.
+
+While Deep Learning is clearly inspired by the insights of Neuroscience, the two fields have little in common in their present form.
+The implementation of neuroscientific findings has emerged as a subfield in its own right, called Neurocomputing (c.f. Section \secref{neurocomputing}).
+In general, neurocomputing is closer related to the functionality of the human brain than Deep Learning.
+Neurocomputing has produced many promising algorithms that can overcome some weaknesses faced by deep learning systems. 
+Although neurocomputing has also achieved significant breakthroughs, most systems used in everyday life are still based on the principle of Deep Learning.
+
+TODO: deep learning or Deep Learning -> make uniform
+
+\subsection{Motivation}\seclbl{motivation}
+Despite the fact that Deep Learning has achieved incredible performance on a variety of tasks it is still questionable whether the current methodology is enough to achieve real (or at least more advanced) intelligence (c.f. Section \secref*{limitationsDL}).
+Many of the current limitations are tackled by approaches from the field of neurocomputing (c.f. Section \secref*{neurocomputing}).
+However, even tough algorithms from the field of neurocomputing  have interesting properties, it usually does not perform as good as Deep Learning and often works on specific or small data only.
+
+Neuroscience provides a source of inspiration for AI algorithms, independent of mathematical models.
+So far, neuroscientists have studied the building blocks of the brain, their responsibilities in the overall process as well as how they interconnect and communicate.
+The ``algorithm'' that makes the brain intelligent remains unknown.
+Furthermore, it is not known which observed functionality in the brain is really part of this algorithm and which are just consequences of it.
+For example, it is hard to tell if the dynamics in the human brain are necessary to achieve intelligence or if this is just nature's way of implementing it.
+
+Renowned scientists \sidecite{von_der_Malsburg_Stadelmann_Grewe_2022} put forward the hypothesis that the core of natural intelligence lies within the self-organization of the brain.
+Self-organization is the process by which individual units organize their global behavior by local interactions amongst themselves.
+There is no central control unit that orchestrates the units.
+In the context of the brain, self-organization primarily affects how neurons are interconnected.
+The brains of living beings already have certain structures from birth, which are specified by the DNA.
+In the course of time, these structures change.
+For example, neurons or connections between neurons may be added or removed.
+Thus, the brain adapts to its environment over time.
+
+Such a mechanism has not been successfully implemented in deep learning nor neurocomputing systems.
+In deep learning system, the architecture is usually predefined and only the parameters (i.e. weight and biases, c.f. \secref*{ann}) are updated.
+In neurocomputing, on the other hand, the theory behind self-organization is often associated with Hebbian Learning (c.f. Section \secref{hebbian}).
+this dynamic learning of connections is often associated with Hebbian Learning (c.f. Section \secref{hebbian}).
+The theory behind this learning rule can be summarized as ``cells that fire together wire together''\sidecite{science.1372754}.
+However, Hebbian learning is usually rather used to update the weight between connections instead of to add or to remove connections.
+Connections are therefore not removed or added but can be ``turned off'' and ``turned on'' if the activation function of a neuron uses a threshold below which signals are no longer transmitted\sidenote{if the weights get small enough, the threshold limit cannot be reached and the neurons output is 0}.
+In this case, the architecture of the network is to a large part still predefined and self-organization can for example not be used to add additional layers.
+
+This thesis aims to combine the strengths of deep learning and neurocomputing with recent findings of neuroscience.
+Especially the hypothesis that self-organization is key for natural intelligence is incorporated in the learning process of modern artificial neural networks.
+While in classical Deep Learning the architecture is predefined, in this thesis we attempt to learn not only the parameters but also the architecture itself.
+The architecture is built by self-organization. 
+his means that local communication between the building blocks defined by an initial architecture takes place and that new connections can be created or existing connections can be removed.
+The challenge is how this re-wiring of the connections can be be learned.
+It seems certain that the existing learning algorithm back-propagation must either be extended or replaced.
+However, proposing a concrete algorithm based on the rather abstract findings from Neuroscience is part of this thesis.
+
+
+%Recently, von der Malsburg et al. \sidecite{von_der_Malsburg_Stadelmann_Grewe_2022} have published their hypothesis about the key building blocks for a system with general intelligence.
+%They point out that building self-organizing sub-networks during training may be one of the keys to fundamentally improve current systems.
+%Lehmann \sidecite{lehmann} worked on incorporating a few of these ideas and principles into a DL framework.
+%He proposes a laterally connected layer (LCL), a layer that forms lateral intra-layer connections based on Hebbian learning.
+%These connections are formed during training based on the input.
+%He shows that the LCL layer increases robustness on the popular MNIST dataset.
+%However, he also points out potential for improvement of the LCL layers.
+
+%Von der Malsburg et al. \cite{von_der_Malsburg_Stadelmann_Grewe_2022} propose several concepts how current problems in ANNs can be tackled.
+%They present systematically sound theoretical foundations, but neither the formulation of a mathematical model nor the translation of their ideas into a concrete application were in the scope of their work.
+%Specifically, we do the following...
+
+%TODO...
 
-
-
-
-Machine learning (ML) has become an indispensable part of our everyday lives.
-For example, we use it for machine translation, transport and logistics organization, product recommendations, fraud detection, self-driving cars, and much more.
-
-
-\section{Fundamentals}\seclbl{fundamentalsDL}
-
-TODO: Input Thilo -> mache den Bezug von diesem Teil auf die schlussendliche Arbeit viel deutlicher -> was wird wie gebraucht?
-
-Machine Learning uses mathematical functions to map an input to an output.
-These functions usually extract patterns from the input data to build a relationship between input and output.
-The term Machine Learning stems from the fact that we use \emph{machines} to correlate the input and the output to a function (i.e. to \emph{learn} a function) during a training period.
-A sub-branch of Machine Learning is Deep Learning (DL).
-DL algorithms are able to learn hidden patterns within data to make predictions.
-They benefit from the accelerated computing power and big data made available in the last decade.
-Deep Learning is considered state-of-the-art for many learning tasks especially for high-dimensional data.
-Typical high-dimensional data are texts, audio recordings, 2D as well as 3D images, and videos.
-Deep Learning models use artificial neural networks to learn the mapping function between given input and output data.
-In the following, the fundamentals of Deep Learning is explained.
-Only those aspects that are relevant for the understanding of the rest of the thesis are discussed.
-
-The idea for artificial neural networks (ANN) stems from biology and aims to capture the interaction of brain cells (neurons) with a mathematical model.
-A first model for a neuron was proposed by MuCulloch and Pitts in 1943 \sidecite{McCulloch_Pitts_1943}.
-Similar to how a"neuron of the human brain transmits electrical impulses through the nervous system, the artificial neuron of MuCulloch and Pitts receives multiple input signals and transforms them into a output signal.
-A neuron takes an input vector \(\boldsymbol{x} = (x_1, ..., x_n)\) where \(x_i \in \{0, 1\}\) and maps it to an output \(\hat{y} \in \{0, 1\}\).
-The mapping from the input to the output is done by using an aggregation function \(g\) that sums up the input vector \(\boldsymbol{x}\) and a activation function \(f\) that outputs \(1\) if the output of \(g\) is greater than a threshold \(\theta\) and \(0\) otherwise.
-
-\begin{equation}\eqlbl{McCulloch_Pitts_agg}
-	g(\boldsymbol{x}) = g(x_1, ..., x_n) = \sum_{i=1}^{n}x_i\\
-\end{equation}
-\begin{equation}\eqlbl{McCulloch_Pitts_act}
-		\hat{y} = f(g(\boldsymbol{x})) = \begin{cases}
-      		1, & \text{if}\ g(x) \geq \theta \\
-      		0, & \text{otherwise}
-    	\end{cases}
-\end{equation}%
-
-In 1958, Rosenblatt \sideciteay{Rosenblatt_1958} developed the Perceptron which works with real numbers as input.
-The input vector \(\boldsymbol{x} = (x_1, ..., x_n)\) where \(x_i \in \mathbb{R}^n\) is multiplied with a weight vector \(\boldsymbol{w} = (w_1, ..., w_n)\) where \(w_i \in \mathbb{R}^n\) with the same length.
-
-\begin{equation}\eqlbl{Perceptron_agg}
-	g(\boldsymbol{x}) = g(x_1, ..., x_n) = \sum_{i=1}^{n} w_i \cdot x_i\\
-\end{equation}
-
-The output \(\hat{y} \in \{0, 1\}\) is similar to the MuCulloch and Pitts neuron \(1\) if the aggregated value is greater than a threshold \(\theta\) and \(0\) otherwise as described in equation \ref{McCulloch_Pitts_act}. The equations \eqref*{Perceptron_agg} and \eqref*{McCulloch_Pitts_act} can be rewritten as
-
-
-\begin{equation}\eqlbl{Perceptron}
-		\hat{y} =f(g(\boldsymbol{x})) = \begin{cases}
-      		1, & \text{if}\ \sum_{i=1}^{n}w_i \cdot x_i - \theta \geq 0 \\
-      		0, & \text{otherwise}
-    	\end{cases}
-\end{equation}
-
-Later, the step-function \(f\) was replaced with other functions so that the output could also be a real number \(\hat{y} \in \mathbb{R}\). Often used functions are
-
-\begin{equation}\eqlbl{act_functions}
-	\begin{aligned}
-		\text{Sigmoid: } \sigma(z) = \frac{1}{1+\mathrm{e}^{-z}}\\
-		\text{Rectified linear unit (ReLU): } (z)^{+} = \max{0, z}\\
-		\text{Hyperbolic tangent (tanh): } \tanh(z) = \frac{\mathrm{e}^{z}-\mathrm{e}^{-z}}{\mathrm{e}^{z}+\mathrm{e}^{-z}}
-	\end{aligned}
-\end{equation}
-
-By convention, instead of using the threshold \(- \theta\) often a bias \(b\) is used which leads to:
-
-\begin{equation}\eqlbl{nn}
-	\begin{aligned}
-		z = g(\boldsymbol{x}) = \boldsymbol{w} \cdot \boldsymbol{x} = \sum_{i=1}^{n}w_i \cdot x_i + b\\
-		\hat{y} = f(z)
-	\end{aligned}
-\end{equation}
-
-However, the brain consists of multiple neurons which are connected through synapses.
-Therefore, ANNs consist not only of one neuron but combine multiple neurons in a network. 
-These neurons are organized into layers.
-A shallow neural network consists of one hidden layer in which the input \(\boldsymbol{x}\) is fed to calculate the output \(\boldsymbol{\hat{y}}\)\sidenote{\(\boldsymbol{\hat{y}}\) has become a vector since multiple neurons produce multiple output values}.
-The universal approximation theorem of Cybenko \sidecite{Cybenko_1989} proves that a shallow network with enough neurons can approximate any mapping function between inputs and outputs.
-However, very complex mapping functions may need too many hidden neurons.
-The neurons of the hidden layer extract features in the input space.
-Since only one layer is used, the features cannot be hierarchically organized and become complex enough.
-
-A multi-layer perceptron (MLP), on the other hand, consists of multiple layers.
-The different layers extract increasingly complex features.
-In a MLP. the input \(\boldsymbol{x}\) is fed into the first layer, each subsequent layer \(l\) gets the output of the previous layer \(l-1\) as input.
-In the following, we describe the mathematical model for fully connected layers, where all neurons of a layer are connected with the subsequent layer\sidenote{many modern network architectures are not fully connected and can have either missing or recurrent connections}.
-For a MLP with \(m\) layers, we define the output of the aggregation \(g\) as \(\boldsymbol{z}^{[l]}\) and the output the activation function as \(\boldsymbol{a}^{[l]}\) for layer \(l\).
-Furthermore, we use \(\boldsymbol{w}^{[l]}\) for the weight vector and \(b^{[l]}\) for the bias of layer \(l\).
-Thus, the mathematical model of a MLP is defined as
-
-\begin{equation}\eqlbl{mlp}
-	\begin{aligned}
-		\boldsymbol{z}^{[l]} = \boldsymbol{w}^{[l]}\boldsymbol{a}^{[l-1]} + b^{[l]}\\
-		\boldsymbol{a}^{[l]} = f({z}^{[l]})
-	\end{aligned}
-\end{equation}
-
-Since the input is fed into the first layer and the output is the result from the last layer \(\boldsymbol{x} = {a}^{[0]}\) and \(\boldsymbol{\hat{y}} = {a}^{[m]}\) holds true.
-
-So far, only the forward-pass which is used to calculate the output \(\boldsymbol{\hat{y}}\) was discussed.
-However, the model output \(\boldsymbol{\hat{y}}\) will only be close to the target output \(\boldsymbol{y}\) if the weights \(\boldsymbol{w}^{[l]}\) and biases \(b^{[l]}\) are properly defined.
-These parameters are learned during a training period.
-The training can take place in a supervised, semi-supervised, self-supervised, unsupervised, or reinforcement learning based manner.
-In supervised learning, the output of the model \(\boldsymbol{\hat{y}}\) for a given input \(\boldsymbol{x}\) is compared to manually created target outputs \(\boldsymbol{y}\).
-Unsupervised learning, on the other hand, tries to find patterns in the input \(\boldsymbol{x}\) and to cluster the samples into meaningful groups without using target labels.
-Semi-supervised learning is a hybrid approach of the the aforementioned principles that combines a small amount of labelled data with a large amount of unlabelled data.
-In self-supervised learning, the target outputs \(\boldsymbol{y}\) are directly derived from the input data \(\boldsymbol{x}\) (e.g. predict a masked part of the input \(\boldsymbol{x}\)).
-Lastly, reinforcement learning algorithms aim to maximize a reward that they become from an environment based on some action they executed.
-
-These learning principle have in common that a loss function \(\mathcal{L}\) can calculate a loss value based on the model output \(\boldsymbol{\hat{y}}\). 
-For example, the mean square error (MSE) can be used for regression problems or the negative log-likelihood for classification problems.
-The chosen loss function is minimized interatively with stochastic gradient descent (SGD)\sidenote{There exist also other optimizer methods such as SGD with momentum, RMSprop, or Adam \citep{Kingma2015AdamAM}} until the network converges.
-The idea behind stochastic gradient descent is to make use of the fact that the negative gradient of the loss value points to the direction of the steepest descent (i.e. in the direction where the loss gets smaller).
-SGD therefore updates the network parameters by taking a step of size \(\eta\) in the direction of their negative gradient
-
-\begin{equation}\eqlbl{sgd}
-	\begin{aligned}
-		\Delta \boldsymbol{w}^{[l]} = -\eta \nabla_{\boldsymbol{w}^{[l]}} \mathcal{L}\\
-		\Delta b^{[l]} = -\eta \nabla_{b^{[l]}} \mathcal{L}
-	\end{aligned}
-\end{equation}
-
-The gradients of the weights \(\boldsymbol{w}^{[l]}\) and biases \(b^{[l]}\) can efficiently be calculated with an algorithm called backpropagation \sidecite{Rumelhart_Hinton_Williams_1986}, which is just a smart implementation of the chain rule\sidenote{While a detailed discussion on backpropagation is out of scope for this thesis, we refer interested reader to the Deep Learning course by Andrew Ng \cite{Coursera}}.
-
-TODO: Describe CNN, Transformer, ... etc.???
-
-\section{Limitations of Deep Learning}\seclbl{limitationsDL}
-The rise of Deep Learning over the past decade has only been possible because of major technological advances in hardware.
-Without the computational resources and the storage capacity of the systems created in the last decades no system could run today's algorithm.
-Moreover, much of the progress of recent years was possible due to the improved hardware. 
-Moore’s law \cite{Moore_2006} states that the number of transistors in a dense integrated circuit doubles about every two years and is the only known physical process following an exponential curve.
-An analysis by OpenAI shows that since 2012 the amount of compute has even increasing exponentially with a doubling time  of \(3.4\) months \cite{OpenAI_compute}.
-However, the exponential increase seems to come to an end since the size of transistors hit physical limitations.
-It is assumed that Moore's law will end by around 2025 \sidecite{Kumar_2015}.
-Besides the progress in the field and the development of new technology, Deep Learning models also became better because the number of parameters and the size of datasets grew exponentially.
-Even the growth in the last five years is astonishing.
-While the state-of-the-art language model from 2018 \sidecite{Peters_Neumann_Iyyer_Gardner_Clark_Lee_Zettlemoyer_2018} had around \(94\)M parameters, the state-of-the-art in 2020 \sidecite{NEURIPS2020_1457c0d6} already had \(175\)B parameters. Training such a model on a single V100 GPU would take about 355 years and cost about \(4.6\)M dollars \cite{Lambda_GPT3}.
-A recent language model from Microsoft and Nvidia \sidecite{Shoeybi_Patwary_Puri_LeGresley_Casper_Catanzaro_2020} even has \(530\)B parameters.
-Only a few institutions with massive resources are able to train such big models.
-In general, inference on low-budget hardware such as smartphones or embedded hardware becomes prohibitive with the growing size of deep networks.
-Even tough there exist techniques to shrink the model size after training such as quantization \cite{Wu_Judd_Zhang_Isaev_Micikevicius_2020}, model pruning \cite{Choudhary_Mishra_Goswami_Sarangapani_2020}, or model distillation \cite{Hinton_Vinyals_Dean_2015} it is questionable if making models bigger is the best way to develop intelligent systems.
-
-Another major issue of Deep Learning systems is that they suffer from catastrophic forgetting.
-If a model is trained on a specific task and afterwards trained (or fine-tuned) on another task, the model suffers a ``catastrophic'' drop in performance over the first task.
-The reason for this effect is that the model during training on the second task adjusts the parameters learned during the first task and therefore ``forgets'' the learned mapping functions.
-Just mixing all datasets or to learn all tasks in parallel in a current multi-task setup \cite{Zhang_Yang_2021} doesn't seem feasible to achieve some kind of general intelligence as this involves too many different unrelated tasks.
-Catastrophic forgetting is also caused by the fact that learning is mostly done offline\sidenote{Offline in this context means that the model parameters are not adapted after training during inference time}.
-Online learning \cite{Sahoo_Pham_Lu_Hoi_2017} and lifelong learning \cite{Parisi_Kemker_Part_Kanan_Wermter_2019} are currently hot research topics.
-However, these methods have not yet been established.
-
-Furthermore, there exists problems which may cannot be solved with the current principles used for Deep Learning.
-First of all, it is questionable if Deep Learning models can achieve \emph{real} generalization\sidenote{Generalization refers to the ability of the model to adapt properly to previously unseen data from the same distribution}.
-With enough data, can achieve generalization in the sense that the model can interpolate within the data distribution.
-However, deep learning models fail to extrapolate.
-For example, convolutional neural networks (CNNs) do not generalize to different viewpoints unless they are added to the training data \sidecite{Madan_Henry_Dozier_Ho_Bhandari_Sasaki_Durand_Pfister_Boix_2022}.
-
-Second, Deep Learning is not able to learn abstract relationships in a few trials but requires many samples of it and is thus data hungry.\sidenote{Delme!!!}
-Marcus Gary \sidecite{Marcus_2018} argues that if he tells that a ``schmister'' is a sister over the age of 10 but under the age of 21, humans can  immediately infer whether they or their best friends have any ``schmister''. However, modern DL systems lacks a mechanism for learning abstractions through explicit, verbal definition and require thousands or even more training samples.
-
-Third, no DL model has been able to demonstrate causal reasoning in a generic way.
-Deep Learning models find correlations between the inputs and the outputs, but not the causation.
-Other AI approaches such as hierarchical Bayesian computing or probabilistic graphical models are better at causal reasoning but cannot be well combined with Deep Learning models.
-
-Lastly, Deep Learning models are to some extend too isolated since they have no embodiment and cannot interact with the world.
-For example, the human body provides needs, goals, emotions, and gut feeling\sidenote{one could argue that the body is therefore even a co-processor of the brain}.
-In current Deep Learning systems are emotions totally absent and the goals are set externally.
-Deep Reinforcement Learning can be considered as a first step in the direction of dissolving this isolation, as they interact with a virtual environment. 
-AI systems that interact with the real world do not work well so far.
-Moravec's paradox \sidecite{Moravec_1995} states that ``it is comparatively easy to make computers exhibit adult level performance on intelligence tests or playing checkers, and difficult or impossible to give them the skills of a one-year-old when it comes to perception and mobility''.
-
-
-\section{Biological Learning}\seclbl{biological_learning}
-The human brain comprises many interconnected areas processing everything in parallel.
-For example, Figure \figref{visual_cortext} illustrates the connections between different organizational units in the cerebral cortex which are responsible for vision.
-It can be seen that these areas are connected in a rather complex structure.
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.99\textwidth]{felleman_visual_cortex}
-    \caption[Organization of the visual system in the cerebral cortex]{The organization of the visual system in the cerebral cortex. The image is from \citeay{Felleman_Van_Essen_1991}.}
-    \figlbl{visual_cortext}
-\end{figure}
-Deep Learning architectures, on the other hand, are mostly unidirectional and the signal flows unidirectional from layer to layer\sidenote{Except for recurrent connections, skip-connections, or residual-connections}.
-However, the choice of the architecture influences the how the model can learn the mapping function from input to output.
-It could be that the complex structure of our brain comprises an inductive bias which was learned over time through evolution.
-
-A learning system requires a mechanism that tells the system if something goes well or wrong so that it can learn from it.
-This is called the \emph{credit assignment problem}.
-Backpropagation (c.f. Section \secref*{fundamentalsDL}) solves this problem by propagating the error backwards through the network.
-However, information flows in the brain only in one direction from the presynaptic neurons to the postsynaptic neurons.
-Therefore, backpropagation is not biologically plausible.
-Lillicrap et al. \sidecite{Lillicrap_Cownden_Tweed_Akerman_2016} shows that an additional set of random feedback weights is able to transmit useful gradients.
-Their work has reopend questions how the brain could process error signals and has dispel some long-held assumptions about algorithmic constraints on learning.
-
-Not only the structure of the network and the way how the feedback is calculated is different between biological learning and Deep Learning.
-Also the neurons themselves are different.
-While the artificial neuron doesn't have any dynamics (c.f. Equation \eqref*{nn}), biological neurons are highly dynamic:
-Biological neurons adapt their firing rate to constant inputs, they may continue firing after an input disappears, and can even fire when no input is active.
-
-TODO: Add reference to reservoir computing
-
-Lastly, the neurons in the brain are self-organizing.
-This means that a group of elementary units such as neurons or a group of neurons perform similar rule of behavior on a sub-set of the available information.
-Such a system doesn't have a central supervision that orchestrates these units.
-Each unit applies similar deterministic functions to the information received.
-Two important principles of such systems are (i) localized learning which means that each unit adapt their behavior to the information they receive; and (ii) emergence which means that there is no explicit loss function that tells the system what to do.
-
-
-\section{Neurocomputing}\seclbl{neurocomputing}
-
-\subsection{Hebbian Learning}\seclbl{hebbian}
-Donald Hebb \sidecite{Hebb_1949} describes how the connections between cells in the nervous system adapt as: ``When an axon of cell A is near enough to excite a cell B and repeatedly or persistently takes part in firing it, some growth process or metabolic change takes place in one or both cells such that A’s efficiency, as one of the cells firing B, is increased''. This statement is often simplified to the well-known phrase ``Neurons that fire together wire together''.
-
-Hebbian learning is based on this principle.
-The weight \(w_{ij}\) from neuron \(i\) to neuron \(j\) changes based on the pre-synaptic activity \(r_i\) of neuron \(i\) and post-synaptic activity \(r_j\) of neuron \(j\)
-
-\begin{equation}\eqlbl{hebb_1}
-	\Delta w_{ij} = \eta r_i r_j
-\end{equation}
-
-where \(\eta\) is the learning rate.
-Thus, the weights between frequently co-activated neurons becomes strong which is called Hebbian plasticity.
-
-In its original form, Hebbian learning had the problem that the connections could only become stronger but not weaker.
-Therefore, it is often extended based on the covariance of the activity between neurons.
-The covariance is positive if two neurons fire often together and negative if they do not often fire together.
-The following equation changes the weight relative to the covariance:
-
-\begin{equation}\eqlbl{hebb_2}
-	\Delta w_{ij} = \eta (r_i - \psi_i) \cdot (r_j - \psi_j)
-\end{equation}
-
-where \(\psi_i\) and \(\psi_j\) are estimates of the expected pre- and post-synaptic activity\sidenote{the expected activity can for example be estimated through a moving average function}.
-The formulation above lacks of boundaries, i.e. the weights could grow to infinite.
-A simple solution is to enforce hard boundaries \(w_{min} \leq w_{ij} \leq w_{max}\).
-
-Another solution to weaken the connections is given by the Bienenstock-Cooper-Monroe (BCM) learning rule which was introduced by Bienenstock et al. \sidecite{Bienenstock_Cooper_Munro_1982} and extended by Intrator and Cooper \sidecite{Intrator_Cooper_1992}.
-They propose a sliding threshold for long-term potentiation (LTP) or long-term depression (LTD) induction.
-When a pre-synaptic neuron fires and the post-synaptic neuron is in a lower activity state than the sliding threshold, it tends to undergo a LTD (i.e. the connection is weaken).
-
-Around the same time, Oja \sidecite{Oja_1982} improved the learning rule of Equation \eqref*{hebb_1} with an normalization term:
-
-\begin{equation}\eqlbl{hebb_3}
-	\Delta w_{ij} = \eta (r_i r_j - \alpha r^2_j w_{ij})
-\end{equation}
-
-The parameter \(\alpha\) is a constant value that determines the size of the norm of the weight vector.
-This update rule is also known as the Oja learning rule. 
-Furthermore, he has found that a layer of multiple linear neurons converges to the first principle component of the input data.
-As all neurons only learn the first principle component, a network of multiple neurons in this setting seem not very useful.
-Differentiation between neurons can be achieved with several different methods.
-Two well known approaches are the winner-take-all competition (i.e. only the neuron with the most similar activity is selected for learning)\sidenote{in practice is k-winner-take-all often preferred where k instead of one neuron learns} and a recurrent circuit that provides a competitive signal (i.e. the neurons compete with their neighbours to become active to learn).
-
-It is known that independent neurons can encode more information and work better than dependent neurons \sidecite{Simoncelli_Olshausen_2001}.
-Anti-Hebbian learning is a method that adds a penalty for similarly active neurons and thus minimizes the linear dependency between neurons.
-Vogels et al. implemented this by switching the sign of the weight change \sidecite{Vogels_Sprekeler_Zenke_Clopath_Gerstner_2011}.
-
-There exists many further improvements for Hebbian learning which are not summarized in this thesis.
-For example, Joshi and Triesch \sidecite{5178625} as well as Teichmann and Hamker \sidecite{Teichmann} adapt the activation function of the neurons to enforce a certain activity distribution and to stabilize Hebbian learning even in multilayer neural networks.
-
-Similar to large parts of the brain, Hebbian learning is unsupervised and learns based on local information (i.e. neurons in close proximity).
-However, the brain is also largely recurrent and could guide neighbouring or preceding units.
-This assumption inspired supervised Hebbian learning.
-In supervised Hebbian learning, a subset of inputs which should evoke post-synaptic activity can be selected.
-Supervised Hebbian learning can be extended to top-down and bottom-up learning \sidecite{Grossberg_1988} which leads to a combination of supervised and unsupervised Hebbian learning.
-
-
-\subsection{Hopfield Networks}\seclbl{hopfield}
-Hopfield networks \sidecite{Hopfield_1982} were introduced 1982 by J. Hopfield.
-They serve as associative (i.e. content-adressable) memory systems.
-Such systems are particularly useful to retrieve representations based on degraded or partial inputs.
-Auto-associative memories return for an input the most similar previously seen sample.
-A classical implementation of an auto-associative memory is the nearest neighbour algorithm \sidecite{Fix_Hodges_1989}.
-This algorithm compares a given samples with the previously seen training data with a distance metric and returns the most similar sample\sidenote{or the \(k\) most similar samples in the case of the k nearest neighbour (k-NN) algorithm}.
-Memory networks \sidecite{Weston_Chopra_Bordes_2015} implement an auto-associative memory within the Deep Learning framework.
-Such networks convert an input \(\boldsymbol{x}\) to a internal feature representation \(I(\boldsymbol{x})\), update memories given the new input \(m=G(m, I(\boldsymbol{x}))\), and compute the output features \(o=O(m, I(\boldsymbol{x}))\).
-This process is applied during the training and inference phase.
-The only difference is that the parameters for the functions \(I\), \(G\), and \(O\) are only updated during training.
-
-In a Hopfield network are all neurons are connected, but there are no self-connections: \(w_{ii}=0\) where \(w_{ij}\) is the weight between neuron \(i\) and neuron \(j\).
-Furthermore, the weights are symmetrical \(w_{ij} = w_{ji}\).
-A Hopfield network in its original form works only with binary units.
-For consistency, this networks are called binary Hopfield networks in the following.
-The output of a neuron in a binary Hopfield network depends on the output of the other neurons within the network:
-
-\begin{equation}\eqlbl{hf_1}
-	x_i = \sum_{i \neq j} w_{ij} y_j + b
-\end{equation}
-
-\begin{equation}\eqlbl{hf_2}
-	y_i = \begin{cases}
-      		1, & \text{if} x > 0 \\
-      		-1, & \text{otherwise}
-    	\end{cases}
-\end{equation}
-
-TODO in equation: check where to use y and where to use y with hat
-
-
-Hopfield networks have their own dynamics and the output evolves over time.
-If the initial value \(y_i\) of a binary Hopfield network has a different sign than \(\sum_{i \neq j} w_{ij}y_j + b\) the output will flip (i.e. change its sign).
-This will in turn influence all other neurons which may also flip.
-The term \(y_i(\sum_{i \neq j} w_{ij}y_j + b)\) is negative if \(y_i\) is not equal to \(\sum_{i \neq j} w_{ij}y_j + b\), otherwise it is positive.
-Since the neuron flips if the term \(y_i(\sum_{i \neq j} w_{ij}y_j + b)\) is negative or stays the same if this term is positive, the change of this term can only be positive:
-
-\begin{equation}\eqlbl{hf_3}
-	\Delta [y_i(\sum_{i \neq j} w_{ij} y_j + b)] \geq 0
-\end{equation}
-
-The negative sum of the term \(y_i(\sum_{i \neq j} w_{ij}y_j + b)\) for the entire network is called the energy \(E\) of the network:
-
-\begin{equation}\eqlbl{hf_4}
-	E(\boldsymbol{y}) = -\sum_{i} y_i \left( \sum_{j>i} w_{ji} y_j + b \right)
-\end{equation}
-
-As we have shown in \eqref*{hf_3}, the energy function \(E\boldsymbol{y})\) of the network can only decrease.
-Moreover, the energy function has a lower bound and thus the network reaches after a finite number of iterations a stable state. 
-A stable pattern of the network (i.e. no neurons flip their sign) is a local minima of the energy function and is called a point attractor.
-A pattern is attracted by the closest stable pattern.
-Thus, the network can be used as associative memory because an input pattern can be matched to the closest stable pattern.
-
-McElice \sidecite{1057328} has shown that a binary Hopfield network with \(N\) neurons has a capacity of \(C=0.138N\) (i.e. the number of patterns that can be stored.
-Hebbian learning (c.f. Section \secref*{hebbian}) can be used to store pattern in a Hopfield network.
-To store a pattern, the weights \(\boldsymbol{w}\) must be choosen in a way so that the desired local patterns \((\boldsymbol{y}^1, ..., \boldsymbol{y}^P)\) are local minima of the energy function.
-By combining Hebbian learning with some smart mathematical transformations it can be shown that the weights can be directly learned with only one iteration over the training patterns\sidenote{for the derivation of this equation refer to \citep{Hopfield_1982}}:
-
-\begin{equation}\eqlbl{hf_5}
-	\boldsymbol{w} = \frac{1}{p} \sum_{k=1}^{P} \boldsymbol{y}^k \times (\boldsymbol{y}^k)^T - \boldsymbol{I}
-\end{equation}
-
-where \(\boldsymbol{I}\) is the identity matrix.
-Later, Hopfield et al. \sidecite{Hopfield1983} extended the binary Hopfield network so that it can either learn pattern during an awake cycle or forget patterns during a sleep cycle.
-
-One of the limiting factors of binary Hopfield networks is the capacity of \(C=0.138N\).
-The problems comes from the fact that the energy function is a quadratic function.
-More than three decades after the introduction of the binary Hopfield networks, Krotov and Hopfield \sidecite{10.5555/3157096.3157228} reformulated the energy function as a polynomial function to get polynomial capacity \(C\approx N^{a-1}\) where \(a\) is the order of the function.
-Later, the energy function was reformulated as exponential function \sidecite{Demircigil_Heusel_Löwe_Upgang_Vermet_2017} and thus modern Hopfield networks have an exponential capacity of \(C\approx 2^{\frac{N}{2}}\).
-
-The second limiting factor of binary Hopfield networks is that only binary patterns can be stored.
-Ramsauer et al. \sidecite{Ramsauer} extended the binary Hopfield network to continous patterns by reformulating the energy function and the corresponding update rule.
-Continous Hopfield networks can retrieve continous patterns or even combination of several similar continous patterns.
-The authors claim that a continous Hopfield networks can replace fully-connected layers, attention layers, LSTM layers, support vector machines (SVM), and k-NN.
-
-TODO: References for LSTM, attention, SVM, ...???
-
-
-\subsection{Spiking Neural Networks}\seclbl{spiking_networks}
-Biological neurons emit spikes.
-To transmit information, especially the firing rate (i.e. the number of spikes per second in Hz) and precise timing of the spikes are relevant.
-The amplitude and duration of the spike does not matter much.
-This behaviour has also been implemented in ANNs.
-So called Spiking neural networks (SNNs) incorporate the concept of time into their model.
-SNN do not transmit information in each forward-pass but rather transmit a signal when the membrane potential reaches a threshold value\sidenote{the membrane potential is related to the electrical charge of the membrane of a biological neuron}. 
-The neuron fires as soon as the threshold is reached and thereby influences the potential of other neurons.
-The most prominent model of a spiking neuron is the leaky integrate-and-fire (LIF) neuron \sidecite{Abbott1999LapicquesIO}.
-The LIF neuron models the membrane potential with a differential equation.
-Incoming spikes can either increase or decrease the membrane potential.
-The membrane potential either decays over time or is reset to a lower value if the threshold value is reached and the neuron has fired.
-There exists different integrate-and-fire (IF) neurons models such as the Izhikevich quadratic IF \sidecite{Izhikevich_2003} or the adaptive exponential IF \sidecite{Brette_Gerstner_2005}.
-While each of these model gas different mathematical properties, the concept of a membrane potential that is increased or decreased through spikes from other neurons and decays over time or by emitting a spike is similar to the LIF.
-
-Biological neurons have different dynamics.
-Some neurons fire regularly if the receive an input current, others slow down the firing rate over time or emits bursts of spikes.
-Modern models of spiking neurons can recreate this behaviour of biological neurons \sidecite{Paugam_Moisy}.
-
-The synaptic plasticity can be modeled with Hebbian learning (c.f. Section \secref*{hebbian}).
-The spike-timing dependent (STDP) plasticity rule \sidecite{Bi_Poo_2001} distinguishes the tiring behaviour of pre-synaptic and post-synaptic neurons.
-If the pre-synaptic neurons fires before the post-synaptic neuron, the connection is strengthen, otherwise it is weaken.
-
-For a long time, SNN only worked for very shallow networks.
-In 2018, Kheradpisheh et al. \sidecite{KHERADPISHEH201856} has proposed a SNN based on the idea of CNNs called a deep spiking convolutional network.
-This network uses convolutional and pooling layers with IF neurons instead of classical artificial neurones and is trained with STDP.
-First, the image is fed into DoG cells.
-This cells apply the difference of Gaussians (DoG) feature enhancement algorithm.
-This algorithm subtracts a Gaussian blurred version of an image from the original image.
-By doing so, positive or negative contrast is detected in the input image.
-The higher the contrast is, the stronger is a cell activated and the earlier it emits a spike.
-Thus, the order of the spikes depends on the order of the contrast.
-These spikes are forwarded to a convolutional layer.
-Deep spiking convolutional networks use two types of LIF neurons: On-center neurons fire when a bright area is surrounded by a darker area, off-center neurons do the opposite.
-Convolutional neurons emit a spike as soon as they detect their preferred visual feature\sidenote{the location of the feature is not relevant as convolution layers are translation invariant}.
-Neurons that fire early perform the STDP update with a winner-takes-all mechanism.
-This means that the neurons within a layer compete with each other and those which fire earlier learn the input pattern.
-This prevents other neurons from firing and guarantees a sparse connection.
-Later convolutional layers detect more complex features by integrating input spikes from the previous layer.
-The features from the last convolutional layer are flatten and a Support Vector Machine is used to classify the features.
-
-
-\subsection{Reservoir Computing}\seclbl{reservoir_comp}
-As described in Section \secref{biological_learning}, biological neurons are highly dynamical while artificial neurons are not.
-Reservoir computing introduces such dynamics into an artificial network.
-Reservoir computing is an umbrella term for networks based on the concepts of Echo State Networks (ESN) \sidecite{esn} and Liquid State Machines (LSM) \sidecite{Maass_Natschlager_Markram_2002}.
-A reservoir is a fixed non-linear system that maps a input vector \(\boldsymbol{x}\) to a higher dimensional computation space.
-After the input vector is mapped into computation space, a simple readout mechanism is trained to return the desired output based on the reservoir state.
-In principle, the system should be capable of any computation if it has a high enough complexity \sidecite{Konkoli_2018}.
-However, not every system is suited as reservoir.
-A good reservoir system distributes different inputs into different regions of the computation space \cite{Konkoli_2018}.
-
-A ESN is a set of sparsely connected recurrent neurons as visualized in Figure \figref*{reservoir}.
-
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.99\textwidth]{reservoir}
-    \caption[Structure of a Echo State Network]{Structure of a Echo State Network. The image is from \citeay{Tanaka_Yamane_Héroux_Nakane_Kanazawa_Takeda_Numata_Nakano_Hirose_2019}.}
-    \figlbl{reservoir}
-\end{figure}
-
-The reservoir consists of \(N\) nodes which are connected according a Erdős–Rényi graph model\sidenote{The Erdős–Rényi model is a model for generating random graphs where all graphs on a fixed set of vertices and edges is equally likely} \sidecite{erdos59a}.
-This graph model is represented by an adjacency matrix \(\boldsymbol{w}\)\sidenote{Figure \figref*{reservoir} uses upper case letter \(\boldsymbol{W}\)} of size \(N \times N\).
-The time varying input signal \(\boldsymbol{x(t)}\) is mapped to a sub-set of \(N/M\) graph nodes by multiplying it with \(\boldsymbol{w}_{\text{in}} \in \mathbb{R}^{N\times M}\) and the output by multiplying the reservoir state with \(\boldsymbol{w}_{\text{out}} \in \mathbb{R}^{M\times N}\).
-We refer interested reads to \sidecite{Lukoševičius_2012} to read more about the mathematical properties and how network is updated in detail.
-
-In the original form of ESN, only the readout weights are learned, the rest is chosen randomly.
-The input \(\boldsymbol{x(t)}\) brings the recurrent units in a initial state.
-The recurrent connections inside the reservoir create different dynamics in the network.
-The readout neurons linearly transform the recurrent dynamics into temporal outputs.
-The readout weights \(\boldsymbol{w}_{\text{out}}\) are trained to reproduce a target function \(\boldsymbol{y(t)}\).
-
-Liquid State machines use a spiking neural network instead of a graph of recurrent units as reservoir.
-The nodes of the spiking neural network are randomly connected together.
-Thus, every node receives time varying inputs from the inputs as well as from other nodes.
-The recurrent connections turns the varying input into a spatio-temporal pattern.
-Similar to ESN, the spatio-temporal patterns of activation are read out by a linear layer.
-
-In general, reservoirs are universal approximators and can approximate any non-linear function given there are enough neurons in the reservoir.
-They generalize better and faster than equivalent MLP.
-The main drawback of current systems is that cannot deal well with high-dimensional inputs such as images.
 
 
 \subsection{Organization of Thesis}\seclbl{org_thesis}
-The remainder of the thesis is organized as follows: TODO
-% Related work: Hedge Backpropagation: https://arxiv.org/abs/1711.03705
+The remainder of the thesis is organized as follows: In chapter \chref*{fundamentals} we present the fundamentals necessary to understand this thesis. We provide an overview about how deep learning works and what the most common research areas in neurocomputing are. Chapter \chref*{rel_work} presents the work related to this thesis.
+
+TODO....
 
 
 
