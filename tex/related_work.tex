@@ -64,19 +64,107 @@ This methods achieves competitive performance on rather small datasets such as M
 Cellular Automata mimic developmental processes in multi-cell organisms.
 They contain a grid of similar cells with an internal state which is updated periodically.
 The transition from a given state to a subsequent state is defined by some update rules.
+During an update, cells are only allowed to communicate with the neighbouring cells.
+Thus, self-organization is enforced by the definition of the update rules.
 Such automata can be used to study biological pattern formations \sidecite{Wolfram1984} or physical systems \sidecite{VICHNIAC198496}.
-Neural Cellular Automata \sidecite{Wulff1992LearningCA} use neural networks to learn these update rules.
+Neural Cellular Automata \sidecite{Wulff1992LearningCA} use neural networks to learn the update rule.
+The input in such a neural network is the state of a given cell and its neighbours, the output the subsequent cell state.
+Usually, the same network is applied to all cells.
+In this case, a fully connected neural network which is applied to each cell and its local neighbours can be reformulated as a CNN\sidecite{PhysRevE}.
+NCAs can be trained efficiently with gradient descent to grow given 2D patterns such as images\sidecite{48963, Mordvintsev_Randazzo_Fouts_2022}.
+These images are grown through self-organisation (i.e. the pixels pick a color based on the color of neighboring pixels) and are surprisingly resistant to damage.
+For example, large parts of the images can be removed and the system is able to rebuild these pixels\sidenote{a demo of this regeneration process is available at \cite{NCAs_distill}}.
+However, the aforementioned approaches can only grow the pattern they were trained on.
+A recent method called Variational Neural Cellular Automata \sidecite{Palm_GonDuque_Sudhakaran_Risi_2022} use an NCA as decoder of a Variational Autoencoder \sidecite{Kingma_Welling_2014}.
+This probabilistic generative model can grow a large variety of images from a given input encoded in a vector format.
+However, there is still a big gap in performance compared to state-of-the-art generative models.
+Besides growing 2D patterns, NCAs can also create 3D patterns such as buildings in the popular video game Minecraft by utilizing 3D CNNs \sidecite{Sudhakaran_Grbic_Li_Katona_Najarro_Glanois_Risi_2021} or generate structures with specific function such as simulated robots able to locomote\sidecite{Horibe_Walker_Risi_2021}.
+Moreover, self-assembling approaches based on NCAs are not restricted to grid-structures.
+NCAs can be generalized to graph neural networks \sidecite{Grattarola_Livi_Alippi_2021}.
+Graph cellular automata (GCA) use graph neural networks \sidecite{Zhou_Cui_Hu_Zhang_Yang_Liu_Wang_Li_Sun_2021} instead of CNNs to learn the state transition rules and can thus deal with more complex pattern structures than just 2D and 3D grids.
+NCAs can even be used to control reinforcement learning (RL) agents.
+Variengien et al. \sidecite{Variengien_Nichele_Glover_Pontes} use the observations of the environment as state of the NCA, the subsequent state predicted by the NCA are used as Q-value estimates of a deep Q-learning algorithm \sidecite{Mnih_Kavukcuoglu_Silver_Graves_Antonoglou_Wierstra_Riedmiller_2013}.
+
+Self-organization can not only be used to generate structures but also to optimize the weights of a neural networks over the agents lifetime.
+For example, a Hebbian learning rule for meta-learning can be used to self-organize the weights of a RL agent over his lifetime\sidecite{NEURIPS2020_ee23e7ad}.
+This means that across multiple episodes the weights of a Hebbian based model are learned.
+The weights of the agents policy are reset in every episode and the Hebbian based model is used to update them.
+This allows the agent to adapt better to the changed conditions within the environment.
+
+Besides optimizing the weights, self-organization has also been used to change the learning rule itself.
+The method ``Evolve and Merge`` \sidecite{Pedersen_Risi_2021} uses the so called ``ABCD'' Hebbian learning rule which updates the weights as follows:
+\begin{equation}\eqlbl{McCulloch_Pitts_act}
+	\Delta w_{ij} = \alpha (A o_i o_j + B o_i + C o_j + D)
+\end{equation}%
+
+$\alpha$ is the learning rate, $o_i$ and $o_j$ are the activity levels of connected neurons and $A$, $B$, $C$, and $D$ are learned constants.
+For each connection in the network is one learning rule initialized and the constants are learned.
+After a pre-defined number of epochs, the learning rules are clustered and the ones with similar constants are merged.
+By repeating this process, the number of parameters can be reduced and robustness increases according to the authors.
+
+Alternatively, it is also possible to initialize the network with shared parameters instead of starting with many rules and merging them over time.
+Kirsch and Schmidhuber \sidecite{kirsch2021meta} use multiple tiny recurrent neural networks (RNNs) that have the same weight parameters but different internal states\sidenote{Intuitively, these tiny RNNs can be interpreted as more complex neurons.}.
+By using self-organization and Hebbian learning, they show that it is possible to learn powerful learning algorithms such as backpropagation while running the network in forward-mode mode only.
+However, it works only for small-scale problems as it can get stuck in local optima.
+In general seem self-organizing systems to be hard to optimize and only to work for small datasets or simple problems so far.
+
+Risi \sidecite{risi2021selfassemblingAI} describes why self-organizing systems are hard to train;
+First, the system is hard to control because there is no central entity in charge but the system must still be nudges into the right direction.
+Second, self-organizing systems are unpredictable (i.e. there exist no mathematical model that tells the outcome of the self-organizing process).
 
 
-%https://arxiv.org/abs/2006.06902
-%https://proceedings.neurips.cc/paper/2019/file/1e6e0a04d20f50967c64dac2d639a577-Paper.pdf
+\subsection{Self-Organization in Spiking Neural Networks}
+Spiking neural networks (SNNs) (c.f. Section \secref{spiking_networks}) communicate through binary signals known as spikes and are very efficient on special event-based hardware\sidecite{8259423}.
+There exist several methods to self-organize such architectures.
+For the sake of completeness, two well-known approaches are described in the following.
+However, since this thesis focuses on self-organization in Deep Learning systems, these approaches are only roughly described and for detailed explanations please refer to the respective literature.
+
+Similar to deep learning, there exists a multitude of different network architectures; Shallow \sidecite{masquelier2007unsupervised, 6469239} and deep networks \sidecite{kheradpisheh2018stdp, mozafari2019bio} structures, fully connected \sidecite{diehl2015unsupervised} and convolutional layers \sidecite{cao2015spiking, tavanaei2016bio}, as well as based on different learning rules such as supervised \sidecite{diehl2015fast, zenke2018superspike}, unsupervised \sidecite{diehl2015unsupervised, ferre2018unsupervised} and reinforcement learning based \sidecite{mozafari2018first}.
+
+A representable method for self-organization in SNNs is proposed by Raghavan et al. \sidecite{Raghavan_Lin_Thomson_2020}.
+They introduce a stackable tool-kit to assemble multi-layer neural networks.
+This tool-kit is a dynamical system that encapsulates the dynamics of spiking neurons, their interactions as well as the plasticity rules that control the flow of information between layers.
+Based on the input, spatio-temporal waves are generated that travel across multiple layers.
+A dynamic learning rule tunes the connectivity between layers based on the properties of the waves tiling the layers\sidenote{for more information please refer to \cite{Raghavan_Lin_Thomson_2020}}.
+
+An alternative method proposed by Raghavan and Thomson \sidecite{Raghavan2019NeuralNG} grows a neural network.
+They start with a single computational ``cell'' and use a wiring algorithm to generate a pooling architecture in a self-organizing fashion.
+The pooling architecture emerges through two processes; First, a layered neural network is grown. Second, self-organization of its inter-layer connections is used to form defined ``pools'' or receptive fields.
+They us the Izikhevich neuron model \sidecite{Izhikevich_2003} in the first layer to generate spatio-temporal waves.
+The units in the second layer learn the ``underlying'' pattern of activity generated in the first layer. 
+Based on the learned patterns, the inter-layer connections are modified to generate a pooling architecture\sidenote{for more information please refer to \cite{Raghavan2019NeuralNG}}.
+
+In general, SNNs have to ``convert'' static input data such as images to a dynamic signal.
+For example, images are often converted to such signals by using Difference of Gaussian (DoG) convolution filters \sidecite{Vaila_Chiasson_Saxena_2019, KHERADPISHEH201856}.
+Such filters subtract one Gaussian blurred version of an original image from another, less blurred version\sidenote{DoG filter can thus be used to reduce noise and to detect edges}.
+This subtraction results in spikes for each pixel.
+To encode the filter output into a temporal signal, bigger spikes are forwarded earlier in time than smaller spikes.
+However, such approaches lose a lot of information about the input.
+For example, in the process described above are all information about color and thin structures lost.
+To the author of this thesis, this seems to be the reason why these SNNs can't match the performance of deep learning algorithms so far and often only work well for small gray-scale image-datasets such as MNIST.
+
+\section{Correlation within CNNs}
+Self-organization in neural networks can be done based on the input data.
+If Hebbian learning is used\sidenote{``Cells that fire together wire together''}, cells are connected based on their correlation (i.e. cells with a high correlation are wired together).
+One way to capture the correlation within CNNs are Gram matrices.
+Gram matrices are essentially the dot-product between the channels of a feature map and can capture the style of given image.
+They are for example used for image style transfer\sidecite{Gatys_Ecker_Bethge_2015} or related fields such as texture synthesis \sidecite{Gatys_Ecker_Bethge_20152}.
+Appendix \chref{image_style_transfer} provides an intuitive explanation what image style transfer is and how this is related to Gram matrices.
 
 
-%https://www.nature.com/articles/srep12866
-%https://sebastianrisi.com/self_assembling_ai/ + Video -> very good points at beginning + self organization (start at min. 30 also about self organizing networks)
 
-% Related work: Hedge Backpropagation: https://arxiv.org/abs/1711.03705
 
+
+
+
+
+
+
+
+
+% Neural Style Transfer & Gram Matritzen
+%https://arxiv.org/abs/1505.07376
+%https://ieeexplore.ieee.org/document/1057698
 
 % Summarize work from Claude -> only if relevant...
 

@@ -69,9 +69,9 @@ For example, neurons or connections between neurons may be added or removed.
 Thus, the brain adapts to its environment over time.
 
 Such a mechanism has not been successfully implemented in deep learning nor neurocomputing systems.
-In deep learning system, the architecture is usually predefined and only the parameters (i.e. weight and biases, c.f. \secref*{ann}) are updated.
-In neurocomputing, on the other hand, the theory behind self-organization is often associated with Hebbian Learning (c.f. Section \secref{hebbian}).
-this dynamic learning of connections is often associated with Hebbian Learning (c.f. Section \secref{hebbian}).
+In deep learning system, the architecture is usually predefined and only the parameters (i.e. weight and biases, c.f. \secref{ann}) are updated.
+In neurocomputing, on the other hand, the theory behind self-organization is often associated with Hebbian Learning (c.f. \secref{hebbian}).
+this dynamic learning of connections is often associated with Hebbian Learning (c.f. \secref{hebbian}).
 The theory behind this learning rule can be summarized as ``cells that fire together wire together''\sidecite{science.1372754}.
 However, Hebbian learning is usually rather used to update the weight between connections instead of to add or to remove connections.
 Connections are therefore not removed or added but can be ``turned off'' and ``turned on'' if the activation function of a neuron uses a threshold below which signals are no longer transmitted\sidenote{if the weights get small enough, the threshold limit cannot be reached and the neurons output is 0}.

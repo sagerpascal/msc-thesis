@@ -61,6 +61,14 @@
   urldate = {2022-08-19}
 }
 
+@online{NCAs_distill,
+  author = {Distill,
+  title = {Growing Neural Cellular Automata},
+  year = 2022,
+  url = {https://distill.pub/2020/growing-ca},
+  urldate = {2022-09-05}
+}
+
 @online{axios_hinton,
   author = {Axios Media Inc.},
   title = {Artificial intelligence pioneer says we need to start over},
@@ -530,14 +538,6 @@ author = {Gérard Y. Vichniac},
 abstract = {Cellular automata are dynamical systems where space, time, and variables are discrete. They are shown on two-dimensional examples to be capable of non-numerical simulations of physics. They are useful for faithful parallel processing of lattice models. At another level, they exhibit behaviours and illustrate concepts that are unmistakably physical, such as non-ergodicity and order parameters, frustration, relaxation to chaos through period doublings, a conspicuous arrow of time in reversible microscopic dynamics, causality and light-cone, and non-separability. In general, they constitute exactly computable models for complex phenomena and large-scale correlations that result from very simple short-range interactions. We study their space, time, and intrinsic symmetries and the corresponding conservation laws, with an emphasis on the conservation of information obeyed by reversible cellular automata.}
 }
 
-
-
-
-
-
-
-
-
 @article{science.1372754,
 author = {Siegrid Löwel  and Wolf Singer },
 title = {Selection of Intrinsic Horizontal Connections in the Visual Cortex by Correlated Neuronal Activity},
@@ -550,4 +550,219 @@ doi = {10.1126/science.1372754},
 URL = {https://www.science.org/doi/abs/10.1126/science.1372754},
 eprint = {https://www.science.org/doi/pdf/10.1126/science.1372754}
 }
+
+@article{PhysRevE,
+  title = {Cellular automata as convolutional neural networks},
+  author = {Gilpin, William},
+  journal = {Phys. Rev. E},
+  volume = {100},
+  issue = {3},
+  pages = {032402},
+  numpages = {11},
+  year = {2019},
+  month = {Sep},
+  publisher = {American Physical Society},
+  doi = {10.1103/PhysRevE.100.032402},
+  url = {https://link.aps.org/doi/10.1103/PhysRevE.100.032402}
+}
+
+@article{48963,
+title	= {Growing Neural Cellular Automata},
+author	= {Alexander Mordvintsev and Ettore Randazzo and Eyvind Niklasson and Michael Levin},
+year	= {2020},
+URL	= {https://distill.pub/2020/growing-ca/},
+journal	= {Distill}
+}
+
+ @article{Mordvintsev_Randazzo_Fouts_2022, title={Growing Isotropic Neural Cellular Automata}, url={http://arxiv.org/abs/2205.01681}, abstractNote={Modeling the ability of multicellular organisms to build and maintain their bodies through local interactions between individual cells (morphogenesis) is a long-standing challenge of developmental biology. Recently, the Neural Cellular Automata (NCA) model was proposed as a way to find local system rules that produce a desired global behaviour, such as growing and persisting a predefined target pattern, by repeatedly applying the same rule over a grid starting from a single cell. In this work, we argue that the original Growing NCA model has an important limitation: anisotropy of the learned update rule. This implies the presence of an external factor that orients the cells in a particular direction. In other words, “physical” rules of the underlying system are not invariant to rotation, thus prohibiting the existence of differently oriented instances of the target pattern on the same grid. We propose a modified Isotropic NCA (IsoNCA) model that does not have this limitation. We demonstrate that such cell systems can be trained to grow accurate asymmetrical patterns through either of two methods: (1) by breaking symmetries using structured seeds or (2) by introducing a rotation-reflection invariant training objective and relying on symmetry-breaking caused by asynchronous cell updates.}, note={arXiv:2205.01681 [cs, q-bio]}, number={arXiv:2205.01681}, publisher={arXiv}, author={Mordvintsev, Alexander and Randazzo, Ettore and Fouts, Craig}, year={2022}, month={Jun} }
+
+ @article{Palm_GonDuque_Sudhakaran_Risi_2022, title={Variational Neural Cellular Automata}, url={http://arxiv.org/abs/2201.12360}, abstractNote={In nature, the process of cellular growth and differentiation has lead to an amazing diversity of organisms -- algae, starfish, giant sequoia, tardigrades, and orcas are all created by the same generative process. Inspired by the incredible diversity of this biological generative process, we propose a generative model, the Variational Neural Cellular Automata (VNCA), which is loosely inspired by the biological processes of cellular growth and differentiation. Unlike previous related works, the VNCA is a proper probabilistic generative model, and we evaluate it according to best practices. We find that the VNCA learns to reconstruct samples well and that despite its relatively few parameters and simple local-only communication, the VNCA can learn to generate a large variety of output from information encoded in a common vector format. While there is a significant gap to the current state-of-the-art in terms of generative modeling performance, we show that the VNCA can learn a purely self-organizing generative process of data. Additionally, we show that the VNCA can learn a distribution of stable attractors that can recover from significant damage.}, note={arXiv:2201.12360 [cs]}, number={arXiv:2201.12360}, publisher={arXiv}, author={Palm, Rasmus Berg and González-Duque, Miguel and Sudhakaran, Shyam and Risi, Sebastian}, year={2022}, month={Feb} }
+
+ @article{Kingma_Welling_2014, title={Auto-Encoding Variational Bayes}, url={http://arxiv.org/abs/1312.6114}, abstractNote={How can we perform efficient inference and learning in directed probabilistic models, in the presence of continuous latent variables with intractable posterior distributions, and large datasets? We introduce a stochastic variational inference and learning algorithm that scales to large datasets and, under some mild differentiability conditions, even works in the intractable case. Our contributions is two-fold. First, we show that a reparameterization of the variational lower bound yields a lower bound estimator that can be straightforwardly optimized using standard stochastic gradient methods. Second, we show that for i.i.d. datasets with continuous latent variables per datapoint, posterior inference can be made especially efficient by fitting an approximate inference model (also called a recognition model) to the intractable posterior using the proposed lower bound estimator. Theoretical advantages are reflected in experimental results.}, note={arXiv:1312.6114 [cs, stat]}, number={arXiv:1312.6114}, publisher={arXiv}, author={Kingma, Diederik P. and Welling, Max}, year={2014}, month={May} }
+
+ @article{Sudhakaran_Grbic_Li_Katona_Najarro_Glanois_Risi_2021, title={Growing 3D Artefacts and Functional Machines with Neural Cellular Automata}, url={http://arxiv.org/abs/2103.08737}, abstractNote={Neural Cellular Automata (NCAs) have been proven effective in simulating morphogenetic processes, the continuous construction of complex structures from very few starting cells. Recent developments in NCAs lie in the 2D domain, namely reconstructing target images from a single pixel or infinitely growing 2D textures. In this work, we propose an extension of NCAs to 3D, utilizing 3D convolutions in the proposed neural network architecture. Minecraft is selected as the environment for our automaton since it allows the generation of both static structures and moving machines. We show that despite their simplicity, NCAs are capable of growing complex entities such as castles, apartment blocks, and trees, some of which are composed of over 3,000 blocks. Additionally, when trained for regeneration, the system is able to regrow parts of simple functional machines, significantly expanding the capabilities of simulated morphogenetic systems. The code for the experiment in this paper can be found at: https://github.com/real-itu/3d-artefacts-nca.}, note={arXiv:2103.08737 [cs]}, number={arXiv:2103.08737}, publisher={arXiv}, author={Sudhakaran, Shyam and Grbic, Djordje and Li, Siyan and Katona, Adam and Najarro, Elias and Glanois, Claire and Risi, Sebastian}, year={2021}, month={Jun} }
+
+ @article{Horibe_Walker_Risi_2021, title={Regenerating Soft Robots through Neural Cellular Automata}, url={http://arxiv.org/abs/2102.02579}, abstractNote={Morphological regeneration is an important feature that highlights the environmental adaptive capacity of biological systems. Lack of this regenerative capacity significantly limits the resilience of machines and the environments they can operate in. To aid in addressing this gap, we develop an approach for simulated soft robots to regrow parts of their morphology when being damaged. Although numerical simulations using soft robots have played an important role in their design, evolving soft robots with regenerative capabilities have so far received comparable little attention. Here we propose a model for soft robots that regenerate through a neural cellular automata. Importantly, this approach only relies on local cell information to regrow damaged components, opening interesting possibilities for physical regenerable soft robots in the future. Our approach allows simulated soft robots that are damaged to partially regenerate their original morphology through local cell interactions alone and regain some of their ability to locomote. These results take a step towards equipping artificial systems with regenerative capacities and could potentially allow for more robust operations in a variety of situations and environments. The code for the experiments in this paper is available at: url{github.com/KazuyaHoribe/RegeneratingSoftRobots}.}, note={arXiv:2102.02579 [cs, q-bio]}, number={arXiv:2102.02579}, publisher={arXiv}, author={Horibe, Kazuya and Walker, Kathryn and Risi, Sebastian}, year={2021}, month={Feb} }
+
+ @article{Grattarola_Livi_Alippi_2021, title={Learning Graph Cellular Automata}, url={http://arxiv.org/abs/2110.14237}, abstractNote={Cellular automata (CA) are a class of computational models that exhibit rich dynamics emerging from the local interaction of cells arranged in a regular lattice. In this work we focus on a generalised version of typical CA, called graph cellular automata (GCA), in which the lattice structure is replaced by an arbitrary graph. In particular, we extend previous work that used convolutional neural networks to learn the transition rule of conventional CA and we use graph neural networks to learn a variety of transition rules for GCA. First, we present a general-purpose architecture for learning GCA, and we show that it can represent any arbitrary GCA with finite and discrete state space. Then, we test our approach on three different tasks: 1) learning the transition rule of a GCA on a Voronoi tessellation; 2) imitating the behaviour of a group of flocking agents; 3) learning a rule that converges to a desired target state.}, note={arXiv:2110.14237 [cs]}, number={arXiv:2110.14237}, publisher={arXiv}, author={Grattarola, Daniele and Livi, Lorenzo and Alippi, Cesare}, year={2021}, month={Oct} }
+
+ @article{Zhou_Cui_Hu_Zhang_Yang_Liu_Wang_Li_Sun_2021, title={Graph Neural Networks: A Review of Methods and Applications}, url={http://arxiv.org/abs/1812.08434}, abstractNote={Lots of learning tasks require dealing with graph data which contains rich relation information among elements. Modeling physics systems, learning molecular fingerprints, predicting protein interface, and classifying diseases demand a model to learn from graph inputs. In other domains such as learning from non-structural data like texts and images, reasoning on extracted structures (like the dependency trees of sentences and the scene graphs of images) is an important research topic which also needs graph reasoning models. Graph neural networks (GNNs) are neural models that capture the dependence of graphs via message passing between the nodes of graphs. In recent years, variants of GNNs such as graph convolutional network (GCN), graph attention network (GAT), graph recurrent network (GRN) have demonstrated ground-breaking performances on many deep learning tasks. In this survey, we propose a general design pipeline for GNN models and discuss the variants of each component, systematically categorize the applications, and propose four open problems for future research.}, note={arXiv:1812.08434 [cs, stat]}, number={arXiv:1812.08434}, publisher={arXiv}, author={Zhou, Jie and Cui, Ganqu and Hu, Shengding and Zhang, Zhengyan and Yang, Cheng and Liu, Zhiyuan and Wang, Lifeng and Li, Changcheng and Sun, Maosong}, year={2021}, month={Oct} }
+
+@inproceedings{NEURIPS2020_ee23e7ad,
+ author = {Najarro, Elias and Risi, Sebastian},
+ booktitle = {Advances in Neural Information Processing Systems},
+ editor = {H. Larochelle and M. Ranzato and R. Hadsell and M.F. Balcan and H. Lin},
+ pages = {20719--20731},
+ publisher = {Curran Associates, Inc.},
+ title = {Meta-Learning through Hebbian Plasticity in Random Networks},
+ url = {https://proceedings.neurips.cc/paper/2020/file/ee23e7ad9b473ad072d57aaa9b2a5222-Paper.pdf},
+ volume = {33},
+ year = {2020}
+}
+
+ @inproceedings{Pedersen_Risi_2021, title={Evolving and Merging Hebbian Learning Rules: Increasing Generalization by Decreasing the Number of Rules}, url={http://arxiv.org/abs/2104.07959}, DOI={10.1145/3449639.3459317}, abstractNote={Generalization to out-of-distribution (OOD) circumstances after training remains a challenge for artificial agents. To improve the robustness displayed by plastic Hebbian neural networks, we evolve a set of Hebbian learning rules, where multiple connections are assigned to a single rule. Inspired by the biological phenomenon of the genomic bottleneck, we show that by allowing multiple connections in the network to share the same local learning rule, it is possible to drastically reduce the number of trainable parameters, while obtaining a more robust agent. During evolution, by iteratively using simple K-Means clustering to combine rules, our Evolve and Merge approach is able to reduce the number of trainable parameters from 61,440 to 1,920, while at the same time improving robustness, all without increasing the number of generations used. While optimization of the agents is done on a standard quadruped robot morphology, we evaluate the agents’ performances on slight morphology modifications in a total of 30 unseen morphologies. Our results add to the discussion on generalization, overfitting and OOD adaptation. To create agents that can adapt to a wider array of unexpected situations, Hebbian learning combined with a regularising “genomic bottleneck” could be a promising research direction.}, note={arXiv:2104.07959 [cs]}, booktitle={Proceedings of the Genetic and Evolutionary Computation Conference}, author={Pedersen, Joachim Winther and Risi, Sebastian}, year={2021}, month={Jun}, pages={892–900} }
+
+
+@inproceedings{kirsch2021meta,
+title={Meta Learning Backpropagation And Improving It},
+author={Louis Kirsch and J{\"u}rgen Schmidhuber},
+booktitle={Advances in Neural Information Processing Systems (NeurIPS)},
+year={2021},
+}
+
+ @article{Variengien_Nichele_Glover_Pontes-Filho_2021, title={Towards self-organized control: Using neural cellular automata to robustly control a cart-pole agent}, url={http://arxiv.org/abs/2106.15240}, abstractNote={Neural cellular automata (Neural CA) are a recent framework used to model biological phenomena emerging from multicellular organisms. In these systems, artificial neural networks are used as update rules for cellular automata. Neural CA are end-to-end differentiable systems where the parameters of the neural network can be learned to achieve a particular task. In this work, we used neural CA to control a cart-pole agent. The observations of the environment are transmitted in input cells, while the values of output cells are used as a readout of the system. We trained the model using deep-Q learning, where the states of the output cells were used as the Q-value estimates to be optimized. We found that the computing abilities of the cellular automata were maintained over several hundreds of thousands of iterations, producing an emergent stable behavior in the environment it controls for thousands of steps. Moreover, the system demonstrated life-like phenomena such as a developmental phase, regeneration after damage, stability despite a noisy environment, and robustness to unseen disruption such as input deletion.}, note={arXiv:2106.15240 [cs]}, number={arXiv:2106.15240}, publisher={arXiv}, author={Variengien, Alexandre and Nichele, Stefano and Glover, Tom and Pontes-Filho, Sidney}, year={2021}, month={Jul} }
+
+ @article{Mnih_Kavukcuoglu_Silver_Graves_Antonoglou_Wierstra_Riedmiller_2013, title={Playing Atari with Deep Reinforcement Learning}, url={http://arxiv.org/abs/1312.5602}, abstractNote={We present the first deep learning model to successfully learn control policies directly from high-dimensional sensory input using reinforcement learning. The model is a convolutional neural network, trained with a variant of Q-learning, whose input is raw pixels and whose output is a value function estimating future rewards. We apply our method to seven Atari 2600 games from the Arcade Learning Environment, with no adjustment of the architecture or learning algorithm. We find that it outperforms all previous approaches on six of the games and surpasses a human expert on three of them.}, note={arXiv:1312.5602 [cs]}, number={arXiv:1312.5602}, publisher={arXiv}, author={Mnih, Volodymyr and Kavukcuoglu, Koray and Silver, David and Graves, Alex and Antonoglou, Ioannis and Wierstra, Daan and Riedmiller, Martin}, year={2013}, month={Dec} }
+
+@article{risi2021selfassemblingAI, 
+title = "The Future of Artificial Intelligence is Self-Organizing and Self-Assembling", 
+author = "Risi, Sebastian", 
+journal = "sebastianrisi.com", 
+year = "2021", 
+url = "https://sebastianrisi.com/self_assembling_ai"
+}
+
+@ARTICLE{8259423,
+  author={Davies, Mike and Srinivasa, Narayan and Lin, Tsung-Han and Chinya, Gautham and Cao, Yongqiang and Choday, Sri Harsha and Dimou, Georgios and Joshi, Prasad and Imam, Nabil and Jain, Shweta and Liao, Yuyun and Lin, Chit-Kwan and Lines, Andrew and Liu, Ruokun and Mathaikutty, Deepak and McCoy, Steven and Paul, Arnab and Tse, Jonathan and Venkataramanan, Guruguhanathan and Weng, Yi-Hsin and Wild, Andreas and Yang, Yoonseok and Wang, Hong},
+  journal={IEEE Micro}, 
+  title={Loihi: A Neuromorphic Manycore Processor with On-Chip Learning}, 
+  year={2018},
+  volume={38},
+  number={1},
+  pages={82-99},
+  doi={10.1109/MM.2018.112130359}}
+
+@article{masquelier2007unsupervised,
+  title={Unsupervised learning of visual features through spike timing dependent plasticity},
+  author={Masquelier, Timoth{\'e}e and Thorpe, Simon J},
+  journal={PLoS computational biology},
+  volume={3},
+  number={2},
+  pages={e31},
+  year={2007},
+  publisher={Public Library of Science San Francisco, USA}
+}
+
+@ARTICLE{6469239,
+  author={Yu, Qiang and Tang, Huajin and Tan, Kay Chen and Li, Haizhou},
+  journal={IEEE Transactions on Neural Networks and Learning Systems}, 
+  title={Rapid Feedforward Computation by Temporal Encoding and Learning With Spiking Neurons}, 
+  year={2013},
+  volume={24},
+  number={10},
+  pages={1539-1552},
+  doi={10.1109/TNNLS.2013.2245677}}
+
+@article{kheradpisheh2018stdp,
+  title={STDP-based spiking deep convolutional neural networks for object recognition},
+  author={Kheradpisheh, Saeed Reza and Ganjtabesh, Mohammad and Thorpe, Simon J and Masquelier, Timoth{\'e}e},
+  journal={Neural Networks},
+  volume={99},
+  pages={56--67},
+  year={2018},
+  publisher={Elsevier}
+}
+
+@article{mozafari2019bio,
+  title={Bio-inspired digit recognition using reward-modulated spike-timing-dependent plasticity in deep convolutional networks},
+  author={Mozafari, Milad and Ganjtabesh, Mohammad and Nowzari-Dalini, Abbas and Thorpe, Simon J and Masquelier, Timoth{\'e}e},
+  journal={Pattern recognition},
+  volume={94},
+  pages={87--95},
+  year={2019},
+  publisher={Elsevier}
+}
+
+@article{diehl2015unsupervised,
+  title={Unsupervised learning of digit recognition using spike-timing-dependent plasticity},
+  author={Diehl, Peter U and Cook, Matthew},
+  journal={Frontiers in computational neuroscience},
+  volume={9},
+  pages={99},
+  year={2015},
+  publisher={Frontiers Media SA}
+}
+
+@article{cao2015spiking,
+  title={Spiking deep convolutional neural networks for energy-efficient object recognition},
+  author={Cao, Yongqiang and Chen, Yang and Khosla, Deepak},
+  journal={International Journal of Computer Vision},
+  volume={113},
+  number={1},
+  pages={54--66},
+  year={2015},
+  publisher={Springer}
+}
+
+@article{tavanaei2016bio,
+  title={Bio-inspired spiking convolutional neural network using layer-wise sparse coding and STDP learning},
+  author={Tavanaei, Amirhossein and Maida, Anthony S},
+  journal={arXiv preprint arXiv:1611.03000},
+  year={2016}
+}
+
+@article{ferre2018unsupervised,
+  title={Unsupervised feature learning with winner-takes-all based stdp},
+  author={Ferr{\'e}, Paul and Mamalet, Franck and Thorpe, Simon J},
+  journal={Frontiers in computational neuroscience},
+  volume={12},
+  pages={24},
+  year={2018},
+  publisher={Frontiers Media SA}
+}
+
+@article{mozafari2018first,
+  title={First-spike-based visual categorization using reward-modulated STDP},
+  author={Mozafari, Milad and Kheradpisheh, Saeed Reza and Masquelier, Timoth{\'e}e and Nowzari-Dalini, Abbas and Ganjtabesh, Mohammad},
+  journal={IEEE transactions on neural networks and learning systems},
+  volume={29},
+  number={12},
+  pages={6178--6190},
+  year={2018},
+  publisher={IEEE}
+}
+
+@inproceedings{diehl2015fast,
+  title={Fast-classifying, high-accuracy spiking deep networks through weight and threshold balancing},
+  author={Diehl, Peter U and Neil, Daniel and Binas, Jonathan and Cook, Matthew and Liu, Shih-Chii and Pfeiffer, Michael},
+  booktitle={2015 International joint conference on neural networks (IJCNN)},
+  pages={1--8},
+  year={2015},
+  organization={ieee}
+}
+
+@article{zenke2018superspike,
+  title={Superspike: Supervised learning in multilayer spiking neural networks},
+  author={Zenke, Friedemann and Ganguli, Surya},
+  journal={Neural computation},
+  volume={30},
+  number={6},
+  pages={1514--1541},
+  year={2018},
+  publisher={MIT Press One Rogers Street, Cambridge, MA 02142-1209, USA journals-info~…}
+}
+
+
+ @article{Raghavan_Lin_Thomson_2020, title={Self-organization of multi-layer spiking neural networks}, url={http://arxiv.org/abs/2006.06902}, abstractNote={Living neural networks in our brains autonomously self-organize into large, complex architectures during early development to result in an organized and functional organic computational device. A key mechanism that enables the formation of complex architecture in the developing brain is the emergence of traveling spatio-temporal waves of neuronal activity across the growing brain. Inspired by this strategy, we attempt to efficiently self-organize large neural networks with an arbitrary number of layers into a wide variety of architectures. To achieve this, we propose a modular tool-kit in the form of a dynamical system that can be seamlessly stacked to assemble multi-layer neural networks. The dynamical system encapsulates the dynamics of spiking units, their inter/intra layer interactions as well as the plasticity rules that control the flow of information between layers. The key features of our tool-kit are (1) autonomous spatio-temporal waves across multiple layers triggered by activity in the preceding layer and (2) Spike-timing dependent plasticity (STDP) learning rules that update the inter-layer connectivity based on wave activity in the connecting layers. Our framework leads to the self-organization of a wide variety of architectures, ranging from multi-layer perceptrons to autoencoders. We also demonstrate that emergent waves can self-organize spiking network architecture to perform unsupervised learning, and networks can be coupled with a linear classifier to perform classification on classic image datasets like MNIST. Broadly, our work shows that a dynamical systems framework for learning can be used to self-organize large computational devices.}, note={arXiv:2006.06902 [cs, q-bio]}, number={arXiv:2006.06902}, publisher={arXiv}, author={Raghavan, Guruprasad and Lin, Cong and Thomson, Matt}, year={2020}, month={Jun} }
+
+ @article{Vaila_Chiasson_Saxena_2019, title={Deep Convolutional Spiking Neural Networks for Image Classification}, url={http://arxiv.org/abs/1903.12272}, abstractNote={Spiking neural networks are biologically plausible counterparts of the artificial neural networks, artificial neural networks are usually trained with stochastic gradient descent and spiking neural networks are trained with spike timing dependant plasticity. Training deep convolutional neural networks is a memory and power intensive job. Spiking networks could potentially help in reducing the power usage. There is a large pool of tools for one to chose to train artificial neural networks of any size, on the other hand all the available tools to simulate spiking neural networks are geared towards computational neuroscience applications and they are not suitable for real life applications. In this work we focus on implementing a spiking CNN using Tensorflow to examine behaviour of the network and empirically study the effect of various parameters on learning capabilities and also study catastrophic forgetting in the spiking CNN and weight initialization problem in R-STDP using MNIST and N-MNIST data sets.}, note={arXiv:1903.12272 [cs]}, number={arXiv:1903.12272}, publisher={arXiv}, author={Vaila, Ruthvik and Chiasson, John and Saxena, Vishal}, year={2019}, month={Sep} }
+
+@inproceedings{Raghavan2019NeuralNG,
+  title={Neural networks grown and self-organized by noise},
+  author={Guruprasad Raghavan and Matt Thomson},
+  booktitle={NeurIPS},
+  year={2019}
+}
+
+ @article{Gatys_Ecker_Bethge_2015, title={A Neural Algorithm of Artistic Style}, url={http://arxiv.org/abs/1508.06576}, abstractNote={In fine art, especially painting, humans have mastered the skill to create unique visual experiences through composing a complex interplay between the content and style of an image. Thus far the algorithmic basis of this process is unknown and there exists no artificial system with similar capabilities. However, in other key areas of visual perception such as object and face recognition near-human performance was recently demonstrated by a class of biologically inspired vision models called Deep Neural Networks. Here we introduce an artificial system based on a Deep Neural Network that creates artistic images of high perceptual quality. The system uses neural representations to separate and recombine content and style of arbitrary images, providing a neural algorithm for the creation of artistic images. Moreover, in light of the striking similarities between performance-optimised artificial neural networks and biological vision, our work offers a path forward to an algorithmic understanding of how humans create and perceive artistic imagery.}, note={arXiv:1508.06576 [cs, q-bio]}, number={arXiv:1508.06576}, publisher={arXiv}, author={Gatys, Leon A. and Ecker, Alexander S. and Bethge, Matthias}, year={2015}, month={Sep} }
+
+ @article{Gatys_Ecker_Bethge_20152, title={Texture Synthesis Using Convolutional Neural Networks}, url={http://arxiv.org/abs/1505.07376}, abstractNote={Here we introduce a new model of natural textures based on the feature spaces of convolutional neural networks optimised for object recognition. Samples from the model are of high perceptual quality demonstrating the generative power of neural networks trained in a purely discriminative fashion. Within the model, textures are represented by the correlations between feature maps in several layers of the network. We show that across layers the texture representations increasingly capture the statistical properties of natural images while making object information more and more explicit. The model provides a new tool to generate stimuli for neuroscience and might offer insights into the deep representations learned by convolutional neural networks.}, note={arXiv:1505.07376 [cs, q-bio]}, number={arXiv:1505.07376}, publisher={arXiv}, author={Gatys, Leon A. and Ecker, Alexander S. and Bethge, Matthias}, year={2015}, month={Nov} }
+
+
+
+
+
+
+
+
 

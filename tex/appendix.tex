@@ -1,2 +1,15 @@
-\chapter{TODO}
-TODO
+\chapter{Image Style Transfer}\chlbl{image_style_transfer}
+In the field of image style transfer\sidecite{Gatys_Ecker_Bethge_2015}, such correlations are used to generate images.
+An image is created based on two images, one image providing the content (i.e. the ``content-image'') and the other image providing the style (i.e. the ``style-image'').
+To generate the content of the image, a random image can be fed into the model and a simple distance-based loss function such as the Euclidean norm can be used to calculate the difference between the model output and the content-image.
+Over time, the model would learn to output the content-image.
+However, only the content from the content-image and not its style is needed.
+A solution to this problem is using Convolutional feature maps as they capture spatial information of an image without containing the style information.
+Therefore, the distance loss is not calculated between the content-image and the model output but between the feature maps of the content-image and the output image.
+The second task is to transfer the style from the style-image to the model output.
+The style of an image can be described by the means and correlations across the different feature maps.
+This information about the image style can be calculated with a Gram matrix.
+A Gram matrix is the dot product\sidenote{the dot product between two vectors can be seen as similarity metric; it gets bigger if two vectors are more similar} of the flattened feature vectors from a convolutional feature map (i.e. the dot product between all channels within a feature map).
+For example, a convolutional layer could have multiple channels. The first channel could have a high activation for black and white stripes in horizontal direction while the second channel could have a high activation for black and white stripes in vertical direction. If both channels activate together for the same input and thus have a high correlation, there is a high possibility that the image might contain the style of a chessboard (i.e. black and white checkered). A third channel, for example, could have a high activation for eyes. If this channel has a low correlation with the first channel but a high correlation with the second channel (i.e. black and white stripes in vertical direction), the input image might contain the face of a zebra and thus capture a ``zebra-style''.
+Similar to the content-transfer, a distance loss such as the Euclidean distance can be used to compare the Gram matrices of the style-image and the output-image.
+Thus, the content is transferred by comparing entire feature maps and the style by comparing the correlations between the channels per feature map (i.e. by comparing gram matrices).
