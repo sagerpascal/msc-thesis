@@ -4,12 +4,52 @@ An image is created based on two images, one image providing the content (i.e. t
 To generate the content of the image, a random image can be fed into the model and a simple distance-based loss function such as the Euclidean norm can be used to calculate the difference between the model output and the content-image.
 Over time, the model would learn to output the content-image.
 However, only the content from the content-image and not its style is needed.
-A solution to this problem is using Convolutional feature maps as they capture spatial information of an image without containing the style information.
+A solution to this problem is using Convolutional feature maps\sidenote{a convolutional layer can have multiple filters (i.e. channels), each filter produces a convolutional feature map} as they capture spatial information of an image well, while containing only little style information.
 Therefore, the distance loss is not calculated between the content-image and the model output but between the feature maps of the content-image and the output image.
+
 The second task is to transfer the style from the style-image to the model output.
-The style of an image can be described by the means and correlations across the different feature maps.
+The style of an image can be described by correlations across the different feature maps.
 This information about the image style can be calculated with a Gram matrix.
-A Gram matrix is the dot product\sidenote{the dot product between two vectors can be seen as similarity metric; it gets bigger if two vectors are more similar} of the flattened feature vectors from a convolutional feature map (i.e. the dot product between all channels within a feature map).
+A Gram matrix is the dot product\sidenote{the dot product between two vectors can be seen as similarity metric; it gets bigger if two vectors are more similar} of the flattened feature vectors from a convolutional feature map (i.e. the dot product between all channels of a convolutional layer's output).
 For example, a convolutional layer could have multiple channels. The first channel could have a high activation for black and white stripes in horizontal direction while the second channel could have a high activation for black and white stripes in vertical direction. If both channels activate together for the same input and thus have a high correlation, there is a high possibility that the image might contain the style of a chessboard (i.e. black and white checkered). A third channel, for example, could have a high activation for eyes. If this channel has a low correlation with the first channel but a high correlation with the second channel (i.e. black and white stripes in vertical direction), the input image might contain the face of a zebra and thus capture a ``zebra-style''.
 Similar to the content-transfer, a distance loss such as the Euclidean distance can be used to compare the Gram matrices of the style-image and the output-image.
-Thus, the content is transferred by comparing entire feature maps and the style by comparing the correlations between the channels per feature map (i.e. by comparing gram matrices).
+Thus, it is compared if the output-image has the same style as the style-image.
+
+In summary, the content is transferred by comparing entire convolutional layer output and the style by comparing the correlations between the feature maps of a convolutional layer output (i.e. by comparing gram matrices).
+
+\pagebreak
+\chapter{Design Decisions}\chlbl{design_decisions}
+There exists a variety of possibilities how self-organization of the network architecture can be implemented.
+However, this thesis is of course limited in time and resources an thus not all of them can be investigated.
+Therefore, a promising direction of research had to be defined at the beginning and followed afterwards.
+
+As a constraint it was defined that (i) a network without dynamics is developed and (ii) self-organization takes place across multiple layers.
+A network without dynamics is used because Deep Learning works very well for pattern recognition and the data analyzed by the computer is mostly static.
+Dynamic networks usually have poorer performance and use special algorithms to convert static data such as images into dynamic time-related signals (c.f. Section \secref{self_org_spiking}).
+Applying self-organization across multiple layers rather than just adding lateral connections in one layer is preferred as this allows the network to form more complex structures and thus to use the whole potential of self-organisation.
+
+This thesis is strongly inspired by the paper ``Natural Intelligence'' \sidecite{von_der_Malsburg_Stadelmann_Grewe_2022} (c.f. Section \secref{natural_intelligence}).
+The most relevant findings in this work are:
+\begin{itemize}
+  \item The brain is highly structured
+  \item Self-organization is the most promising approach to achieve natural intelligence. It loops between activity and connectivity
+  \item Self-organization forms net-fragments, one neuron can be part of multiple fragments
+  \begin{itemize}
+    \item An object can be represented by multiple net-fragments
+    \item A hierarchy of features can be represented by nested net-fragments
+\end{itemize}
+  \item The self-organizing process has to start from an already established coarse structure
+  \item There exists many alternative pathways in the network
+\end{itemize}
+
+However, it is unclear how these findings and hypotheses from the field of neuroscience can be implemented in an algorithm.
+To create a self-organizing neural network, the following mechanisms are particularly relevant: The design of the initial architecture, the allowed architecture modifications (removing and adding neurons and/or connections), the type of neurons, and the definition of the learning algorithm.
+These aspects are discussed hereafter.
+
+\begin{description}
+   \item[Design of initial architecture] The initial architecture should exhibit a good inductive bias from the start so that the network can learn (something meaningful). Current approaches also start from much bigger architectures and reduce their size by up to a thirty-fold \sidecite{Pedersen_Risi_2021} (c.f. Section \secref{self_org_related}) or grow the architecture from a single neuron \sidecite{Raghavan2019NeuralNG} (c.f. Section \secref{self_org_spiking}) by using self-organisation.
+   \item[Architecture modifications] ...
+   \item[Type of neurons] ... (see Schmidhuber)
+   \item[Learning algorithm] ... (see learning to learn or Hebbian)
+\end{description}
+

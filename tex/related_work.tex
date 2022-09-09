@@ -1,6 +1,6 @@
 %% related_work.tex
 
-\section{Natural Intelligence}
+\section{Natural Intelligence}\seclbl{natural_intelligence}
 This thesis is inspired by the work ''A Theory of Natural Intelligence` from von der Malsburg et al. \sidecite{von_der_Malsburg_Stadelmann_Grewe_2022}.
 Therefore, we dedicate this section to summarize their work in detail.
 
@@ -36,7 +36,7 @@ A hierarchy of features may be represented by nested net fragments of different 
 Complex objects, such as mental constructs, can thus be seen as larger net fragments composed as mergers of pre-existing smaller net fragments.
 
 
-\section{Self-Organization}
+\section{Self-Organization}}\seclbl{self_org_related}
 The human brain is self-organizing \sidecite{kelso1995dynamic}.
 Self-organization is the process by which systems consisting of many units spontaneously acquire their structure or function without interference from a external agent or system.
 The absence of a central control unit allow self-organizing systems to quickly adjust to new environmental conditions.
@@ -83,7 +83,7 @@ Moreover, self-assembling approaches based on NCAs are not restricted to grid-st
 NCAs can be generalized to graph neural networks \sidecite{Grattarola_Livi_Alippi_2021}.
 Graph cellular automata (GCA) use graph neural networks \sidecite{Zhou_Cui_Hu_Zhang_Yang_Liu_Wang_Li_Sun_2021} instead of CNNs to learn the state transition rules and can thus deal with more complex pattern structures than just 2D and 3D grids.
 NCAs can even be used to control reinforcement learning (RL) agents.
-Variengien et al. \sidecite{Variengien_Nichele_Glover_Pontes} use the observations of the environment as state of the NCA, the subsequent state predicted by the NCA are used as Q-value estimates of a deep Q-learning algorithm \sidecite{Mnih_Kavukcuoglu_Silver_Graves_Antonoglou_Wierstra_Riedmiller_2013}.
+Variengien et al. \sidecite{Variengien_Nichele_Glover_Pontes_Filho_2021} use the observations of the environment as state of the NCA, the subsequent state predicted by the NCA are used as Q-value estimates of a deep Q-learning algorithm \sidecite{Mnih_Kavukcuoglu_Silver_Graves_Antonoglou_Wierstra_Riedmiller_2013}.
 
 Self-organization can not only be used to generate structures but also to optimize the weights of a neural networks over the agents lifetime.
 For example, a Hebbian learning rule for meta-learning can be used to self-organize the weights of a RL agent over his lifetime\sidecite{NEURIPS2020_ee23e7ad}.
@@ -113,7 +113,7 @@ First, the system is hard to control because there is no central entity in charg
 Second, self-organizing systems are unpredictable (i.e. there exist no mathematical model that tells the outcome of the self-organizing process).
 
 
-\subsection{Self-Organization in Spiking Neural Networks}
+\subsection{Self-Organization in Spiking Neural Networks}\seclbl{self_org_spiking}
 Spiking neural networks (SNNs) (c.f. Section \secref{spiking_networks}) communicate through binary signals known as spikes and are very efficient on special event-based hardware\sidecite{8259423}.
 There exist several methods to self-organize such architectures.
 For the sake of completeness, two well-known approaches are described in the following.
@@ -149,7 +149,41 @@ If Hebbian learning is used\sidenote{``Cells that fire together wire together''}
 One way to capture the correlation within CNNs are Gram matrices.
 Gram matrices are essentially the dot-product between the channels of a feature map and can capture the style of given image.
 They are for example used for image style transfer\sidecite{Gatys_Ecker_Bethge_2015} or related fields such as texture synthesis \sidecite{Gatys_Ecker_Bethge_20152}.
-Appendix \chref{image_style_transfer} provides an intuitive explanation what image style transfer is and how this is related to Gram matrices.
+Appendix \chref{image_style_transfer} provides an intuitive explanation what image style transfer is and how it is related to Gram matrices.
+
+A Gram matrix can be calculated based on the output of a convolutional layer.
+Each filter of a convolutional layer (i.e. each channel) produces a so called convolutional map.
+A convolutional map contains information about the content of the image such as object structure and positioning as well as information about the style.
+Calculating a Gram matrix eliminates content-related information from the convolutional layer output but does not affect style information (c.f. Appendix \chref{image_style_transfer}).
+A Gram matrix calculates the correlations between the convolutional maps (i.e. between the filter responses) of a convolutional layer output.
+For a convolutional filter output $F$ of layer $l$ and two flattened convolutional maps $i$ and $j$ it is defined as \sidecite{7780634}:
+
+\begin{equation}\eqlbl{Gram_mat}
+		G_{ij}^{l} = \sum_k F^{l}_{ik} \cdot F^{l}_{jk}
+\end{equation}%
+
+Thereby, $k$ is a hyperparameter defining how many elements of the convolutional output $F$ are compared.
+Gatys et al. \sidecite{7780634} applied this formula the first time to convolutional filters but did not fully explain why it works.
+However, they found that the style is captured well in the correlation between convolutional maps.
+Later, it was shown \sidecite{10555531720773172198} that matching the Gram matrices between two convolutional filters can be reformulated as minimizing the Maximum Mean Discrepancy (MMD) \sidecite{JMLRv13gretton12a} and thus that the style information is intrinsically represented by the distribution of activations in a CNN.
+
+Intuitively, several filters together can describe the style of the image.
+For example, if one filter reacts to vertical white and black lines and a second filter reacts to horizontal white and black lines and the input image has a checkerboard style, then these two filters have a high correlation, which is reflected in the Gram Matrix (c.f. Appendix \chref{image_style_transfer}).
+
+Wenn Hebbian learning zur selbst-organisation verwendet wird, dann werden Neuronen von Filtern verbunden die häufig zusammen ansprechen.
+Ein Datensatz beinhaltet oftmals spezifische Muster, welche in der Gram Matrix repräsentiert sind\sidenote{Nachfolgend wird der Begriff Muster statt Style verwendet, da die Gram matrix nicht nur Styles wie im Sinne von fotorealistisch, Zeichnung, o-ä. representieren kann, sondern irgendwelche nicht kontentbezogene Informationen.
+Beispielsweise könnte bei einem Tierdatensatz ein Filter bei weisser Farbe, ein zweiter Filter bei schwarzen vertikalen Linien und ein dritter Filter bei schwarzen Punkten eine hohe Aktivierung haben.
+Bei einem Foto eines Zebreas hätte der erste und der zweite Filter eine hohe Korrelation während bei einem Dalmatiner der erste und der dritte Filter eine hohe Korrelation aufweisen würden.}.
+Somit werden also Neuronen verbunden, die alleine einen gewissen Filter repräsentieren aber zusammen für ein gewisses komplexeres Muster stehen.
+
+
+
+When Hebbian learning is used for self-organization, neurons of filters that often trigger together are connected.
+A dataset usually contains specific patterns, which are represented in the Gram Matrix\sidenote{In the following the term pattern is used instead of style, because the Gram matrix can represent not only styles like photorealistic images, drawings, etc., but any non-content related information.
+For example, for an animal dataset, one filter could have high activation on white color, a second filter on black vertical lines, and a third filter on black dots.
+For a photo of a zebra, the first and second filters would have a high correlation while for a dalmatian, the first and third filters would have a high correlation}.
+Thus, neurons are connected that alone represent a certain filter but together represent a certain more complex pattern.
+
 
 
 
