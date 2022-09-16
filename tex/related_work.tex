@@ -36,7 +36,7 @@ A hierarchy of features may be represented by nested net fragments of different 
 Complex objects, such as mental constructs, can thus be seen as larger net fragments composed as mergers of pre-existing smaller net fragments.
 
 
-\section{Self-Organization}}\seclbl{self_org_related}
+\section{Self-Organization}\seclbl{self_org_related}
 The human brain is self-organizing \sidecite{kelso1995dynamic}.
 Self-organization is the process by which systems consisting of many units spontaneously acquire their structure or function without interference from a external agent or system.
 The absence of a central control unit allow self-organizing systems to quickly adjust to new environmental conditions.
@@ -112,6 +112,31 @@ Risi \sidecite{risi2021selfassemblingAI} describes why self-organizing systems a
 First, the system is hard to control because there is no central entity in charge but the system must still be nudges into the right direction.
 Second, self-organizing systems are unpredictable (i.e. there exist no mathematical model that tells the outcome of the self-organizing process).
 
+\subsection{Growing Networks}
+Unsupervised learning techniques usually map high dimensional input data to a lower-dimensional representation.
+One approach to do so are self-organizing maps (SOM) \sidecite{Kohonen_1982, Kohonen_1989}.
+They map the input data to a discretized representation of the input space of the training samples, called a map.
+In opposite to ANNs, they use competitive learning instead of error correction learning (i.e. back-propagation with gradient descent).
+A weight vector is used to map the data to a node in the mapping field.
+The datapoints ``compete'' for the weight vectors.
+The weight vector of a node in the map that best matches a datapoint is moved closer to that input, as are nodes that are in the neighbourhood.
+By doing so, samples that are close in the input space are also closed in the resulting maps.
+
+However, SOM have to major limitations; First, the network structure must be pre-defined which constraints the result mapping accuracy. Second, the capacity of the map is predefined through the number of nodes.
+Growing networks are able to overcome this limitations.
+Growing networks add nodes or whole layers of nodes into the network structure at the positions of the map where the error is highest.
+Many growing networks \sidecite{NIPS1994_d56b9fc4, Reilly_Cooper_Elbaum_1982, Fritzke_1994} add such units after a fixed number of iterations in which the error is accumulated.
+After adding a unit, it takes several iterations to accumulate the error again until the next node can be added.
+
+Grow When Required (GWR) networks \sidecite{Marsland_Shapiro_Nehmzow_2002} use a different criterion to add nodes.
+Instead of adding nodes to support the node with the highest error, nodes are added when a given input samples cannot be matched with the current nodes by some pre-defined accuracy.
+This allows the network to adapt the growing process rather fast; The networks stops growing when the input space is matched b the network with some accuracy and the networks starts growing again if the input distribution changes.
+
+Such GWR networks can be used to build self-organizing architectures.
+For example, Mici et al. \sidecite{Mici_Parisi_Wermter_2018} build a self-organizing architecture based on GWR to learn human-object interactions from videos.
+They use two GWR in parallel, one to process feature representations of body postures and another to process manipulated objects.
+A third GWR is used to combine these two streams and to create action–object mappings in a self-organized manner.
+
 
 \subsection{Self-Organization in Spiking Neural Networks}\seclbl{self_org_spiking}
 Spiking neural networks (SNNs) (c.f. Section \secref{spiking_networks}) communicate through binary signals known as spikes and are very efficient on special event-based hardware\sidecite{8259423}.
@@ -170,14 +195,6 @@ Later, it was shown \sidecite{10555531720773172198} that matching the Gram matri
 Intuitively, several filters together can describe the style of the image.
 For example, if one filter reacts to vertical white and black lines and a second filter reacts to horizontal white and black lines and the input image has a checkerboard style, then these two filters have a high correlation, which is reflected in the Gram Matrix (c.f. Appendix \chref{image_style_transfer}).
 
-Wenn Hebbian learning zur selbst-organisation verwendet wird, dann werden Neuronen von Filtern verbunden die häufig zusammen ansprechen.
-Ein Datensatz beinhaltet oftmals spezifische Muster, welche in der Gram Matrix repräsentiert sind\sidenote{Nachfolgend wird der Begriff Muster statt Style verwendet, da die Gram matrix nicht nur Styles wie im Sinne von fotorealistisch, Zeichnung, o-ä. representieren kann, sondern irgendwelche nicht kontentbezogene Informationen.
-Beispielsweise könnte bei einem Tierdatensatz ein Filter bei weisser Farbe, ein zweiter Filter bei schwarzen vertikalen Linien und ein dritter Filter bei schwarzen Punkten eine hohe Aktivierung haben.
-Bei einem Foto eines Zebreas hätte der erste und der zweite Filter eine hohe Korrelation während bei einem Dalmatiner der erste und der dritte Filter eine hohe Korrelation aufweisen würden.}.
-Somit werden also Neuronen verbunden, die alleine einen gewissen Filter repräsentieren aber zusammen für ein gewisses komplexeres Muster stehen.
-
-
-
 When Hebbian learning is used for self-organization, neurons of filters that often trigger together are connected.
 A dataset usually contains specific patterns, which are represented in the Gram Matrix\sidenote{In the following the term pattern is used instead of style, because the Gram matrix can represent not only styles like photorealistic images, drawings, etc., but any non-content related information.
 For example, for an animal dataset, one filter could have high activation on white color, a second filter on black vertical lines, and a third filter on black dots.
@@ -185,26 +202,20 @@ For a photo of a zebra, the first and second filters would have a high correlati
 Thus, neurons are connected that alone represent a certain filter but together represent a certain more complex pattern.
 
 
+\section{Leveraging Neuroscience for Deep Learning Based Object Recognition}
+Prior to this thesis, Lehmann \sidecite{lehmann} examined self-organizing deep learning architectures in Master thesis at the Zurich University of Applied Sciences.
+He proposes a new layer called the laterally connected layer (LCL).
+The LCL layer extends convolutional layers by forming lateral intra-layer connections based on the Hebbian learning rule (c.f. Section \secref{hebbian}).
+Similar to a convolutional filter, the convolutional feature map is calculated.
+Afterwards, the convolutional feature maps are compared and the lateral impact between the feature maps is calculated (i.e. how strongly the feature maps influence each other based on their covariance).
+When two feature maps are simultaneously in the same pixel locations, their connection strength is increased.
+By using Hebbian learning, lateral connections are formed between the feature maps with a high lateral impact.
+
+Lehmann found that LCL layers increase robustness for object recognition.
+He shows on the MNIST dataset that for a small reduction in accuracy of 1\%, the performance on corrupted images increases by up to 21\% and that it works especially well for noisy types of corruptions.
 
 
-
-
-
-
-
-
-
-
-
-% Neural Style Transfer & Gram Matritzen
-%https://arxiv.org/abs/1505.07376
-%https://ieeexplore.ieee.org/document/1057698
-
-% Summarize work from Claude -> only if relevant...
-
-
-
-
+%https://numenta.com/htmschool/
 
 
 
