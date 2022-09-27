@@ -49,57 +49,45 @@ Although neurocomputing has also achieved significant breakthroughs, most system
 TODO: deep learning or Deep Learning -> make uniform
 
 \subsection{Motivation}\seclbl{motivation}
-Despite the fact that Deep Learning has achieved incredible performance on a variety of tasks it is still questionable whether the current methodology is enough to achieve real (or at least more advanced) intelligence (c.f. Section \secref*{limitationsDL}).
-Many of the current limitations are tackled by approaches from the field of neurocomputing (c.f. Section \secref*{neurocomputing}).
-However, even tough algorithms from the field of neurocomputing  have interesting properties, it usually does not perform as good as Deep Learning and often works on specific or small data only.
+One of the main challenges of today's AI systems is the processing of visual information.
+Visual perception is fundamentally the task of finding a suitable interpretation of a given scene.
+A scene typically consists of objects that interact with each other.
+Identifying these objects and their relationship among each other is implemented by algorithms as a non-deterministic search problem, i.e. algorithms try to identify the object within a scene.
+State-of-the-art algorithms for image processing are often based on Deep Learning.
+Despite the fact that Deep Learning has achieved incredible performance on a variety of tasks such as object recognition it is still questionable whether the current methodology is enough to achieve real (or at least more advanced) intelligence (c.f. Section \secref*{limitationsDL}).
+Algorithms from the field of neurocomputing (c.f. Section \secref*{neurocomputing}), which are more closely oriented to the findings from the field of neuroscience, can be considered as a complement to Deep Learning.
+However, even tough algorithms from the field of neurocomputing have interesting properties, they usually do not perform as good as Deep Learning according to the evaluation metrics used and often work on specific or small data only.
 
-Neuroscience provides a source of inspiration for AI algorithms, independent of mathematical models.
-So far, neuroscientists have studied the building blocks of the brain, their responsibilities in the overall process as well as how they interconnect and communicate.
-The ``algorithm'' that makes the brain intelligent remains unknown.
-Furthermore, it is not known which observed functionality in the brain is really part of this algorithm and which are just consequences of it.
-For example, it is hard to tell if the dynamics in the human brain are necessary to achieve intelligence or if this is just nature's way of implementing it.
+Thus, various algorithms exist to solve the non-deterministic problem of finding an appropriate interpretation of a visual scene, but they have significant shortcomings.
+Interestingly, the problem of generating a scene\sidenote{the opposite task than finding an interpretation of a scene} from a clear description is deterministic.
+Computer graphics deals with the problem to generate images with the aid of computers.
+Nowadays, such systems are able to render photorealistic images based on descriptions.
+For example, video games are essentially programs that generate scenes consisting of multiple objects such as people, weapons, buildings, or vehicles based on program code.
+For each of these objects, skeletons are usually pre-defined and during rendering transformed (i.e. their size, rotation, distortion and positioning are adjusted) as well as properly illuminated (raytracing).
+This allows to generate an infinite number of scenes from a predefined set of skeletons and transformations.
+Essential in this process seems the separation between objects and object transformation.
+Therefore, incorporating these insights into current algorithms for the interpretation of visual scenes seems promising and could lead to significant improvements.
+More precisely, identifying objects and their transformations separately in preception systems in order to recognize objects independently of their transformations could improve visual scene interpretation.
 
-Renowned scientists \sidecite{von_der_Malsburg_Stadelmann_Grewe_2022} put forward the hypothesis that the core of natural intelligence lies within the self-organization of the brain.
+Renowned scientists \sidecite{von_der_Malsburg_Stadelmann_Grewe_2022} put forward the hypothesis that natural intelligent systems such as the human brain learn to interpret visual scenes through a mechanism based on self-organization.
 Self-organization is the process by which individual units organize their global behavior by local interactions amongst themselves.
 There is no central control unit that orchestrates the units.
 In the context of the brain, self-organization primarily affects how neurons are interconnected.
 The brains of living beings already have certain structures from birth, which are specified by the DNA.
-In the course of time, these structures change.
-For example, neurons or connections between neurons may be added or removed.
-Thus, the brain adapts to its environment over time.
+However, in the course of time, these structures change.
+According to von der Malsburg et al. \cite{von_der_Malsburg_Stadelmann_Grewe_2022}, neurons form net-fragments (a.k.a. sub-networks) that represent objects with different levels of abstraction within an image (c.f. section \secref{natural_intelligence}).
+For example, some net-fragments may represent shapes and structures while a multitude of such net-fragments together represent objects such as persons or entire scenes.
+Thus, self-organization could be the algorithm to form net-fragments that represent objects independent of their transformation.
 
-Such a mechanism has not been successfully implemented in deep learning nor neurocomputing systems.
+Such a mechanism to form networks that can capture scenes in the form of net-fragment has not been successfully implemented in deep learning nor neurocomputing systems.
 In deep learning system, the architecture is usually predefined and only the parameters (i.e. weight and biases, c.f. \secref{ann}) are updated.
 In neurocomputing, on the other hand, the theory behind self-organization is often associated with Hebbian Learning (c.f. \secref{hebbian}).
-this dynamic learning of connections is often associated with Hebbian Learning (c.f. \secref{hebbian}).
 The theory behind this learning rule can be summarized as ``cells that fire together wire together''\sidecite{science.1372754}.
-However, Hebbian learning is usually rather used to update the weight between connections instead of to add or to remove connections.
-Connections are therefore not removed or added but can be ``turned off'' and ``turned on'' if the activation function of a neuron uses a threshold below which signals are no longer transmitted\sidenote{if the weights get small enough, the threshold limit cannot be reached and the neurons output is 0}.
-In this case, the architecture of the network is to a large part still predefined and self-organization can for example not be used to add additional layers.
+However, even though promising systems based Hebbian learning could be developed, the breakthrough has not been achieved yet.
+Moreover, there don't exist systems that use Hebbian learning to explicitly form net-fragment that represent objects.
 
-This thesis aims to combine the strengths of deep learning and neurocomputing with recent findings of neuroscience.
-Especially the hypothesis that self-organization is key for natural intelligence is incorporated in the learning process of modern artificial neural networks.
-While in classical Deep Learning the architecture is predefined, in this thesis we attempt to learn not only the parameters but also the architecture itself.
-The architecture is built by self-organization. 
-his means that local communication between the building blocks defined by an initial architecture takes place and that new connections can be created or existing connections can be removed.
-The challenge is how this re-wiring of the connections can be be learned.
-It seems certain that the existing learning algorithm back-propagation must either be extended or replaced.
-However, proposing a concrete algorithm based on the rather abstract findings from Neuroscience is part of this thesis.
-
-
-%Recently, von der Malsburg et al. \sidecite{von_der_Malsburg_Stadelmann_Grewe_2022} have published their hypothesis about the key building blocks for a system with general intelligence.
-%They point out that building self-organizing sub-networks during training may be one of the keys to fundamentally improve current systems.
-%Lehmann \sidecite{lehmann} worked on incorporating a few of these ideas and principles into a DL framework.
-%He proposes a laterally connected layer (LCL), a layer that forms lateral intra-layer connections based on Hebbian learning.
-%These connections are formed during training based on the input.
-%He shows that the LCL layer increases robustness on the popular MNIST dataset.
-%However, he also points out potential for improvement of the LCL layers.
-
-%Von der Malsburg et al. \cite{von_der_Malsburg_Stadelmann_Grewe_2022} propose several concepts how current problems in ANNs can be tackled.
-%They present systematically sound theoretical foundations, but neither the formulation of a mathematical model nor the translation of their ideas into a concrete application were in the scope of their work.
-%Specifically, we do the following...
-
-%TODO...
+This thesis aims to develop a learning paradigm that explicitly foster creation of net-fragments that represent objects independent of their transformation.
+... TODO ...
 
 
 
