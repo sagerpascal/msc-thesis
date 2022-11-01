@@ -69,27 +69,66 @@ Essential in this process seems the separation between objects and object transf
 Therefore, incorporating these insights into current algorithms for the interpretation of visual scenes seems promising and could lead to significant improvements.
 More precisely, identifying objects and their transformations separately in preception systems in order to recognize objects independently of their transformations could improve visual scene interpretation.
 
-Renowned scientists \sidecite{von_der_Malsburg_Stadelmann_Grewe_2022} put forward the hypothesis that natural intelligent systems such as the human brain learn to interpret visual scenes through a mechanism based on self-organization.
-Self-organization is the process by which individual units organize their global behavior by local interactions amongst themselves.
-There is no central control unit that orchestrates the units.
-In the context of the brain, self-organization primarily affects how neurons are interconnected.
-The brains of living beings already have certain structures from birth, which are specified by the DNA.
-However, in the course of time, these structures change.
+It is known that large parts of the human brain are self-organizing \sidecite{kelso1995dynamic}.
+Recently, renowned scientists \sidecite{von_der_Malsburg_Stadelmann_Grewe_2022} put forward the hypothesis that the key mechanism of natural intelligent systems such as the human brain to interpret visual scenes is self-organization.
+Self-organization is the process by which systems consisting of many units spontaneously acquire their structure or function without interference from a external agent or system.
+They organize their global behavior by local interactions amongst themselves.
+The absence of a central control unit allow self-organizing systems to quickly adjust to new environmental conditions.
+Additionally, such systems have in-built redundancy with a high degree of robustness as they  are made of many simpler individual units.
+These individual units can even fail without the overall system breaking down.
+Dresp \sidecite{Dresp2020SevenPO} describes seven clearly identified properties of self-organization in the human brain: (i) modular connectivity, (ii) unsupervised learning, (iii) adaptive ability, (iv) functional resiliency, (v) functional plasticity, (vi) from-local-to-global functional organization, and (vii) dynamic system growth.
+
+However, it is not obvious how these insights from neuroscience can be integrated into a Deep Learning framework.
+One interpretation of self-organization may be that instead of optimizing the entire network by statistical learning for a single task (i.e. using backpropagation), local optimization based on local input data takes place.
+The suitability of backpropagation for explaining how the brain learns was questioned soon after it was published \sidecite{Crick_1989, Grossberg_1987}.
+Many alternative and biologically more plausible algorithms have been proposed in recent years such as the feedback alignment (FA) algorithm \sidecite{Lillicrap_Cownden_Tweed_Akerman_2014}, contrastive Hebbian learning \sidecite{Movellan_1991}, generalized recirculation \sidecite{O_Reilly_1996}, as well as target propagation (TP) and its variants \sidecite{Le__Cun_1986, hinton2007backpropagation, Lee_Zhang_Fischer_Bengio_2015}.
+However, Bartunov et al. \sidecite{Bartunov_Santoro_Richards_Marris_Hinton_Lillicrap_2018} have shown that these algorithms do not scale to large vision datasets such as ImageNet \cite(deng2009imagenet) and only work for smaller datasets such as MNIST \cite(MNIST) and CIFAR-10 \cite(cifar_10).
+The biologically most plausible learning algorithm is Hebbian learning (c.f. Section \secref{hebbian}).
+However, even tough I obtain some promising results in preliminary results with Hebbian learning (c.f. Appendix \secref{exp_hebb_learning}), this algorithm doesn't seem to be well suited to learn good image representation if a network is trained from scratch.
+
+Another interpretation of self-organization within neural network is that the networks adapts its structure during training.
 According to von der Malsburg et al. \cite{von_der_Malsburg_Stadelmann_Grewe_2022}, neurons form net-fragments (a.k.a. sub-networks) that represent objects with different levels of abstraction within an image (c.f. section \secref{natural_intelligence}).
 For example, some net-fragments may represent shapes and structures while a multitude of such net-fragments together represent objects such as persons or entire scenes.
 Thus, self-organization could be the algorithm to form net-fragments that represent objects independent of their transformation.
 
 Such a mechanism to form networks that can capture scenes in the form of net-fragment has not been successfully implemented in deep learning nor neurocomputing systems.
-In deep learning system, the architecture is usually predefined and only the parameters (i.e. weight and biases, c.f. \secref{ann}) are updated.
-In neurocomputing, on the other hand, the theory behind self-organization is often associated with Hebbian Learning (c.f. \secref{hebbian}).
-The theory behind this learning rule can be summarized as ``cells that fire together wire together''\sidecite{science.1372754}.
-However, even though promising systems based Hebbian learning could be developed, the breakthrough has not been achieved yet.
-Moreover, there don't exist systems that use Hebbian learning to explicitly form net-fragment that represent objects.
-
 This thesis aims to develop a learning paradigm that explicitly foster creation of net-fragments that represent objects independent of their transformation.
 ... TODO ...
 
 
+\subsection{Terminology}\seclbl{terminology}
+This work is at the intersection of computer science and neuroscience.
+Deep Learning, which is the principle used in this thesis, is strongly inspired by the findings of neuroscience.
+Therefore, many terms and concepts overlap and are therefore defined in this chapter.
+
+A biological neuron (i.e. found in the human body and animals) is a cell that communicates with other neurons through connections called synapses.
+Communication takes place through precisely timed electrical pulses.
+Biological neurons are electrically excitable by voltage changes across their membranes.
+If the changes is large enough within a short interval, the neuron generates a pulse called an action potential.
+This action potential travels through the axon and activates synaptic connections.
+Other neurons, connected through synapses, receive this signal.
+The synaptic signal can be be excitatory \sidecite{Takagi_2000} or inhibitory \sidecite{Coombs_Eccles_Fatt_1955}, making the post-synaptic neuron more or less likely to fire an action potential.
+Biological neurons are typically classified into three types; sensory neurons, motor neurons, and interneurons.
+Sensory neurons respond to external stimuli such as light or sound and send their signal to the spinal cord or directly to the brain.
+Motor neurons receive signals from the brain and spinal cord to control muscles or organs.
+Interneurons connect neurons within the same region of the brain or the spinal coord.
+Multiple connected neurons from a neural circuit.
+The neural network in the brain is not static but changes through growth and reorganization.
+This process is referred to as neuroplasticity or neural plasticity \sidecite{Costandi_2016}.
+
+An artificial neuron is, similar to a biological neuron, connected to other neurons.
+Artificial neurons are usually organized in layers that forward signals sequentially.
+Although the neurons in the first layer could be considered sensory neurons, the neurons in the last layer could be considered motor neurons, and the neurons in the middle layer could be considered interneurons, such a distinction makes less sense because the artificial neurons function similarly regardless of their layer except for the activation function (c.f. Section \secref{ann}).
+Several variants for artificial neurons have been proposed in the literature. These variants are described in the following chapter \chref*{fundamentals}.
+Similar to biological neurons, multiple artificial neurons are usually connected to an artificial neural network.
+
+In this thesis, the two fields are declared as well as possible.
+If it is not clear from the context what we are talking about, we will refer to biological or artificial neurons and biological or artificial neural networks.
+This thesis describes the field of interest as clearly as possible.
+If it is not clear from the context to which field the referred entity belongs to, it is clarified by stating it (e.g. biological or artificial neuron).
+However, some concepts are identical in both fields.
+For example, there are excitatory or inhibitory signals or neural plasticity in biological and artificial neurons.
+Consequently, these terms are not distinguished.
 
 \subsection{Organization of Thesis}\seclbl{org_thesis}
 The remainder of the thesis is organized as follows: In chapter \chref*{fundamentals} we present the fundamentals necessary to understand this thesis. We provide an overview about how deep learning works and what the most common research areas in neurocomputing are. Chapter \chref*{rel_work} presents the work related to this thesis.
