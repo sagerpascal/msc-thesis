@@ -83,6 +83,10 @@ Besides growing 2D patterns, NCAs can also create 3D patterns such as buildings 
 Moreover, self-assembling approaches based on NCAs are not restricted to grid-structures.
 NCAs can be generalized to graph neural networks \sidecite{Grattarola_Livi_Alippi_2021}.
 Graph cellular automata (GCA) use graph neural networks \sidecite{Zhou_Cui_Hu_Zhang_Yang_Liu_Wang_Li_Sun_2021} instead of CNNs to learn the state transition rules and can thus deal with more complex pattern structures than just 2D and 3D grids.
+The process of growing images from cells of an NCA can also be inverted.
+Randazzo et al. \sidecite{randazzo2020self_classifying} propose to use NCA to classify given structures such as images.
+They apply the same network to each pixel and its neighbours of an image.
+In an iterative process based on local communication, the image fragments then agree on which object they represent.
 NCAs can even be used to control reinforcement learning (RL) agents.
 Variengien et al. \sidecite{Variengien_Nichele_Glover_Pontes_Filho_2021} use the observations of the environment as state of the NCA, the subsequent state predicted by the NCA are used as Q-value estimates of a deep Q-learning algorithm \sidecite{Mnih_Kavukcuoglu_Silver_Graves_Antonoglou_Wierstra_Riedmiller_2013}.
 

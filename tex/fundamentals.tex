@@ -118,7 +118,39 @@ SGD therefore updates the network parameters by taking a step of size \(\eta\) i
 
 The gradients of the weights \(\boldsymbol{w}^{[l]}\) and biases \(b^{[l]}\) can efficiently be calculated with an algorithm called backpropagation \sidecite{Rumelhart_Hinton_Williams_1986}, which is just a smart implementation of the chain rule\sidenote{While a detailed discussion on backpropagation is out of scope for this thesis, we refer interested reader to the Deep Learning course by Andrew Ng \cite{Coursera}}.
 
-TODO: Describe CNN, Transformer, ... etc.???
+One of the most important design decisions in creating ANNs is how the neurons are connected.
+If the each neuron is connected to each neuron of the succeeding layer, it is called a Fully Connected Layer (FCN). 
+There exists several alternatives besides such dense connections.
+Since this thesis deals with the processing of visual scenes, only the most important neural network architectures for vision applications are presented in the following.
+
+\subsection{Convolutional Neural Networks}\seclbl{cnns}
+Convolutional Neural Networks (CNNs) are particularly useful for finding patterns in images but can also be used to analyze non-image data such as audio data or time series.
+Similar to FCNs, a CNN is composed of an input layer, an output layer, and many hidden layers in between.
+A typical CNN consists of subsequently connected convolutional layers and pooling layers.
+Usually, an activation function is applied after each convolutional layer while no activation function is used after pooling layers.
+Depending on the task, the last layers can be different, e.g. for image classification the last layers are often fully connected.
+
+Convolutional layers use convolution filters or kernels that slide along input features and create translation-equivariant\sidenote{most CNNs apply downsampling operations to the input and are therefore not translation-invariant but translation-equivariant \cite{Mouton_Myburgh_Davel_2020}} responses known as feature maps \sidecite{Zhang_Itoh_Tanida_Ichioka_1990}.
+The size of the filter, which is typically a \(3\times 3\) matrix, determines the size of the receptive field.
+The filter is applied to an area of the input, with that area having the same size as the filter.
+When applying the filter, the dot product is calculated between the input and the filter and then fed into an output array (i.e. the feature map).
+Afterwards, the filter shifts by a stride, repeating the process until the entire input has been processed.
+Since only the kernel have to be learned, convolutional layers consists of much less parameters than equivalently sized fully connected layers.
+This process of re-using the same weights at different locations of the input is also known as parameter sharing.
+As described earlier, multiple convolutional layer can follow on each other.
+By doing so, CNNs become hierarchical as the later layers can see the pixels within the receptive fields of prior layers.
+
+Pooling layers reduce the size of the input by conducting dimensionality reduction.
+Similar to convolutional layers, a filter slides along the input.
+However, this filter does not have any learned parameter but apply an aggregation function.
+Usually, the filter either select the pixel with the highest value (max pooling) or calculates the average (average pooling) within the receptive field and forwards it to the output array.
+Pooling layers usually discard a lot of information but help to reduce complexity and increase robustness.
+
+In the last decades, various CNN architectures have been proposed, usually consisting of different combinations of CNN and pooling layer.
+Further improvements have been achieved by using parallel paths of convolutional layers, batch normalization \sidecite{Ioffe_Szegedy_2015}, and skip connections\sidenote{skip connections skips some of the layers in the network and add the output of a layer to the input of a later layer}.
+In this thesis I do not go into these specific architectures but provide references to some well known architectures; LeNet \sidecite{Lecun_Bottou_Bengio_Haffner_1998}, AlexNet \sidecite{NIPS2012_c399862d}, VGGNet \sidecite{Simonyan_Zisserman_2015}, GoogLeNet \sidecite{Szegedy_Liu_Jia_Sermanet_Reed_Anguelov_Erhan_Vanhoucke_Rabinovich_2014}, ResNet \sidecite{He_Zhang_Ren_Sun_2016}, U-Net \sidecite{Ronneberger_Fischer_Brox_2015}, and YOLO \sidecite{Redmon_Divvala_Girshick_Farhadi_2016}.
+
+TODO: Describe Transformer, ... etc.???
 
 \section{Limitations of Deep Learning}\seclbl{limitationsDL}
 The rise of Deep Learning over the past decade has only been possible because of major technological advances in hardware.
