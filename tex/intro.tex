@@ -134,6 +134,19 @@ In addition to these well-defined terms, there are various biological principles
 The concepts relevant for this thesis are discussed in the following.
 However, due to the aforementioned challenges, no definition of these principles is given but rather my own interpretation in the context of this work.
 
+A central concept of this work are sub-networks.
+Typically, in current DL architectures for computer vision, an encoder is used to compute object representations in a latent space.
+Thus, the output of a single layer can be understood as an object representation\sidenote{this is also true for image classification: Usually, a classification head consisting of fully connected layers and subsequent softmax activation is used after an image encoder}.
+According to von der Malsburg et al. \cite{von_der_Malsburg_Stadelmann_Grewe_2022}, biological sub-networks span multiple layers.
+This concept is interpreted in such a way that the latent representations should not be extracted from the last layer of an encoder but from several layers.
+While the first layers of an image encoder contain more local information, the last layers contain very global information.
+It is known from speech representation learning that different layers capture different speech information \sidecite{Chung_Hsu_Tang_Glass_2019}.
+For example, the first layers contain more information to distinguish speakers, while representations in later layers provide more phonetic content.
+However, such information seems to be poorly exploited in computer vision architectures.
+One could argue that skip connections in segmentation networks \sidecite{Ronneberger_Fischer_Brox_2015} exploit such information.
+While this may be true to some extent, information from previous layers is still squeezed into a feature vector and can be poorly exploited by downstream tasks.
+TODO: Umsetzung Sub-Networks beschreiben
+
 In addition to forward connections, lateral connections are also located in visual cortex \sidecite{gilbert1990lateral}.
 Thus, the biological neurons are not only connected to the neurons in the subsequent layer but also within the same layer.
 TODO: Je nach Umsetzung erklären, wie lateral connections in ANN interpretiert werden (+ Zeichnung einfügen)
@@ -147,6 +160,10 @@ Sparse weight matrices are often chosen to make models smaller or to increase in
 From a biological point of view, this process of first creating a large network and then shrinking it is obviously not plausible\sidenote{otherwise we would have a large brain at the beginning, which becomes smaller by factors in the course of time}.
 Sparse activations, on the other hand, can increase robustness \cite{Panousis_Chatzis_Theodoridis_2021}.
 Intuitively, sparse activations enforce that only the most relevant information is passed to the subsequent layer.
+Furthermore, sparse activations can help to obtain sub-networks.
+Objects are represented in sub-networks (i.e. in multiple layers).
+If all neurons in all layers are always active, then object representations cannot be extracted from sub-networks, since it is unclear which activation pattern represents which object.
+If, on the other hand, only a fraction of the neurons are active, then certain neuron combinations can infer objects.
 TODO: Umsetzung Sprase Activations beschreiben
 
 A biological intelligent organism has an embodiment and can interact with the world.
