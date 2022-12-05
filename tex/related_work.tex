@@ -174,7 +174,48 @@ However, such approaches lose a lot of information about the input.
 For example, in the process described above are all information about color and thin structures lost.
 To the author of this thesis, this seems to be the reason why these SNNs can't match the performance of deep learning algorithms so far and often only work well for small gray-scale image-datasets such as MNIST.
 
+
+\section{Visual Representation Learning}\seclbl{visual_rep_learning}
+One of the earliest methods of learning visual representations are \emph{Autoencoders}.
+\emph{Autoencoders} have been introduced 1985 \sidecite{rumelhart1985learning} and learn an encoder and a decoder function \sidecite{pmlrv27baldi12a}.
+The encoder $A$ maps the input from a high-dimensional space to a lower dimensional embedding space $A: \mathbb{R}^{n} \rightarrow \mathbb{R}^{e}$ and the decoder $B$ reverses this mapping $B: \mathbb{R}^{e} \rightarrow \mathbb{R}^{n}$.
+Typically, neural networks are used to learn the encoder function $A$ and decoder function $B$ by minimizing a reconstruction loss \sidecite{Ranzato_Huang_Boureau_LeCun_2007}.
+In order that the functions $A$ and $B$ are not just the identity operators, some regularization is needed.
+One of the simplest regularization methods is to introduce a bottleneck, i.e. to compress the representation with the encoder while still being able to re-create the original input as good as possible with the decoder.
+With a bottleneck layer, the number of neurons is limited.
+An alternative (or a supplement) is to limit the number of activations by enforcing sparsity.
+This constraint can be imposed with $L_1$ regularization or a Kullback-Leibler (KL) divergence between expected average neuron activation and an ideal distribution \sidecite{10-5555-3042573-3042641}.
+Other popular versions of \emph{Autoencoders} are \emph{Denoising Autoencoders} \sidecite{10-1145-1390156-1390294}, \emph{Contractive Autoencoders} \sidecite{10-5555-3104482-3104587}, and \emph{Variational Autoencoders (VAE)} \sidecite{Kingma_Welling_2014}.
+In \emph{Denoising Autoencoders}, the input is disrupted by noise (e.g. by adding Gaussian noise or removing some pixels by using Dropout) and fed into the encoder $A$.
+The goal of the decoding function $B$ is to reconstruct the clean version of the input without the added noise.
+By doing so, the \emph{Denoising Autoencoders} learns to create more robust representation of the input or can be used for error correction.
+\emph{Contractive Autoencoders}, on the other hand, try to make the feature extraction less sensitive to small perturbations.
+By adding the squared Jacobian norm to the reconstruction loss, the latent representations of the input tend to be more similar to each other.
+This diminishes latent representations that are not important for the reconstruction and only important variations between the inputs are kept.
+The encoder of \emph{Variational Autoencoders} map the input to a probabilistic distribution; Instead of mapping the input to an encoding vector, the input is mapped to a vector representing the means $\mu$ and another vector representing the standard deviations $\sigma$.
+By doing so, the latent space becomes by design continuous and allows random sampling and interpolation of data.
+
+Other approaches for \emph{self-supervised learning} typically augment the visual scene and either predict the augmentation parameters, reconstruct the original version of the image, or learn consistent representations among augmented views of the image.
+For example, some models use masking to learn visual representation;
+A part of the input image is removed and the model predicts the missing part (image inpainting) \cite{Elharrouss_Almaadeed_Al-Maadeed_Akbari_2020}.
+This not only allows to generate part of images but also to learn visual representations of the image \sidecite{Pathak_Krahenbuhl_Donahue_Darrell_Efros_2016, he2022masked, shi2022adversarial}.
+Other approaches rotate images and predict the rotation angle to generate representations \sidecite{komodakis2018unsupervised, Zhai_Oliver_Kolesnikov_Beyer_2019}.
+There exist many other methods that augment images and learn good visual representations based on it.
+A comprehensive overview is given by \sidecite{chen2022semi}.
+
+Another popular \emph{self-supervised learning} paradigm is \emph{contrastive learning}.
+The idea of \emph{contrastive learning} is that similar images should yield similar representations.
+Typically, \emph{contrastive learning} models are trained without labels.
+In this case, two augmented views of the same image are created, fed through an encoder and the representation of this two views are pushed together in the embedding space by maximizing their similarity \sidecite{chen2020simple, he2020momentum, caron2020unsupervised}.
+Subsequently, the encoder can be used to generate image representations that are used for other downstream tasks such as image classification.
+However, \emph{contrastive learning} can also leverage information from annotations.
+For example, Khosla et al. \sidecite{khosla2020supervised} use labels in a contrastive setting to pull the representations of images of the same class together in the embedding space, while simultaneously pushing apart clusters of samples from different classes.
+
+
 \section{Correlation within CNNs}
+
+TODO: Not sure if this chapter is still relevant.... -> move or delete?
+
 Self-organization in neural networks can be done based on the input data.
 If Hebbian learning is used\sidenote{``Cells that fire together wire together''}, cells are connected based on their correlation (i.e. cells with a high correlation are wired together).
 One way to capture the correlation within CNNs are Gram matrices.
@@ -209,6 +250,8 @@ Thus, neurons are connected that alone represent a certain filter but together r
 
 
 \section{Leveraging Neuroscience for Deep Learning Based Object Recognition}
+TODO: beschreiben, dass diese Arbeit vom Natural Intelligence Paper inspiriert war
+
 Prior to this thesis, Lehmann \sidecite{lehmann} examined self-organizing deep learning architectures in Master thesis at the Zurich University of Applied Sciences.
 He proposes a new layer called the laterally connected layer (LCL).
 The LCL layer extends convolutional layers by forming lateral intra-layer connections based on the Hebbian learning rule (c.f. Section \secref{hebbian}).
@@ -221,6 +264,9 @@ Lehmann found that LCL layers increase robustness for object recognition.
 He shows on the MNIST dataset that for a small reduction in accuracy of 1\%, the performance on corrupted images increases by up to 21\% and that it works especially well for noisy types of corruptions.
 
 \section{Rotation Invariant Convolutions}\seclbl{rotation_invariant_conv}
+
+TODO: Not sure if this chapter is still relevant.... -> move or delete?
+
 In this thesis, I show the capability of self-organization to deal with object transformations.
 Common transformations of objects in visual scenes are translations, rotations, zooming, and deformations.
 While most state-of-the-art architectures are translation invariant\sidenote{STOA architectures for visual scene interpretation are mainly based on convolutional neural networks and vision transformers \cite{Dosovitskiy_Beyer_Kolesnikov_Weissenborn_Zhai_Unterthiner_Dehghani_Minderer_Heigold_Gelly_2021}. These architectures are by definition translation invariant.}, they suffer from the other aforementioned transformations.

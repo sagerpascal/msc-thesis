@@ -148,9 +148,38 @@ Pooling layers usually discard a lot of information but help to reduce complexit
 
 In the last decades, various CNN architectures have been proposed, usually consisting of different combinations of CNN and pooling layer.
 Further improvements have been achieved by using parallel paths of convolutional layers, batch normalization \sidecite{Ioffe_Szegedy_2015}, and skip connections\sidenote{skip connections skips some of the layers in the network and add the output of a layer to the input of a later layer}.
-In this thesis I do not go into these specific architectures but provide references to some well known architectures; LeNet \sidecite{Lecun_Bottou_Bengio_Haffner_1998}, AlexNet \sidecite{NIPS2012_c399862d}, VGGNet \sidecite{Simonyan_Zisserman_2015}, GoogLeNet \sidecite{Szegedy_Liu_Jia_Sermanet_Reed_Anguelov_Erhan_Vanhoucke_Rabinovich_2014}, ResNet \sidecite{He_Zhang_Ren_Sun_2016}, U-Net \sidecite{Ronneberger_Fischer_Brox_2015}, and YOLO \sidecite{Redmon_Divvala_Girshick_Farhadi_2016}.
+In this thesis I do not go into these specific architectures but provide some references to some well known architectures; LeNet \sidecite{Lecun_Bottou_Bengio_Haffner_1998}, AlexNet \sidecite{NIPS2012_c399862d}, VGGNet \sidecite{Simonyan_Zisserman_2015}, GoogLeNet \sidecite{Szegedy_Liu_Jia_Sermanet_Reed_Anguelov_Erhan_Vanhoucke_Rabinovich_2014}, ResNet \sidecite{He_Zhang_Ren_Sun_2016}, U-Net \sidecite{Ronneberger_Fischer_Brox_2015}, Mask R-CNN \sidecite{He_Gkioxari_Dollar_Girshick_2017}, SSD \sidecite{Liu_Anguelov_Erhan_Szegedy_Reed_Fu_Berg_2016}, and YOLO \sidecite{Redmon_Divvala_Girshick_Farhadi_2016}.
 
-TODO: Describe Transformer, ... etc.???
+\subsubsection{Training of Convolutional Neural Networks}\seclbl{train_cnns}
+CNNs can be used in various applications such as image recognition, video analysis, natural language processing, anomaly detection in time series and many others.
+Since this thesis deals with better representations for visual scenes, this chapter is limited to the typical image analysis tasks; image classification, object detection, and image segmentation.
+The goal of image classification is to predict an image-level label, i.e. to predict what object is in the image.
+A classic example of this problem is predicting whether a cat or a dog is in a picture.
+This is typically done for images that only contain one object.
+With a multi-label classifier, however, it is also possible to predict whether none, one or several classes are present, i.e. whether a cat, a dog or both are present in the image.
+With image classification it is unclear where in the image these objects are located.
+Object detection provides a remedy.
+The aim of object detection is not only to determine what is visible in the image but also where.
+The position of the object is usually indicated by a bounding box (i.e. a rectangle).
+Especially when there are several objects within a picture, it is helpful to know which object is where, e.g. that the cat is to the left of the dog.
+For some applications, predicting the position with bounding boxes is not sufficient.
+In this case, semantic segmentation is often used.
+Semantic segmentation is the task where each pixel is classified (the image is divided into segments) which leads to a pixel-wise mask for each object in the image.
+This gives us exact information about the shapes of the objects.
+
+TODO: Bild einfügen mit diesen Tasks und darauf verweisen.
+
+
+Depending on the task, different kind of labels are required for supervised learning.
+Image classification requires labels on image-level (i.e. one or multiple labels per image) \cite{Lecun_Bottou_Bengio_Haffner_1998, NIPS2012_c399862d, Simonyan_Zisserman_2015, Szegedy_Liu_Jia_Sermanet_Reed_Anguelov_Erhan_Vanhoucke_Rabinovich_2014, He_Zhang_Ren_Sun_2016}, object detection requires the coordinates of the bounding box \cite{Redmon_Divvala_Girshick_Farhadi_2016, Liu_Anguelov_Erhan_Szegedy_Reed_Fu_Berg_2016, He_Gkioxari_Dollar_Girshick_2017}, and semantic segmentation requires the labels on pixel-level \cite{Ronneberger_Fischer_Brox_2015, Wu_Zhang_Huang_Liang_Yu_2019} (i.e. each pixel has a label of an object or a label ``background'' for irrelevant pixels).
+
+Besides supervised learning, there are various principles of learning with partial labels or without labels.
+These techniques are called weakly-supervised or un-supervised learning and are well summarised in \sidecite{Simmler_Sager_Andermatt_Chavarriaga_Schilling_Rosenthal_Stadelmann_2021}.
+
+Not only specific tasks can be learned, but also task-independent representations.
+These representations are typically learned unsupervised\sidenote{also called self-supervised learning because the target labels are derived from the data itself} and can be used for one or several downstream tasks.
+More details on visual representation learning are provided in Section \secref*{visual_rep_learning}.
+
 
 \section{Limitations of Deep Learning}\seclbl{limitationsDL}
 The rise of Deep Learning over the past decade has only been possible because of major technological advances in hardware.
@@ -414,7 +443,7 @@ The features from the last convolutional layer are flatten and a Support Vector 
 
 
 \subsection{Reservoir Computing}\seclbl{reservoir_comp}
-As described in Section \secref{biological_learning}, biological neurons are highly dynamical while artificial neurons are not.
+As described in Section \secref*{biological_learning}, biological neurons are highly dynamical while artificial neurons are not.
 Reservoir computing introduces such dynamics into an artificial network.
 Reservoir computing is an umbrella term for networks based on the concepts of Echo State Networks (ESN) \sidecite{esn} and Liquid State Machines (LSM) \sidecite{Maass_Natschlager_Markram_2002}.
 A reservoir is a fixed non-linear system that maps a input vector \(\boldsymbol{x}\) to a higher dimensional computation space.
