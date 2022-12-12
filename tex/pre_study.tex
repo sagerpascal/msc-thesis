@@ -1,8 +1,7 @@
 %% pre_study.tex
-In this preliminary study, I examine what representations of typical deep learning architectures look like.
-Especially network fragments are of interest, i.e. (groups of) neurons that represent certain (parts of) objects.
-According to \sidecite{von_der_Malsburg_Stadelmann_Grewe_2022}, net fragments are a compositional data structure (c.f. Section \secref*{natural_intelligence}).
-Meaning that net fragments in the last layers are complexer and are composed of simpler fragments of previous layers.
+In this preliminary study, I examine how representations of typical deep learning architectures look like.
+Especially net fragments are of interest, i.e. (groups of) neurons that represent certain (parts of) objects.
+According to \sidecite{von_der_Malsburg_Stadelmann_Grewe_2022}, net fragments are a compositional data structure (c.f. Section \secref*{natural_intelligence}), meaning that net fragments in the last layers are complexer and are composed of simpler fragments of previous layers.
 Thus, some (group) of neurons in the first layer should be active if some low-level features (e.g. part of objects) are present in the input.
 If several groups of such neurons are active, these neurons activate some other neurons in subsequent layers that represent higher-level net fragments.
 
@@ -10,15 +9,15 @@ A typical task in the field of image analysis is image classification (cf. Secti
 Usually, the last layer of an image classification architecture has exactly as many neurons as there are classes to predict.
 Each neuron corresponds to a class, and the neuron with the highest activity (i.e. the most active neuron) is eventually used to predict the image-level label.
 Such architectures thus have the design constraint that the last layer of neurons must represent distinct classes.
-Thus, each neuron in the last layer can be interpreted as a net fragment that represents a class-object.
+Therefore, each neuron in the last layer can be interpreted as a net fragment that represents a class-object.
 Since the last layer of a classification network represents entire classes, such architectures seem to be well suited to investigate whether the preceding layers represent less complex objects that are composed by the last layer.
 
-Deep Learning architectures usually consist of several layers with millions of neurons, leading to millions of activations.
+Deep Learning architectures usually consist of several layers with millions of neurons, leading to millions of activations \cite{Szegedy_Liu_Jia_Sermanet_Reed_Anguelov_Erhan_Vanhoucke_Rabinovich_2014, He_Zhang_Ren_Sun_2016, Ronneberger_Fischer_Brox_2015, He_Gkioxari_Dollar_Girshick_2017, Liu_Anguelov_Erhan_Szegedy_Reed_Fu_Berg_2016, Redmon_Divvala_Girshick_Farhadi_2016}.
 In addition, the input data is processed in a complex way, which makes the analysis of activations difficult.
 To simplify the analysis of network activations, a novel straightforward classification task is proposed;
 The dataset consists of $10$ images as shown in Figure \figref*{pre_study_dataset}.
-Each image has a size of $9\times9$ pixels and represents a number between $0$ and $9$.
-The images have only one channel and contain binary values (i.e. $0$ or $1$).
+Each image has a size of $9\times9$ pixels and depicts a number between $0$ and $9$.
+The images have only one channel and contain binary values (i.e. pixels are either set to $0$ or $1$).
 
 \begin{figure}[h]
     \centering
@@ -27,14 +26,14 @@ The images have only one channel and contain binary values (i.e. $0$ or $1$).
     \figlbl{pre_study_dataset}
 \end{figure}
 
-The goal of this task is to predict the number (labels $0-9$) that is represented in the image.
+The goal of this task is to predict the number (labels $0-9$) that is shown in the image.
 This task is neither for humans nor deep learning architectures challenging.
 However, it is simple enough to investigate the activations of neural networks and to search for net fragments.
 
-The following example explains how network fragments could theoretically be built in this data set.
+The following example explains how net fragments could theoretically be built in this data set.
 In total, the data set consists of $9$ basic lines, that can be composed to $10$ different digits.
 A low-level net fragment could represent such a basic line and be composed to higher-level net fragments such as digits.
-Figure \figref*{pre_study_components} visualizes these basic components (basic lines on the left, digits on the right).
+Figure \figref*{pre_study_components} visualizes these components (basic lines on the left, digits on the right).
 
 \begin{figure}[h]
     \centering
@@ -48,9 +47,9 @@ The composition can either take place across one or multiple layers.
 The visualization in Figure \figref*{pre_study_components} can be interpreted as a composition across one layer, i.e. the low-level fragments are combined to high-level fragments within one step.
 
 The composition can also take place across multiple layers. 
-An exemplary composition of network fragments of the number $9$ across $4$ subsequent layers is shown in Figure \figref*{pre_study_composition}.
-In this example, it is shown that a fragment representing a digit can be composed of other fragments that also represent digits.
-However, net fragments do not necessarily have to represent digits as shown in this example but can be a composition of multiple lines without a specific meaning.
+An exemplary composition of net fragments of the number $9$ across $4$ subsequent layers is shown in Figure \figref*{pre_study_composition}.
+In this example, it is demonstrated that a fragment representing a digit can be composed of other fragments that also represent digits.
+However, net fragments do not necessarily have to represent digits as shown in this example but can be a composition of multiple pixels without semantic.
 
 \begin{figure}[h]
     \centering
@@ -60,7 +59,7 @@ However, net fragments do not necessarily have to represent digits as shown in t
 \end{figure}
 
 The fragments described so far are to be understood as an explanatory example.
-A neural network might extract features in the first layers that do not correspond to vertical and horizontal lines and subsequently compose those features into more complex network fragments that are not as simple-to-interpret.
+A neural network might extract features in the first layers that do not correspond to vertical and horizontal lines and subsequently compose those features into more complex net fragments that are not as simple-to-interpret.
 Meaning that looking for neurons of a (for us humans) simple to interpret meaning might be hard.
 Regardless of what these net fragments represent, the network should have certain characteristics;
 If a neuron or a group of neurons are part of a net fragment that represents a feature in the input, then these neuron(s) should be strongly active if the feature is present and not or only very weakly active if the feature is not present.
@@ -70,7 +69,7 @@ for example, the $7$ is contained in the $3$, the $3$ is contained in the $9$ an
 The $1$, on the other hand, has nothing in common with the $4$, etc.
 This means that at least one net fragment should be active for the $7$, $3$, $9$, and $8$ but not all net fragments that are composed to the digit $8$ should be active if the input depicts a $9$, $3$, or $7$.
 The net fragments between the $1$ and $4$, on the other hand, should be completely different.
-These properties should be visible in the activations of the network if it forms proper net fragments and is analysed in the following.
+These properties should be visible in the activations of the network if it forms proper net fragments and are analysed in the following.
 
 \section{Methods}\seclbl{pre_study_methods}
 To investigate the emergence of net fragments, different deep learning models are trained.
@@ -87,7 +86,7 @@ The number of neurons was determined empirically by training various architectur
 It was found that there are always fewer than $12$ neurons active and that this capacity is therefore sufficient.
 The last fully connected layer consists of $10$ neurons since this corresponds to the number of classes to predict.
 The encoders of the models used are described in more detail in Table \tabref*{pre_study_models}.
-The ``head' is identical for all models and consists of a sequence of the following layers; FC ($12$ neurons) $\rightarrow$ ReLU $\rightarrow$ FC ($10$ neurons) $\rightarrow$ Softmax.
+The ``head'' is identical for all models and consists of a sequence of the following layers; FC ($12$ neurons) $\rightarrow$ ReLU $\rightarrow$ FC ($10$ neurons) $\rightarrow$ Softmax.
 
 \begin{table}[h]
 \newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
@@ -131,7 +130,7 @@ However, the goal is not to achieve high accuracy but to exhibit net fragments.
 It is not feasible to visualise all activations of all layers in this thesis.
 Therefore, only the activations of the second last FC layer (i.e. the first FC layer of the ``head'') after the ReLU function are shown.
 Since the last layer contains the net fragments that depict classes, this is the layer with the highest-level fragments.
-Furthermore, it is the only layer that has a global view on the input, i.e. can access all the features extracted by the encoder\sidenote{convolutional layers only consider a local neighbourhood by sliding a kernel over the input (c.f. Section \secref{cnns})} (except for the encoder consisting of FC layers only).
+Furthermore, it is the only layer that has a global view on the input, i.e. can access all the features extracted by the encoder\sidenote{convolutional layers only consider a local neighbourhood by sliding a kernel over the input (c.f. \secref{cnns})} (except for the encoder consisting of FC layers only).
 Some higher-level net fragments should be visible in this layer, which are subsequently composed in the last layer to net fragments corresponding to classes.
 Interested readers who want to investigate the activations from all layers, as well as the network weights by themselves, can view an interactive visualisation at \url{http://160.85.252.38:8501}.
 
@@ -184,6 +183,6 @@ Therefore, I argue that deep learning architectures do not comprise net fragment
 This assumption is further strengthened by the visualisation of the input that maximises the probability per class.
 If a class is represented by a net fragment and this net fragment is composed of other net fragments, then some of these lower-level fragments would have to be active.
 Such a set of low-level net fragments can directly be mapped to a set of pixels that has to be active.
-However, since the input does not contain a meaningful (sub-)set of active pixels, it can be assumed that these lower-level fragments are either not present or at least do not represent any meaningful features.
+However, since the input does not contain a meaningful (sub-) set of active pixels, it can be assumed that these lower-level fragments are either not present or at least do not represent any meaningful features.
 
 
