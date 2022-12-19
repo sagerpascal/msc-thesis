@@ -17,42 +17,42 @@ Thus, it is compared if the output-image has the same style as the style-image.
 
 In summary, the content is transferred by comparing entire convolutional layer output and the style by comparing the correlations between the feature maps of a convolutional layer output (i.e. by comparing gram matrices).
 
-\pagebreak
-\chapter{Design Decisions}\chlbl{design_decisions}
-There exists a variety of possibilities how self-organization of the network architecture can be implemented.
-However, this thesis is of course limited in time and resources an thus not all of them can be investigated.
-Therefore, a promising direction of research had to be defined at the beginning and followed afterwards.
+%\pagebreak
+%\chapter{Design Decisions}\chlbl{design_decisions}
+%There exists a variety of possibilities how self-organization of the network architecture can be implemented.
+%However, this thesis is of course limited in time and resources an thus not all of them can be investigated.
+%Therefore, a promising direction of research had to be defined at the beginning and followed afterwards.
 
-As a constraint it was defined that (i) a network without dynamics is developed and (ii) self-organization takes place across multiple layers.
-A network without dynamics is used because Deep Learning works very well for pattern recognition and the data analyzed by the computer is mostly static.
-Dynamic networks usually have poorer performance and use special algorithms to convert static data such as images into dynamic time-related signals (c.f. Section \secref{self_org_spiking}).
-Applying self-organization across multiple layers rather than just adding lateral connections in one layer is preferred as this allows the network to form more complex structures and thus to use the whole potential of self-organisation.
+%As a constraint it was defined that (i) a network without dynamics is developed and (ii) self-organization takes place across multiple layers.
+%A network without dynamics is used because Deep Learning works very well for pattern recognition and the data analyzed by the computer is mostly static.
+%Dynamic networks usually have poorer performance and use special algorithms to convert static data such as images into dynamic time-related signals (c.f. Section \secref{self_org_spiking}).
+%Applying self-organization across multiple layers rather than just adding lateral connections in one layer is preferred as this allows the network to form more complex structures and thus to use the whole potential of self-organisation.
 
-This thesis is strongly inspired by the paper ``Natural Intelligence'' \sidecite{von_der_Malsburg_Stadelmann_Grewe_2022} (c.f. Section \secref{natural_intelligence}).
-The most relevant findings in this work are:
+%This thesis is strongly inspired by the paper ``Natural Intelligence'' \sidecite{von_der_Malsburg_Stadelmann_Grewe_2022} (c.f. Section \secref{natural_intelligence}).
+%The most relevant findings in this work are:
 
-\begin{itemize}
-  \item The brain is highly structured
-  \item Self-organization is the most promising approach to achieve natural intelligence. It loops between activity and connectivity
-  \item Self-organization forms net-fragments, one neuron can be part of multiple fragments
-  \begin{itemize}
-    \item An object can be represented by multiple net-fragments
-    \item A hierarchy of features can be represented by nested net-fragments
-  \end{itemize}
-  \item The self-organizing process has to start from an already established coarse structure
-  \item There exists many alternative pathways in the network
-\end{itemize}
+%\begin{itemize}
+%  \item The brain is highly structured
+%  \item Self-organization is the most promising approach to achieve natural intelligence. It loops between activity and connectivity
+%  \item Self-organization forms net-fragments, one neuron can be part of multiple fragments
+%  \begin{itemize}
+%    \item An object can be represented by multiple net-fragments
+%    \item A hierarchy of features can be represented by nested net-fragments
+%  \end{itemize}
+%  \item The self-organizing process has to start from an already established coarse structure
+%  \item There exists many alternative pathways in the network
+%\end{itemize}
 
-However, it is unclear how these findings and hypotheses from the field of neuroscience can be implemented in an algorithm.
-To create a self-organizing neural network, the following mechanisms are particularly relevant: The design of the initial architecture, the allowed architecture modifications (removing and adding neurons and/or connections), the type of neurons, and the definition of the learning algorithm.
-These aspects are discussed hereafter.
+%However, it is unclear how these findings and hypotheses from the field of neuroscience can be implemented in an algorithm.
+%To create a self-organizing neural network, the following mechanisms are particularly relevant: The design of the initial architecture, the allowed architecture modifications (removing and adding neurons and/or connections), the type of neurons, and the definition of the learning algorithm.
+%These aspects are discussed hereafter.
 
-\begin{description}
-   \item[Design of initial architecture] The initial architecture should exhibit a good inductive bias from the start so that the network can learn (something meaningful). Current approaches also start from much bigger architectures and reduce their size by up to a thirty-fold \sidecite{Pedersen_Risi_2021} (c.f. Section \secref{self_org_related}) or grow the architecture from a single neuron \sidecite{Raghavan2019NeuralNG} (c.f. Section \secref{self_org_spiking}) by using self-organisation.
-   \item[Architecture modifications] The architecture can be modified in several ways. For example, from a more global perspective, the network can grow, shrink, split into sub-networks\sidenote{this is related to ensemble approaches TODO: add source}, or multiple sub-networks can re-organize into one network. From a local perspective, connections can be created or removed within the same layer (lateral connections) or between subsequent layer. Moreover, connections can be used to skip on or several layers (residual connections), or connections can be recurrent to a previous layer. Furthermore, besides modifying single connections and neurons, complete blocks of neurons can be added or removed. This includes for example layers, mathematical functions like pooling operations, or pre-defined modules consisting of several layers.
-   \item[Type of neurons] As described above, no dynamic (i.e. spiking) neurons are employed. The classical neurons multiply the input \(\boldsymbol{x}\) by a weight vector \(\boldsymbol{w}\), add a bias \(\boldsymbol{b}\) and calculate the output with a non-linear activation of this sum (c.f. Section \secref{ann}). However, recent architectures replace such classical neurons with more complex units. For example, Kirsch and Schmidhuber \sidecite{kirsch2021meta} (c.f. Section \secref{self_org_related}) use tiny RNNs with shared parameters as neurons. Such neurons are able to learn learning algorithms which are equivalent to back-propagation.
-   \item[Learning algorithm] ... (see learning to learn or Hebbian based on input covarinace or learning based on target label (e.g. enforce some distinction in neurons covariance matrix depending on label))
-\end{description}
+%\begin{description}
+%   \item[Design of initial architecture] The initial architecture should exhibit a good inductive bias from the start so that the network can learn (something meaningful). Current approaches also start from much bigger architectures and reduce their size by up to a thirty-fold \sidecite{Pedersen_Risi_2021} (c.f. Section \secref{self_org_related}) or grow the architecture from a single neuron \sidecite{Raghavan2019NeuralNG} (c.f. Section \secref{self_org_spiking}) by using self-organisation.
+%   \item[Architecture modifications] The architecture can be modified in several ways. For example, from a more global perspective, the network can grow, shrink, split into sub-networks\sidenote{this is related to ensemble approaches TODO: add source}, or multiple sub-networks can re-organize into one network. From a local perspective, connections can be created or removed within the same layer (lateral connections) or between subsequent layer. Moreover, connections can be used to skip on or several layers (residual connections), or connections can be recurrent to a previous layer. Furthermore, besides modifying single connections and neurons, complete blocks of neurons can be added or removed. This includes for example layers, mathematical functions like pooling operations, or pre-defined modules consisting of several layers.
+%   \item[Type of neurons] As described above, no dynamic (i.e. spiking) neurons are employed. The classical neurons multiply the input \(\boldsymbol{x}\) by a weight vector \(\boldsymbol{w}\), add a bias \(\boldsymbol{b}\) and calculate the output with a non-linear activation of this sum (c.f. Section \secref{ann}). However, recent architectures replace such classical neurons with more complex units. For example, Kirsch and Schmidhuber \sidecite{kirsch2021meta} (c.f. Section \secref{self_org_related}) use tiny RNNs with shared parameters as neurons. Such neurons are able to learn learning algorithms which are equivalent to back-propagation.
+%   \item[Learning algorithm] ... (see learning to learn or Hebbian based on input covarinace or learning based on target label (e.g. enforce some distinction in neurons covariance matrix depending on label))
+%\end{description}
 
 
 \chapter{Experiments Hebbian Learning}\chlbl{exp_hebb_learning}

@@ -48,6 +48,8 @@ Although neurocomputing has also achieved significant breakthroughs, most system
 
 TODO: deep learning or Deep Learning -> make uniform
 
+TODO: Umschreiben: Schreibe DL funktioniert gut, sehr gut für Pattern Extraction. Dies ist aber nur ein Baustein eines intelligenten Systems. Beispielsweise fehlt cognition komplett (z.B. in NLP sind Vektoren wie König - Königin = Mann - Frau -> das System korrepiert die Informationen aber nur und hat keine Ahnung, was dies bedeutet. Um dies zu erreichen könnte nach dem mit Backprop trainierten Pattern-Extraction System ein weiteres System nötig sein. Weitere Bausteine könnten sein: Continous Input, Netzfragmente, Sparsity, anderer Lernalgorithmus, World-Modell, ...
+
 \subsection{Motivation}\seclbl{motivation}
 One of the main challenges of today's AI systems is the processing of visual information.
 Visual perception is fundamentally the task of finding a suitable interpretation of a given scene.
@@ -86,6 +88,8 @@ However, Bartunov et al. \sidecite{Bartunov_Santoro_Richards_Marris_Hinton_Lilli
 The biologically most plausible learning algorithm is Hebbian learning (c.f. Section \secref{hebbian}).
 However, even tough I obtain some promising results in preliminary results with Hebbian learning (c.f. Appendix \secref{exp_hebb_learning}), this algorithm doesn't seem to be well suited to learn good image representation if a network is trained from scratch.
 
+TODO: Füge FF-Algorithmus von Hinton hinzu
+
 Another interpretation of self-organization within neural network is that the networks adapts its structure during training.
 According to von der Malsburg et al. \cite{von_der_Malsburg_Stadelmann_Grewe_2022}, neurons form net-fragments (a.k.a. sub-networks) that represent objects with different levels of abstraction within an image (c.f. section \secref{natural_intelligence}).
 For example, some net-fragments may represent shapes and structures while a multitude of such net-fragments together represent objects such as persons or entire scenes.
@@ -95,6 +99,9 @@ Such a mechanism to form networks that can capture scenes in the form of net-fra
 This thesis aims to develop a learning paradigm that explicitly foster creation of net-fragments that represent objects independent of their transformation.
 ... TODO ...
 
+
+TODO: Evtl. schreibe sowas wie: Netzfragmente scheinen vielversprechend, kriegen hingegen zu neuen Lernalgorithmen aber wenig Beachtung. 
+TODO: Schreibe: Schlussendliches Ziel ist die Entwicklung eines intelligenten Systems -> MSc. Thesis beschäftigt sich mit einem Fragment davon, nämlich Netzfragmente -> diese könnten Teil eines grösseren Systems sein und mit neuen Lernalgorithmen etc. kombiniert werden.
 
 \subsection{Terminology}\seclbl{terminology}
 This work is at the intersection of computer science and neuroscience.
