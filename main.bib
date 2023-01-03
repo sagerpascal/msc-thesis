@@ -605,7 +605,7 @@ journal	= {Distill}
 
 @inproceedings{kirsch2021meta,
 title={Meta Learning Backpropagation And Improving It},
-author={Louis Kirsch and J{\"u}rgen Schmidhuber},
+author={Louis Kirsch and Jürgen Schmidhuber},
 booktitle={Advances in Neural Information Processing Systems (NeurIPS)},
 year={2021},
 }
@@ -1321,3 +1321,266 @@ terms= {}
 }
 
 @article{Hinton_2021, title={How to represent part-whole hierarchies in a neural network}, url={http://arxiv.org/abs/2102.12627}, abstractNote={This paper does not describe a working system. Instead, it presents a single idea about representation which allows advances made by several different groups to be combined into an imaginary system called GLOM. The advances include transformers, neural fields, contrastive representation learning, distillation and capsules. GLOM answers the question: How can a neural network with a fixed architecture parse an image into a part-whole hierarchy which has a different structure for each image? The idea is simply to use islands of identical vectors to represent the nodes in the parse tree. If GLOM can be made to work, it should significantly improve the interpretability of the representations produced by transformer-like systems when applied to vision or language}, note={arXiv:2102.12627 [cs]}, number={arXiv:2102.12627}, publisher={arXiv}, author={Hinton, Geoffrey}, year={2021}, month={Feb} }
+
+ @inbook{Thrun_Pratt_1998, address={Boston, MA}, title={Learning to Learn: Introduction and Overview}, ISBN={978-1-4613-7527-2}, url={http://link.springer.com/10.1007/978-1-4615-5529-2_1}, DOI={10.1007/978-1-4615-5529-2_1}, booktitle={Learning to Learn}, publisher={Springer US}, author={Thrun, Sebastian and Pratt, Lorien}, editor={Thrun, Sebastian and Pratt, Lorien}, year={1998}, pages={3–17}, language={en} }
+
+ @article{Hospedales_Antoniou_Micaelli_Storkey_2021, title={Meta-Learning in Neural Networks: A Survey}, ISSN={0162-8828, 2160-9292, 1939-3539}, DOI={10.1109/TPAMI.2021.3079209}, journal={IEEE Transactions on Pattern Analysis and Machine Intelligence}, author={Hospedales, Timothy M and Antoniou, Antreas and Micaelli, Paul and Storkey, Amos J.}, year={2021}, pages={1–1} }
+
+ @article{Schrier_1984, title={Learning how to learn: The significance and current status of learning set formation}, volume={25}, ISSN={0032-8332, 1610-7365}, DOI={10.1007/BF02382299}, number={1}, journal={Primates}, author={Schrier, Allan M.}, year={1984}, month={Jan}, pages={95–102}, language={en} }
+
+@inproceedings{10-5555-3305381-3305498, author = {Finn, Chelsea and Abbeel, Pieter and Levine, Sergey}, title = {Model-Agnostic Meta-Learning for Fast Adaptation of Deep Networks}, year = {2017}, publisher = {JMLR.org}, abstract = {We propose an algorithm for meta-learning that is model-agnostic, in the sense that it is compatible with any model trained with gradient descent and applicable to a variety of different learning problems, including classification, regression, and reinforcement learning. The goal of meta-learning is to train a model on a variety of learning tasks, such that it can solve new learning tasks using only a small number of training samples. In our approach, the parameters of the model are explicitly trained such that a small number of gradient steps with a small amount of training data from a new task will produce good generalization performance on that task. In effect, our method trains the model to be easy to fine-tune. We demonstrate that this approach leads to state-of-the-art performance on two few-shot image classification benchmarks, produces good results on few-shot regression, and accelerates fine-tuning for policy gradient reinforcement learning with neural network policies.}, booktitle = {Proceedings of the 34th International Conference on Machine Learning - Volume 70}, pages = {1126–1135}, numpages = {10}, location = {Sydney, NSW, Australia}, series = {ICML'17} }
+
+@inproceedings{10-5555-3327546-3327622, author = {Finn, Chelsea and Xu, Kelvin and Levine, Sergey}, title = {Probabilistic Model-Agnostic Meta-Learning}, year = {2018}, publisher = {Curran Associates Inc.}, address = {Red Hook, NY, USA}, abstract = {Meta-learning for few-shot learning entails acquiring a prior over previous tasks and experiences, such that new tasks be learned from small amounts of data. However, a critical challenge in few-shot learning is task ambiguity: even when a powerful prior can be meta-learned from a large number of prior tasks, a small dataset for a new task can simply be too ambiguous to acquire a single model (e.g., a classifier) for that task that is accurate. In this paper, we propose a probabilistic meta-learning algorithm that can sample models for a new task from a model distribution. Our approach extends model-agnostic meta-learning, which adapts to new tasks via gradient descent, to incorporate a parameter distribution that is trained via a variational lower bound. At meta-test time, our algorithm adapts via a simple procedure that injects noise into gradient descent, and at meta-training time, the model is trained such that this stochastic adaptation procedure produces samples from the approximate model posterior. Our experimental results show that our method can sample plausible classifiers and regressors in ambiguous few-shot learning problems. We also show how reasoning about ambiguity can also be used for downstream active learning problems.}, booktitle = {Proceedings of the 32nd International Conference on Neural Information Processing Systems}, pages = {9537–9548}, numpages = {12}, location = {Montreal, Canada}, series = {NIPS'18} }
+
+@inproceedings{lee2018gradient,
+  title={Gradient-based meta-learning with learned layerwise metric and subspace},
+  author={Lee, Yoonho and Choi, Seungjin},
+  booktitle={International Conference on Machine Learning},
+  pages={2927--2936},
+  year={2018},
+  organization={PMLR}
+}
+
+@inproceedings{qiao2018few,
+  title={Few-shot image recognition by predicting parameters from activations},
+  author={Qiao, Siyuan and Liu, Chenxi and Shen, Wei and Yuille, Alan L},
+  booktitle={Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition},
+  pages={7229--7238},
+  year={2018}
+}
+
+@article{rusu2018meta,
+  title={Meta-learning with latent embedding optimization},
+  author={Rusu, Andrei A and Rao, Dushyant and Sygnowski, Jakub and Vinyals, Oriol and Pascanu, Razvan and Osindero, Simon and Hadsell, Raia},
+  journal={arXiv preprint arXiv:1807.05960},
+  year={2018}
+}
+
+@article{ravi2016optimization,
+ravi2017optimization,
+title={Optimization as a Model for Few-Shot Learning},
+author={Sachin Ravi and Hugo Larochelle},
+booktitle={International Conference on Learning Representations},
+year={2017},
+url={https://openreview.net/forum?id=rJY0-Kcll}
+}
+
+ @article{Li_Malik_2016, title={Learning to Optimize}, url={http://arxiv.org/abs/1606.01885}, abstractNote={Algorithm design is a laborious process and often requires many iterations of ideation and validation. In this paper, we explore automating algorithm design and present a method to learn an optimization algorithm, which we believe to be the first method that can automatically discover a better algorithm. We approach this problem from a reinforcement learning perspective and represent any particular optimization algorithm as a policy. We learn an optimization algorithm using guided policy search and demonstrate that the resulting algorithm outperforms existing hand-engineered algorithms in terms of convergence speed and/or the final objective value.}, note={arXiv:1606.01885 [cs, math, stat]}, number={arXiv:1606.01885}, publisher={arXiv}, author={Li, Ke and Malik, Jitendra}, year={2016}, month={Jun} }
+
+ @article{Li_Zhou_Chen_Li_2017, title={Meta-SGD: Learning to Learn Quickly for Few-Shot Learning}, url={http://arxiv.org/abs/1707.09835}, abstractNote={Few-shot learning is challenging for learning algorithms that learn each task in isolation and from scratch. In contrast, meta-learning learns from many related tasks a meta-learner that can learn a new task more accurately and faster with fewer examples, where the choice of meta-learners is crucial. In this paper, we develop Meta-SGD, an SGD-like, easily trainable meta-learner that can initialize and adapt any differentiable learner in just one step, on both supervised learning and reinforcement learning. Compared to the popular meta-learner LSTM, Meta-SGD is conceptually simpler, easier to implement, and can be learned more efficiently. Compared to the latest meta-learner MAML, Meta-SGD has a much higher capacity by learning to learn not just the learner initialization, but also the learner update direction and learning rate, all in a single meta-learning process. Meta-SGD shows highly competitive performance for few-shot learning on regression, classification, and reinforcement learning.}, note={arXiv:1707.09835 [cs]}, number={arXiv:1707.09835}, publisher={arXiv}, author={Li, Zhenguo and Zhou, Fengwei and Chen, Fei and Li, Hang}, year={2017}, month={Sep} }
+
+@article{heskes2000empirical,
+  title={Empirical Bayes for learning to learn},
+  author={Heskes, TM},
+  year={2000},
+  publisher={San Francisco: Morgan Kaufmann}
+}
+
+@inbook{10-5555-3454287-3455002, author = {Requeima, James and Gordon, Jonathan and Bronskill, John and Nowozin, Sebastian and Turner, Richard E.}, title = {Fast and Flexible Multi-Task Classification Using Conditional Neural Adaptive Processes}, year = {2019}, publisher = {Curran Associates Inc.}, address = {Red Hook, NY, USA}, abstract = {The goal of this paper is to design image classification systems that, after an initial multi-task training phase, can automatically adapt to new tasks encountered at test time. We introduce a conditional neural process based approach to the multi-task classification setting for this purpose, and establish connections to the meta-learning and few-shot learning literature. The resulting approach, called CNAPS, comprises a classifier whose parameters are modulated by an adaptation network that takes the current task's dataset as input. We demonstrate that CNAPS achieves state-of-the-art results on the challenging META-DATASET benchmark indicating high-quality transfer-learning. We show that the approach is robust, avoiding both over-fitting in low-shot regimes and under-fitting in high-shot regimes. Timing experiments reveal that CNAPS is computationally efficient at test-time as it does not involve gradient based adaptation. Finally, we show that trained models are immediately deployable to continual learning and active learning where they can outperform existing approaches that do not leverage transfer learning.}, booktitle = {Proceedings of the 33rd International Conference on Neural Information Processing Systems}, articleno = {715}, numpages = {12} }
+
+ @article{Ha_Dai_Le_2016, title={HyperNetworks}, url={http://arxiv.org/abs/1609.09106}, abstractNote={This work explores hypernetworks: an approach of using a one network, also known as a hypernetwork, to generate the weights for another network. Hypernetworks provide an abstraction that is similar to what is found in nature: the relationship between a genotype - the hypernetwork - and a phenotype - the main network. Though they are also reminiscent of HyperNEAT in evolution, our hypernetworks are trained end-to-end with backpropagation and thus are usually faster. The focus of this work is to make hypernetworks useful for deep convolutional networks and long recurrent networks, where hypernetworks can be viewed as relaxed form of weight-sharing across layers. Our main result is that hypernetworks can generate non-shared weights for LSTM and achieve near state-of-the-art results on a variety of sequence modelling tasks including character-level language modelling, handwriting generation and neural machine translation, challenging the weight-sharing paradigm for recurrent networks. Our results also show that hypernetworks applied to convolutional networks still achieve respectable results for image recognition tasks compared to state-of-the-art baseline models while requiring fewer learnable parameters.}, note={arXiv:1609.09106 [cs]}, number={arXiv:1609.09106}, publisher={arXiv}, author={Ha, David and Dai, Andrew and Le, Quoc V.}, year={2016}, month={Dec} }
+
+ @article{Park_Oliva_2020, title={Meta-Curvature}, url={http://arxiv.org/abs/1902.03356}, abstractNote={We propose meta-curvature (MC), a framework to learn curvature information for better generalization and fast model adaptation. MC expands on the model-agnostic meta-learner (MAML) by learning to transform the gradients in the inner optimization such that the transformed gradients achieve better generalization performance to a new task. For training large scale neural networks, we decompose the curvature matrix into smaller matrices in a novel scheme where we capture the dependencies of the model’s parameters with a series of tensor products. We demonstrate the effects of our proposed method on several few-shot learning tasks and datasets. Without any task specific techniques and architectures, the proposed method achieves substantial improvement upon previous MAML variants and outperforms the recent state-of-the-art methods. Furthermore, we observe faster convergence rates of the meta-training process. Finally, we present an analysis that explains better generalization performance with the meta-trained curvature.}, note={arXiv:1902.03356 [cs, stat]}, number={arXiv:1902.03356}, publisher={arXiv}, author={Park, Eunbyung and Oliva, Junier B.}, year={2020}, month={Jan} }
+
+@inproceedings{10-5555-3294996-3295163, author = {Snell, Jake and Swersky, Kevin and Zemel, Richard}, title = {Prototypical Networks for Few-Shot Learning}, year = {2017}, isbn = {9781510860964}, publisher = {Curran Associates Inc.}, address = {Red Hook, NY, USA}, abstract = {We propose Prototypical Networks for the problem of few-shot classification, where a classifier must generalize to new classes not seen in the training set, given only a small number of examples of each new class. Prototypical Networks learn a metric space in which classification can be performed by computing distances to prototype representations of each class. Compared to recent approaches for few-shot learning, they reflect a simpler inductive bias that is beneficial in this limited-data regime, and achieve excellent results. We provide an analysis showing that some simple design decisions can yield substantial improvements over recent approaches involving complicated architectural choices and meta-learning. We further extend Prototypical Networks to zero-shot learning and achieve state-of-the-art results on the CU-Birds dataset.}, booktitle = {Proceedings of the 31st International Conference on Neural Information Processing Systems}, pages = {4080–4090}, numpages = {11}, location = {Long Beach, California, USA}, series = {NIPS'17} }
+
+@inproceedings{qiao2018few,
+  title={Few-shot image recognition by predicting parameters from activations},
+  author={Qiao, Siyuan and Liu, Chenxi and Shen, Wei and Yuille, Alan L},
+  booktitle={Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition},
+  pages={7229--7238},
+  year={2018}
+}
+
+ @article{Chen_Liu_Kira_Wang_Huang_2020, title={A Closer Look at Few-shot Classification}, url={http://arxiv.org/abs/1904.04232}, abstractNote={Few-shot classification aims to learn a classifier to recognize unseen classes during training with limited labeled examples. While significant progress has been made, the growing complexity of network designs, meta-learning algorithms, and differences in implementation details make a fair comparison difficult. In this paper, we present 1) a consistent comparative analysis of several representative few-shot classification algorithms, with results showing that deeper backbones significantly reduce the performance differences among methods on datasets with limited domain differences, 2) a modified baseline method that surprisingly achieves competitive performance when compared with the state-of-the-art on both the miniI and the CUB datasets, and 3) a new experimental setting for evaluating the cross-domain generalization ability for few-shot classification algorithms. Our results reveal that reducing intra-class variation is an important factor when the feature backbone is shallow, but not as critical when using deeper backbones. In a realistic cross-domain evaluation setting, we show that a baseline method with a standard fine-tuning practice compares favorably against other state-of-the-art few-shot learning algorithms.}, note={arXiv:1904.04232 [cs]}, number={arXiv:1904.04232}, publisher={arXiv}, author={Chen, Wei-Yu and Liu, Yen-Cheng and Kira, Zsolt and Wang, Yu-Chiang Frank and Huang, Jia-Bin}, year={2020}, month={Jan} }
+
+@inproceedings{NEURIPS2018_7876acb6,
+ author = {Houthooft, Rein and Chen, Yuhua and Isola, Phillip and Stadie, Bradly and Wolski, Filip and Jonathan Ho, OpenAI and Abbeel, Pieter},
+ booktitle = {Advances in Neural Information Processing Systems},
+ editor = {S. Bengio and H. Wallach and H. Larochelle and K. Grauman and N. Cesa-Bianchi and R. Garnett},
+ pages = {},
+ publisher = {Curran Associates, Inc.},
+ title = {Evolved Policy Gradients},
+ url = {https://proceedings.neurips.cc/paper/2018/file/7876acb66640bad41f1e1371ef30c180-Paper.pdf},
+ volume = {31},
+ year = {2018}
+}
+
+ @article{Sung_Zhang_Xiang_Hospedales_Yang_2017, title={Learning to Learn: Meta-Critic Networks for Sample Efficient Learning}, url={http://arxiv.org/abs/1706.09529}, abstractNote={We propose a novel and flexible approach to meta-learning for learning-to-learn from only a few examples. Our framework is motivated by actor-critic reinforcement learning, but can be applied to both reinforcement and supervised learning. The key idea is to learn a meta-critic: an action-value function neural network that learns to criticise any actor trying to solve any specified task. For supervised learning, this corresponds to the novel idea of a trainable task-parametrised loss generator. This meta-critic approach provides a route to knowledge transfer that can flexibly deal with few-shot and semi-supervised conditions for both reinforcement and supervised learning. Promising results are shown on both reinforcement and supervised learning problems.}, note={arXiv:1706.09529 [cs]}, number={arXiv:1706.09529}, publisher={arXiv}, author={Sung, Flood and Zhang, Li and Xiang, Tao and Hospedales, Timothy and Yang, Yongxin}, year={2017}, month={Jun} }
+
+@inproceedings{NEURIPS2019_e0e2b58d,
+ author = {Denevi, Giulia and Stamos, Dimitris and Ciliberto, Carlo and Pontil, Massimiliano},
+ booktitle = {Advances in Neural Information Processing Systems},
+ editor = {H. Wallach and H. Larochelle and A. Beygelzimer and F. d\textquotesingle Alch\'{e}-Buc and E. Fox and R. Garnett},
+ pages = {},
+ publisher = {Curran Associates, Inc.},
+ title = {Online-Within-Online Meta-Learning},
+ url = {https://proceedings.neurips.cc/paper/2019/file/e0e2b58d64fb37a2527329a5ce093d80-Paper.pdf},
+ volume = {32},
+ year = {2019}
+}
+
+@inproceedings{NEURIPS2018_b9a25e42,
+ author = {Denevi, Giulia and Ciliberto, Carlo and Stamos, Dimitris and Pontil, Massimiliano},
+ booktitle = {Advances in Neural Information Processing Systems},
+ editor = {S. Bengio and H. Wallach and H. Larochelle and K. Grauman and N. Cesa-Bianchi and R. Garnett},
+ pages = {},
+ publisher = {Curran Associates, Inc.},
+ title = {Learning To Learn Around A Common Mean},
+ url = {https://proceedings.neurips.cc/paper/2018/file/b9a25e422ba96f7572089a00b838c3f8-Paper.pdf},
+ volume = {31},
+ year = {2018}
+}
+
+@inproceedings{gonzalez2020improved,
+  title={Improved training speed, accuracy, and data utilization through loss function optimization},
+  author={Gonzalez, Santiago and Miikkulainen, Risto},
+  booktitle={2020 IEEE Congress on Evolutionary Computation (CEC)},
+  pages={1--8},
+  year={2020},
+  organization={IEEE}
+}
+
+@inproceedings{li2019feature,
+  title={Feature-critic networks for heterogeneous domain generalization},
+  author={Li, Yiying and Yang, Yongxin and Zhou, Wei and Hospedales, Timothy},
+  booktitle={International Conference on Machine Learning},
+  pages={3915--3924},
+  year={2019},
+  organization={PMLR}
+}
+
+@inproceedings{NEURIPS2019_6018df18,
+ author = {Antoniou, Antreas and Storkey, Amos J},
+ booktitle = {Advances in Neural Information Processing Systems},
+ editor = {H. Wallach and H. Larochelle and A. Beygelzimer and F. d\textquotesingle Alch\'{e}-Buc and E. Fox and R. Garnett},
+ pages = {},
+ publisher = {Curran Associates, Inc.},
+ title = {Learning to Learn By Self-Critique},
+ url = {https://proceedings.neurips.cc/paper/2019/file/6018df1842f7130f1b85a6f8e911b96b-Paper.pdf},
+ volume = {32},
+ year = {2019}
+}
+
+@inproceedings{Boney2018SemiSupervisedFL,
+  title={Semi-Supervised Few-Shot Learning with MAML},
+  author={Rinu Boney and Alexander Ilin},
+  booktitle={International Conference on Learning Representations},
+  year={2018}
+}
+
+@inproceedings{zoph2017neural,
+title={Neural Architecture Search with Reinforcement Learning},
+author={Barret Zoph and Quoc Le},
+booktitle={International Conference on Learning Representations},
+year={2017},
+url={https://openreview.net/forum?id=r1Ue8Hcxg}
+}
+
+ @inbook{Bayer_Wierstra_Togelius_Schmidhuber_2009, address={Berlin, Heidelberg}, series={Lecture Notes in Computer Science}, title={Evolving Memory Cell Structures for Sequence Learning}, volume={5769}, ISBN={978-3-642-04276-8}, url={http://link.springer.com/10.1007/978-3-642-04277-5_76}, DOI={10.1007/978-3-642-04277-5_76}, booktitle={Artificial Neural Networks – ICANN 2009}, publisher={Springer Berlin Heidelberg}, author={Bayer, Justin and Wierstra, Daan and Togelius, Julian and Schmidhuber, Jürgen}, editor={Alippi, Cesare and Polycarpou, Marios and Panayiotou, Christos and Ellinas, Georgios}, year={2009}, pages={755–764}, collection={Lecture Notes in Computer Science} }
+
+@inproceedings{10-1609-aaai-v33i01-33014780, author = {Real, Esteban and Aggarwal, Alok and Huang, Yanping and Le, Quoc V.}, title = {Regularized Evolution for Image Classifier Architecture Search}, year = {2019}, isbn = {978-1-57735-809-1}, publisher = {AAAI Press}, url = {https://doi.org/10.1609/aaai.v33i01.33014780}, doi = {10.1609/aaai.v33i01.33014780}, abstract = {The effort devoted to hand-crafting neural network image classifiers has motivated the use of architecture search to discover them automatically. Although evolutionary algorithms have been repeatedly applied to neural network topologies, the image classifiers thus discovered have remained inferior to human-crafted ones. Here, we evolve an image classifier— AmoebaNet-A—that surpasses hand-designs for the first time. To do this, we modify the tournament selection evolutionary algorithm by introducing an age property to favor the younger genotypes. Matching size, AmoebaNet-A has comparable accuracy to current state-of-the-art ImageNet models discovered with more complex architecture-search methods. Scaled to larger size, AmoebaNet-A sets a new state-of-the-art 83.9% top-1 / 96.6% top-5 ImageNet accuracy. In a controlled comparison against a well known reinforcement learning algorithm, we give evidence that evolution can obtain results faster with the same hardware, especially at the earlier stages of the search. This is relevant when fewer compute resources are available. Evolution is, thus, a simple method to effectively discover high-quality architectures.}, booktitle = {Proceedings of the Thirty-Third AAAI Conference on Artificial Intelligence and Thirty-First Innovative Applications of Artificial Intelligence Conference and Ninth AAAI Symposium on Educational Advances in Artificial Intelligence}, articleno = {587}, numpages = {10}, location = {Honolulu, Hawaii, USA}, series = {AAAI'19/IAAI'19/EAAI'19} }
+
+
+@InProceedings{pmlr-v80-franceschi18a,
+  title = 	 {Bilevel Programming for Hyperparameter Optimization and Meta-Learning},
+  author =       {Franceschi, Luca and Frasconi, Paolo and Salzo, Saverio and Grazzi, Riccardo and Pontil, Massimiliano},
+  booktitle = 	 {Proceedings of the 35th International Conference on Machine Learning},
+  pages = 	 {1568--1577},
+  year = 	 {2018},
+  editor = 	 {Dy, Jennifer and Krause, Andreas},
+  volume = 	 {80},
+  series = 	 {Proceedings of Machine Learning Research},
+  month = 	 {10--15 Jul},
+  publisher =    {PMLR},
+  pdf = 	 {http://proceedings.mlr.press/v80/franceschi18a/franceschi18a.pdf},
+  url = 	 {https://proceedings.mlr.press/v80/franceschi18a.html},
+  abstract = 	 {We introduce a framework based on bilevel programming that unifies gradient-based hyperparameter optimization and meta-learning. We show that an approximate version of the bilevel problem can be solved by taking into explicit account the optimization dynamics for the inner objective. Depending on the specific setting, the outer variables take either the meaning of hyperparameters in a supervised learning problem or parameters of a meta-learner. We provide sufficient conditions under which solutions of the approximate problem converge to those of the exact problem. We instantiate our approach for meta-learning in the case of deep learning where representation layers are treated as hyperparameters shared across a set of training episodes. In experiments, we confirm our theoretical findings, present encouraging results for few-shot learning and contrast the bilevel approach against classical approaches for learning-to-learn.}
+}
+
+ @article{Micaelli_Storkey_2021, title={Gradient-based Hyperparameter Optimization Over Long Horizons}, url={http://arxiv.org/abs/2007.07869}, abstractNote={Gradient-based hyperparameter optimization has earned a widespread popularity in the context of few-shot meta-learning, but remains broadly impractical for tasks with long horizons (many gradient steps), due to memory scaling and gradient degradation issues. A common workaround is to learn hyperparameters online, but this introduces greediness which comes with a significant performance drop. We propose forward-mode differentiation with sharing (FDS), a simple and efficient algorithm which tackles memory scaling issues with forward-mode differentiation, and gradient degradation issues by sharing hyperparameters that are contiguous in time. We provide theoretical guarantees about the noise reduction properties of our algorithm, and demonstrate its efficiency empirically by differentiating through $sim 10^4$ gradient steps of unrolled optimization. We consider large hyperparameter search ranges on CIFAR-10 where we significantly outperform greedy gradient-based alternatives, while achieving $times 20$ speedups compared to the state-of-the-art black-box methods. Code is available at: url{https://github.com/polo5/FDS}}, note={arXiv:2007.07869 [cs, stat]}, number={arXiv:2007.07869}, publisher={arXiv}, author={Micaelli, Paul and Storkey, Amos}, year={2021}, month={Sep} }
+
+@inproceedings{10-5555-3305381-3305502, author = {Franceschi, Luca and Donini, Michele and Frasconi, Paolo and Pontil, Massimiliano}, title = {Forward and Reverse Gradient-Based Hyperparameter Optimization}, year = {2017}, publisher = {JMLR.org}, abstract = {We study two procedures (reverse-mode and forward-mode) for computing the gradient of the validation error with respect to the hyperparameters of any iterative learning algorithm such as stochastic gradient descent. These procedures mirror two methods of computing gradients for recurrent neural networks and have different trade-offs in terms of running time and space requirements. Our formulation of the reverse-mode procedure is linked to previous work by Maclaurin et al. (2015) but does not require reversible dynamics. The forward-mode procedure is suitable for real-time hyperparameter updates, which may significantly speed up hyperparameter optimization on large datasets. We present experiments on data cleaning and on learning task interactions. We also present one large-scale experiment where the use of previous gradient-based methods would be prohibitive.}, booktitle = {Proceedings of the 34th International Conference on Machine Learning - Volume 70}, pages = {1165–1173}, numpages = {9}, location = {Sydney, NSW, Australia}, series = {ICML'17} }
+
+@InProceedings{Cubuk_2019_CVPR,
+author = {Cubuk, Ekin D. and Zoph, Barret and Mane, Dandelion and Vasudevan, Vijay and Le, Quoc V.},
+title = {AutoAugment: Learning Augmentation Strategies From Data},
+booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+month = {June},
+year = {2019}
+}
+
+ @inbook{Li_Hu_Wang_Hospedales_Robertson_Yang_2020, address={Cham}, series={Lecture Notes in Computer Science}, title={Differentiable Automatic Data Augmentation}, volume={12367}, ISBN={978-3-030-58541-9}, url={https://link.springer.com/10.1007/978-3-030-58542-6_35}, DOI={10.1007/978-3-030-58542-6_35}, booktitle={Computer Vision – ECCV 2020}, publisher={Springer International Publishing}, author={Li, Yonggang and Hu, Guosheng and Wang, Yongtao and Hospedales, Timothy and Robertson, Neil M. and Yang, Yongxin}, editor={Vedaldi, Andrea and Bischof, Horst and Brox, Thomas and Frahm, Jan-Michael}, year={2020}, pages={580–595}, collection={Lecture Notes in Computer Science}, language={en} }
+
+@inproceedings{10-1609-aaai-v33i01-33015741, author = {Zhang, Cheng and \"{O}ztireli, Cengiz and Mandt, Stephan and Salvi, Giampiero}, title = {Active Mini-Batch Sampling Using Repulsive Point Processes}, year = {2019}, isbn = {978-1-57735-809-1}, publisher = {AAAI Press}, url = {https://doi.org/10.1609/aaai.v33i01.33015741}, doi = {10.1609/aaai.v33i01.33015741}, abstract = {The convergence speed of stochastic gradient descent (SGD) can be improved by actively selecting mini-batches. We explore sampling schemes where similar data points are less likely to be selected in the same mini-batch. In particular, we prove that such repulsive sampling schemes lower the variance of the gradient estimator. This generalizes recent work on using Determinantal Point Processes (DPPs) for mini-batch diversification (Zhang et al., 2017) to the broader class of repulsive point processes. We first show that the phenomenon of variance reduction by diversified sampling generalizes in particular to non-stationary point processes. We then show that other point processes may be computationally much more efficient than DPPs. In particular, we propose and investigate Poisson Disk sampling—frequently encountered in the computer graphics community—for this task. We show empirically that our approach improves over standard SGD both in terms of convergence speed as well as final model performance.}, booktitle = {Proceedings of the Thirty-Third AAAI Conference on Artificial Intelligence and Thirty-First Innovative Applications of Artificial Intelligence Conference and Ninth AAAI Symposium on Educational Advances in Artificial Intelligence}, articleno = {704}, numpages = {8}, location = {Honolulu, Hawaii, USA}, series = {AAAI'19/IAAI'19/EAAI'19} }
+
+@inproceedings{fan2018learning,
+title={Learning to Teach},
+author={Yang Fan and Fei Tian and Tao Qin and Xiang-Yang Li and Tie-Yan Liu},
+booktitle={International Conference on Learning Representations},
+year={2018},
+url={https://openreview.net/forum?id=HJewuJWCZ},
+}
+
+
+@InProceedings{pmlr-v108-lorraine20a,
+  title = 	 {Optimizing Millions of Hyperparameters by Implicit Differentiation},
+  author =       {Lorraine, Jonathan and Vicol, Paul and Duvenaud, David},
+  booktitle = 	 {Proceedings of the Twenty Third International Conference on Artificial Intelligence and Statistics},
+  pages = 	 {1540--1552},
+  year = 	 {2020},
+  editor = 	 {Chiappa, Silvia and Calandra, Roberto},
+  volume = 	 {108},
+  series = 	 {Proceedings of Machine Learning Research},
+  month = 	 {26--28 Aug},
+  publisher =    {PMLR},
+  pdf = 	 {http://proceedings.mlr.press/v108/lorraine20a/lorraine20a.pdf},
+  url = 	 {https://proceedings.mlr.press/v108/lorraine20a.html},
+  abstract = 	 {We propose an algorithm for inexpensive gradient-based hyperparameter optimization that combines the implicit function theorem (IFT) with efficient inverse Hessian approximations. We present results about the relationship between the IFT and differentiating through optimization, motivating our algorithm.  We use the proposed approach to train modern network architectures with millions of weights and millions of hyper-parameters. For example, we learn a data-augmentation network—where every weight is a hyperparameter tuned for validation performance—outputting augmented training examples. Jointly tuning weights and hyper-parameters is only a few times more costly in memory and compute than standard training.}
+}
+
+ @article{Wang_Zhu_Torralba_Efros_2020, title={Dataset Distillation}, url={http://arxiv.org/abs/1811.10959}, abstractNote={Model distillation aims to distill the knowledge of a complex model into a simpler one. In this paper, we consider an alternative formulation called dataset distillation: we keep the model fixed and instead attempt to distill the knowledge from a large training dataset into a small one. The idea is to synthesize a small number of data points that do not need to come from the correct data distribution, but will, when given to the learning algorithm as training data, approximate the model trained on the original data. For example, we show that it is possible to compress 60,000 MNIST training images into just 10 synthetic distilled images (one per class) and achieve close to original performance with only a few gradient descent steps, given a fixed network initialization. We evaluate our method in various initialization settings and with different learning objectives. Experiments on multiple datasets show the advantage of our approach compared to alternative methods.}, note={arXiv:1811.10959 [cs, stat]}, number={arXiv:1811.10959}, publisher={arXiv}, author={Wang, Tongzhou and Zhu, Jun-Yan and Torralba, Antonio and Efros, Alexei A.}, year={2020}, month={Feb} }
+
+ @article{Andrychowicz_Baker_Chociej_Józefowicz_McGrew_Pachocki_Petron_Plappert_Powell_Ray_2020, title={Learning dexterous in-hand manipulation}, volume={39}, ISSN={0278-3649, 1741-3176}, DOI={10.1177/0278364919887447}, abstractNote={We use reinforcement learning (RL) to learn dexterous in-hand manipulation policies that can perform vision-based object reorientation on a physical Shadow Dexterous Hand. The training is performed in a simulated environment in which we randomize many of the physical properties of the system such as friction coefficients and an object’s appearance. Our policies transfer to the physical robot despite being trained entirely in simulation. Our method does not rely on any human demonstrations, but many behaviors found in human manipulation emerge naturally, including finger gaiting, multi-finger coordination, and the controlled use of gravity. Our results were obtained using the same distributed RL system that was used to train OpenAI Five. We also include a video of our results: https://youtu.be/jwSbzNHGflM .}, number={1}, journal={The International Journal of Robotics Research}, author={Andrychowicz, OpenAI: Marcin and Baker, Bowen and Chociej, Maciek and Józefowicz, Rafal and McGrew, Bob and Pachocki, Jakub and Petron, Arthur and Plappert, Matthias and Powell, Glenn and Ray, Alex and Schneider, Jonas and Sidor, Szymon and Tobin, Josh and Welinder, Peter and Weng, Lilian and Zaremba, Wojciech}, year={2020}, month={Jan}, pages={3–20}, language={en} }
+
+@inproceedings{ruiz2018learning,
+title={Learning To Simulate},
+author={Nataniel Ruiz and Samuel Schulter and Manmohan Chandraker},
+booktitle={International Conference on Learning Representations},
+year={2019},
+url={https://openreview.net/forum?id=HJgkx2Aqt7},
+}
+
+ @article{Vuong_Vikram_Su_Gao_Christensen_2019, title={How to pick the domain randomization parameters for sim-to-real transfer of reinforcement learning policies?}, url={http://arxiv.org/abs/1903.11774}, abstractNote={Recently, reinforcement learning (RL) algorithms have demonstrated remarkable success in learning complicated behaviors from minimally processed input. However, most of this success is limited to simulation. While there are promising successes in applying RL algorithms directly on real systems, their performance on more complex systems remains bottle-necked by the relative data inefficiency of RL algorithms. Domain randomization is a promising direction of research that has demonstrated impressive results using RL algorithms to control real robots. At a high level, domain randomization works by training a policy on a distribution of environmental conditions in simulation. If the environments are diverse enough, then the policy trained on this distribution will plausibly generalize to the real world. A human-specified design choice in domain randomization is the form and parameters of the distribution of simulated environments. It is unclear how to the best pick the form and parameters of this distribution and prior work uses hand-tuned distributions. This extended abstract demonstrates that the choice of the distribution plays a major role in the performance of the trained policies in the real world and that the parameter of this distribution can be optimized to maximize the performance of the trained policies in the real world}, note={arXiv:1903.11774 [cs, stat]}, number={arXiv:1903.11774}, publisher={arXiv}, author={Vuong, Quan and Vikram, Sharad and Su, Hao and Gao, Sicun and Christensen, Henrik I.}, year={2019}, month={Mar} }
+
+@inproceedings{huang2019addressing,
+  title={Addressing the loss-metric mismatch with adaptive loss alignment},
+  author={Huang, Chen and Zhai, Shuangfei and Talbott, Walter and Martin, Miguel Bautista and Sun, Shih-Yu and Guestrin, Carlos and Susskind, Josh},
+  booktitle={International conference on machine learning},
+  pages={2891--2900},
+  year={2019},
+  organization={PMLR}
+}
+
+ @article{Duan_Schulman_Chen_Bartlett_Sutskever_Abbeel_2016, title={RL$^2$: Fast Reinforcement Learning via Slow Reinforcement Learning}, url={http://arxiv.org/abs/1611.02779}, abstractNote={Deep reinforcement learning (deep RL) has been successful in learning sophisticated behaviors automatically; however, the learning process requires a huge number of trials. In contrast, animals can learn new tasks in just a few trials, benefiting from their prior knowledge about the world. This paper seeks to bridge this gap. Rather than designing a “fast” reinforcement learning algorithm, we propose to represent it as a recurrent neural network (RNN) and learn it from data. In our proposed method, RL$^2$, the algorithm is encoded in the weights of the RNN, which are learned slowly through a general-purpose (“slow”) RL algorithm. The RNN receives all information a typical RL algorithm would receive, including observations, actions, rewards, and termination flags; and it retains its state across episodes in a given Markov Decision Process (MDP). The activations of the RNN store the state of the “fast” RL algorithm on the current (previously unseen) MDP. We evaluate RL$^2$ experimentally on both small-scale and large-scale problems. On the small-scale side, we train it to solve randomly generated multi-arm bandit problems and finite MDPs. After RL$^2$ is trained, its performance on new MDPs is close to human-designed algorithms with optimality guarantees. On the large-scale side, we test RL$^2$ on a vision-based navigation task and show that it scales up to high-dimensional problems.}, note={arXiv:1611.02779 [cs, stat]}, number={arXiv:1611.02779}, publisher={arXiv}, author={Duan, Yan and Schulman, John and Chen, Xi and Bartlett, Peter L. and Sutskever, Ilya and Abbeel, Pieter}, year={2016}, month={Nov} }
+
+@mastersthesis{schmidhuber-1987,
+  added-at = {2008-06-19T17:46:40.000+0200},
+  author = {Schmidhuber, Jurgen},
+  biburl = {https://www.bibsonomy.org/bibtex/2a96f7c3d42103ab94b13badef5d869f0/brazovayeye},
+  interhash = {b1d12416bd2edc34c30961f0ae978d8f},
+  intrahash = {a96f7c3d42103ab94b13badef5d869f0},
+  keywords = {EURISKO, PSALM, SALM, algorithm, algorithms, associative brigade, bucket evolution, fractals genetic genetical introsepection, learning, meta, nets, neuronal programming self-reference,},
+  month = {14 May},
+  school = {Technische Universitat Munchen, Germany},
+  size = {62 pages},
+  timestamp = {2008-06-19T17:51:06.000+0200},
+  title = {Evolutionary Principles in Self-Referential Learning.
+                 On Learning now to Learn: The Meta-Meta-Meta...-Hook},
+  type = {Diploma Thesis},
+  url = {http://www.idsia.ch/~juergen/diploma.html},
+  year = 1987
+}
+
+ @article{Stanley_Clune_Lehman_Miikkulainen_2019, title={Designing neural networks through neuroevolution}, volume={1}, ISSN={2522-5839}, DOI={10.1038/s42256-018-0006-z}, number={1}, journal={Nature Machine Intelligence}, author={Stanley, Kenneth O. and Clune, Jeff and Lehman, Joel and Miikkulainen, Risto}, year={2019}, month={Jan}, pages={24–35}, language={en} }
+

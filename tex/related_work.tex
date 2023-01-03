@@ -1,5 +1,7 @@
 %% related_work.tex
 
+TODO: Teile auf in related work (zu Beginn) + optionales Kapitel mit weiteren relevanten Themen zu Natural Intelligence, die aber nicht wirklich related work sind sondern eher ein Survey
+
 \section{Natural Intelligence}\seclbl{natural_intelligence}
 This thesis is inspired by the work ''A Theory of Natural Intelligence` from von der Malsburg et al. \sidecite{von_der_Malsburg_Stadelmann_Grewe_2022}.
 Therefore, we dedicate this section to summarize their work in detail.
@@ -318,6 +320,9 @@ According to \sidecite{Duan_Principe_2022} and \sidecite{Bartunov_Santoro_Richar
 The other approaches work only on smaller datasets such as MNIST or CIFAR-10 so far.
 
 
+TODO: Add Schmidhuber learning backprop and improving it
+
+
 
 \section{Visual Representation Learning}\seclbl{visual_rep_learning}
 One of the earliest methods of learning visual representations are \emph{Autoencoders}.
@@ -354,6 +359,71 @@ In this case, two augmented views of the same image are created, fed through an 
 Subsequently, the encoder can be used to generate image representations that are used for other downstream tasks such as image classification.
 However, \emph{contrastive learning} can also leverage information from annotations.
 For example, Khosla et al. \sidecite{khosla2020supervised} use labels in a contrastive setting to pull the representations of images of the same class together in the embedding space, while simultaneously pushing apart clusters of samples from different classes.
+
+
+\section{Meta-Learning}
+Meta-learning is the process of distilling experience from multiple learning cycles and using the accumulated experience to improve the future learning process \sidecite{Hospedales_Antoniou_Micaelli_Storkey_2021}.
+Therefore, meta-learning is also referred to as ``learning-to-learn'' \sidecite{Thrun_Pratt_1998} and improves learning on a lifetime (i.e. single agent) and evolutionary timescale (i.e. population of agents) \sidecite{Schrier_1984}.
+Typically, meta-learning includes \emph{base learning} (also referred to as \emph{inner} or \emph{lower} learning) and \emph{meta-learning} (also referred to as \emph{outer} or \emph{upper} learning).
+During \emph{base learning}, the model learns a typical task such as image classification based on a dataset and a objective function.
+During \emph{meta-learning}, an algorithm updates the \emph{base learning} algorithm based on a meta objective function\sidenote{Typical meta objective function aim to improve generalization or learning speed}.
+Thus, meta-learning usually iterates between learning a task and improving the learning algorithm that is used to learn the task.
+
+In the following, I use the categorisation according to Hospedales et al. \cite{Hospedales_Antoniou_Micaelli_Storkey_2021} to describe the different aspects of meta-learning algorithm.
+\begin{description}
+   \item[Meta-Representation] What meta-knowledge shall be learned by the outer \emph{meta-learning} algorithm.
+   \item[Meta-Optimizer] How the outer \emph{meta-learning} algorithm learns, i.e. the from of the learning algorithm.
+   \item[Meta-Objective] What the goal of the \emph{meta-learning} algorithm is.
+\end{description}
+
+The first dimension of the meta-learning landscape is the \bf{meta-representation}.
+Meta-representations describe which part of the learning strategy should be learned.
+One possibility is to learn good \emph{initial parameters} that can be used by the model during \emph{base learning}.
+Good initial parameters are only a few gradient steps away from a set of parameters that can solve a task $\mathcal{T}$ drawn from a set of tasks $p(\mathcal{T})$.
+A popular algorithm to learn initial parameters is called MAML \sidecite{10-5555-3305381-3305498, 10-5555-3327546-3327622} and works well on smaller networks.
+However, a major challenge is that the outer \emph{meta-learning} algorithm has to find a solution for as many parameters as the inner \emph{base learning} needs.
+Therefore, many approaches focus on isolating a subset of parameters to meta-learn \cite{lee2018gradient, qiao2018few, rusu2018meta}.
+\emph{Black-box models}, on the other hand, use \emph{meta-learning} to directly provide the parameters required to classify data (i.e. the \emph{base learning} algorithm maps a sample directly to class without iterative parameter optimization) \cite{heskes2000empirical, 10-5555-3454287-3455002, Ha_Dai_Le_2016}.
+A special case of the black-box models are the approaches based on \emph{metric learning}\sidenote{an explanation why this approach can be considered black-box learning is provided by Hospedales et al. \cite{Hospedales_Antoniou_Micaelli_Storkey_2021}}.
+The outer \emph{meta-learning} process optimizes a model to transform inputs into representations that can be used for recognition by similarity comparison (e.g. by using cosine similarity or euclidean distance) \cite{10-5555-3294996-3295163, qiao2018few, Chen_Liu_Kira_Wang_Huang_2020}.
+
+Other approaches learn the \emph{optimizer} of the inner \emph{base learning} algorithm \cite{ravi2016optimization, ravi2016optimization, Li_Malik_2016, Li_Zhou_Chen_Li_2017}.
+Typically, such approaches generate each optimization step of the \emph{base learning} algorithm based on the models parameter and a given base objective function.
+The trainable component can for example be simple hyper-parameters such as the learning rate \cite{Li_Zhou_Chen_Li_2017} or more sophisticated such as pre-conditioned matrices \cite{Park_Oliva_2020}.
+Even the learning algorithm itself can be learned \sidecite{kirsch2021meta}.
+
+The outer \emph{meta-learning} algorithm can also be used to learn the \emph{inner objective function} (while the outer objective function is fixed).
+Such loss-learning approaches output a scalar value that is treated as loss by the inner optimizer based on relevant quantities such as prediction/ground truth pairs or model parameters.
+Common goals of this approach are to obtain a loss that has less local minima \cite{NEURIPS2018_7876acb6, Sung_Zhang_Xiang_Hospedales_Yang_2017}, provides better generalization \cite{NEURIPS2018_b9a25e42, NEURIPS2019_e0e2b58d, gonzalez2020improved}, leads to more robust models \cite{li2019feature}, or to learn from unlabelled data \cite{NEURIPS2019_6018df18, Boney2018SemiSupervisedFL}.
+
+Other approaches use the outer \emph{meta-learning} to learn \emph{network architectures} for the inner \emph{base learning}.
+Some approaches use reinforcement learning in the outer loop to learn CNN architectures \cite{zoph2017neural}, while other approaches use evolutionary algorithms to learn the topology of LSTM cells \cite{Bayer_Wierstra_Togelius_Schmidhuber_2009} or to model the network by a graph of network-blocks \cite{10-1609-aaai-v33i01-33014780}.
+
+The outer \emph{meta-learning} loop can also meta-learn hyper-parameters such as regularization-strength \cite{pmlr-v80-franceschi18a, Micaelli_Storkey_2021}, task-relatedness for multi-task learning \cite{10-5555-3305381-3305502}, or sparsity-strength \cite{10-5555-3305381-3305502}. Furthermore, it can meta learn suitable data augmentation methods \cite{Cubuk_2019_CVPR, Li_Hu_Wang_Hospedales_Robertson_Yang_2020}, or improve the selection process for the samples of a mini-batch \cite{10-1609-aaai-v33i01-33015741, fan2018learning}.
+Even the dataset itself can be learned with dataset distillation; A rather large datasets can be summarized a smaller dataset with only a few support images \cite{Wang_Zhu_Torralba_Efros_2020, pmlr-v108-lorraine20a} that still allow good generalization on real test images. In sim2real learning \cite{Andrychowicz_Baker_Chociej_Józefowicz_McGrew_Pachocki_Petron_Plappert_Powell_Ray_2020}, also the graphics engine \cite{ruiz2018learning, Vuong_Vikram_Su_Gao_Christensen_2019} can be trained in an outer loop so that the performance on real-world data is maximized.
+
+
+The second dimension of the meta-learning landscape is the \bf{meta-optimizer}.
+The meta-optimizer describes how the algorithm in the outer \emph{meta-learning} loop is learned.
+Many methods use backpropagation of error and gradient descent (c.f. Section \seqref{ann}) to optimize the meta parameters \cite{ravi2016optimization, 10-5555-3305381-3305498, li2019feature, 10-5555-3305381-3305502, pmlr-v80-franceschi18a, Micaelli_Storkey_2021, 189, pmlr-v108-lorraine20a}.
+However, this algorithm has some well-known downsides (c.f. Section XXXXXXXXXX) and requires differentiability.
+When the inner \emph{base learning} algorithm includes non-differentiable steps \cite{Cubuk_2019_CVPR} or the outer meta objective function is non-differentiable \cite{huang2019addressing}, many methods utilize the RL paradigm to optimize the outer objective \cite{Duan_Schulman_Chen_Bartlett_Sutskever_Abbeel_2016}.
+However, using RL to alleviate requirement for differentiability is usually computationally very costly.
+Finally, evolutionary algorithms can be used for learning the outer \emph{meta-learning} function \cite{schmidhuber-1987, Stanley_Clune_Lehman_Miikkulainen_2019, Salimans_Ho_Chen_Sidor_Sutskever_2017}.
+These algorithms have no differentiability constraints, do not suffer from gradient degradation issues, are highly parallelizable, and can often avoid local minima better than gradient-based methods \cite{Salimans_Ho_Chen_Sidor_Sutskever_2017}.
+The downside of evolutionary algorithms is that often a large population size is required (especially if many parameters have to be learned) and the performance is generally inferior to gradient-based methods for large models.
+These three learning methods are also used in conventional machine learning.
+However, meta-learning comparatively uses RL and evolutionary algorithms more frequently as some components are often non-differentiable in the meta-learning setup.
+
+The third dimension of the meta-learning landscape is the \bf{meta-objective}.
+The meta-objective describes what the goal of the \emph{meta-learning} algorithm is.
+
+TODO: weiter ab hier
+
+
+
+
+
 
 
 \section{Correlation within CNNs}
@@ -448,3 +518,5 @@ This concept can also be applied to the rotation group in the final layers of a 
 
 
 TODO: somewhere it is argued that biologically-motivated algorithms work bad: This is shown here: https://arxiv.org/pdf/1807.04587.pdf -> add this as source -> \sidecite{Bartunov_Santoro_Richards_Marris_Hinton_Lillicrap_2018}
+
+TODO: After each section: Describe relevance to my work
