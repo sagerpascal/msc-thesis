@@ -416,14 +416,13 @@ These three learning methods are also used in conventional machine learning.
 However, meta-learning comparatively uses RL and evolutionary algorithms more frequently as some components are often non-differentiable in the meta-learning setup.
 
 The third dimension of the meta-learning landscape is the \bf{meta-objective}.
-The meta-objective describes what the goal of the \emph{meta-learning} algorithm is.
-
-TODO: weiter ab hier
-
-
-
-
-
+The meta-objective describes what the goal of the meta-learning algorithm is.
+Typically, the performance of a meta-learning algorithm is evaluated with a metric on the inner loop or a meta-metric on the outer loop.
+However, there are several design options within the meta-learning framework.
+First, the inner base-learning episodes can either take few \cite{ravi2016optimization, 10-5555-3305381-3305498} or many \cite{10-5555-3305381-3305502, 10-5555-3305890-3306069} samples and thus the goal can be to either improve few- or -many-shot performance.
+Second, the validation loss of the inner base-learning algorithm can either be calculated at the end of a learning episode to encourage a better \emph{final} performance of the base task or as sum of the loss calculated after each update step to encourage \emph{faster} learning \cite{antoniou2018how}.
+Third, the goal of the meta-learning can either be to better solve any task drawn from a set of (often related) tasks (i.e. multi-task setting) \cite{10-5555-3305381-3305498, 10-5555-3294996-3295163, li2019feature}, or to solve one specific task better than when only the inner base learning algorithm is used (i.e. single task setting) \cite{10-5555-3305381-3305502}.
+Finally, the meta-optimization can either be done offline (i.e. the inner and outer loop alternate) \cite{10-5555-3305381-3305498} or online (i.e. the meta-learning takes place within a base learning episode) \cite{li2019feature}.
 
 
 \section{Correlation within CNNs}
