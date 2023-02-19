@@ -187,9 +187,17 @@
 }
 
 \let\originalmarginnote\marginnote%
-\renewcommand{\marginnote}[2][0pt]{%
-	\originalmarginnote{#2}[\snotez@if@nblskip{#1}{\@cdr#1\@nil\baselineskip}{#1}]%
-}
+%\renewcommand{\marginnote}[2][0pt]{%
+%	\originalmarginnote{#2}[\snotez@if@nblskip{#1}{\@cdr#1\@nil\baselineskip}{#1}]%
+%}
+
+%% TODO: updated by sage
+\RenewDocumentCommand\marginnote { o m }{%
+ 	\IfNoValueOrEmptyTF{#1}%
+ 	{\marginpar{\@margin@par#2}}%
+ 	{\originalmarginnote{#2}[\snotez@if@nblskip{#1}{\@cdr#1\@nil\baselineskip}{#1}]}%
+ }
+
 
 \RenewDocumentCommand \@sidenotes@placemarginal { m m }%
 {%

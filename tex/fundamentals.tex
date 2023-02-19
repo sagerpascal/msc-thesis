@@ -1,18 +1,48 @@
 %% fundamentals.tex
 
-TODO: Input Thilo -> mache den Bezug von diesem Teil auf die schlussendliche Arbeit viel deutlicher -> was wird wie gebraucht?
+% TODO: Input Thilo -> mache den Bezug von diesem Teil auf die schlussendliche Arbeit viel deutlicher -> was wird wie gebraucht?
 
-Machine Learning uses mathematical functions to map an input to an output.
+Machine learning uses mathematical functions to map an input to an output.
 These functions usually extract patterns from the input data to build a relationship between input and output.
-The term Machine Learning stems from the fact that we use \emph{machines} to correlate the input and the output to a function (i.e. to \emph{learn} a function) during a training period.
-A sub-branch of Machine Learning is Deep Learning (DL).
-DL algorithms are able to learn hidden patterns within data to make predictions.
-They benefit from the accelerated computing power and big data made available in the last decade.
-Deep Learning is considered state-of-the-art for many learning tasks especially for high-dimensional data.
-Typical high-dimensional data are texts, audio recordings, 2D as well as 3D images, and videos.
-Deep Learning models use artificial neural networks to learn the mapping function between given input and output data.
-In the following, the fundamentals of Deep Learning is explained.
-Only those aspects that are relevant for the understanding of the rest of the thesis are discussed.
+The term machine learning stems from the fact that we use \emph{machines} to correlate the input and the output to a function (i.e. to \emph{learn} a function) during a training period.
+Deep learning is a sub-branch of machine learning and considered state-of-the-art for many learning tasks, especially for high-dimensional data such as texts, audio recordings, 2D as well as 3D images, and videos.
+Deep learning algorithms use neural networks that are heavily inspired from the connected neurons within the human brain.
+
+Therefore, this chapter first briefly explains what biological neurons are and relates them to artificial neurons (c.f. Section \secref*{neurons}).
+Next, Section \secref*{ann} describes artificial neural networks that connect a large number of such artificial neurons.
+In Section \secref*{limitationsDL}, problems of such artificial neural networks are pointed out.
+In section \secref*{biological_learning} I describe some of the differences to biological learning and in Section \secref*{neurocomputing} make the connection to methods that are more plausible from a neuroscientific point of view.
+These last two sections are not essential for the understanding of this thesis and can optionally be skipped, but are intended as a supplement for interested readers to get an overview of the whole field.
+
+
+\section{Biological and Artificial Neurons}\seclbl{neurons}
+A biological neuron is a cell that communicates with other neurons through connections called synapses.
+Communication takes place through precisely timed electrical pulses.
+Biological neurons are electrically excitable by voltage changes across their membranes.
+If the changes is large enough within a short interval, the neuron generates a pulse called an action potential.
+This action potential travels through the axon and activates synaptic connections.
+Other neurons, connected through synapses, receive this signal.
+The synaptic signal can be be excitatory \sidecite{Takagi_2000} or inhibitory \sidecite{Coombs_Eccles_Fatt_1955}, making the post-synaptic neuron more or less likely to fire an action potential.
+Biological neurons are typically classified into three types; sensory neurons, motor neurons, and interneurons.
+Sensory neurons respond to external stimuli such as light or sound and send their signal to the spinal cord or directly to the brain.
+Motor neurons receive signals from the brain and spinal cord to control muscles or organs.
+Interneurons connect neurons within the same region of the brain or the spinal coord.
+Multiple connected neurons from a neural circuit.
+The neural network in the brain is not static but changes through growth and reorganization.
+This process is referred to as neuroplasticity or neural plasticity \sidecite{Costandi_2016}.
+
+An artificial neuron is, similar to a biological neuron, connected to other neurons.
+Artificial neurons are usually organized in layers that forward signals sequentially.
+Although the neurons in the first layer could be considered sensory neurons, the neurons in the last layer could be considered motor neurons, and the neurons in the middle layer could be considered interneurons, such a distinction makes less sense because the artificial neurons function similarly regardless of their layer except for the activation function (c.f. Section \secref{ann}).
+Several variants for artificial neurons have been proposed in the literature. These variants are described in the following Chapter \chref*{fundamentals}.
+Similar to biological neurons, multiple artificial neurons are usually connected to an artificial neural network.
+
+In this thesis, the two fields are declared as well as possible.
+If it is not clear from the context what we are talking about, we will refer to biological or artificial neurons and biological or artificial neural networks.
+However, some concepts are identical in both fields.
+For example, there are excitatory or inhibitory signals or neural plasticity in biological and artificial neurons.
+Consequently, these terms are not distinguished.
+
 
 \section{Artificial Neural Networks}\seclbl{ann}
 The idea for artificial neural networks (ANN) stems from biology and aims to capture the interaction of brain cells (neurons) with a mathematical model.
@@ -180,6 +210,7 @@ Not only specific tasks can be learned, but also task-independent representation
 These representations are typically learned unsupervised\sidenote{also called self-supervised learning because the target labels are derived from the data itself} and can be used for one or several downstream tasks.
 More details on visual representation learning are provided in Section \secref*{visual_rep_learning}.
 
+ TODO: Autoencoder einfügen
 
 \section{Limitations of Deep Learning}\seclbl{limitationsDL}
 The rise of Deep Learning over the past decade has only been possible because of major technological advances in hardware.

@@ -1,197 +1,92 @@
 %% intro.tex
 Mankind has always tried to simplify its life through technological progress.
-Thousands of years before Christ the wheel was invented, later the pulley, the printing press, and the steam locomotive.
-At the beginning of the 19th century, the first generators were built to produce electricity, and in 1835, the first light bulb was invented by James Bowman Lindsay\sidenote{and not, as so often falsely claimed, by Thomas Alva Edision}.
-In the course of time more and more complex electrical circuits were produced and finally in 1941 the first digital calculating machine, the computer was developed.
-This calculating machine is able to perform various arithmetic operations on the basis of commands.
-Through the development of transistors, more and more complex computers could be produced, which are able to execute various tasks.
-The definition of these tasks are captured in software.
-The computer has been so successful in fact that it has spawned its own scientific discipline, Computer Science.
+In the last hundred years, the computer in particular has shaped progress in every field imaginable. 
+The computer has been so successful in fact that it has spawned its own scientific discipline, computer science.
 Nowadays it is impossible to imagine life without computers: almost every household and company owns computers.
 Computers facilitate various tasks, from communication to the acquisition of knowledge.
-For all these tasks, software developers have created appropriate tools.
+For all these tasks, software developers have created appropriate programs.
 Software development is the process of writing a script with a programming language to specify how the computer should behave for a given input.
 Simply put: A software program tells the computer what to do if the user enters a command.
-This works very well if the tasks is clearly defined and can be described precisely.
-However, there exists tasks which are almost impossible to program.
-For example, writing a script that detects cats in images is almost impossible because we cannot describe how a cat looks like\sidenote{at least not on a pixel-level basis so that we can simply compare a given image with our description}.
+This works very well if the tasks are clearly defined and can be described precisely.
+However, there exist tasks that are almost impossible to program such as writing a script that detects cats in images because we cannot describe how a cat looks precisely\sidenote{at least not on a pixel-level basis so that we can simply compare a given image with our description}.
 
-Therefore, computer scientists came up with the idea to not just program such tasks but to let the computer learn them instead.
-Machine learning (ML) are algorithms that are able to learn and adapt without following explicit instructions such as program code.
-Instead, they use statistical models to analyse data, to find patterns in the data and to draw inferences out of it.
+Therefore, scientists came up with the idea to not just program such tasks but to let the computer learn them instead.
+Machine learning (ML) are algorithms that can learn and adapt without following explicit instructions such as program code.
+Instead, they use statistical models to analyze data, find patterns in the data, and draw inferences from it.
 Machine learning has become an indispensable part of our everyday lives.
 For example, we use it for machine translation, transport and logistics organization, product recommendations, fraud detection, self-driving cars, unlocking smartphones, improving video games, speech recognition, and much more.
-A sub-branch of Machine Learning, namely Deep Learning, has made waves in the last decade.
-Breakthroughs are being made with this technology are made almost monthly and allows us to execute more and more tasks.
+A sub-branch of machine learning is deep learning which achieved very impressive results in the last decade and is considered the state-of-the-art technology for many of the aforementioned tasks.
 
-However, such DL system are usually good at one ore a few closely related tasks.
-In fact, they have they have some crucial flaws by definition (c.f. Section \secref{limitationsDL}) which cannot be resolved for sure in the current DL framework.
-One of the Godfathers of Deep Learning is the Turing Award winner Geoffrey Hinton. 
-Especially his contribution to back propagation (c.f. Section \secref{ann}) has shaped the field.
-Back propagation is \emph{the} core learning algorithm of DL systems and was developed in 1986. TODO ADD SOURCE!
-More than 30 years later, in 2017, Hinton says that he is ``deeply suspicious'' about back propagation and in his view we have to ``throw it all away and start again'' to improve current systems fundamentally \sidecite{axios_hinton}.
+Even though this technology works very well for many tasks, such models have some crucial flaws by definition (c.f. Section \secref{limitationsDL}) which cannot be resolved for sure in the current DL framework.
+One of the godfathers of deep learning is the Turing Award winner Geoffrey Hinton. 
+Especially his contribution to backpropagation (c.f. Section \secref{ann}) has created the foundation for modern deep learning.
+More than 30 years later, in 2017, Hinton says that he is ``deeply suspicious'' about end-to-end backpropagation of error, and in his view we have to ``throw it all away and start again'' to improve current systems fundamentally \sidecite{axios_hinton}.
 Considering what DL systems have achieved, this seems a bit extreme.
 However, it also shows that the current learning algorithm of such systems has serious flaws.
 
-Mankind is often inspired by nature when it comes to developing novel systems.
-The development of artificial intelligence (AI) and Deep Learning has been strongly influenced by, according to our perception, one of (if not the) most intelligent systems on planet Earth, the human brain.
-The brain is studied by the scientific field of neuroscience\sidenote{there exist many additional (sub-)fields studying the brain such as cognitive science, cognitive psychology, neurology, and neuropsychology}.
-From neuroscience or related fields come various insights on how the human nervous system and especially the brain works.
-Much of this knowledge has been gained through observations and experiments on humans or other living creatures.
-Often these findings are only what can be measured from the outside, the real core, the mechanism that causes intelligence, remains unknown.
+Some of the most crucial limitations of deep learning systems are listed in Section \secref{limitationsDL}.
+This thesis addresses some of these problems, especially the robustness problem.
+This is done by exploring different architectures inspired by findings from the field of neuroscience\sidenote{this field studies how the human nervous system and especially the brain works}.
+The inspiration is drawn from neuroscience as the human brain seems to not have these problems and thus incorporating findings from neuroscience into the deep learning framework might help to overcome some of the current limitations.
+In this thesis, the theory of natural intelligence by von der Malsburg et al. \sidecite{von_der_Malsburg_Stadelmann_Grewe_2022} in particular is used as an inspirational source.
 
-While Deep Learning is clearly inspired by the insights of Neuroscience, the two fields have little in common in their present form.
-The implementation of neuroscientific findings has emerged as a subfield in its own right, called Neurocomputing (c.f. Section \secref{neurocomputing}).
-In general, neurocomputing is closer related to the functionality of the human brain than Deep Learning.
-Neurocomputing has produced many promising algorithms that can overcome some weaknesses faced by deep learning systems. 
-Although neurocomputing has also achieved significant breakthroughs, most systems used in everyday life are still based on the principle of Deep Learning.
-
-TODO: deep learning or Deep Learning -> make uniform
-
-TODO: Umschreiben: Schreibe DL funktioniert gut, sehr gut für Pattern Extraction. Dies ist aber nur ein Baustein eines intelligenten Systems. Beispielsweise fehlt cognition komplett (z.B. in NLP sind Vektoren wie König - Königin = Mann - Frau -> das System korrepiert die Informationen aber nur und hat keine Ahnung, was dies bedeutet. Um dies zu erreichen könnte nach dem mit Backprop trainierten Pattern-Extraction System ein weiteres System nötig sein. Weitere Bausteine könnten sein: Continous Input, Netzfragmente, Sparsity, anderer Lernalgorithmus, World-Modell, ...
-
-\subsection{Motivation}\seclbl{motivation}
-One of the main challenges of today's AI systems is the processing of visual information.
-Visual perception is fundamentally the task of finding a suitable interpretation of a given scene.
-A scene typically consists of objects that interact with each other.
-Identifying these objects and their relationship among each other is implemented by algorithms as a non-deterministic search problem, i.e. algorithms try to identify the object within a scene.
-State-of-the-art algorithms for image processing are often based on Deep Learning.
-Despite the fact that Deep Learning has achieved incredible performance on a variety of tasks such as object recognition it is still questionable whether the current methodology is enough to achieve real (or at least more advanced) intelligence (c.f. Section \secref*{limitationsDL}).
-Algorithms from the field of neurocomputing (c.f. Section \secref*{neurocomputing}), which are more closely oriented to the findings from the field of neuroscience, can be considered as a complement to Deep Learning.
-However, even tough algorithms from the field of neurocomputing have interesting properties, they usually do not perform as good as Deep Learning according to the evaluation metrics used and often work on specific or small data only.
-
-Thus, various algorithms exist to solve the non-deterministic problem of finding an appropriate interpretation of a visual scene, but they have significant shortcomings.
-Interestingly, the problem of generating a scene\sidenote{the opposite task than finding an interpretation of a scene} from a clear description is deterministic.
-Computer graphics deals with the problem to generate images with the aid of computers.
-Nowadays, such systems are able to render photorealistic images based on descriptions.
-For example, video games are essentially programs that generate scenes consisting of multiple objects such as people, weapons, buildings, or vehicles based on program code.
-For each of these objects, skeletons are usually pre-defined and during rendering transformed (i.e. their size, rotation, distortion and positioning are adjusted) as well as properly illuminated (raytracing).
-This allows to generate an infinite number of scenes from a predefined set of skeletons and transformations.
-Essential in this process seems the separation between objects and object transformation.
-Therefore, incorporating these insights into current algorithms for the interpretation of visual scenes seems promising and could lead to significant improvements.
-More precisely, identifying objects and their transformations separately in preception systems in order to recognize objects independently of their transformations could improve visual scene interpretation.
-
-It is known that large parts of the human brain are self-organizing \sidecite{kelso1995dynamic}.
-Recently, renowned scientists \sidecite{von_der_Malsburg_Stadelmann_Grewe_2022} put forward the hypothesis that the key mechanism of natural intelligent systems such as the human brain to interpret visual scenes is self-organization.
-Self-organization is the process by which systems consisting of many units spontaneously acquire their structure or function without interference from a external agent or system.
-They organize their global behavior by local interactions amongst themselves.
-The absence of a central control unit allow self-organizing systems to quickly adjust to new environmental conditions.
-Additionally, such systems have in-built redundancy with a high degree of robustness as they  are made of many simpler individual units.
-These individual units can even fail without the overall system breaking down.
-Dresp \sidecite{Dresp2020SevenPO} describes seven clearly identified properties of self-organization in the human brain: (i) modular connectivity, (ii) unsupervised learning, (iii) adaptive ability, (iv) functional resiliency, (v) functional plasticity, (vi) from-local-to-global functional organization, and (vii) dynamic system growth.
-
-However, it is not obvious how these insights from neuroscience can be integrated into a Deep Learning framework.
-One interpretation of self-organization may be that instead of optimizing the entire network by statistical learning for a single task (i.e. using backpropagation), local optimization based on local input data takes place.
-The suitability of backpropagation for explaining how the brain learns was questioned soon after it was published \sidecite{Crick_1989, Grossberg_1987}.
-Many alternative and biologically more plausible algorithms have been proposed in recent years such as the feedback alignment (FA) algorithm \sidecite{Lillicrap_Cownden_Tweed_Akerman_2014}, contrastive Hebbian learning \sidecite{Movellan_1991}, generalized recirculation \sidecite{O_Reilly_1996}, as well as target propagation (TP) and its variants \sidecite{Le__Cun_1986, hinton2007backpropagation, Lee_Zhang_Fischer_Bengio_2015}.
-However, Bartunov et al. \sidecite{Bartunov_Santoro_Richards_Marris_Hinton_Lillicrap_2018} have shown that these algorithms do not scale to large vision datasets such as ImageNet \cite{deng2009imagenet} and only work for smaller datasets such as MNIST \cite{MNIST} and CIFAR-10 \cite{cifar_10}.
-The biologically most plausible learning algorithm is Hebbian learning (c.f. Section \secref{hebbian}).
-However, even tough I obtain some promising results in preliminary results with Hebbian learning (c.f. Appendix \secref{exp_hebb_learning}), this algorithm doesn't seem to be well suited to learn good image representation if a network is trained from scratch.
-
-TODO: Füge FF-Algorithmus von Hinton hinzu
-
-Another interpretation of self-organization within neural network is that the networks adapts its structure during training.
-According to von der Malsburg et al. \cite{von_der_Malsburg_Stadelmann_Grewe_2022}, neurons form net-fragments (a.k.a. sub-networks) that represent objects with different levels of abstraction within an image (c.f. section \secref{natural_intelligence}).
-For example, some net-fragments may represent shapes and structures while a multitude of such net-fragments together represent objects such as persons or entire scenes.
-Thus, self-organization could be the algorithm to form net-fragments that represent objects independent of their transformation.
-
-Such a mechanism to form networks that can capture scenes in the form of net-fragment has not been successfully implemented in deep learning nor neurocomputing systems.
-This thesis aims to develop a learning paradigm that explicitly foster creation of net-fragments that represent objects independent of their transformation.
-... TODO ...
+The thesis differs from neurocomputing\sidenote{neurocomputing is considered a sub-field of neuroscience that deals with the implementation of algorithms with a high degree of plausibility according to neuroscientific findings on how natural nervous systems work} in the sense that the architectures investigated are still closely related to the DL framework and, for example, do not use time-dynamic signals. 
+For the completeness of this thesis, an overview of neurocomputing is given in Section \secref{neurocomputing}.
+However, since these types of algorithms have not (yet) become established in practical applications, they are not investigated in this thesis.
+Thus, the thesis is strongly oriented along the field of deep learning and focuses on incorporating findings of neuroscience in the deep learning framework while natural plausibility is of less importance.
 
 
-TODO: Evtl. schreibe sowas wie: Netzfragmente scheinen vielversprechend, kriegen hingegen zu neuen Lernalgorithmen aber wenig Beachtung. 
-TODO: Schreibe: Schlussendliches Ziel ist die Entwicklung eines intelligenten Systems -> MSc. Thesis beschäftigt sich mit einem Fragment davon, nämlich Netzfragmente -> diese könnten Teil eines grösseren Systems sein und mit neuen Lernalgorithmen etc. kombiniert werden.
+%Mankind is often inspired by nature when it comes to developing novel systems.
+%The development of artificial intelligence (AI) and Deep Learning has been strongly influenced by, according to our perception, one of (if not the) most intelligent systems on planet Earth, the human brain.
+%The brain is studied by the scientific field of neuroscience\sidenote{there exist many additional (sub-)fields studying the brain such as cognitive science, cognitive psychology, neurology, and neuropsychology}.
+%From neuroscience or related fields come various insights on how the human nervous system and especially the brain works.
+%Much of this knowledge has been gained through observations and experiments on humans or other living creatures.
+%Often these findings are only what can be measured from the outside, the real core, the mechanism that causes intelligence, remains unknown.
+%
+%While Deep Learning is clearly inspired by the insights of Neuroscience, the two fields have little in common in their present form.
+%The implementation of neuroscientific findings has emerged as a subfield in its own right, called Neurocomputing (c.f. Section \secref{neurocomputing}).
+%In general, neurocomputing is closer related to the functionality of the human brain than Deep Learning.
+%Neurocomputing has produced many promising algorithms that can overcome some weaknesses faced by deep learning systems. 
+%Although neurocomputing has also achieved significant breakthroughs, most systems used in everyday life are still based on the principle of Deep Learning.
 
-\subsection{Terminology}\seclbl{terminology}
-This work is at the intersection of computer science and neuroscience.
-Deep Learning, which is the principle used in this thesis, is strongly inspired by the findings of neuroscience.
-Therefore, many terms and concepts overlap and are therefore defined in this chapter.
 
-A biological neuron (i.e. found in the human body and animals) is a cell that communicates with other neurons through connections called synapses.
-Communication takes place through precisely timed electrical pulses.
-Biological neurons are electrically excitable by voltage changes across their membranes.
-If the changes is large enough within a short interval, the neuron generates a pulse called an action potential.
-This action potential travels through the axon and activates synaptic connections.
-Other neurons, connected through synapses, receive this signal.
-The synaptic signal can be be excitatory \sidecite{Takagi_2000} or inhibitory \sidecite{Coombs_Eccles_Fatt_1955}, making the post-synaptic neuron more or less likely to fire an action potential.
-Biological neurons are typically classified into three types; sensory neurons, motor neurons, and interneurons.
-Sensory neurons respond to external stimuli such as light or sound and send their signal to the spinal cord or directly to the brain.
-Motor neurons receive signals from the brain and spinal cord to control muscles or organs.
-Interneurons connect neurons within the same region of the brain or the spinal coord.
-Multiple connected neurons from a neural circuit.
-The neural network in the brain is not static but changes through growth and reorganization.
-This process is referred to as neuroplasticity or neural plasticity \sidecite{Costandi_2016}.
+%\section{Motivation}\seclbl{motivation}
+%One of the main challenges of today's AI systems is the processing of visual information.
+%Visual perception is fundamentally the task of finding a suitable interpretation of a given scene.
+%A scene typically consists of objects that interact with each other.
+%Identifying these objects and their relationship among each other is implemented by algorithms as a non-deterministic search problem, i.e. algorithms try to identify the object within a scene.
+%State-of-the-art algorithms for image processing are often based on deep learning.
+%Despite the fact that deep learning has achieved incredible performance on a variety of tasks such as object recognition it is still questionable whether the current methodology is enough to achieve real (or at least more advanced) intelligence (c.f. Section \secref*{limitationsDL}).
+%Algorithms from the field of neurocomputing (c.f. Section \secref*{neurocomputing}), which are more closely oriented to the findings from the field of neuroscience, can be considered as a complement to deep learning.
+%However, even tough algorithms from the field of neurocomputing have interesting properties, they usually do not perform as good as deep learning according to the evaluation metrics used and often work on specific or small data only.
 
-An artificial neuron is, similar to a biological neuron, connected to other neurons.
-Artificial neurons are usually organized in layers that forward signals sequentially.
-Although the neurons in the first layer could be considered sensory neurons, the neurons in the last layer could be considered motor neurons, and the neurons in the middle layer could be considered interneurons, such a distinction makes less sense because the artificial neurons function similarly regardless of their layer except for the activation function (c.f. Section \secref{ann}).
-Several variants for artificial neurons have been proposed in the literature. These variants are described in the following chapter \chref*{fundamentals}.
-Similar to biological neurons, multiple artificial neurons are usually connected to an artificial neural network.
+%Thus, various algorithms exist to solve the non-deterministic problem of finding an appropriate interpretation of a visual scene, but they have significant shortcomings.
+%Interestingly, the problem of generating a scene\sidenote{the opposite task than finding an interpretation of a scene} from a clear description is deterministic.
+%Computer graphics deals with the problem to generate images with the aid of computers.
+%Nowadays, such systems are able to render photorealistic images based on descriptions.
+%For example, video games are essentially programs that generate scenes consisting of multiple objects such as people, weapons, buildings, or vehicles based on program code.
+%For each of these objects, skeletons are usually pre-defined and during rendering transformed (i.e. their size, rotation, distortion and positioning are adjusted) as well as properly illuminated (raytracing).
+%This allows to generate an infinite number of scenes from a predefined set of skeletons and transformations.
+%Essential in this process seems the separation between objects and object transformation.
+%Therefore, incorporating these insights into current algorithms for the interpretation of visual scenes seems promising and could lead to significant improvements.
+%More precisely, identifying objects and their transformations separately in preception systems in order to recognize objects independently of their transformations could improve visual scene interpretation.
 
-In this thesis, the two fields are declared as well as possible.
-If it is not clear from the context what we are talking about, we will refer to biological or artificial neurons and biological or artificial neural networks.
-This thesis describes the field of interest as clearly as possible.
-If it is not clear from the context to which field the referred entity belongs to, it is clarified by stating it (e.g. biological or artificial neuron).
-However, some concepts are identical in both fields.
-For example, there are excitatory or inhibitory signals or neural plasticity in biological and artificial neurons.
-Consequently, these terms are not distinguished.
 
-In addition to these well-defined terms, there are various biological principles observed in the field of Neuroscience that are either not completely understood or it is unclear how they can be incorporated into artificial networks.
-The concepts relevant for this thesis are discussed in the following.
-However, due to the aforementioned challenges, no definition of these principles is given but rather my own interpretation in the context of this work.
+%\section{Terminology}\seclbl{terminology}
 
-A central concept of this work are sub-networks.
-Typically, in current DL architectures for computer vision, an encoder is used to compute object representations in a latent space.
-Thus, the output of a single layer can be understood as an object representation\sidenote{this is also true for image classification: Usually, a classification head consisting of fully connected layers and subsequent softmax activation is used after an image encoder}.
-According to von der Malsburg et al. \cite{von_der_Malsburg_Stadelmann_Grewe_2022}, biological sub-networks span multiple layers.
-This concept is interpreted in such a way that the latent representations should not be extracted from the last layer of an encoder but from several layers.
-While the first layers of an image encoder contain more local information, the last layers contain very global information.
-It is known from speech representation learning that different layers capture different speech information \sidecite{Chung_Hsu_Tang_Glass_2019}.
-For example, the first layers contain more information to distinguish speakers, while representations in later layers provide more phonetic content.
-However, such information seems to be poorly exploited in computer vision architectures.
-One could argue that skip connections in segmentation networks \sidecite{Ronneberger_Fischer_Brox_2015} exploit such information.
-While this may be true to some extent, information from previous layers is still squeezed into a feature vector and can be poorly exploited by downstream tasks.
-TODO: Umsetzung Sub-Networks beschreiben
 
-In addition to forward connections, lateral connections are also located in visual cortex \sidecite{gilbert1990lateral}.
-Thus, the biological neurons are not only connected to the neurons in the subsequent layer but also within the same layer.
-TODO: Je nach Umsetzung erklären, wie lateral connections in ANN interpretiert werden (+ Zeichnung einfügen)
+\section{Contribution}
+The following contributions are made in this thesis:
+\begin{itemize}
+	\item First, the basics of the fields of deep learning and neurocomputing are described in detail. Together with related work, this provides a survey of the related fundamentals.
+	\item Second, promising concepts from the neuroscience literature that may be necessary for more intelligent systems are identified and suggestions are made on how to integrate these concepts into a modern DL framework.
+	\item Third, I present two concrete DL architectures that make use of such neuroscience-inspired concepts and analyze their strengths and weaknesses in detail.
+	\item Fourth, this work gives an impression of which concepts that are currently little used in DL settings seem to be promising and makes a recommendation for future work.
+\end{itemize}
 
-Another principle that seems important in biological neural networks is sparsity.
-Over time, the number of active neurons in the visual cortex decreases.
-For example, in the visual cortex of mice are more than 75\% of the neurons active before the first opening of the eyes, 36\% after the opening of the eyes and only 12\% in adulthood \sidecite{Rochefort_Garaschuk_Milos_Narushima_Marandi_Pichler_Kovalchuk_Konnerth_2009}.
-Thus, a sparsification of neuronal activations takes place through visual experience.
-In the field of Deep Learning, sparisty is often interpreted in two different forms; sparse weight matrices and sparse activation matrices.
-Sparse weight matrices are often chosen to make models smaller or to increase inference speed \cite{Louizos_Welling_Kingma_2018, Hoefler_Alistarh_Ben_Nun_Dryden_Peste_2021}.
-From a biological point of view, this process of first creating a large network and then shrinking it is obviously not plausible\sidenote{otherwise we would have a large brain at the beginning, which becomes smaller by factors in the course of time}.
-Sparse activations, on the other hand, can increase robustness \cite{Panousis_Chatzis_Theodoridis_2021}.
-Intuitively, sparse activations enforce that only the most relevant information is passed to the subsequent layer.
-Furthermore, sparse activations can help to obtain sub-networks.
-Objects are represented in sub-networks (i.e. in multiple layers).
-If all neurons in all layers are always active, then object representations cannot be extracted from sub-networks, since it is unclear which activation pattern represents which object.
-If, on the other hand, only a fraction of the neurons are active, then certain neuron combinations can infer objects.
-TODO: Umsetzung Sprase Activations beschreiben
-
-A biological intelligent organism has an embodiment and can interact with the world.
-At the same time, the visual system perceives continuous input all the time (except when sleeping or blinking).
-As a result, the visual signal changes only minimally from one perceived frame to the next over a long course of time.
-An ANN, on the other hand, is typically trained on samples that have little relation to each other.
-When the system is trained on images, each frame is different; with videos, each sequence of frames is different.
-A continuous input might help to get better representation of objects through self-supervised learning.
-If an input is continuous and shows the same object from different angles or in different transformations (e.g. stretching) and it can be inferred that it is the same object then the object representations derived from this continuous stream can be homogenized.
-These principles are already applied to some extent by self-supervised learning systems for computer vision.
-In contrastive learning, a popular form of self-supervised learning, two different views are derived from one image by data augmentation, and their representations are then pushed closed together in the feature space \sidecite{chen2020simple, chen2020big, caron2020unsupervised}.
-However, this paradigm is still quite limited since only two views of the same scene and not the continuous transformation of an object are presented to the learning system.
-TODO: Umsetzung beschreiben
-
-\subsection{Contribution}
-TODO: Einzelnes Kapitel in dem beschrieben wird, was implementiert wurde, resp. wie dies hilft
-
-\subsection{Organization of Thesis}\seclbl{org_thesis}
-The remainder of the thesis is organized as follows: In chapter \chref*{fundamentals} we present the fundamentals necessary to understand this thesis. We provide an overview about how deep learning works and what the most common research areas in neurocomputing are. Chapter \chref*{rel_work} presents the work related to this thesis.
-
-TODO....
-
+\section{Organization of Thesis}\seclbl{org_thesis}
+The remainder of the thesis is organized as follows: In Chapter \chref*{fundamentals} the fundamentals of deep learning and neurocomputing are explained in detail.
+Experts may skip this chapter, likewise, the second Section on neurocomputing can optionally be omitted, as it is not fundamental for understanding this thesis.
+Chapter \chref*{rel_work} introduces the related work. Chapter \chref*{methods} describes the methods used; first, I explain my interpretation on how specific neuroscientific concepts could be implemented in a deep learning setting. Afterwards, two architectures incorporating these concepts are presented. In Chapter \chref*{results} the results and findings of this thesis are discussed. Finally, in Chapter \chref*{future_work} future work is described and some insights and intuitions of the author are given about which neuroscience concepts seem promising and which do not.
 
 
