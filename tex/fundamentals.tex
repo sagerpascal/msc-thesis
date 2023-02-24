@@ -5,18 +5,25 @@
 Machine learning uses mathematical functions to map an input to an output.
 These functions usually extract patterns from the input data to build a relationship between input and output.
 The term machine learning stems from the fact that we use \emph{machines} to correlate the input and the output to a function (i.e. to \emph{learn} a function) during a training period.
-Deep learning is a sub-branch of machine learning and considered state-of-the-art for many learning tasks, especially for high-dimensional data such as texts, audio recordings, 2D as well as 3D images, and videos.
-Deep learning algorithms use neural networks that are heavily inspired from the connected neurons within the human brain.
+Deep learning is a sub-branch of machine learning and considered state-of-the-art for many learning tasks, especially on high-dimensional data such as texts, audio recordings, 2D as well as 3D images, and videos.
+Deep learning algorithms use neural networks that are heavily inspired from connected neurons within the human brain.
 
-Therefore, this chapter first briefly explains what biological neurons are and relates them to artificial neurons (c.f. Section \secref*{neurons}).
-Next, Section \secref*{ann} describes artificial neural networks that connect a large number of such artificial neurons.
+Therefore, this chapter first briefly explains how biological neurons work and relates them to artificial neurons (c.f. Section \secref*{neurons}).
+Next, Section \secref*{ann} describes artificial neural networks that connect a large number of artificial neurons.
 In Section \secref*{limitationsDL}, problems of such artificial neural networks are pointed out.
-In section \secref*{biological_learning} I describe some of the differences to biological learning and in Section \secref*{neurocomputing} make the connection to methods that are more plausible from a neuroscientific point of view.
-These last two sections are not essential for the understanding of this thesis and can optionally be skipped, but are intended as a supplement for interested readers to get an overview of the whole field.
+Section \secref*{biological_learning} describes some of the differences of deep learning compared to biological learning and Section \secref*{neurocomputing} describes biologically more plausible learning methods that are investigated in the field of neurocomputing.
+These last two sections are not essential for the understanding of this thesis and can optionally be skipped. However, they are intended as a supplement for interested readers who want to get an overview of the whole field.
 
 
-\section{Biological and Artificial Neurons}\seclbl{neurons}
-A biological neuron is a cell that communicates with other neurons through connections called synapses.
+\section{Biological Neurons}\seclbl{neurons}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.99\textwidth]{components_of_neuron}
+    \caption[Diagram of the components of a biological neuron]{A Diagram of the components of a biological neuron. The image is from \citeay{wiki_neuron}.}
+    \figlbl{components_neuron}
+\end{figure}
+
+A biological neuron (c.f. Figure \figref*{components_neuron}) is a cell that communicates with other neurons through connections called synapses.
 Communication takes place through precisely timed electrical pulses.
 Biological neurons are electrically excitable by voltage changes across their membranes.
 If the changes is large enough within a short interval, the neuron generates a pulse called an action potential.
@@ -33,21 +40,15 @@ This process is referred to as neuroplasticity or neural plasticity \sidecite{Co
 
 An artificial neuron is, similar to a biological neuron, connected to other neurons.
 Artificial neurons are usually organized in layers that forward signals sequentially.
-Although the neurons in the first layer could be considered sensory neurons, the neurons in the last layer could be considered motor neurons, and the neurons in the middle layer could be considered interneurons, such a distinction makes less sense because the artificial neurons function similarly regardless of their layer except for the activation function (c.f. Section \secref{ann}).
-Several variants for artificial neurons have been proposed in the literature. These variants are described in the following Chapter \chref*{fundamentals}.
+Although the neurons in the first layer could be considered sensory neurons, the neurons in the last layer could be considered motor neurons, and the neurons in the middle layer could be considered interneurons, such a distinction makes less sense because the artificial neurons function similarly regardless of their layer except for the activation function.
+Several variants for artificial neurons have been proposed in the literature. These variants are described in the following Section \secref*{ann}.
 Similar to biological neurons, multiple artificial neurons are usually connected to an artificial neural network.
-
-In this thesis, the two fields are declared as well as possible.
-If it is not clear from the context what we are talking about, we will refer to biological or artificial neurons and biological or artificial neural networks.
-However, some concepts are identical in both fields.
-For example, there are excitatory or inhibitory signals or neural plasticity in biological and artificial neurons.
-Consequently, these terms are not distinguished.
 
 
 \section{Artificial Neural Networks}\seclbl{ann}
 The idea for artificial neural networks (ANN) stems from biology and aims to capture the interaction of brain cells (neurons) with a mathematical model.
 A first model for a neuron was proposed by MuCulloch and Pitts in 1943 \sidecite{McCulloch_Pitts_1943}.
-Similar to how a"neuron of the human brain transmits electrical impulses through the nervous system, the artificial neuron of MuCulloch and Pitts receives multiple input signals and transforms them into a output signal.
+Similar to how a neuron of the human brain transmits electrical impulses through the nervous system, the artificial neuron of MuCulloch and Pitts receives multiple input signals and transforms them into a output signal.
 A neuron takes an input vector \(\boldsymbol{x} = (x_1, ..., x_n)\) where \(x_i \in \{0, 1\}\) and maps it to an output \(\hat{y} \in \{0, 1\}\).
 The mapping from the input to the output is done by using an aggregation function \(g\) that sums up the input vector \(\boldsymbol{x}\) and a activation function \(f\) that outputs \(1\) if the output of \(g\) is greater than a threshold \(\theta\) and \(0\) otherwise.
 
@@ -146,7 +147,7 @@ SGD therefore updates the network parameters by taking a step of size \(\eta\) i
 	\end{aligned}
 \end{equation}
 
-The gradients of the weights \(\boldsymbol{w}^{[l]}\) and biases \(b^{[l]}\) can efficiently be calculated with an algorithm called backpropagation \sidecite{Rumelhart_Hinton_Williams_1986}, which is just a smart implementation of the chain rule\sidenote{While a detailed discussion on backpropagation is out of scope for this thesis, we refer interested reader to the Deep Learning course by Andrew Ng \cite{Coursera}}.
+The gradients of the weights \(\boldsymbol{w}^{[l]}\) and biases \(b^{[l]}\) can efficiently be calculated with an algorithm called backpropagation \sidecite{Rumelhart_Hinton_Williams_1986}, which is just a smart implementation of the chain rule\sidenote{While a detailed discussion on backpropagation is out of scope for this thesis, we refer interested reader to the deep learning course by Andrew Ng \cite{Coursera}}.
 
 One of the most important design decisions in creating ANNs is how the neurons are connected.
 If the each neuron is connected to each neuron of the succeeding layer, it is called a Fully Connected Layer (FCN). 
@@ -183,6 +184,7 @@ In this thesis I do not go into these specific architectures but provide some re
 \subsubsection{Training of Convolutional Neural Networks}\seclbl{train_cnns}
 CNNs can be used in various applications such as image recognition, video analysis, natural language processing, anomaly detection in time series and many others.
 Since this thesis deals with better representations for visual scenes, this chapter is limited to the typical image analysis tasks; image classification, object detection, and image segmentation.
+An overview of these tasks is shown in Figure \figref*{img_analysis_tasks}.
 The goal of image classification is to predict an image-level label, i.e. to predict what object is in the image.
 A classic example of this problem is predicting whether a cat or a dog is in a picture.
 This is typically done for images that only contain one object.
@@ -197,7 +199,12 @@ In this case, semantic segmentation is often used.
 Semantic segmentation is the task where each pixel is classified (the image is divided into segments) which leads to a pixel-wise mask for each object in the image.
 This gives us exact information about the shapes of the objects.
 
-TODO: Bild einfügen mit diesen Tasks und darauf verweisen.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.99\textwidth]{image_analysis}
+    \caption[Overview of different image analysis tasks]{Overview of different image analysis tasks. The image is taken from \citeay{venturebeat_img_analysis} and was slightly adapted.}
+    \figlbl{img_analysis_tasks}
+\end{figure}
 
 
 Depending on the task, different kind of labels are required for supervised learning.
@@ -205,22 +212,21 @@ Image classification requires labels on image-level (i.e. one or multiple labels
 
 Besides supervised learning, there are various principles of learning with partial labels or without labels.
 These techniques are called weakly-supervised or un-supervised learning and are well summarised in \sidecite{Simmler_Sager_Andermatt_Chavarriaga_Schilling_Rosenthal_Stadelmann_2021}.
-
 Not only specific tasks can be learned, but also task-independent representations.
 These representations are typically learned unsupervised\sidenote{also called self-supervised learning because the target labels are derived from the data itself} and can be used for one or several downstream tasks.
 More details on visual representation learning are provided in Section \secref*{visual_rep_learning}.
+Especially Autoencoders \sidecite{rumelhart1985learning} are explained in this section as they are applied in this thesis.
 
- TODO: Autoencoder einfügen
 
 \section{Limitations of Deep Learning}\seclbl{limitationsDL}
-The rise of Deep Learning over the past decade has only been possible because of major technological advances in hardware.
+The rise of deep learning over the past decade has only been possible because of major technological advances in hardware.
 Without the computational resources and the storage capacity of the systems created in the last decades no system could run today's algorithm.
 Moreover, much of the progress of recent years was possible due to the improved hardware. 
 Moore’s law \cite{Moore_2006} states that the number of transistors in a dense integrated circuit doubles about every two years and is the only known physical process following an exponential curve.
 An analysis by OpenAI shows that since 2012 the amount of compute has even increasing exponentially with a doubling time  of \(3.4\) months \cite{OpenAI_compute}.
 However, the exponential increase seems to come to an end since the size of transistors hit physical limitations.
 It is assumed that Moore's law will end by around 2025 \sidecite{Kumar_2015}.
-Besides the progress in the field and the development of new technology, Deep Learning models also became better because the number of parameters and the size of datasets grew exponentially.
+Besides the progress in the field and the development of new technology, deep learning models also became better because the number of parameters and the size of datasets grew exponentially.
 Even the growth in the last five years is astonishing.
 While the state-of-the-art language model from 2018 \sidecite{Peters_Neumann_Iyyer_Gardner_Clark_Lee_Zettlemoyer_2018} had around \(94\)M parameters, the state-of-the-art in 2020 \sidecite{NEURIPS2020_1457c0d6} already had \(175\)B parameters. Training such a model on a single V100 GPU would take about 355 years and cost about \(4.6\)M dollars \cite{Lambda_GPT3}.
 A recent language model from Microsoft and Nvidia \sidecite{Shoeybi_Patwary_Puri_LeGresley_Casper_Catanzaro_2020} even has \(530\)B parameters.
@@ -228,7 +234,7 @@ Only a few institutions with massive resources are able to train such big models
 In general, inference on low-budget hardware such as smartphones or embedded hardware becomes prohibitive with the growing size of deep networks.
 Even tough there exist techniques to shrink the model size after training such as quantization \cite{Wu_Judd_Zhang_Isaev_Micikevicius_2020}, model pruning \cite{Choudhary_Mishra_Goswami_Sarangapani_2020}, or model distillation \cite{Hinton_Vinyals_Dean_2015} it is questionable if making models bigger is the best way to develop intelligent systems.
 
-Another major issue of Deep Learning systems is that they suffer from catastrophic forgetting.
+Another major issue of deep learning systems is that they suffer from catastrophic forgetting.
 If a model is trained on a specific task and afterwards trained (or fine-tuned) on another task, the model suffers a ``catastrophic'' drop in performance over the first task.
 The reason for this effect is that the model during training on the second task adjusts the parameters learned during the first task and therefore ``forgets'' the learned mapping functions.
 Just mixing all datasets or to learn all tasks in parallel in a current multi-task setup \cite{Zhang_Yang_2021} doesn't seem feasible to achieve some kind of general intelligence as this involves too many different unrelated tasks.
@@ -236,22 +242,22 @@ Catastrophic forgetting is also caused by the fact that learning is mostly done 
 Online learning \cite{Sahoo_Pham_Lu_Hoi_2017} and lifelong learning \cite{Parisi_Kemker_Part_Kanan_Wermter_2019} are currently hot research topics.
 However, these methods have not yet been established.
 
-Furthermore, there exists problems which may cannot be solved with the current principles used for Deep Learning.
-First of all, it is questionable if Deep Learning models can achieve \emph{real} generalization\sidenote{Generalization refers to the ability of the model to adapt properly to previously unseen data from the same distribution}.
+Furthermore, there exists problems which may cannot be solved with the current principles used for deep learning.
+First of all, it is questionable if deep learning models can achieve \emph{real} generalization\sidenote{Generalization refers to the ability of the model to adapt properly to previously unseen data from the same distribution}.
 With enough data, can achieve generalization in the sense that the model can interpolate within the data distribution.
 However, deep learning models fail to extrapolate.
 For example, convolutional neural networks (CNNs) do not generalize to different viewpoints unless they are added to the training data \sidecite{Madan_Henry_Dozier_Ho_Bhandari_Sasaki_Durand_Pfister_Boix_2022}.
 
-Second, Deep Learning is not able to learn abstract relationships in a few trials but requires many samples of it and is thus data hungry.\sidenote{Delme!!!}
+Second, deep learning is not able to learn abstract relationships in a few trials but requires many samples of it and is thus data hungry.\sidenote{Delme!!!}
 Marcus Gary \sidecite{Marcus_2018} argues that if he tells that a ``schmister'' is a sister over the age of 10 but under the age of 21, humans can  immediately infer whether they or their best friends have any ``schmister''. However, modern DL systems lacks a mechanism for learning abstractions through explicit, verbal definition and require thousands or even more training samples.
 
 Third, no DL model has been able to demonstrate causal reasoning in a generic way.
-Deep Learning models find correlations between the inputs and the outputs, but not the causation.
-Other AI approaches such as hierarchical Bayesian computing or probabilistic graphical models are better at causal reasoning but cannot be well combined with Deep Learning models.
+Deep learning models find correlations between the inputs and the outputs, but not the causation.
+Other AI approaches such as hierarchical Bayesian computing or probabilistic graphical models are better at causal reasoning but cannot be well combined with deep learning models.
 
-Lastly, Deep Learning models are to some extend too isolated since they have no embodiment and cannot interact with the world.
+Lastly, deep learning models are to some extend too isolated since they have no embodiment and cannot interact with the world.
 For example, the human body provides needs, goals, emotions, and gut feeling\sidenote{one could argue that the body is therefore even a co-processor of the brain}.
-In current Deep Learning systems are emotions totally absent and the goals are set externally.
+In current deep learning systems are emotions totally absent and the goals are set externally.
 Deep Reinforcement Learning can be considered as a first step in the direction of dissolving this isolation, as they interact with a virtual environment. 
 AI systems that interact with the real world do not work well so far.
 Moravec's paradox \sidecite{Moravec_1995} states that ``it is comparatively easy to make computers exhibit adult level performance on intelligence tests or playing checkers, and difficult or impossible to give them the skills of a one-year-old when it comes to perception and mobility''.
@@ -267,7 +273,7 @@ It can be seen that these areas are connected in a rather complex structure.
     \caption[Organization of the visual system in the cerebral cortex]{The organization of the visual system in the cerebral cortex. The image is from \citeay{Felleman_Van_Essen_1991}.}
     \figlbl{visual_cortext}
 \end{figure}
-Deep Learning architectures, on the other hand, are mostly unidirectional and the signal flows unidirectional from layer to layer\sidenote{Except for recurrent connections, skip-connections, or residual-connections}.
+Deep learning architectures, on the other hand, are mostly unidirectional and the signal flows unidirectional from layer to layer\sidenote{Except for recurrent connections, skip-connections, or residual-connections}.
 However, the choice of the architecture influences the how the model can learn the mapping function from input to output.
 It could be that the complex structure of our brain comprises an inductive bias which was learned over time through evolution.
 
@@ -279,12 +285,10 @@ Therefore, backpropagation is not biologically plausible.
 Lillicrap et al. \sidecite{Lillicrap_Cownden_Tweed_Akerman_2016} shows that an additional set of random feedback weights is able to transmit useful gradients.
 Their work has reopend questions how the brain could process error signals and has dispel some long-held assumptions about algorithmic constraints on learning.
 
-Not only the structure of the network and the way how the feedback is calculated is different between biological learning and Deep Learning.
+Not only the structure of the network and the way how the feedback is calculated is different between biological learning and deep learning.
 Also the neurons themselves are different.
 While the artificial neuron doesn't have any dynamics (c.f. Equation \eqref*{nn}), biological neurons are highly dynamic:
-Biological neurons adapt their firing rate to constant inputs, they may continue firing after an input disappears, and can even fire when no input is active.
-
-TODO: Add reference to reservoir computing
+Biological neurons adapt their firing rate to constant inputs, they may continue firing after an input disappears, and can even fire when no input is active (c.f. Section \secref*{reservoir_comp}).
 
 Lastly, the neurons in the brain are self-organizing.
 This means that a group of elementary units such as neurons or a group of neurons perform similar rule of behavior on a sub-set of the available information.
@@ -359,7 +363,7 @@ Such systems are particularly useful to retrieve representations based on degrad
 Auto-associative memories return for an input the most similar previously seen sample.
 A classical implementation of an auto-associative memory is the nearest neighbour algorithm \sidecite{Fix_Hodges_1989}.
 This algorithm compares a given samples with the previously seen training data with a distance metric and returns the most similar sample\sidenote{or the \(k\) most similar samples in the case of the k nearest neighbour (k-NN) algorithm}.
-Memory networks \sidecite{Weston_Chopra_Bordes_2015} implement an auto-associative memory within the Deep Learning framework.
+Memory networks \sidecite{Weston_Chopra_Bordes_2015} implement an auto-associative memory within the deep learning framework.
 Such networks convert an input \(\boldsymbol{x}\) to a internal feature representation \(I(\boldsymbol{x})\), update memories given the new input \(m=G(m, I(\boldsymbol{x}))\), and compute the output features \(o=O(m, I(\boldsymbol{x}))\).
 This process is applied during the training and inference phase.
 The only difference is that the parameters for the functions \(I\), \(G\), and \(O\) are only updated during training.
@@ -426,9 +430,7 @@ Later, the energy function was reformulated as exponential function \sidecite{De
 The second limiting factor of binary Hopfield networks is that only binary patterns can be stored.
 Ramsauer et al. \sidecite{Ramsauer} extended the binary Hopfield network to continous patterns by reformulating the energy function and the corresponding update rule.
 Continous Hopfield networks can retrieve continous patterns or even combination of several similar continous patterns.
-The authors claim that a continous Hopfield networks can replace fully-connected layers, attention layers, LSTM layers, support vector machines (SVM), and k-NN.
-
-TODO: References for LSTM, attention, SVM, ...???
+The authors claim that a continous Hopfield networks can replace fully-connected layers, attention layers \cite{10.5555/2969033.2969073}, LSTM layers \cite{Hochreiter_Schmidhuber_1997}, support vector machines (SVM) \cite{Cortes_Vapnik_1995}, and k nearest neighbor (k-NN) \cite{Cover_Hart_1967}.
 
 
 \subsection{Spiking Neural Networks}\seclbl{spiking_networks}

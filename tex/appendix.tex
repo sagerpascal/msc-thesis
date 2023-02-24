@@ -1,21 +1,21 @@
-\chapter{Image Style Transfer}\chlbl{image_style_transfer}
-In the field of image style transfer\sidecite{Gatys_Ecker_Bethge_2015}, such correlations are used to generate images.
-An image is created based on two images, one image providing the content (i.e. the ``content-image'') and the other image providing the style (i.e. the ``style-image'').
-To generate the content of the image, a random image can be fed into the model and a simple distance-based loss function such as the Euclidean norm can be used to calculate the difference between the model output and the content-image.
-Over time, the model would learn to output the content-image.
-However, only the content from the content-image and not its style is needed.
-A solution to this problem is using Convolutional feature maps\sidenote{a convolutional layer can have multiple filters (i.e. channels), each filter produces a convolutional feature map} as they capture spatial information of an image well, while containing only little style information.
-Therefore, the distance loss is not calculated between the content-image and the model output but between the feature maps of the content-image and the output image.
+%\chapter{Image Style Transfer}\chlbl{image_style_transfer}
+%In the field of image style transfer\sidecite{Gatys_Ecker_Bethge_2015}, such correlations are used to generate images.
+%An image is created based on two images, one image providing the content (i.e. the ``content-image'') and the other image providing the style (i.e. the ``style-image'').
+%To generate the content of the image, a random image can be fed into the model and a simple distance-based loss function such as the Euclidean norm can be used to calculate the difference between the model output and the content-image.
+%Over time, the model would learn to output the content-image.
+%However, only the content from the content-image and not its style is needed.
+%A solution to this problem is using Convolutional feature maps\sidenote{a convolutional layer can have multiple filters (i.e. channels), each filter produces a convolutional feature map} as they capture spatial information of an image well, while containing only little style information.
+%Therefore, the distance loss is not calculated between the content-image and the model output but between the feature maps of the content-image and the output image.
 
-The second task is to transfer the style from the style-image to the model output.
-The style of an image can be described by correlations across the different feature maps.
-This information about the image style can be calculated with a Gram matrix.
-A Gram matrix is the dot product\sidenote{the dot product between two vectors can be seen as similarity metric; it gets bigger if two vectors are more similar} of the flattened feature vectors from a convolutional feature map (i.e. the dot product between all channels of a convolutional layer's output).
-For example, a convolutional layer could have multiple channels. The first channel could have a high activation for black and white stripes in horizontal direction while the second channel could have a high activation for black and white stripes in vertical direction. If both channels activate together for the same input and thus have a high correlation, there is a high possibility that the image might contain the style of a chessboard (i.e. black and white checkered). A third channel, for example, could have a high activation for eyes. If this channel has a low correlation with the first channel but a high correlation with the second channel (i.e. black and white stripes in vertical direction), the input image might contain the face of a zebra and thus capture a ``zebra-style''.
-Similar to the content-transfer, a distance loss such as the Euclidean distance can be used to compare the Gram matrices of the style-image and the output-image.
-Thus, it is compared if the output-image has the same style as the style-image.
+%The second task is to transfer the style from the style-image to the model output.
+%The style of an image can be described by correlations across the different feature maps.
+%This information about the image style can be calculated with a Gram matrix.
+%A Gram matrix is the dot product\sidenote{the dot product between two vectors can be seen as similarity metric; it gets bigger if two vectors are more similar} of the flattened feature vectors from a convolutional feature map (i.e. the dot product between all channels of a convolutional layer's output).
+%For example, a convolutional layer could have multiple channels. The first channel could have a high activation for black and white stripes in horizontal direction while the second channel could have a high activation for black and white stripes in vertical direction. If both channels activate together for the same input and thus have a high correlation, there is a high possibility that the image might contain the style of a chessboard (i.e. black and white checkered). A third channel, for example, could have a high activation for eyes. If this channel has a low correlation with the first channel but a high correlation with the second channel (i.e. black and white stripes in vertical direction), the input image might contain the face of a zebra and thus capture a ``zebra-style''.
+%Similar to the content-transfer, a distance loss such as the Euclidean distance can be used to compare the Gram matrices of the style-image and the output-image.
+%Thus, it is compared if the output-image has the same style as the style-image.
 
-In summary, the content is transferred by comparing entire convolutional layer output and the style by comparing the correlations between the feature maps of a convolutional layer output (i.e. by comparing gram matrices).
+%In summary, the content is transferred by comparing entire convolutional layer output and the style by comparing the correlations between the feature maps of a convolutional layer output (i.e. by comparing gram matrices).
 
 %\pagebreak
 %\chapter{Design Decisions}\chlbl{design_decisions}
@@ -267,3 +267,339 @@ Furthermore, the correlation based method is compared to randomly setting the sa
 It can be observed that the performance is better when weights between neurons with low correlation are set to \(0\) than if random weights are set to \(0\).
 
 
+\pagebreak
+\chapter{Net-Fragments and Deep Learning}\chlbl{net_fragments}
+In this chapter, it is examined how representations of typical deep learning architectures look like.
+Especially net fragments are of interest, i.e. (groups of) neurons that represent certain features of objects.
+According to \sidecite{von_der_Malsburg_Stadelmann_Grewe_2022}, net fragments are a compositional data structure (c.f. Section \secref*{natural_intelligence}).
+In architectures without recurrent connections, a composition of neurons is built up hierarchically over several layers.
+Thus, an object is not represented by the activations of a single layer but by the activations of multiple layers.
+Furthermore, groups of neurons represent certain features, and an object is composed of a multitude of such neuron groups (i.e. has many features).
+
+% TODO schreiben, dass NN nur letztes Layer auslesen -> dieses Prinzip verletzt, zweites Prinzip ist das Neuronen spezifische Features repräsentieren -> das wird hier untersucht
+Typical deep learning architectures for vision tasks sequentially process the input, i.e. the output from one layer is used as input from the next layer.
+In the last layer\sidenote{or in some special cases such as autoencoders in a defined intermediate layer}, the representations describing the objects in the image are retrieved and used for a down-stream task such as image classification.
+Thus, object representations stem from one single layer.
+This process violates the biological principle that an object is represented by groups of neurons that span over several layers.
+However, even if deep-learning architectures use only one layer to represent objects, they work very well due to the increasing complexity of features within a neural network; deep learning architectures for image processing, especially CNNs, build a hierarchy of features where the first layers extract low-level features that are combined into more complex features in the later layers. The last layer thus represents objects but neglects the details.
+
+Since this first principle is violated by deep learning architectures by design, this chapter focuses mainly on the second principle. Specifically, it investigates whether specific neuron groups can be assigned to specific features. 
+If this would be the case, specific features would be expected to trigger the activation of a group of neurons when they are present and that the same neurons would be inactive when this feature is not present. Thus, different neurons should be active for different objects.
+
+
+Deep Learning architectures usually consist of several layers with millions of neurons, leading to millions of activations \cite{Szegedy_Liu_Jia_Sermanet_Reed_Anguelov_Erhan_Vanhoucke_Rabinovich_2014, He_Zhang_Ren_Sun_2016, Ronneberger_Fischer_Brox_2015, He_Gkioxari_Dollar_Girshick_2017, Liu_Anguelov_Erhan_Szegedy_Reed_Fu_Berg_2016, Redmon_Divvala_Girshick_Farhadi_2016}.
+Thus, the input data is processed in a complex way, which makes the analysis of activations difficult.
+To simplify the analysis of network activations, a novel straightforward classification dataset is proposed;
+The dataset consists of $10$ images as shown in Figure \figref*{pre_study_dataset}.
+Each image has a size of $9\times9$ pixels and depicts a number between $0$ and $9$.
+The images have only one channel and contain binary values (i.e. pixels are either set to $0$ or $1$).
+Small networks are sufficient to analyze these images and this dataset thus leads to less network activations what simplifies the search for net fragments.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.99\textwidth]{pre_study_dataset}
+    \caption[Straight Line Digits Dataset]{A novel dataset created to investigate the properties of modern deep learning architectures. The dataset consists of images of the numbers $0-9$, each image has a size of $9\times9$ pixels. The blue dots represent pixels with the value $0$, green dots represent pixels with the value $1$.}
+    \figlbl{pre_study_dataset}
+\end{figure}
+
+Even in this small data set, there exist various features and consequently a multitude of network fragments.
+A very intuitive way for us humans to construct features on this data set is to interpret each line as a feature.
+For example, the dataset could be explained by $9$ basic lines, that can be composed to $10$ different digits.
+Thus, a low-level net fragment could represent such a basic line and be composed to higher-level net fragments such as digits.
+Figure \figref*{pre_study_components} visualizes such an intuitive composition (basic lines on the left, digits on the right).
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.99\textwidth]{pre_study_components}
+    \caption[Line Types in Straight Line Digits Dataset]{A visualisation of all the lines (left) needed to compose the digits in the data set (right). The coloured lines in-between illustrate the relationship between the lines and the digits.}
+    \figlbl{pre_study_components}
+\end{figure}
+
+Thereby, each low-level fragment can be part of one or multiple digits.
+The composition can either take place across one or multiple layers.
+The visualization in Figure \figref*{pre_study_components} can be interpreted as a composition across one layer, i.e. the low-level fragments are combined to high-level fragments within one step.
+
+The composition can also take place across multiple layers. 
+An exemplary composition of net fragments of the number $9$ across $4$ subsequent layers is shown in Figure \figref*{pre_study_composition}.
+In this example, it is demonstrated that a fragment representing a digit can be composed of other fragments that also represent digits.
+
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.99\textwidth]{pre_study_composition}
+    \caption[Sample Net Fragment Composition]{A sample composition of the net fragment that could represent the digit $9$.}
+    \figlbl{pre_study_composition}
+\end{figure}
+
+However, this explanatory example has to be understood as an intuitive way how humans would build net fragments.
+Actual net fragments do not necessarily have to be a composition of lines but can be a composition of multiple pixels without semantic.
+In fact, it can be expected that neural networks come up with their own features that look totally different than the example used above for explaining net fragments.
+Regardless of what these net fragments represent, the network should have certain characteristics;
+If a neuron or a group of neurons are part of a net fragment that represents a feature in the input, then these neuron(s) should be strongly active if the feature is present and not or only very weakly active if the feature is not present.
+This leads to a sparse activation map and net fragments should only be active for digits with specific characteristics.
+Thus, different neurons should be active depending on the digit.
+
+Digits with common characteristics should have some overlapping network activities;
+For example, the $7$ is contained in the $3$, the $3$ is contained in the $9$ and the $9$ is contained in the $8$.
+Therefore, these digits should have some common network activations.
+The $1$, on the other hand, has nothing in common with the $4$, thus these digits should have no overlapping activations.
+In the following, networks are trained and their activations are examined for such properties.
+
+Two types of models are trained on this dataset, namely a classification network (supervised) and autoencoder networks (unsupervised).
+The goal of the classification task is to predict the number (labels $0-9$) that is shown in the image (c.f. Section \secref*{train_cnns}).
+This task is neither for humans nor deep learning architectures challenging.
+Usually, the last layer of an image classification architecture has exactly as many neurons as there are classes to predict.
+Each neuron corresponds to a class, and the neuron with the highest activity (i.e. the most active neuron) is eventually used to predict the image-level label.
+Such architectures thus have the design constraint that the last layer of neurons must represent distinct classes.
+Therefore, each neuron in the last layer can be interpreted as a representation of a class-object.
+Since the last layer of a classification network represents entire classes, such architectures seem to be well suited to investigate whether the preceding layers represent object features (i.e. net fragments) that are composed by the last layer.
+
+A classification network relies on labels.
+An autoencoder, on the other hand, works unsupervised and reconstructs the input data from a lower dimensional embedding space (c.f. section \secref*{visual_rep_learning}).
+Thus, the autoencoder generates representations that contain not only the class information but the entire image information.
+Consequently, the embedding activations of autoencoders are also examined in the embedding space.
+In addition, the autoencoder offers the possibility to constrain the embedding space so that net fragments are more strongly encouraged.
+
+
+
+\section{Classification}\seclbl{pre_study_classification}
+
+\subsection{Methods}\seclbl{pre_study_classification_methods}
+To investigate the emergence of net fragments in classification networks, different architectures are trained.
+The model's parameters are optimised by minimising the cross-entropy loss with the Adam optimizer \sidecite{Kingma2015AdamAM} so that the models learn to predict the corresponding class of the images shown in Figure \figref*{pre_study_dataset}.
+The learning rate is $5 \cdot 10^{-4}$, the mini-batch size is $32$ samples and the model is trained for a total of $10$ epochs.
+
+The models used have different feature extractors consisting of either convolutional (Conv.) layers (models no. $1$-$8$, no. $11$) or fully connected (FC) layers (models no. $10$) as shown in Table \tabref*{pre_study_models}.
+Model no. $9$ has no feature extractor as the input images are so simple that they can be considered as features by themself, model no. $10$ uses a FC layer as feature extractor, and model no. $11$ has a Conv. layer with two hand-crafted kernels to extract horizontal and vertical lines as feature extractor.
+After the feature extractor, all models have a similar ``head'' consisting of $2$ fully connected layers.
+The feature extractor aims to extract certain features from the image, that are combined into higher-level net fragments in the first fully connected layer of the ``head'' and composed into predictions per class (i.e. net fragments corresponding to classes) in the last fully connected layer of the ``head''.
+The first FC layer of the ``head'' maps the input activations to $12$ output features.
+The number of output features is determined empirically by training various architectures and examining the number of active neurons.
+It was found that there are always fewer than $12$ neurons active and that this capacity is therefore sufficient.
+The last fully connected layer consists of $10$ neurons since this corresponds to the number of classes to predict.
+The encoders of the models used are described in more detail in Table \tabref*{pre_study_models}.
+The ``head'' is identical for all models and consists of a sequence of the following layers; FC (out size=$12$) $\rightarrow$ ReLU $\rightarrow$ FC (out size=$10$) $\rightarrow$ Softmax.
+
+\begin{table}[h]
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+    \tablbl{pre_study_models}
+    \centering
+	 \begin{tabular}{|l L{9cm}|} 
+    	\hline
+    	\textbf{No.} & \textbf{Encoder Description} \\
+        \hline
+		1 & Conv. Layer (kernel size=$3\times3$, channels=$2$) $\rightarrow$ ReLU $\rightarrow$ head \\ \hline
+		2 & Conv. Layer (kernel size=$3\times3$, channels=$4$) $\rightarrow$ ReLU $\rightarrow$ head \\ \hline
+		3 & Conv. Layer (kernel size=$5\times5$, channels=$2$) $\rightarrow$ ReLU $\rightarrow$ head \\ \hline
+		4 & Conv. Layer (kernel size=$5\times5$, channels=$4$) $\rightarrow$ ReLU $\rightarrow$ head \\ \hline
+		5 & Conv. Layer (kernel size=$3\times3$, channels=$2$) $\rightarrow$ ReLU $\rightarrow$ Conv. Layer (kernel size=$3\times3$, channels=$4$) $\rightarrow$ ReLU $\rightarrow$ head \\ \hline
+		6 & Conv. Layer (kernel size=$3\times3$, channels=$4$) $\rightarrow$ ReLU $\rightarrow$ Conv. Layer (kernel size=$3\times3$, channels=$8$) $\rightarrow$ ReLU $\rightarrow$ head\\ \hline
+		7 & Conv. Layer (kernel size=$3\times3$, channels=$2$) $\rightarrow$ ReLU $\rightarrow$ Max Pooling $\rightarrow$ Conv. Layer (kernel size=$3\times3$, channels=$4$) $\rightarrow$ ReLU $\rightarrow$ head\\ \hline
+		8 & Conv. Layer (kernel size=$3\times3$, channels=$4$) $\rightarrow$ ReLU $\rightarrow$ Max Pooling $\rightarrow$ Conv. Layer (kernel size=$3\times3$, channels=$8$) $\rightarrow$ ReLU $\rightarrow$ head\\ \hline
+		9 & head \\ \hline
+		10 & FC (in size=$9*9$, out size=$12$) $\rightarrow$ ReLU $\rightarrow$ head \\ \hline
+		11 & Hand Crafted Conv. Layer for vertical \& horizontal edge detection (kernel size=$3\times3$, channels=$2$) $\rightarrow$ ReLU $\rightarrow$ head \\
+        \hline
+    \end{tabular}
+    \caption[Different architectures of classification networks that are investigated for net-fragments]{A description of the different classification networks that are investigated for net-fragments.}
+\end{table}
+
+After each epoch, the model's weights are stored as well as the activations of each layer.
+These vectors are visualized and investigated for net fragments.
+
+Furthermore, the most relevant input features for a fully trained model are analysed.
+This is done by freezing the model's parameters so that they cannot change.
+Instead, an empty image is fed into the network and updated with backpropagation of error such that the probability for a given class is maximized.
+This leads to an input image that has the highest probability to be predicted by the model as a specific class (e.g. generate the image that has the highest probability to be predicted as digit $3$ by the model).
+
+
+\subsection{Results}\seclbl{pre_study_classification_results}
+
+All the models learn to classify these digits perfectly within a few epochs.
+Interestingly, not only the accuracy reaches $100\%$ but some models also achieve a cross-entropy loss of $0.0$, meaning that they can find a global minimum.
+However, the goal is not to achieve high accuracy but to exhibit net fragments.
+It is not feasible to visualise all activations of all layers in this thesis.
+Therefore, only the activations of the second last FC layer (i.e. the first FC layer of the ``head'') after the ReLU function are shown.
+Since the last layer contains the net fragments that depict classes, this is the layer with the highest-level fragments.
+Furthermore, it is the only layer that has a global view on the input, i.e. can access all the features extracted by the encoder\sidenote{convolutional layers only consider a local neighbourhood by sliding a kernel over the input (c.f. \secref{cnns})} (except for the encoder consisting of FC layers only).
+Some higher-level net fragments should be visible in this layer, which are subsequently composed in the last layer to net fragments corresponding to classes.
+%Interested readers who want to investigate the activations from all layers, as well as the network weights by themselves, can view an interactive visualisation at \url{http://160.85.252.38:8501}.
+
+\figref{pre_study_activations} shows the activations of the first fully connected layer in the ``head'' of the different models.
+The FC layer has $12$ neurons whose activation is indicated along the vertical axis (per model), and the horizontal axis depicts the activation of the same neuron for the classes $0$-$9$.
+For example, the circle in the top left corner indicates the activation of the first neuron for class $0$, the circle in the top right corner the activation of the first neuron for class $9$, and the circle in the bottom left corner the activation of the last neuron for class $0$.
+Blue circles show activations that are exactly $0$, red circles are low activations $>0$, and green circles represent strong activations\sidenote{activations $<0$ do not exist because they are set to exactly $0$ by the ReLU function}.
+
+It can be seen in the visualization that none of the models utilises all $12$ neurons and certain neurons are always inactive regardless of the class.
+Also, no obvious net fragments can be identified;
+Most neurons are always similarly strongly active regardless of the class.
+If net fragments are formed, however, the neurons of a fragment would have to be strongly active in the presence of certain features and weakly active otherwise.
+Such behaviour is not observable in these activations.
+
+Furthermore, some digits are very similar and differ in only two pixels.
+Some examples are the digit pairs $5$ and $6$, $8$ and $9$, $0$ and $8$, or $3$ and $9$.
+However, when the activations of the corresponding classes are compared, it is obvious that almost always all activations change a little bit, and not one neuron is turned on or off depending on the presence of these two pixels.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.99\textwidth]{pre_study_activations}
+    \caption[Network activations of classification networks on the straight line dataset]{The activations of the first fully connected layer in the ``head'' of the different networks. For each model, the activity of the $12$ neurons is shown for each class (activations along the vertical axis, classes along the horizontal axis). Red means low activation, green means high activation, blue means activation is off (i.e. $0$).}
+    \figlbl{pre_study_activations}
+\end{figure}
+
+%It can also be observed that roughly the same neurons are always active.
+%For different classes, however, these neurons do not switch on or off, but the strength of the activity changes.
+
+\figref{pre_study_inputs_max} visualizes the input that maximizes the probability for each class.
+It is obvious that all models focus on the wrong features and it can be assumed that these networks would not be robust to slight perturbations in the input.
+This also indicates that net fragments are not present in current deep learning models (or at least not to the desirable extent);
+if a class-level net fragment is composed of several lower-level net fragments, then some of these lower-level net fragments have to be active.
+Since these lower-level net fragments represent specific input features, corresponding pixel constellations should be visible in this visualisation.
+However, since these rather random-looking pixel combinations maximise the probability of predicting a specific class, this suggests that pixel combinations are not composed into hierarchically more complex net fragments.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.99\textwidth]{pre_study_inputs_max}
+    \caption[Inputs that Maximize the Class Output Probability]{The inputs that maximize the probability that the different models predict a specific class. For example, the image in the top left corner maximizes the probability that model number $1$ predicts that this is class $0$ (digit $0$).}
+    \figlbl{pre_study_inputs_max}
+\end{figure}
+
+
+
+
+\section{Autoencoders}\seclbl{pre_study_ae}
+
+\subsection{Methods}\seclbl{pre_study_ae_methods}
+Similar to the experiments with classification networks, different autoencoders are also investigated.
+Since most architectures lead to similar results for the classification networks, the focus is less on testing many different architectures but rather on incorporating different constraints that might encourage net-fragments.
+Incorporating constraints into an autoencoder can be done easily by adding a loss function that regulate the activations in the bottleneck layer.
+For a classification network, on the other hand, it is not obvious how such constraints should be added.
+The two different autoencoder architectures used are shown in Table  \tabref*{pre_study_ae_models}.
+
+\begin{table}[h]
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+    \tablbl{pre_study_ae_models}
+    \centering
+	 \begin{tabular}{|l L{9cm}|} 
+    	\hline
+    	\textbf{No.} & \textbf{Encoder Description} \\
+        \hline
+		1 & FC (in size=$9*9$ out size=$12$) $\rightarrow$ ReLU $\rightarrow$ FC (in size=$12$ out size=$9*9$) \\ \hline
+		2 & FC (in size=$9*9$ out size=$40$) $\rightarrow$ ReLU $\rightarrow$ FC (in size=$40$ out size=$9*9$) \\ \hline
+        \hline
+    \end{tabular}
+    \caption[Different architectures of autoencoders that are investigated for net-fragments]{A description of the different autoencoder networks that are investigated for net-fragments.}
+\end{table}
+
+
+The autoencoder's parameters are optimised by minimising a reconstruction loss (i.e. a distance measurement between the input and the reconstructed output) with the Adam optimizer \sidecite{Kingma2015AdamAM} so that the output looks similar to the input even tough the networks capacity is reduced by a bottleneck-layer in the middle.
+The learning rate is $5 \cdot 10^{-4}$, the mini-batch size is $32$ samples and the model is trained for a total of $10$ epochs.
+
+The reconstruction loss $L_{rec}$ used for the different experiments is either the L1 distance (mean absolute error) or the L2 distance (mean square error). If $\boldsymbol{x}$ is the input data with $N$ pixels and $\hat{\boldsymbol{x}}$ is the reconstructed data, then the reconstruction loss can be written as follows:
+
+\begin{equation}\eqlbl{ae_recon}
+		L_{rec}(\boldsymbol{x}, \hat{\boldsymbol{x}}) = \begin{cases}
+      		\frac{1}{N} \sum^{N}_{n=1}|x_n - \hat{x}_n|, & \text{if use L1 distance}\\
+      		\frac{1}{N} \sum^{N}_{n=1} (x_n - \hat{x}_n)^2, & \text{if use L2 distance}
+    	\end{cases}
+\end{equation}
+
+% https://debuggercafe.com/sparse-autoencoders-using-kl-divergence-with-pytorch/
+
+Optionally, a sparsity and a diversity loss were added to the reconstruction loss to encourage net-fragments.
+Since specific neurons of a net-fragment represent certain features, they should only be active if the feature is present.
+Good features only occur as part of a few objects and not in all of them: Thus, the neurons representing this feature should be active only sporadically and therefore the activations should be sparse and diverse.
+This combination of sparsity and diversity is also in line with the ideas of LeCun to obtain autonomous machine intelligence \sidecite{LeCun_AMI}.
+
+
+For the sparsity loss $L_{s}$ the kullback-leibler (KL) divergence us used \sidecite{10-5555-3042573-3042641}.
+The hidden representations $\boldsymbol{z}$ in the bottleneck layer with length $m$ (i.e. $m$ neurons in the bottleneck layer) are defined as $\boldsymbol{z} = z_1, ..., z_m$.
+Furthermore, the average activation probability of a neuron $z_j$ over the input data $\boldsymbol{x}$ is defined as $\hat{\rho}_j$. We also define a sparsity parameter $\rho=0.05$ that can be interpreted as a target activation probability of each neuron. If the kullback-leibler divergence between all $\hat{\rho}_j$ and $\rho$ is minimised, then an average activation probability per neuron in the hidden layer of $\rho$ is enforced. The corresponding kullback-leibler divergence for each $\hat{\rho}_j$ is defined as:
+
+
+\begin{equation}\eqlbl{ae_kld}
+		KL(\rho || \hat{\rho}_j) = \rho \cdot \log \frac{\rho}{\hat{\rho}_j} + (1-\rho) \cdot \log \frac{1-\rho}{1-\hat{\rho}_j}
+\end{equation}
+
+The sparsity loss $L_{s}$ is the sum of the kullback-leibler divergence between all $\hat{\rho}_j$ and $\rho$ and thus enforces that on average only $5\%$ of the hidden representations $\boldsymbol{z}$ are active:
+
+\begin{equation}\eqlbl{ae_kldl}
+		L_{s}(\rho, \hat{\rho}) = \sum_{j=1}^{m} KL(\rho || \hat{\rho}_j)
+\end{equation}
+
+Thus, this constraint ensures that the activations are sparse, which is consistent with the concept of net-fragments.
+Another property of net-fragments is that the activations should be diverse.
+Therefore, a new diversity loss $L_{d}$ is proposed.
+This loss is based on the fact that the activations in the bottleneck layers $(\boldsymbol{z}^{(1)}, ..., \boldsymbol{z}^{(N)})$ should be as different as possible for all samples of a mini-batch $(\boldsymbol{x}^{(1)}, ..., \boldsymbol{x}^{(N)})$.
+It is easy to see that the sum of the dot product between the activation of a sample $\boldsymbol{z}^{(i)}$ and all other samples $\boldsymbol{z}^{(j)}$, $i \neq j$ is small if the samples within a batch have a high diversity. Therefore, the diversity loss can be defined as:
+
+\begin{equation}\eqlbl{ae_kldl2}
+		L_{d}(\boldsymbol{z}) = \frac{1}{N} \sum_{i=1}^N\sum_{j=1}^{m} \boldsymbol{z}^{(i)} \cdot \boldsymbol{z}^{(j)}, \text{ if } i\neq j
+\end{equation}
+
+Minimising $L_{d}$ results in the bottleneck layer activations not only being sparse but also diverse. 
+The overall loss can be defined as the sum of these three loss components, with $\lambda_s$ and $\lambda_d$ beeing hyperparameters that control the influence of the diversity and sparsity loss.
+
+\begin{equation}\eqlbl{ae_kldl2}
+		L = L_{rec} + \lambda_s \cdot L_{s} + \lambda_d \cdot L_{d}
+\end{equation}
+
+In the experiments, these hyperparameters were set to $lambda_s = 0.02$ and $lambda_d = 0.02$, respectively $lambda_s = 0$ and $lambda_d = 0$ if the sparsity and diversity loss should not be used.
+
+Similar to the analysis of classification architectures, the model's activations of each layer are stored after every epoch.
+These vectors are visualized and investigated for net fragments.
+
+\subsection{Results}\seclbl{pre_study_ae_results}
+The activations of the autoencoders trained with reconstruction loss only and without diversity or sparsity constraint (i.e. $lambda_s = 0$ and $lambda_d = 0$) look very similar to those of the classification network; about half of the neurons are always active regardless of the object depicted in the image and the other half of neurons are always inactive. Thus, this version of the autoencoder has the same problem as the classification networks. Adding a sparsity constraint (i.e. $lambda_s = 0.02$ and $lambda_d = 0$) improves this issue slightly. The activations become sparse, but the same neurons are always active independent of the objects in the image. Only in a few cases can a set of neurons be identified that represent specific objects or features.
+
+However, if all three loss components are used, the activations look much better. In this case, specific neuron combinations represent object-dependent features and are only active for specific objects. There are no more neurons that are constantly active. It is even possible to infer image labels based on a binary activity state (i.e. which neuron is active or inactive) and without knowing the strength of the activation, even though labels were not used during training. Thus, an autoencoder with additional sparsity and diversity constraint can represent net-fragments to some extent\sidenote{except that constraint 1 which says that net-fragments span several layers by design is violated (c.f. Introduction in Section \secref*{net_fragments})}.
+
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.99\textwidth]{pre_study_ae1}
+    \caption[Network activations of the smaller autoencoder network on the straight line dataset]{The activations in the bottleneck layer of the smaller autoencoder ``model 1'' for different loss functions. For each loss function, the activity of the $12$ neurons in the bottleneck layer is shown for each class (activations along the vertical axis, classes along the horizontal axis). Red means low activation, green means high activation, blue means activation is off (i.e. $0$).}
+    \figlbl{pre_study_ae1}
+\end{figure}
+
+
+This can be observed in Figure \figref*{pre_study_ae1} that shows the activations of the ``model 1''.
+On the left are the activations without constraint, in the middle the activations with sparsity constraint and on the right the activations with sparsity and diversity constraint.
+For each of these three loss functions, the activations in the bottleneck layer are shown per class (activations along the vertical axis, classes along the horizontal axis).
+It is clearly visible how adding the sparsity constraint and the diversity constraint gives more meaning to the individual neurons. While without both constraints the same neurons are always active independent of the class, the activations are significantly more varied when both constraints are used.
+This becomes even more obvious when the activations of the bigger autoencoder ``model 2'' are investigated (c.f. Figure \figref*{pre_study_ae2} (a)).
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.99\textwidth]{pre_study_ae2}
+    \caption[Network activations of the bigger autoencoder network on the straight line dataset]{On the lieft sinde (a), the activations in the bottleneck layer of the bigger autoencoder ``model 2'' are shown. The activity of the $40$ neurons in the bottleneck layer is shown for each class (activations along the vertical axis, classes along the horizontal axis). On the right side (b), the output of the decoder is shown when the 18th neuron is set to $1$ and all other neurons are set to $0$. The $18$-th neurons is a feature that is needed to generate the numbers $5$ and $9$.}
+    \figlbl{pre_study_ae2}
+\end{figure}
+
+It is also examined what features the various neurons in the bottleneck layer represent.
+This is done by manually creating a bottleneck activation $\boldsymbol{z} = z_1, ..., z_m$ and feeding it through the decoder.
+To examine which feature the $i$-th neuron represents, $z_i=1$ is set and $z_{j}=0$, for $i \neq j$.
+Figure \figref*{pre_study_ae2} (b) shows which feature the $18$-th neuron represents. Together with the $33$-th neuron, this neuron represents the number 5 and together with the $36$-th neuron the number 9.
+Thus, it is a feature (i.e. a net-fragment) that assembles with other features to represent an object.
+
+
+\section{Conclusion}\seclbl{pre_study_conclusion}
+Different architectures have been trained with different targets on a very simple and therefore easily interpretable data set.
+The network activations are tracked during training and analyzed for net-fragments.
+Typical vision architectures are sequential and build up a composition of features (i.e. net-fragments) over several layer.
+Usually, the embeddings of a pre-defined layer are used for down-stream tasks such as classification.
+Autoencoders typically use the bottleneck layer, a classification networks typically have a classification head (i.e. a FC layer with a Softmax activation) after the last model layer and thus extract these embeddings from the last model layer.
+Thus, embeddings are extracted from one layer.
+Net-fragments, on the other hand, span over multiple layers\sidenote{net-fragments can be thought of as the ``path'' of features through a network} and hence this principle is violated.
+
+Furthermore, net fragments are strongly active when the corresponding feature they represent is present in the input and are weakly active or not active at all when it is not present.
+Typical deep learning networks have neurons that are never active, while the active neurons usually remain active regardless of the class of the input data and only change their activity slightly.
+Thus, the information about different features is not distributed on different neurons but transported as activation strength of neurons through the network.
+Therefore, deep learning architectures do not comprise brain-like net fragments by default.
+
+However, it was found that adding a sparsity and diversity constraint can alleviate this issue.
+Adding such constraints to the loss function encourages neurons to represent specific features that are typical for some of the objects.

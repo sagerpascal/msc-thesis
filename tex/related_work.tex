@@ -3,8 +3,8 @@
 TODO: Teile auf in related work (zu Beginn) + optionales Kapitel mit weiteren relevanten Themen zu Natural Intelligence, die aber nicht wirklich related work sind sondern eher ein Survey
 
 \section{Natural Intelligence}\seclbl{natural_intelligence}
-This thesis is inspired by the work ''A Theory of Natural Intelligence` from von der Malsburg et al. \sidecite{von_der_Malsburg_Stadelmann_Grewe_2022}.
-Therefore, we dedicate this section to summarize their work in detail.
+This thesis is inspired by the work ''A Theory of Natural Intelligence`` from von der Malsburg et al. \sidecite{von_der_Malsburg_Stadelmann_Grewe_2022}.
+Therefore, summarize their work in detail in the following.
 
 According \cite{von_der_Malsburg_Stadelmann_Grewe_2022}, the process of learning is influenced by ``nature'', ``nurture'', and ``emergence''\sidenote{nature refers to the influence of genes and evolution, nurture to the influence of experience and education}.
 They point out that human genome (as of nature) only contain 1GB of information \sidecite{hbcrd} and humans only absorb a few GB into permanent memory over a lifetime (as of nurture) but it requires about 1PB to describe the connectivity in human brain.
@@ -37,24 +37,35 @@ Ref. \cite{von_der_Malsburg_Stadelmann_Grewe_2022} also argue that net fragments
 A hierarchy of features may be represented by nested net fragments of different size.
 Complex objects, such as mental constructs, can thus be seen as larger net fragments composed as mergers of pre-existing smaller net fragments.
 
+Von der Malsburg et al. \cite{von_der_Malsburg_Stadelmann_Grewe_2022} do not address how their interesting theoretical concepts can be implemented in a mathematical model.
+However, a concrete implementation was done by Claude Lehmann in the form of a Master's thesis \sidecite{lehmann}.
+He proposes a new layer called the laterally connected layer (LCL).
+The LCL layer extends convolutional layers by forming lateral intra-layer connections based on the Hebbian learning rule (c.f. Section \secref{hebbian}).
+Similar to a convolutional filter, the convolutional feature map is calculated.
+Afterwards, the convolutional feature maps are compared and the lateral impact between feature maps is calculated (i.e. the covariance between the feature maps).
+When two feature maps are similar in the same pixel locations, their connection strength is increased.
+By using Hebbian learning, lateral connections are formed between the feature maps with a high lateral impact.
+Thus, new filters are formed based on existing filters with a high covariance.
+Lehmann found that LCL layers increase robustness for object recognition.
+He shows on the MNIST dataset \cite{Lecun_Bottou_Bengio_Haffner_1998} that for a small reduction in accuracy of 1\%, the performance on corrupted images increases by up to 21\% and that it works especially well for noisy types of corruptions.
+However, this layers improved performance only on very small networks.
+
+In this thesis, the ideas from the work of von der Malsburg et al. \cite{von_der_Malsburg_Stadelmann_Grewe_2022} are incorporated into a deep learning model.
+Thus, this work is considered to be \emph{the} inspiration for this thesis.
+However, this thesis is based on other concepts than the thesis by Lehmann \cite{lehmann} and therefore has little in common with his work.
 
 \section{Self-Organization}\seclbl{self_org_related}
-%% THIS WAS MOVED TO INTRO
-%The human brain is self-organizing \sidecite{kelso1995dynamic}.
-%Self-organization is the process by which systems consisting of many units spontaneously acquire their structure or function without interference from a external agent or system.
-%The absence of a central control unit allow self-organizing systems to quickly adjust to new environmental conditions.
-%Additionally, such systems have in-built redundancy with a high degree of robustness as they  are made of many simpler individual units.
-%These individual units can even fail without the overall system breaking down.
-%Dresp \sidecite{Dresp2020SevenPO} describes seven clearly identified properties of self-organization in the human brain: (i) modular connectivity, (ii) unsupervised learning, (iii) adaptive ability, (iv) functional resiliency, (v) functional plasticity, (vi) from-local-to-global functional organization, and (vii) dynamic system growth.
-
-%Before summarizing the literature specific to self-organization of neural networks, the general literature on self-organization with a focus on deep learning is described in the following.
-%Many of these fundamental algorithms for self-organization serve as inspiration for how ANNs can be designed to be self-organizing.
+Self-organization is the process by which systems consisting of many units spontaneously acquire their structure or function without interference from a external agent or system.
+They organize their global behavior by local interactions amongst themselves.
+The absence of a central control unit allow self-organizing systems to quickly adjust to new environmental conditions.
+Additionally, such systems have in-built redundancy with a high degree of robustness as they  are made of many simpler individual units.
+These individual units can even fail without the overall system breaking down.
 
 In nature, groups of millions units that solve complex tasks by using only local interactions can be observed.
 For example, ants can navigate difficult terrain with a local pheromone-based communication and thus form a collective type of intelligence.
 Such observations inspired researchers to build algorithms which are based on local communication and self-organization, for example ant colony optimization algorithms \sidecite{dorigo1997ant}.
 DeepSwarm \sidecite{Byla_Pang_2020} is a neural architecture search method that uses this algorithm to search for the best neural architecture.
-This methods achieves competitive performance on rather small datasets such as MNIST, Fashion-MNIST, and CIFAR-10.
+This methods achieves competitive performance on rather small datasets such as MNIST \cite{Lecun_Bottou_Bengio_Haffner_1998}, Fashion-MNIST \cite{xiao2017/online}, and CIFAR-10 \cite{krizhevsky2009learning}.
 
 %Robotic is another research area that uses ideas from collective intelligence such as self-assembly or self-organization.
 %For example, swarm systems consist of multiple robots that work together to solve complex tasks \sidecite{Hamann_2018}.
@@ -150,7 +161,7 @@ By doing so, they are able to learn human-object interactions and exhibit a mode
 Spiking neural networks (SNNs) (c.f. Section \secref{spiking_networks}) communicate through binary signals known as spikes and are very efficient on special event-based hardware\sidecite{8259423}.
 There exist several methods to self-organize such architectures.
 For the sake of completeness, two well-known approaches are described in the following.
-However, since this thesis focuses on self-organization in Deep Learning systems, these approaches are only roughly described and for detailed explanations please refer to the respective literature.
+However, since this thesis focuses on self-organization in deep learning systems, these approaches are only roughly described and for detailed explanations please refer to the respective literature.
 
 Similar to deep learning, there exists a multitude of different network architectures; Shallow \sidecite{masquelier2007unsupervised, 6469239} and deep networks \sidecite{kheradpisheh2018stdp, mozafari2019bio} structures, fully connected \sidecite{diehl2015unsupervised} and convolutional layers \sidecite{cao2015spiking, tavanaei2016bio}, as well as based on different learning rules such as supervised \sidecite{diehl2015fast, zenke2018superspike}, unsupervised \sidecite{diehl2015unsupervised, ferre2018unsupervised} and reinforcement learning based \sidecite{mozafari2018first}.
 
@@ -174,7 +185,16 @@ This subtraction results in spikes for each pixel.
 To encode the filter output into a temporal signal, bigger spikes are forwarded earlier in time than smaller spikes.
 However, such approaches lose a lot of information about the input.
 For example, in the process described above are all information about color and thin structures lost.
-To the author of this thesis, this seems to be the reason why these SNNs can't match the performance of deep learning algorithms so far and often only work well for small gray-scale image-datasets such as MNIST.
+To the author of this thesis, this seems to be the reason why these SNNs can't match the performance of deep learning algorithms so far and often only work well for small gray-scale image-datasets such as MNIST \cite{Lecun_Bottou_Bengio_Haffner_1998}.
+
+\subsection{Relevance}\seclbl{self_org_relevance}
+Self-organization is, according to von der Malsburg et al. \sidecite{von_der_Malsburg_Stadelmann_Grewe_2022}, one of the key elements for natural intelligence.
+Therefore, this concept of local optimization and interaction plays a very important role in this thesis.
+Specifically, two types of self-organization are proposed in this thesis;
+Vertical self-organisation is based on layer-wise learning. In this approach, the layers of a neural network are considered separate units and are updated independently.
+The communication between these units takes place by feeding data sequentially through the layers.
+The second type of self-organization is vertical self-organisation. In this approach, data is divided into patches and then analysed by independent networks. Thus, small networks form the self-organising units and communicate with each other by adding the output of one network to the input of another network.
+These two types of self-organization are described in more detail in Chapter \chref*{methods}.
 
 
 \section{Alternative Training Algorithms}\seclbl{alt_train_algo}
@@ -211,7 +231,7 @@ In the synchronous setting is first a forward pass through all layers performed 
 In the asynchronous settings are all layers trained simultaneously by using a replay buffer for each layer that stores the layers output \sidecite{10.5555/3524938.3525007}.
 Each layer receives its input from such a buffer instead of the previous layer what eliminates the need for an end-to-end forward pass.
 
-A closely related type of learning algorithm is the \emph{Forward-Forward (FF) Algorithm} recently introduced by Hinton \sidecite{ff_algo}.
+Recently, Hinton \sidecite{ff_algo} introduced the \emph{Forward-Forward (FF) Algorithm} that uses a proxy objective functions over multiple time-steps.
 This algorithm uses two forward passes, one with positive (i.e. real) data and one with negative data.
 Each layer has its own objective function which is to have a high ``goodness'' for positive data and a low ``goodness'' for negative data. 
 The goodness is measured by the sum of the squared neural activities.
@@ -316,13 +336,14 @@ These methods use the idea of variable splitting, i.e. transform a complicated p
 Introducing auxiliary variables may pose scalability issues, and these methods require special, usually tailor-made solvers.
 Therefore, such methods are not reviewed in more detail in this thesis.
 
-According to \sidecite{Duan_Principe_2022} and \sidecite{Bartunov_Santoro_Richards_Marris_Hinton_Lillicrap_2018}, only proxy objective functions have achieved competitive performance with large models on large datasets such as ImageNet.
-The other approaches work only on smaller datasets such as MNIST or CIFAR-10 so far.
+According to \sidecite{Duan_Principe_2022} and \sidecite{Bartunov_Santoro_Richards_Marris_Hinton_Lillicrap_2018}, only proxy objective functions have achieved competitive performance with large models on large datasets such as ImageNet \cite{Deng_Dong_Socher_Li_KaiLi_LiFei_Fei_2009}.
+The other approaches work only on smaller datasets such as MNIST \cite{Lecun_Bottou_Bengio_Haffner_1998} or CIFAR-10 \cite{krizhevsky2009learning} so far.
 
-
-TODO: Add Schmidhuber learning backprop and improving it
-
-
+End-to-end backpropagation is not compatible with local self-organisation which is one of the key concepts of natural intelligence according to von der Malsburg et al. \sidecite{von_der_Malsburg_Stadelmann_Grewe_2022}.
+With end-to-end backpropagation, systems are trained as a single unit and consequently have no independent local units that can organise themselves.
+Therefore, alternative learning algorithms is very relevant to this thesis.
+In fact, the approach based on vertical self-organisation uses proxy objective functions to train the layer locally as independent units (c.f. Chapter \chref*{methods}).
+Proxy objective functions are used as these are the only alternative learning algorithm known that scale well on large neural networks and large datasets.
 
 \section{Visual Representation Learning}\seclbl{visual_rep_learning}
 One of the earliest methods of learning visual representations are \emph{Autoencoders}.
@@ -333,7 +354,8 @@ In order that the functions $A$ and $B$ are not just the identity operators, som
 One of the simplest regularization methods is to introduce a bottleneck, i.e. to compress the representation with the encoder while still being able to re-create the original input as good as possible with the decoder.
 With a bottleneck layer, the number of neurons is limited.
 An alternative (or a supplement) is to limit the number of activations by enforcing sparsity.
-This constraint can be imposed with $L_1$ regularization or a Kullback-Leibler (KL) divergence between expected average neuron activation and an ideal distribution \sidecite{10-5555-3042573-3042641}.
+Autoencoders with such a sparsity constraint are also known as \emph{Sparse Autoencoders}.
+A sparsity constraint can be imposed with $L_1$ regularization or a kullback-leibler (KL) divergence between expected average neuron activation and an ideal distribution \sidecite{10-5555-3042573-3042641}.
 Other popular versions of \emph{Autoencoders} are \emph{Denoising Autoencoders} \sidecite{10-1145-1390156-1390294}, \emph{Contractive Autoencoders} \sidecite{10-5555-3104482-3104587}, and \emph{Variational Autoencoders (VAE)} \sidecite{Kingma_Welling_2014}.
 In \emph{Denoising Autoencoders}, the input is disrupted by noise (e.g. by adding Gaussian noise or removing some pixels by using Dropout) and fed into the encoder $A$.
 The goal of the decoding function $B$ is to reconstruct the clean version of the input without the added noise.
@@ -342,6 +364,8 @@ By doing so, the \emph{Denoising Autoencoders} learns to create more robust repr
 By adding the squared Jacobian norm to the reconstruction loss, the latent representations of the input tend to be more similar to each other.
 This diminishes latent representations that are not important for the reconstruction and only important variations between the inputs are kept.
 The encoder of \emph{Variational Autoencoders} map the input to a probabilistic distribution; Instead of mapping the input to an encoding vector, the input is mapped to a vector representing the means $\mu$ and another vector representing the standard deviations $\sigma$.
+This done by adding two fully connected layers after the encoder $A$, one layer to predict $\mu$ and the other layer to predict $\sigma$.
+Afterwards, a variable is sampled from this distribution $z \sim \mathcal{N}(\mu,\,\sigma^{2})$\sidenote{this process is also called the re-parameterization trick} and fed into the decoder $B$.
 By doing so, the latent space becomes by design continuous and allows random sampling and interpolation of data.
 
 Other approaches for \emph{self-supervised learning} typically augment the visual scene and either predict the augmentation parameters, reconstruct the original version of the image, or learn consistent representations among augmented views of the image.
@@ -360,8 +384,15 @@ Subsequently, the encoder can be used to generate image representations that are
 However, \emph{contrastive learning} can also leverage information from annotations.
 For example, Khosla et al. \sidecite{khosla2020supervised} use labels in a contrastive setting to pull the representations of images of the same class together in the embedding space, while simultaneously pushing apart clusters of samples from different classes.
 
+In this thesis, representations of images are learned.
+Two different principles are applied;
+vertical self-organisation uses a type of contrastive learning by forcing samples from the same class to have similar representations and samples from different classes to have high diversity.
+Horizontal self-organisation uses independently trained variational autoencoders to obtain good representations of input patches.
+
 
 \section{Meta-Learning}
+TODO: NOT SURE IF THIS CHAPTER IS STILL NEEDED -> ADD REFERENCE TO THIS CHAPTER
+
 Meta-learning is the process of distilling experience from multiple learning cycles and using the accumulated experience to improve the future learning process \sidecite{Hospedales_Antoniou_Micaelli_Storkey_2021}.
 Therefore, meta-learning is also referred to as ``learning-to-learn'' \sidecite{Thrun_Pratt_1998} and improves learning on a lifetime (i.e. single agent) and evolutionary timescale (i.e. population of agents) \sidecite{Schrier_1984}.
 Typically, meta-learning includes \emph{base learning} (also referred to as \emph{inner} or \emph{lower} learning) and \emph{meta-learning} (also referred to as \emph{outer} or \emph{upper} learning).
@@ -424,97 +455,70 @@ Third, the goal of the meta-learning can either be to better solve any task draw
 Finally, the meta-optimization can either be done offline (i.e. the inner and outer loop alternate) \cite{10-5555-3305381-3305498} or online (i.e. the meta-learning takes place within a base learning episode) \cite{li2019feature}.
 
 
-\section{Correlation within CNNs}
+%\section{Correlation within CNNs}
 
-TODO: Not sure if this chapter is still relevant.... -> move or delete?
+%TODO: Not sure if this chapter is still relevant.... -> move or delete?
 
-Self-organization in neural networks can be done based on the input data.
-If Hebbian learning is used\sidenote{``Cells that fire together wire together''}, cells are connected based on their correlation (i.e. cells with a high correlation are wired together).
-One way to capture the correlation within CNNs are Gram matrices.
-Gram matrices are essentially the dot-product between the channels of a feature map and can capture the style of given image.
-They are for example used for image style transfer\sidecite{Gatys_Ecker_Bethge_2015} or related fields such as texture synthesis \sidecite{Gatys_Ecker_Bethge_20152}.
-Appendix \chref{image_style_transfer} provides an intuitive explanation what image style transfer is and how it is related to Gram matrices.
+%Self-organization in neural networks can be done based on the input data.
+%If Hebbian learning is used\sidenote{``Cells that fire together wire together''}, cells are connected based on their correlation (i.e. cells with a high correlation are wired together).
+%One way to capture the correlation within CNNs are Gram matrices.
+%Gram matrices are essentially the dot-product between the channels of a feature map and can capture the style of given image.
+%They are for example used for image style transfer\sidecite{Gatys_Ecker_Bethge_2015} or related fields such as texture synthesis \sidecite{Gatys_Ecker_Bethge_20152}.
+%Appendix \chref{image_style_transfer} provides an intuitive explanation what image style transfer is and how it is related to Gram matrices.
 
-A Gram matrix can be calculated based on the output of a convolutional layer.
-Each filter of a convolutional layer (i.e. each channel) produces a so called convolutional map.
-A convolutional map contains information about the content of the image such as object structure and positioning as well as information about the style.
-Calculating a Gram matrix eliminates content-related information from the convolutional layer output but does not affect style information (c.f. Appendix \chref{image_style_transfer}).
-A Gram matrix calculates the correlations between the convolutional maps (i.e. between the filter responses) of a convolutional layer output.
-For a convolutional filter output $F$ of layer $l$ and two flattened convolutional maps $i$ and $j$ it is defined as \sidecite{7780634}:
+%A Gram matrix can be calculated based on the output of a convolutional layer.
+%Each filter of a convolutional layer (i.e. each channel) produces a so called convolutional map.
+%A convolutional map contains information about the content of the image such as object structure and positioning as well as information about the style.
+%Calculating a Gram matrix eliminates content-related information from the convolutional layer output but does not affect style information (c.f. Appendix \chref{image_style_transfer}).
+%A Gram matrix calculates the correlations between the convolutional maps (i.e. between the filter responses) of a convolutional layer output.
+%For a convolutional filter output $F$ of layer $l$ and two flattened convolutional maps $i$ and $j$ it is defined as \sidecite{7780634}:
 
-\begin{equation}\eqlbl{Gram_mat}
-		G_{ij}^{l} = \sum_k F^{l}_{ik} \cdot F^{l}_{jk}
-\end{equation}%
+%\begin{equation}\eqlbl{Gram_mat}
+%		G_{ij}^{l} = \sum_k F^{l}_{ik} \cdot F^{l}_{jk}
+%\end{equation}%
 
-Thereby, $k$ is a hyperparameter defining how many elements of the convolutional output $F$ are compared.
-Gatys et al. \sidecite{7780634} applied this formula the first time to convolutional filters but did not fully explain why it works.
-However, they found that the style is captured well in the correlation between convolutional maps.
-Later, it was shown \sidecite{10555531720773172198} that matching the Gram matrices between two convolutional filters can be reformulated as minimizing the Maximum Mean Discrepancy (MMD) \sidecite{JMLRv13gretton12a} and thus that the style information is intrinsically represented by the distribution of activations in a CNN.
+%Thereby, $k$ is a hyperparameter defining how many elements of the convolutional output $F$ are compared.
+%Gatys et al. \sidecite{7780634} applied this formula the first time to convolutional filters but did not fully explain why it works.
+%However, they found that the style is captured well in the correlation between convolutional maps.
+%Later, it was shown \sidecite{10555531720773172198} that matching the Gram matrices between two convolutional filters can be reformulated as minimizing the Maximum Mean Discrepancy (MMD) \sidecite{JMLRv13gretton12a} and thus that the style information is intrinsically represented by the distribution of activations in a CNN.
 
-Intuitively, several filters together can describe the style of the image.
-For example, if one filter reacts to vertical white and black lines and a second filter reacts to horizontal white and black lines and the input image has a checkerboard style, then these two filters have a high correlation, which is reflected in the Gram Matrix (c.f. Appendix \chref{image_style_transfer}).
+%Intuitively, several filters together can describe the style of the image.
+%For example, if one filter reacts to vertical white and black lines and a second filter reacts to horizontal white and black lines and the input image has a checkerboard style, then these two filters have a high correlation, which is reflected in the Gram Matrix (c.f. Appendix \chref{image_style_transfer}).
 
-When Hebbian learning is used for self-organization, neurons of filters that often trigger together are connected.
-A dataset usually contains specific patterns, which are represented in the Gram Matrix\sidenote{In the following the term pattern is used instead of style, because the Gram matrix can represent not only styles like photorealistic images, drawings, etc., but any non-content related information.
-For example, for an animal dataset, one filter could have high activation on white color, a second filter on black vertical lines, and a third filter on black dots.
-For a photo of a zebra, the first and second filters would have a high correlation while for a dalmatian, the first and third filters would have a high correlation}.
-Thus, neurons are connected that alone represent a certain filter but together represent a certain more complex pattern.
-
-
-\section{Leveraging Neuroscience for Deep Learning Based Object Recognition}
-TODO: beschreiben, dass diese Arbeit vom Natural Intelligence Paper inspiriert war
-
-Prior to this thesis, Lehmann \sidecite{lehmann} examined self-organizing deep learning architectures in Master thesis at the Zurich University of Applied Sciences.
-He proposes a new layer called the laterally connected layer (LCL).
-The LCL layer extends convolutional layers by forming lateral intra-layer connections based on the Hebbian learning rule (c.f. Section \secref{hebbian}).
-Similar to a convolutional filter, the convolutional feature map is calculated.
-Afterwards, the convolutional feature maps are compared and the lateral impact between the feature maps is calculated (i.e. how strongly the feature maps influence each other based on their covariance).
-When two feature maps are simultaneously in the same pixel locations, their connection strength is increased.
-By using Hebbian learning, lateral connections are formed between the feature maps with a high lateral impact.
-
-Lehmann found that LCL layers increase robustness for object recognition.
-He shows on the MNIST dataset that for a small reduction in accuracy of 1\%, the performance on corrupted images increases by up to 21\% and that it works especially well for noisy types of corruptions.
-
-\section{Rotation Invariant Convolutions}\seclbl{rotation_invariant_conv}
-
-TODO: Not sure if this chapter is still relevant.... -> move or delete?
-
-In this thesis, I show the capability of self-organization to deal with object transformations.
-Common transformations of objects in visual scenes are translations, rotations, zooming, and deformations.
-While most state-of-the-art architectures are translation invariant\sidenote{STOA architectures for visual scene interpretation are mainly based on convolutional neural networks and vision transformers \cite{Dosovitskiy_Beyer_Kolesnikov_Weissenborn_Zhai_Unterthiner_Dehghani_Minderer_Heigold_Gelly_2021}. These architectures are by definition translation invariant.}, they suffer from the other aforementioned transformations.
-The model can be trained to be more robust against most kind of transformations through data augmentation \sidecite{Simard_Steinkraus_Platt_2003}.
-For example, dynamically increasing and decreasing image sizes works very well to obtain robustness against different object sizes.
-Robustness against deformations, on the other hand, can be learned to a great extend through data pre-processing such as random grid-based deformations \sidecite{Ronneberger_Fischer_Brox_2015, Sager_Salzmann_Burn_Stadelmann_2022}.
-However, deformations are often domain specific.
-In this thesis, I mainly focus on rotation invariance of visual perception systems as this is a challenging task and is for many applications the most important transformation invariance beyond translation.
-Although transformation invariant models can be obtain with data augmentation \cite{Simard_Steinkraus_Platt_2003, Fasel_Gatica_Perez_2006}, this approach is considered inefficient as the model has to learn many redundant parameters, independent for each rotation angle.
-In the following, we focus on methods that overcome this limitation.
-
-A simple approach to achieve rotation invariance is to find the main axis of an image patch and to rotate it until it is aligned with the samples from the training set \sidecite{Jafari_Khouzani_Soltanian_Zadeh_2005}.
-Another common strategy is to define features that are rotation invariant or equivariant, i.e. to use features whose output is either not affected by rotating the input image or whose output is rotated the same way as the input image by definition.
-Some well-known approaches are Local Binary Patterns \sidecite{Ojala_Pietikainen_Maenpaa_2002}, spiral resampling \sidecite{Wen_RongWu_ShiehChungWei_1996}, and steerable pyramid filters \sidecite{greenspan1994rotation}.
-
-Other approaches learn rotatable filters from the input data.
-Dieleman et al. \sidecite{Dieleman_DeFauw_Kavukcuoglu_2016} propose four new neural networks blocks.
-The probably most important block proposed in their work is a pooling operation that is applied over rotated feature maps to  reduce the number of parameters and to learn rotation invariance more explicitly.
-Another approach \sidecite{Laptev_Savinov_Buhmann_Pollefeys_2016} also applies convolutional filters to rotated versions of the image but aggregates the result by taking the maximum activation over the feature maps as output.
-
-Another category of approaches apply rotations to learned convolutional filters.
-Earlier approaches \sidecite{Schmidt_Roth_2012, Kivinen_Williams_2011, Sohn_Lee_2012} use a Convolutional Restricted Boltzmann Machine (C-RBM)\sidenote{A C-RBM is a generative stochastic network that can learn a probability distribution over its inputs. Multiple layers of C-RBM are also known as deep belief networks.} \sidecite{Lee_Grosse_Ranganath_Ng_2009} to tie the weights.
-Besides using C-RBM, it is also possible to tie the weights within several layers of a CNN to enforce rotation invariance and to reduce the number of parameters to learn. 
-Teney and Herbert \sidecite{Teney_Hebert_2016} split the filters of a CNN in orientation groups and constraint their weights.
-Such models achieve rotation covariance\sidenote{rotation covariance means that applying a rotation to the input image results in a shift of the output across the features} and only need to learn a single canonical filter per orientation group.
-This concept can also be applied to the rotation group in the final layers of a CNN to obtain invariance to global rotations \sidecite{Wu_Hu_Kong_2015}.
+%When Hebbian learning is used for self-organization, neurons of filters that often trigger together are connected.
+%A dataset usually contains specific patterns, which are represented in the Gram Matrix\sidenote{In the following the term pattern is used instead of style, because the Gram matrix can represent not only styles like photorealistic images, drawings, etc., but any non-content related information.
+%For example, for an animal dataset, one filter could have high activation on white color, a second filter on black vertical lines, and a third filter on black dots.
+%For a photo of a zebra, the first and second filters would have a high correlation while for a dalmatian, the first and third filters would have a high correlation}.
+%Thus, neurons are connected that alone represent a certain filter but together represent a certain more complex pattern.
 
 
+%\section{Rotation Invariant Convolutions}\seclbl{rotation_invariant_conv}
 
-%https://numenta.com/htmschool/
+%TODO: Not sure if this chapter is still relevant.... -> move or delete?
 
+%In this thesis, I show the capability of self-organization to deal with object transformations.
+%Common transformations of objects in visual scenes are translations, rotations, zooming, and deformations.
+%While most state-of-the-art architectures are translation invariant\sidenote{STOA architectures for visual scene interpretation are mainly based on convolutional neural networks and vision transformers \cite{Dosovitskiy_Beyer_Kolesnikov_Weissenborn_Zhai_Unterthiner_Dehghani_Minderer_Heigold_Gelly_2021}. These architectures are by definition translation invariant.}, they suffer from the other aforementioned transformations.
+%The model can be trained to be more robust against most kind of transformations through data augmentation \sidecite{Simard_Steinkraus_Platt_2003}.
+%For example, dynamically increasing and decreasing image sizes works very well to obtain robustness against different object sizes.
+%Robustness against deformations, on the other hand, can be learned to a great extend through data pre-processing such as random grid-based deformations \sidecite{Ronneberger_Fischer_Brox_2015, Sager_Salzmann_Burn_Stadelmann_2022}.
+%However, deformations are often domain specific.
+%In this thesis, I mainly focus on rotation invariance of visual perception systems as this is a challenging task and is for many applications the most important transformation invariance beyond translation.
+%Although transformation invariant models can be obtain with data augmentation \cite{Simard_Steinkraus_Platt_2003, Fasel_Gatica_Perez_2006}, this approach is considered inefficient as the model has to learn many redundant parameters, independent for each rotation angle.
+%In the following, we focus on methods that overcome this limitation.
 
+%A simple approach to achieve rotation invariance is to find the main axis of an image patch and to rotate it until it is aligned with the samples from the training set \sidecite{Jafari_Khouzani_Soltanian_Zadeh_2005}.
+%Another common strategy is to define features that are rotation invariant or equivariant, i.e. to use features whose output is either not affected by rotating the input image or whose output is rotated the same way as the input image by definition.
+%Some well-known approaches are Local Binary Patterns \sidecite{Ojala_Pietikainen_Maenpaa_2002}, spiral resampling \sidecite{Wen_RongWu_ShiehChungWei_1996}, and steerable pyramid filters \sidecite{greenspan1994rotation}.
 
+%Other approaches learn rotatable filters from the input data.
+%Dieleman et al. \sidecite{Dieleman_DeFauw_Kavukcuoglu_2016} propose four new neural networks blocks.
+%The probably most important block proposed in their work is a pooling operation that is applied over rotated feature maps to  reduce the number of parameters and to learn rotation invariance more explicitly.
+%Another approach \sidecite{Laptev_Savinov_Buhmann_Pollefeys_2016} also applies convolutional filters to rotated versions of the image but aggregates the result by taking the maximum activation over the feature maps as output.
 
-
-
-TODO: somewhere it is argued that biologically-motivated algorithms work bad: This is shown here: https://arxiv.org/pdf/1807.04587.pdf -> add this as source -> \sidecite{Bartunov_Santoro_Richards_Marris_Hinton_Lillicrap_2018}
-
-TODO: After each section: Describe relevance to my work
+%Another category of approaches apply rotations to learned convolutional filters.
+%Earlier approaches \sidecite{Schmidt_Roth_2012, Kivinen_Williams_2011, Sohn_Lee_2012} use a Convolutional Restricted Boltzmann Machine (C-RBM)\sidenote{A C-RBM is a generative stochastic network that can learn a probability distribution over its inputs. Multiple layers of C-RBM are also known as deep belief networks.} \sidecite{Lee_Grosse_Ranganath_Ng_2009} to tie the weights.
+%Besides using C-RBM, it is also possible to tie the weights within several layers of a CNN to enforce rotation invariance and to reduce the number of parameters to learn. 
+%Teney and Herbert \sidecite{Teney_Hebert_2016} split the filters of a CNN in orientation groups and constraint their weights.
+%Such models achieve rotation covariance\sidenote{rotation covariance means that applying a rotation to the input image results in a shift of the output across the features} and only need to learn a single canonical filter per orientation group.
+%This concept can also be applied to the rotation group in the final layers of a CNN to obtain invariance to global rotations \sidecite{Wu_Hu_Kong_2015}.

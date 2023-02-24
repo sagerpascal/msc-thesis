@@ -1,19 +1,21 @@
 %% methods.tex
+This chapter describes the methodology used.
+A large part of the contribution of this thesis consists of identifying appropriate findings from neuroscience and adapting them to a deep learning setting.
+This identified concept and the link between the two disciplines is described in chapter \secref*{neuro_concepts}.
+It should be noted that this section presents only one possible interpretation for the implementation of neuroscientific concepts in the context of deep learning and that alternative interpretations might also be promising.
+Afterwards, two possible implementation approaches are described, which differ mainly in the type of local self-organisation.
+These types of self-organisation are referred to as horizontal and vertical self-organisation and are described in Section \secref*{vertical_self_org} and Section \secref*{horizontal_self_org} respectively.
+
+
+
 
 \section{Neuroscientific Concepts}\seclbl{neuro_concepts}
-% TODO: Dieser Teil wurde hier einfach reinkopiert -> passend zusammenschreiben
-
-
-
-
-% TODO: VON HIER SCHIEBE IN NEUES KAPITEL -> ABSTRAKTE KONZEPTE von Neuroscience IN DL Übertragen
 It is known that large parts of the human brain are self-organizing \sidecite{kelso1995dynamic}.
-Recently, renowned scientists \sidecite{von_der_Malsburg_Stadelmann_Grewe_2022} put forward the hypothesis that the key mechanism of natural intelligent systems such as the human brain to interpret visual scenes is self-organization.
-Self-organization is the process by which systems consisting of many units spontaneously acquire their structure or function without interference from a external agent or system.
-They organize their global behavior by local interactions amongst themselves.
-The absence of a central control unit allow self-organizing systems to quickly adjust to new environmental conditions.
-Additionally, such systems have in-built redundancy with a high degree of robustness as they  are made of many simpler individual units.
-These individual units can even fail without the overall system breaking down.
+Recently, renowned scientists \sidecite{von_der_Malsburg_Stadelmann_Grewe_2022} put forward the hypothesis that this process of self-organization is the key mechanism of natural intelligent systems such as the human brain.
+
+
+
+
 Dresp \sidecite{Dresp2020SevenPO} describes seven clearly identified properties of self-organization in the human brain: (i) modular connectivity, (ii) unsupervised learning, (iii) adaptive ability, (iv) functional resiliency, (v) functional plasticity, (vi) from-local-to-global functional organization, and (vii) dynamic system growth.
 
 However, it is not obvious how these insights from neuroscience can be integrated into a deep learning framework.
@@ -86,3 +88,9 @@ These principles are already applied to some extent by self-supervised learning 
 In contrastive learning, a popular form of self-supervised learning, two different views are derived from one image by data augmentation, and their representations are then pushed closed together in the feature space \sidecite{chen2020simple, chen2020big, caron2020unsupervised}.
 However, this paradigm is still quite limited since only two views of the same scene and not the continuous transformation of an object are presented to the learning system.
 TODO: Umsetzung beschreiben
+
+
+\section{Vertical Self-Organization}\seclbl{vertical_self_org}
+2 Arten von Loss: 1x Diversity + Sparsity, 1x MI zwischen vorherigem und nachfolgendem Layer
+
+\section{Horizontal Self-Organization}\seclbl{horizontal_self_org}
