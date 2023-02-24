@@ -10,53 +10,147 @@ These types of self-organisation are referred to as horizontal and vertical self
 
 
 \section{Neuroscientific Concepts}\seclbl{neuro_concepts}
+
+\subsection{Self-Organisation}\seclbl{neuro_concepts_self_org}
 It is known that large parts of the human brain are self-organizing \sidecite{kelso1995dynamic}.
-Recently, renowned scientists \sidecite{von_der_Malsburg_Stadelmann_Grewe_2022} put forward the hypothesis that this process of self-organization is the key mechanism of natural intelligent systems such as the human brain.
-
-
-
-
+Self-organization is the process by which systems consisting of many units acquire their function through local interaction and without interference from a external supervisory system.
+Recently, renowned scientists \sidecite{von_der_Malsburg_Stadelmann_Grewe_2022} put forward the hypothesis that this process of self-organization is \emph{the} key mechanism of natural intelligent systems such as the human brain.
 Dresp \sidecite{Dresp2020SevenPO} describes seven clearly identified properties of self-organization in the human brain: (i) modular connectivity, (ii) unsupervised learning, (iii) adaptive ability, (iv) functional resiliency, (v) functional plasticity, (vi) from-local-to-global functional organization, and (vii) dynamic system growth.
-
 However, it is not obvious how these insights from neuroscience can be integrated into a deep learning framework.
-One interpretation of self-organization may be that instead of optimizing the entire network by statistical learning for a single task (i.e. using backpropagation), local optimization based on local input data takes place.
-The suitability of backpropagation for explaining how the brain learns was questioned soon after it was published \sidecite{Crick_1989, Grossberg_1987}.
-Many alternative and biologically more plausible algorithms have been proposed in recent years such as the feedback alignment (FA) algorithm \sidecite{Lillicrap_Cownden_Tweed_Akerman_2014}, contrastive Hebbian learning \sidecite{Movellan_1991}, generalized recirculation \sidecite{O_Reilly_1996}, as well as target propagation (TP) and its variants \sidecite{Le__Cun_1986, hinton2007backpropagation, Lee_Zhang_Fischer_Bengio_2015}.
-However, Bartunov et al. \sidecite{Bartunov_Santoro_Richards_Marris_Hinton_Lillicrap_2018} have shown that these algorithms do not scale to large vision datasets such as ImageNet \cite{deng2009imagenet} and only work for smaller datasets such as MNIST \cite{MNIST} and CIFAR-10 \cite{cifar_10}.
-The biologically most plausible learning algorithm is Hebbian learning (c.f. Section \secref{hebbian}).
-However, even tough I obtain some promising results in preliminary results with Hebbian learning (c.f. Appendix \secref{exp_hebb_learning}), this algorithm doesn't seem to be well suited to learn good image representation if a network is trained from scratch.
 
-TODO: Füge FF-Algorithmus von Hinton hinzu
+Deep learning networks are usually optimized with end-to-end backpropagation of error.
+Thus, the entire network is optimized for a specific target.
+This is considered a violation of the self-organisation principle, as a global update algorithm (i.e. the optimizer) adjusts all network weights to minimise a global target function.
 
-Another interpretation of self-organization within neural network is that the networks adapts its structure during training.
-According to von der Malsburg et al. \cite{von_der_Malsburg_Stadelmann_Grewe_2022}, neurons form net-fragments (a.k.a. sub-networks) that represent objects with different levels of abstraction within an image (c.f. section \secref{natural_intelligence}).
+
+\begin{claim}
+	End-to-end backpropagation of error violates the principle of self-organization. Self-organisation in neural networks requires dividing the network into smaller units that are optimised independently of each other.
+\end{claim}
+
+In fact, the plausibility of backpropagation of error for explaining how the brain works was questioned soon after it was published \sidecite{Crick_1989, Grossberg_1987}.
+Since then, many alternative and biologically more plausible algorithms have been proposed such as the feedback alignment (FA) algorithm \sidecite{Lillicrap_Cownden_Tweed_Akerman_2014}, generalized recirculation \sidecite{O_Reilly_1996}, as well as target propagation (TP) \sidecite{Le__Cun_1986} (c.f. Section \secref*{alt_train_algo}).
+However, Bartunov et al. \sidecite{Bartunov_Santoro_Richards_Marris_Hinton_Lillicrap_2018} have demonstrated that these algorithms do not scale to large vision datasets such as ImageNet \cite{deng2009imagenet} and only work for smaller datasets such as MNIST \cite{MNIST} and CIFAR-10 \cite{cifar_10}.
+The only algorithm that seems to scale well is using a proxy objective functions (c.f. Section \secref*{alt_train_algo}).
+
+The biologically most plausible learning algorithm is Hebbian learning (c.f. Section \secref{hebbian}) and its variants such as contrastive Hebbian learning \sidecite{Movellan_1991}.
+However, even tough I obtain some promising results in preliminary experiments with Hebbian learning (c.f. Appendix \chref{exp_hebb_learning}), this algorithm doesn't seem to be well suited to learn good image representation if a network is trained from scratch.
+
+Thus, the use of proxy objective functions\sidenote{proxy objective functions are loss functions that are only applied to local units of a system} seems promising; the updates of weights are done in separate local units, yet the power of current deep learning training algorithms can be exploited and systems can be created that can solve complex problems and scale to large datasets by interacting with each other.
+
+\begin{implementation}
+	Instead of using end-to-end backpropagation of error to optimise the whole system according to a single global objective function, proxy objective functions are applied to local units. Thus, self-organisation takes place through the optimisation of local units instead of an overall system.
+\end{implementation}
+
+The next ambiguity is what local units are in a deep learning setting.
+In deep learning models, typically not neurons are modelled but the trainable parameters\sidenote{the weights $\boldsymbol{w}$ and the bias $\boldsymbol{b}$ are modelled, so that the output $y$ can be calculated as $\boldsymbol{y}=\boldsymbol{w} \cdot \boldsymbol{x} + \boldsymbol{b}$ for given data $\boldsymbol{x}$}.
+One of the strengths of deep learning systems is that matrix multiplications allow to calculate the layer outputs in one step.
+Calculating each neuron activity separately, on the other hand, would be very inefficient.
+Therefore, the smallest meaningful unit for local updates seems to be a layer and not a single neuron.
+If a neural network is visualised layer-wise from left to right, then the self-organising units line up horizontally. This is why layer-wise self-organisation is also referred to as ``horizontal self-organisation'' in this thesis (c.f. Figure \figref*{horizontal_vertical_self_org}).
+
+\begin{implementation}
+	Self-organisation takes place within local units. A local unit can be a part of a model such as layer.
+	In this thesis, this type of self-organisation is called horizontal self-organisation.
+\end{implementation}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.99\textwidth]{horizontal_vertical_self_org}
+    \caption[Overview of horizontal and vertical self-organization]{Two different ways of building self-organizing units. Self-organization can either take place horizontally (i.e. layer-wise) within a model (a) or vertically by splitting the data into patches and processing them with independent units (b). The independent units are marked with a red frame.}
+    \figlbl{horizontal_vertical_self_org}
+\end{figure}
+ 
+A second type of self-organisation is not to split the model into separate units but to split the data.
+The input data can be divided into smaller patches and then be processed by independent models.
+It is important that one model does not process the entire set of existing patches, as is the case with the vision transformer. If only one model is used, there would again be an end-to-end backpropagation of error on a single unit.
+But if the patches are processed by a graph of independent models, then each model can be considered as a self-organising unit.
+In this thesis we call this kind of self-organisation the ``vertical self-organisation'' (c.f. Figure \figref*{horizontal_vertical_self_org}).
+
+\begin{implementation}
+	A second type of self-organising unit can be a model that processes a subset of input data that is not shared with other models. In this thesis, this type of self-organisation is called vertical self-organisation.
+\end{implementation}
+
+
+\subsection{Net-Fragments}\seclbl{neuro_concepts_net_fragments}
+Another very important principle according to von der Malsburg et al. \cite{von_der_Malsburg_Stadelmann_Grewe_2022} is that neurons form net-fragments (a.k.a. sub-networks) that represent features of objects (c.f. section \secref{natural_intelligence}).
 For example, some net-fragments may represent shapes and structures while a multitude of such net-fragments together represent objects such as persons or entire scenes.
-Thus, self-organization could be the algorithm to form net-fragments that represent objects independent of their transformation.
+Net fragments are a compositional data structure, meaning that some low-level features can be composed to a higher-level feature and multiple higher-level features are composed to an object.
+To some extend, neural networks do this as well; data is fed into the network, the first layer extract some low-level patterns, and subsequent layer combine these patterns in higher-level features in a hierarchical manner.
+However, there is one big difference: The features that are used to fulfil a specific task such as classification are extracted from the latent space of \emph{one} single layer.
+Net-fragments in the human brain, on the other hand, are not considered to be present at a specific point in time but to be built up over multiple time-steps.
 
-Such a mechanism to form networks that can capture scenes in the form of net-fragment has not been successfully implemented in deep learning nor neurocomputing systems.
-This thesis aims to develop a learning paradigm that explicitly foster creation of net-fragments that represent objects independent of their transformation.
+\begin{claim}
+	Net fragments are represented by groups of neurons and their activity over multiple time-dependent spikes. In addition, several net fragments can be composed into a higher-level fragments. Thus, objects are not represented by a single neuron but by all neurons that were activated due to this object.
+\end{claim}
+
+Deep learning models are not based on time-dependent spikes of neurons that compose features to more complex features.
+However, a time-step could be interpreted as a forward-step from one layer to the next within a network of layers.
+Thus, net-fragments would be the activation of multiple layers.
+This interpretation is also in line with the compositional property of net-fragments.
+Low-level features that are detect within the first layers activate higher-level features in subsequent layers.
+An object, however, is not represented in the last layer of a neural network but through all activations within the network.
+Thus, representations of objects cannot be extracted from a single layer but from multiple layers.
+Intuitively, this seems promising.
+For example, auto-regressive models applied on speech capture different information at different layers of the network \sidecite{Chung_Hsu_Tang_Glass_2019}.
+While the first layers contain more information to distinguish speakers, representations in later layers provide more phonetic content.
+Thus, extracting information from several layers could lead to representations containing more information.
+
+\begin{implementation}
+	Net-fragments cannot be extracted from one single layer. Therefore, the representations of an image are extracted from multiple layers.
+\end{implementation}
+
+
+It is also important that distinct groups of neurons represent specific net fragments.
+This means that neurons are only active when the corresponding feature is present in the input and are inactive otherwise.
+Moreover, the features represented by the neurons should be meaningful and consequently not active for every existing object.
+This inevitably leads to the sparse and diverse activations.
+The activations are sparse and diverse because, the object in the image consists of only a small sub-set of all learned features. Thus, only a small sub-set of the neurons should be active for a given object.
+When the input changes and a different object is shown to the model, also the set of active neurons should change.
+
+\begin{claim}
+	The activation patterns of neurons that represent net-fragments must be sparse and diverse.
+\end{claim}
+
+The extent to which neuronal networks contain or can produce net fragments was investigated in detail in a preliminary study.
+The methodology used as well as an in-depth evaluation is described in the appendix in the Chapter \chref{net_fragments}.
+In summary, it was found that neural networks do not contain net fragments by default. Typically, there are neurons that are always active regardless of the input data and encode most of the input information in their activation strength.
+Other neurons, however, are never active and are therefore not needed by the network.
+If, on the other hand, a sparsity and diversity constraint is applied, then layers are obtained with neurons that appear to be suitable for net fragments.
+
+\begin{implementation}
+	Sparse and diverse activation patterns can be obtained by imposing sparsity and diversity constraints to the objective function of the model.
+\end{implementation}
+
+VAE haben continous latent space von welchem gesampelt werden kann -> nicht ganz so offensichtlich aber irgendwie beschreiben, dass dies ebenfalls diese Eigenschaften hat
+
+ 
+
+\subsection{Lateral Connections}\seclbl{neuro_concepts_lateral_connections}
+
+
+\subsection{Other Principles}\seclbl{neuro_concepts_others}
+
+
+
+
+
+% TODO: target function und objective function vereinheitlichen
+% TODO: net-fragment or net fragment
+
+
+
+
 ... TODO ...
 
 
 
 
 % TODO: VON HIER SCHIEBE IN NEUES KAPITEL -> ABSTRAKTE KONZEPTE von Neuroscience IN DL Übertragen
-In addition to these well-defined terms, there are various biological principles observed in the field of Neuroscience that are either not completely understood or it is unclear how they can be incorporated into artificial networks.
-The concepts relevant for this thesis are discussed in the following.
-However, due to the aforementioned challenges, no definition of these principles is given but rather my own interpretation in the context of this work.
 
-A central concept of this work are sub-networks.
-Typically, in current DL architectures for computer vision, an encoder is used to compute object representations in a latent space.
-Thus, the output of a single layer can be understood as an object representation\sidenote{this is also true for image classification: Usually, a classification head consisting of fully connected layers and subsequent softmax activation is used after an image encoder}.
-According to von der Malsburg et al. \cite{von_der_Malsburg_Stadelmann_Grewe_2022}, biological sub-networks span multiple layers.
-This concept is interpreted in such a way that the latent representations should not be extracted from the last layer of an encoder but from several layers.
-While the first layers of an image encoder contain more local information, the last layers contain very global information.
-It is known from speech representation learning that different layers capture different speech information \sidecite{Chung_Hsu_Tang_Glass_2019}.
-For example, the first layers contain more information to distinguish speakers, while representations in later layers provide more phonetic content.
-However, such information seems to be poorly exploited in computer vision architectures.
-One could argue that skip connections in segmentation networks \sidecite{Ronneberger_Fischer_Brox_2015} exploit such information.
-While this may be true to some extent, information from previous layers is still squeezed into a feature vector and can be poorly exploited by downstream tasks.
-TODO: Umsetzung Sub-Networks beschreiben
+
+
+
+
 
 In addition to forward connections, lateral connections are also located in visual cortex \sidecite{gilbert1990lateral}.
 Thus, the biological neurons are not only connected to the neurons in the subsequent layer but also within the same layer.
