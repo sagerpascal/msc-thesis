@@ -269,23 +269,36 @@ It can be observed that the performance is better when weights between neurons w
 
 \pagebreak
 \chapter{Net-Fragments and Deep Learning}\chlbl{net_fragments}
+TODO: UMSCHREIBEN SO DASS ES ZU METHODIK PASST UND NICHT ALLES WIEDERHOLT (-> sparsity and diversity constraints are mainly necessary to obtain meaningful and more robust activation patterns) -> Schreibe, beide claims hier nochmals auf. Schreibe claim 1 verletzt by design. Claim 2 wichtig für Robustness und interpretierbarkeit (aber nicht zwingend notwendig für funktionalität) -> wird in diesem Kapitel untersucht.
+
+
 In this chapter, it is examined how representations of typical deep learning architectures look like.
 Especially net fragments are of interest, i.e. (groups of) neurons that represent certain features of objects.
-According to \sidecite{von_der_Malsburg_Stadelmann_Grewe_2022}, net fragments are a compositional data structure (c.f. Section \secref*{natural_intelligence}).
-In architectures without recurrent connections, a composition of neurons is built up hierarchically over several layers.
-Thus, an object is not represented by the activations of a single layer but by the activations of multiple layers.
-Furthermore, groups of neurons represent certain features, and an object is composed of a multitude of such neuron groups (i.e. has many features).
+Net-fragments are discussed in Section \secref*{neuro_concepts_net_fragments}.
+There, it is described that the interpretation of net-fragments in this thesis relies on two principles:
+
+\begin{itemize}
+	\item The latent representations should be read out from multiple layers and not from a single layer
+	\item To obtain meaningful activations, the activation maps should be sparse and diverse
+\end{itemize}
+
+
+%According to \sidecite{von_der_Malsburg_Stadelmann_Grewe_2022}, net fragments are a compositional data structure (c.f. Section \secref*{natural_intelligence}).
+%In architectures without recurrent connections, a composition of neurons is built up hierarchically over several layers.
+%Thus, an object is not represented by the activations of a single layer but by the activations of multiple layers (c.f. Section \secref*{neuro_concepts_net_fragments}).
+%Furthermore, groups of neurons represent certain features, and an object is composed of a multitude of such neuron groups (i.e. has many features).
 
 % TODO schreiben, dass NN nur letztes Layer auslesen -> dieses Prinzip verletzt, zweites Prinzip ist das Neuronen spezifische Features repräsentieren -> das wird hier untersucht
-Typical deep learning architectures for vision tasks sequentially process the input, i.e. the output from one layer is used as input from the next layer.
-In the last layer\sidenote{or in some special cases such as autoencoders in a defined intermediate layer}, the representations describing the objects in the image are retrieved and used for a down-stream task such as image classification.
-Thus, object representations stem from one single layer.
-This process violates the biological principle that an object is represented by groups of neurons that span over several layers.
-However, even if deep-learning architectures use only one layer to represent objects, they work very well due to the increasing complexity of features within a neural network; deep learning architectures for image processing, especially CNNs, build a hierarchy of features where the first layers extract low-level features that are combined into more complex features in the later layers. The last layer thus represents objects but neglects the details.
+%Typical deep learning architectures for vision tasks sequentially process the input, i.e. the output from one layer is used as input from the next layer.
+%In the last layer\sidenote{or in some special cases such as autoencoders in a defined intermediate layer}, the representations describing the objects in the image are retrieved and used for a down-stream task such as image classification.
+%Thus, object representations stem from one single layer.
+%This process violates the biological principle that an object is represented by groups of neurons that span over several layers.
+%However, even if deep-learning architectures use only one layer to represent objects, they work very well due to the increasing complexity of features within a neural network; deep learning architectures for image processing, especially CNNs, build a hierarchy of features where the first layers extract low-level features that are combined into more complex features in the later layers. The last layer thus represents objects but neglects the details.
 
-Since this first principle is violated by deep learning architectures by design, this chapter focuses mainly on the second principle. Specifically, it investigates whether specific neuron groups can be assigned to specific features. 
+The first principle is violated by most deep learning architectures as the latent representations are read out from a single layer and subsequently used for a downstream task.
+Since this first principle is violated by deep learning architectures by design, this chapter focuses mainly on the second principle. Specifically, it investigates whether specific neuron groups can be assigned to specific features (i.e. represent net-fragments). 
 If this would be the case, specific features would be expected to trigger the activation of a group of neurons when they are present and that the same neurons would be inactive when this feature is not present. Thus, different neurons should be active for different objects.
-
+It is important to note that this mainly improves robustness and interpretability. Sparsity and diversity is not necessary, for example, to achieve high classification accuracy.
 
 Deep Learning architectures usually consist of several layers with millions of neurons, leading to millions of activations \cite{Szegedy_Liu_Jia_Sermanet_Reed_Anguelov_Erhan_Vanhoucke_Rabinovich_2014, He_Zhang_Ren_Sun_2016, Ronneberger_Fischer_Brox_2015, He_Gkioxari_Dollar_Girshick_2017, Liu_Anguelov_Erhan_Szegedy_Reed_Fu_Berg_2016, Redmon_Divvala_Girshick_Farhadi_2016}.
 Thus, the input data is processed in a complex way, which makes the analysis of activations difficult.
