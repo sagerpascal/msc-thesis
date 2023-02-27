@@ -1,0 +1,31 @@
+%% horizontal_self_org.tex
+This chapter presents a method based on horizontal self-organisation (c.f. \secref{neuro_concepts_self_org}).
+The idea of horizontal self-organisation is that the input is analysed by several smaller models instead of one big model.
+This means that each network sees only a patch of the input data and cannot decide on its own what is represented in the input image, but must agree on a representation with neighbouring models.
+It is important that each model is independent of the other models and that the parameters are not shared between the models. Otherwise the architecture would be comparable to vision transformer \sidecite{Dosovitskiy_Beyer_Kolesnikov_Weissenborn_Zhai_Unterthiner_Dehghani_Minderer_Heigold_Gelly_2021} and the input patches would no longer be analysed independently.
+
+
+In the following, first the methodology (i.e. how horizontal self-organization is implemented) is presented and afterwards the obtained results are discussed in detail.
+
+
+\section{Methods}\seclbl{horizontal_self_org_methods}
+
+
+
+\section{Results}\seclbl{horizontal_self_org_results}
+
+
+
+
+
+
+
+
+
+
+%TODO: vereinheitliche Mathe: Was ist underline, was ist hochgestellt in Klammern ($z^{(i)}$) und was ist hochgestellt in eckigen Klammern? Bei NN: Was ist n, was ist m, ... (+ Lernraten Symbol, Loss Symbol, etc.)
+%Sind alle Vektoren bold?
+
+% TODO: target function und objective function vereinheitlichen
+% TODO: net-fragment or net fragment
+
