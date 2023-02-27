@@ -50,6 +50,14 @@
 %\newtheorem{claim}{Claim}[theorem]
 \newtheorem{implementation}{Implementation}[claim]
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Math
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 
@@ -121,6 +129,10 @@
     %\afterpage{\blankpage}
 
 \endgroup
+
+\chapter*{Mathematical Terms \& Definitions}
+\addcontentsline{toc}{chapter}{Mathematical Terms \& Definitions}
+	\input{tex/math}
 
 %\KOMAoptions{twoside=false}
 

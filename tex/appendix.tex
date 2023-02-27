@@ -269,9 +269,6 @@ It can be observed that the performance is better when weights between neurons w
 
 \pagebreak
 \chapter{Net-Fragments and Deep Learning}\chlbl{net_fragments}
-TODO: UMSCHREIBEN SO DASS ES ZU METHODIK PASST UND NICHT ALLES WIEDERHOLT (-> sparsity and diversity constraints are mainly necessary to obtain meaningful and more robust activation patterns) -> Schreibe, beide claims hier nochmals auf. Schreibe claim 1 verletzt by design. Claim 2 wichtig für Robustness und interpretierbarkeit (aber nicht zwingend notwendig für funktionalität) -> wird in diesem Kapitel untersucht.
-
-
 In this chapter, it is examined how representations of typical deep learning architectures look like.
 Especially net fragments are of interest, i.e. (groups of) neurons that represent certain features of objects.
 Net-fragments are discussed in Section \secref*{neuro_concepts_net_fragments}.
@@ -529,9 +526,15 @@ Good features only occur as part of a few objects and not in all of them: Thus, 
 This combination of sparsity and diversity is also in line with the ideas of LeCun to obtain autonomous machine intelligence \sidecite{LeCun_AMI}.
 
 
-For the sparsity loss $L_{s}$ the kullback-leibler (KL) divergence us used \sidecite{10-5555-3042573-3042641}.
+For the sparsity loss $L_{s}$ the kullback-leibler (KL) divergence is used \sidecite{10-5555-3042573-3042641}.
 The hidden representations $\boldsymbol{z}$ in the bottleneck layer with length $m$ (i.e. $m$ neurons in the bottleneck layer) are defined as $\boldsymbol{z} = z_1, ..., z_m$.
-Furthermore, the average activation probability of a neuron $z_j$ over the input data $\boldsymbol{x}$ is defined as $\hat{\rho}_j$. We also define a sparsity parameter $\rho=0.05$ that can be interpreted as a target activation probability of each neuron. If the kullback-leibler divergence between all $\hat{\rho}_j$ and $\rho$ is minimised, then an average activation probability per neuron in the hidden layer of $\rho$ is enforced. The corresponding kullback-leibler divergence for each $\hat{\rho}_j$ is defined as:
+Furthermore, the average activation probability of a neuron $z_j$ over the input data $\boldsymbol{x}$ can be calculated as
+
+\begin{equation}\eqlbl{ae_kldd}
+		\hat{\rho}_j = \frac{1}{N} \sum^N_i \frac{1}{1+e^{-z^{(l)}_i}}
+\end{equation}
+
+where $\frac{1}{1+e^{-z^{(i)}}}$ is the sigmoid function that squeezes the activation in the range between $0$ and $1$. Furthermore, $\rho=0.05$ is sparsity parameter that can be interpreted as a target activation probability of each neuron. If the kullback-leibler divergence between all $\hat{\rho}_j$ and $\rho$ is minimised, then an average activation probability per neuron in the hidden layer of $\rho$ is enforced. The corresponding kullback-leibler divergence for each $\hat{\rho}_j$ is defined as:
 
 
 \begin{equation}\eqlbl{ae_kld}
