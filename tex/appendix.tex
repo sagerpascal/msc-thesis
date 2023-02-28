@@ -564,13 +564,13 @@ The overall loss can be defined as the sum of these three loss components, with 
 		L = L_{rec} + \lambda_s \cdot L_{s} + \lambda_d \cdot L_{d}
 \end{equation}
 
-In the experiments, these hyperparameters were set to $lambda_s = 0.02$ and $lambda_d = 0.02$, respectively $lambda_s = 0$ and $lambda_d = 0$ if the sparsity and diversity loss should not be used.
+In the experiments, these hyperparameters were set to $\lambda_s = 0.02$ and $\lambda_d = 0.02$, respectively $\lambda_s = 0$ and $\lambda_d = 0$ if the sparsity and diversity loss should not be used.
 
 Similar to the analysis of classification architectures, the model's activations of each layer are stored after every epoch.
 These vectors are visualized and investigated for net fragments.
 
 \subsection{Results}\seclbl{pre_study_ae_results}
-The activations of the autoencoders trained with reconstruction loss only and without diversity or sparsity constraint (i.e. $lambda_s = 0$ and $lambda_d = 0$) look very similar to those of the classification network; about half of the neurons are always active regardless of the object depicted in the image and the other half of neurons are always inactive. Thus, this version of the autoencoder has the same problem as the classification networks. Adding a sparsity constraint (i.e. $lambda_s = 0.02$ and $lambda_d = 0$) improves this issue slightly. The activations become sparse, but the same neurons are always active independent of the objects in the image. Only in a few cases can a set of neurons be identified that represent specific objects or features.
+The activations of the autoencoders trained with reconstruction loss only and without diversity or sparsity constraint (i.e. $\lambda_s = 0$ and $\lambda_d = 0$) look very similar to those of the classification network; about half of the neurons are always active regardless of the object depicted in the image and the other half of neurons are always inactive. Thus, this version of the autoencoder has the same problem as the classification networks. Adding a sparsity constraint (i.e. $\lambda_s = 0.02$ and $\lambda_d = 0$) improves this issue slightly. The activations become sparse, but the same neurons are always active independent of the objects in the image. Only in a few cases can a set of neurons be identified that represent specific objects or features.
 
 However, if all three loss components are used, the activations look much better. In this case, specific neuron combinations represent object-dependent features and are only active for specific objects. There are no more neurons that are constantly active. It is even possible to infer image labels based on a binary activity state (i.e. which neuron is active or inactive) and without knowing the strength of the activation, even though labels were not used during training. Thus, an autoencoder with additional sparsity and diversity constraint can represent net-fragments to some extent\sidenote{except that constraint 1 which says that net-fragments span several layers by design is violated (c.f. Introduction in Section \secref*{net_fragments})}.
 
