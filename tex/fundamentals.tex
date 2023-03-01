@@ -55,6 +55,7 @@ The mapping from the input to the output is done by using an aggregation functio
 \begin{equation}\eqlbl{McCulloch_Pitts_agg}
 	g(\boldsymbol{x}) = g(x_1, ..., x_n) = \sum_{i=1}^{n}x_i\\
 \end{equation}
+
 \begin{equation}\eqlbl{McCulloch_Pitts_act}
 		\hat{y} = f(g(\boldsymbol{x})) = \begin{cases}
       		1, & \text{if}\ g(x) \geq \theta \\
@@ -69,7 +70,7 @@ The input vector \(\boldsymbol{x} = (x_1, ..., x_n)\) where \(x_i \in \mathbb{R}
 	g(\boldsymbol{x}) = g(x_1, ..., x_n) = \sum_{i=1}^{n} w_i \cdot x_i\\
 \end{equation}
 
-The output \(\hat{y} \in \{0, 1\}\) is similar to the MuCulloch and Pitts neuron \(1\) if the aggregated value is greater than a threshold \(\theta\) and \(0\) otherwise as described in equation \ref{McCulloch_Pitts_act}. The equations \eqref*{Perceptron_agg} and \eqref*{McCulloch_Pitts_act} can be rewritten as
+The output \(\hat{y} \in \{0, 1\}\) is similar to the MuCulloch and Pitts neuron \(1\) if the aggregated value is greater than a threshold \(\theta\) and \(0\) otherwise as described in equation \eqref{McCulloch_Pitts_act}. The equations \eqref{Perceptron_agg} and \eqref{McCulloch_Pitts_act} can be rewritten as
 
 
 \begin{equation}\eqlbl{Perceptron}
