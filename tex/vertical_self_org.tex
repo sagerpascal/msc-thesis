@@ -205,7 +205,7 @@ These averages from the training set represent prototypes of each class object i
 When a new sample $\boldsymbol{x}_s$ is classified, the cosine similarity between the activations $\boldsymbol{z}^{(l)}_s$ of this sample and the class prototypes $\boldsymbol{z}^{(l)}[c]$ is calculated in each layer.
 
 \begin{equation}\eqlbl{vso_11}
-		\text{cos}^{(l)}_s[c] = \text{cos}(z\boldsymbol{z}^{(l)}_s, \boldsymbol{z}^{(l)}[c]) = \frac{\boldsymbol{z}^{(l)}_s \cdot \boldsymbol{z}^{(l)}[c]}{\max(||\boldsymbol{z}^{(l)}_s||_2, ||\boldsymbol{z}^{(l)}[c]||_2)} \text{, for } c \in C
+		\text{cos}^{(l)}_s[c] = \text{cos}(\boldsymbol{z}^{(l)}_s, \boldsymbol{z}^{(l)}[c]) = \frac{\boldsymbol{z}^{(l)}_s \cdot \boldsymbol{z}^{(l)}[c]}{\max(||\boldsymbol{z}^{(l)}_s||_2, ||\boldsymbol{z}^{(l)}[c]||_2)} \text{, for } c \in C
 \end{equation}
 
 Thus, the cosine similarity $\text{cos}^{(l)}[c]$ for each class $c \in C$ and each of the for layers $l \in {1, ..., 4}$ is calculated. Afterwards, the average class $c$ with the highest average cosine similarity between the sample activations $\boldsymbol{z}^{(l)}_s$ and the class prototypes $\boldsymbol{z}^{(l)}[c]$ is used as prediction.
