@@ -1,20 +1,56 @@
 
 
 \section{Notation}
-\begin{tabular}{ | l | l | l | }
+
+Depending on the context, a variable can be a scalar value, a vector, or a matrix. The following formatting is used:
+
+\begin{tabular}{ p{4cm} p{3cm} p{7cm} }
 	\textbf{Formatting} & \textbf{Example} & \textbf{Meaning}\\
 	\hline
   	No formatting, lower case & $a$ & A scalar value\\
   	Bold, lower case & $\boldsymbol{a}$ & A vector\\
   	Bold, upper case & $\boldsymbol{A}$ & A matrix\\
-\end{tabular}
-
-\section{Data}
-
-
-\begin{tabular}{ l l }
-  $\boldsymbol{X}$ & Input data that is fed into a model, typically a matrix (since it is a mini-batch with multiple samples)\\
+  	Brackets with a point & $a(\cdot)$ & A function, where $(\cdot)$ is a placeholder for a variable\\
+  	Superscript rectangular brackets & $a^{[l]}$ & $l$ is the index of the layer, e.g. $\boldsymbol{W}^{[l]}$ is the weight matrix of layer $l$\\
 \end{tabular}
 
 
+\section{Variables}
 
+\begin{tabular}{ p{3cm} p{11cm} }
+	\textbf{Variable} & \textbf{Meaning}\\
+	\hline
+	$\eta$ & The learning rate of an optimization algorithm\\
+	$\theta$ & A threshold value that was used instead of the bias $b$ in early versions of neural networks\\
+	$a$ & The output of an activation function of a single neuron\\
+	$\boldsymbol{a}$ & The output of an activation function in an intermediate layer of a multi-layer network, the output of the model is typically denoted as $\boldsymbol{\hat{y}}$\\
+	$b$ & The bias of a single neuron\\
+	$\boldsymbol{b}$ & The bias of a network layer\\
+	$k$ & The number of neurons within a layer\\
+	$L$ & The number of layers of a network\\
+	$l$ & The index of a layer, e.g. $\boldsymbol{W}^{[l]}$ is the weight matrix of layer $l$\\
+	$m$ & The number of input samples within a (mini-)batch\\
+	$n$ & The length (size) of a vector, for example, an input sample is defined as $\boldsymbol{x} = (x_1, ..., x_n)$\\
+	$\boldsymbol{w} = (w_1, ..., w_n)$ & A weight vector of a neuron\\
+	$\boldsymbol{W} = (\boldsymbol{w}_1, ..., \boldsymbol{w}_k)$ & A weight matrix of a network layer\\
+	$\boldsymbol{x} = (x_1, ..., x_n)$ & An input sample that is fed into a model or a network layer, typically a vector of length $n$\\
+	$\boldsymbol{y}$ & The expected output of a model or a network layer (i.e. the ground truth), typically a vector ($\boldsymbol{y}$) for a multi-class classification task or a scalar value ($y$) for a regression or single-class classification task\\
+	$\boldsymbol{\hat{y}}$ & The actual output of a model or a network layer (i.e. the prediction), typically a vector ($\boldsymbol{\hat{y}}$) for a multi-class classification task or a scalar value ($\hat{y}$) for a regression or single-class classification task (in a multi-layer network, the output of an intermediate layer is typically denoted as $\boldsymbol{a}$)\\
+	$z$ & The output of the aggregation function $g(\cdot)$ for a single neuron\\
+	$\boldsymbol{z}$ & The output of the aggregation function $g(\cdot)$ for a network layer\\
+\end{tabular}
+
+
+\section{Functions}
+
+\begin{tabular}{ p{3cm} p{11cm} }
+	\textbf{Function} & \textbf{Meaning}\\
+	\hline
+	$\mathcal{L}(\cdot)$ & Loss function to calculate the goodness of the model's prediction\\
+	$g(\cdot)$ & The aggregation function that calculates the scalar value that is fed into the activation function $f(\cdot)$ (c.f. \eqref{McCulloch_Pitts_agg}, \eqref{Perceptron_agg}, \eqref{nn})\\
+	$f(\cdot)$ & An activation function such as $\sigma(\cdot)$, $(\cdot)^{+}$, or $\tanh(\cdot)$ (c.f. \eqref{act_functions})\\
+	$\sigma(\cdot)$ & The sigmoid activation function (c.f. \eqref{act_functions})\\
+	$(\cdot)^{+}$ & The ReLU activation function (c.f. \eqref{act_functions})\\
+	 $\tanh(\cdot)$ & The hyperbolic tangent activation function (c.f. \eqref{act_functions})\\
+	
+\end{tabular}

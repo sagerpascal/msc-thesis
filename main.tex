@@ -8,10 +8,13 @@
 
 \usepackage[english]{babel}
 \usepackage[english=british]{csquotes}
+\usepackage[thmmarks]{ntheorem}
+\usetikzlibrary{fit,calc,positioning}
+\usetikzlibrary{3d}
+\subimport{layers/}{init}
 \usepackage{amsmath}
 \usepackage{textcomp}
 \usepackage{fontawesome}
-
 \usepackage{styles/phdbibliobyphd}
 \addbibresource{main.bib}
 
@@ -24,11 +27,6 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Plotting neural networks
-%\usepackage{import}
-\subimport{layers/}{init}
-\usetikzlibrary{fit,calc,positioning}
-\usetikzlibrary{3d} %for including external image 
-
 \def\ConvColor{rgb:yellow,5;red,2.5;white,5}
 \def\ConvReluColor{rgb:yellow,5;red,5;white,5}
 \def\PoolColor{rgb:red,1;black,0.3}
@@ -43,7 +41,6 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Theorems
-\usepackage[thmmarks]{ntheorem}
 \theoremstyle{plain}
 \newtheorem{theorem}{Theorem}
 \newtheorem{claim}{Claim}
@@ -53,7 +50,6 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Math
-\usepackage{amsmath}
 \DeclareMathOperator*{\argmax}{arg\,max}
 \DeclareMathOperator*{\argmin}{arg\,min}
 

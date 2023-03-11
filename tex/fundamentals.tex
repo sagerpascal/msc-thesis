@@ -1,19 +1,15 @@
 %% fundamentals.tex
-
-% TODO: Input Thilo -> mache den Bezug von diesem Teil auf die schlussendliche Arbeit viel deutlicher -> was wird wie gebraucht?
-
 Machine learning uses mathematical functions to map an input to an output.
 These functions usually extract patterns from the input data to build a relationship between input and output.
 The term machine learning stems from the fact that we use \emph{machines} to correlate the input and the output to a function (i.e. to \emph{learn} a function) during a training period.
-Deep learning is a sub-branch of machine learning and considered state-of-the-art for many learning tasks, especially on high-dimensional data such as texts, audio recordings, 2D as well as 3D images, and videos.
-Deep learning algorithms use neural networks that are heavily inspired from connected neurons within the human brain.
+Deep learning is a sub-branch of machine learning and is considered state-of-the-art for many learning tasks, especially on high-dimensional data such as texts, audio recordings, 2D and 3D images, and videos.
+Deep learning algorithms use neural networks that are heavily inspired by networks of neurons within the human brain.
 
-Therefore, this chapter first briefly explains how biological neurons work and relates them to artificial neurons (c.f. Section \secref*{neurons}).
-Next, Section \secref*{ann} describes artificial neural networks that connect a large number of artificial neurons.
-In Section \secref*{limitationsDL}, problems of such artificial neural networks are pointed out.
-Section \secref*{biological_learning} describes some of the differences of deep learning compared to biological learning and Section \secref*{neurocomputing} describes biologically more plausible learning methods that are investigated in the field of neurocomputing.
-These last two sections are not essential for the understanding of this thesis and can optionally be skipped. However, they are intended as a supplement for interested readers who want to get an overview of the whole field.
-
+Therefore, \secref{neurons} first briefly explains how biological neurons work and relates them to artificial neurons.
+Next, \secref{ann} describes artificial neural networks that connect many artificial neurons.
+In \secref{limitationsDL}, problems of such artificial neural networks are pointed out.
+Next, \secref{biological_learning} describes some of the differences between deep learning and biological learning. Finally, \secref{neurocomputing} describes biologically more plausible learning methods that are investigated in the field of neurocomputing.
+These last two sections are not important for understanding this thesis and can optionally be skipped. However, they are intended as a supplement for interested readers who want to get a better overview of the whole field.
 
 \section{Biological Neurons}\seclbl{neurons}
 \begin{figure}[h]
@@ -23,139 +19,198 @@ These last two sections are not essential for the understanding of this thesis a
     \figlbl{components_neuron}
 \end{figure}
 
-A biological neuron (c.f. Figure \figref*{components_neuron}) is a cell that communicates with other neurons through connections called synapses.
-Communication takes place through precisely timed electrical pulses.
+A biological neuron (c.f. \figref{components_neuron}) is a cell that communicates with other neurons through connections called synapses.
+Communication takes place through precisely timed electrical pulses called spikes.
 Biological neurons are electrically excitable by voltage changes across their membranes.
-If the changes is large enough within a short interval, the neuron generates a pulse called an action potential.
+If the changes are significant enough within a short interval, the neuron generates a pulse called an action potential.
 This action potential travels through the axon and activates synaptic connections.
 Other neurons, connected through synapses, receive this signal.
-The synaptic signal can be be excitatory \sidecite{Takagi_2000} or inhibitory \sidecite{Coombs_Eccles_Fatt_1955}, making the post-synaptic neuron more or less likely to fire an action potential.
-Biological neurons are typically classified into three types; sensory neurons, motor neurons, and interneurons.
-Sensory neurons respond to external stimuli such as light or sound and send their signal to the spinal cord or directly to the brain.
-Motor neurons receive signals from the brain and spinal cord to control muscles or organs.
-Interneurons connect neurons within the same region of the brain or the spinal coord.
-Multiple connected neurons from a neural circuit.
-The neural network in the brain is not static but changes through growth and reorganization.
+The synaptic signal can be excitatory \sidecite{Takagi_2000} or inhibitory \sidecite{Coombs_Eccles_Fatt_1955}, making the post-synaptic neuron more or less likely to fire an action potential.
+Biological neurons can be classified into sensory neurons, motor neurons, and interneurons.
+Sensory neurons respond to external stimuli such as light or sound and send signals to the spinal cord or the brain.
+Motor neurons receive brain and spinal cord signals to control muscles or organs.
+Interneurons connect neurons within the same region of the brain or of the spinal cord.
+Multiple connected neurons form a neural circuit.
+The neural network in the brain is not static but changes through growth and reorganisation.
 This process is referred to as neuroplasticity or neural plasticity \sidecite{Costandi_2016}.
 
-An artificial neuron is, similar to a biological neuron, connected to other neurons.
-Artificial neurons are usually organized in layers that forward signals sequentially.
+Like a biological neuron, an artificial neuron is connected to other neurons.
+Artificial neurons are usually organised in layers that forward signals sequentially.
 Although the neurons in the first layer could be considered sensory neurons, the neurons in the last layer could be considered motor neurons, and the neurons in the middle layer could be considered interneurons, such a distinction makes less sense because the artificial neurons function similarly regardless of their layer except for the activation function.
-Several variants for artificial neurons have been proposed in the literature. These variants are described in the following Section \secref*{ann}.
-Similar to biological neurons, multiple artificial neurons are usually connected to an artificial neural network.
+Several variants for artificial neurons have been proposed in the literature. These variants are described in the following  \secref{ann}.
+Like biological neurons, multiple artificial neurons are connected to artificial neural networks.
 
 
 \section{Artificial Neural Networks}\seclbl{ann}
-The idea for artificial neural networks (ANN) stems from biology and aims to capture the interaction of brain cells (neurons) with a mathematical model.
-A first model for a neuron was proposed by MuCulloch and Pitts in 1943 \sidecite{McCulloch_Pitts_1943}.
-Similar to how a neuron of the human brain transmits electrical impulses through the nervous system, the artificial neuron of MuCulloch and Pitts receives multiple input signals and transforms them into a output signal.
-A neuron takes an input vector \(\boldsymbol{x} = (x_1, ..., x_n)\) where \(x_i \in \{0, 1\}\) and maps it to an output \(\hat{y} \in \{0, 1\}\).
-The mapping from the input to the output is done by using an aggregation function \(g\) that sums up the input vector \(\boldsymbol{x}\) and a activation function \(f\) that outputs \(1\) if the output of \(g\) is greater than a threshold \(\theta\) and \(0\) otherwise.
-
-\begin{equation}\eqlbl{McCulloch_Pitts_agg}
-	g(\boldsymbol{x}) = g(x_1, ..., x_n) = \sum_{i=1}^{n}x_i\\
+The idea for artificial neural networks (ANN) stems from biology and aims to capture the interaction of biological neurons with a mathematical model.
+McCulloch and Pitts proposed the first model for a neuron that can be connected to other neurons in 1943 \sidecite{McCulloch_Pitts_1943}.
+Similar to how a neuron of the human brain transmits electrical impulses through the nervous system, the artificial neuron of McCulloch and Pitts receives multiple input signals and transforms them into an output signal.
+A neuron takes an input vector $\boldsymbol{x} = (x_1, ..., x_n)$ where $x_i \in \{0, 1\}$ and maps it to an output $\hat{y} \in \{0, 1\}$.
+The mapping from the input to the output is done by using an aggregation function $g(\cdot)$ that sums up the input vector $\boldsymbol{x}$ and an activation function $f(\cdot)$ that outputs $1$ if the output of $g(\cdot)$ is bigger than a threshold $\theta$ and $0$ otherwise.
+%
+\begin{equation}\eqlbl{McCulloch_Pitts_agg}%
+	z = g(\boldsymbol{x}) = g(x_1, ..., x_n) = \sum_{i=1}^{n}x_i\\
 \end{equation}
-
-\begin{equation}\eqlbl{McCulloch_Pitts_act}
-		\hat{y} = f(g(\boldsymbol{x})) = \begin{cases}
-      		1, & \text{if}\ g(x) \geq \theta \\
+%
+\begin{equation}\eqlbl{McCulloch_Pitts_act}%
+		\hat{y} = f(z) = \begin{cases}
+      		1, & \text{if}\ z \geq \theta \\
       		0, & \text{otherwise}
     	\end{cases}
-\end{equation}%
-
-In 1958, Rosenblatt \sideciteay{Rosenblatt_1958} developed the Perceptron which works with real numbers as input.
-The input vector \(\boldsymbol{x} = (x_1, ..., x_n)\) where \(x_i \in \mathbb{R}^n\) is multiplied with a weight vector \(\boldsymbol{w} = (w_1, ..., w_n)\) where \(w_i \in \mathbb{R}^n\) with the same length.
-
-\begin{equation}\eqlbl{Perceptron_agg}
-	g(\boldsymbol{x}) = g(x_1, ..., x_n) = \sum_{i=1}^{n} w_i \cdot x_i\\
 \end{equation}
-
-The output \(\hat{y} \in \{0, 1\}\) is similar to the MuCulloch and Pitts neuron \(1\) if the aggregated value is greater than a threshold \(\theta\) and \(0\) otherwise as described in equation \eqref{McCulloch_Pitts_act}. The equations \eqref{Perceptron_agg} and \eqref{McCulloch_Pitts_act} can be rewritten as
-
-
-\begin{equation}\eqlbl{Perceptron}
+%
+In 1958, \sideciteay{Rosenblatt_1958} developed the Perceptron, which works with real numbers as input.
+The input vector $\boldsymbol{x} \in \mathbb{R}^n$ is multiplied with a weight vector $\boldsymbol{w} \in \mathbb{R}^n$ with the same length $n$.
+%
+\begin{equation}\eqlbl{Perceptron_agg}%
+	z = g(\boldsymbol{x}) = g(x_1, ..., x_n) = \sum_{i=1}^{n} w_i \cdot x_i\\
+\end{equation}
+%
+The output $\hat{y} \in \{0, 1\}$ is similar to the McCulloch and Pitts neuron $1$ if the aggregated value is greater than a threshold $\theta$ and $0$ otherwise as described in \eqref{McCulloch_Pitts_act}. With real numbers as input, the equations \eqref*{Perceptron_agg} and \eqref*{McCulloch_Pitts_act} can be rewritten as
+%
+\begin{equation}\eqlbl{Perceptron}%
 		\hat{y} =f(g(\boldsymbol{x})) = \begin{cases}
-      		1, & \text{if}\ \sum_{i=1}^{n}w_i \cdot x_i - \theta \geq 0 \\
+      		1, & \text{if}\ z - \theta \geq 0 \\
       		0, & \text{otherwise}
     	\end{cases}
 \end{equation}
-
-Later, the step-function \(f\) was replaced with other functions so that the output could also be a real number \(\hat{y} \in \mathbb{R}\). Often used functions are
-
-\begin{equation}\eqlbl{act_functions}
+%
+Later, the step-function \(f(\cdot)\) was replaced with other functions so that the output can also be a real number \(\hat{y} \in \mathbb{R}\). Often-used activation functions are
+%
+\begin{equation}\eqlbl{act_functions}%
 	\begin{aligned}
-		\text{Sigmoid: } \sigma(z) = \frac{1}{1+\mathrm{e}^{-z}}\\
-		\text{Rectified linear unit (ReLU): } (z)^{+} = \max{0, z}\\
-		\text{Hyperbolic tangent (tanh): } \tanh(z) = \frac{\mathrm{e}^{z}-\mathrm{e}^{-z}}{\mathrm{e}^{z}+\mathrm{e}^{-z}}
+		\text{Sigmoid: } & \sigma(z) = \frac{1}{1+\mathrm{e}^{-z}}\\
+		\text{Rectified linear unit (ReLU): } & (z)^{+} = \max\{0, z\}\\
+		\text{Hyperbolic tangent (tanh): }  & \tanh(z) = \frac{\mathrm{e}^{z}-\mathrm{e}^{-z}}{\mathrm{e}^{z}+\mathrm{e}^{-z}}
 	\end{aligned}
 \end{equation}
-
-By convention, instead of using the threshold \(- \theta\) often a bias \(b\) is used which leads to:
-
-\begin{equation}\eqlbl{nn}
-	\begin{aligned}
-		z = g(\boldsymbol{x}) = \boldsymbol{w} \cdot \boldsymbol{x} = \sum_{i=1}^{n}w_i \cdot x_i + b\\
-		\hat{y} = f(z)
-	\end{aligned}
+%
+By convention, a positive bias $b$ is often used instead of the negative threshold $- \theta$, which leads to:
+%
+\begin{equation}\eqlbl{nn}%
+	z = g(\boldsymbol{x}) = \boldsymbol{w} \cdot \boldsymbol{x} + b = \left( \sum_{i=1}^{n}w_i \cdot x_i \right) + b
 \end{equation}
-
+%
+The neuron's output is calculated with the activation function of $z$:
+%
+\begin{equation}\eqlbl{nn2}%
+	\hat{y} = f(z)
+\end{equation}
+%
+So far, only the output of a single neuron has been discussed.
 However, the brain consists of multiple neurons which are connected through synapses.
-Therefore, ANNs consist not only of one neuron but combine multiple neurons in a network. 
-These neurons are organized into layers.
-A shallow neural network consists of one hidden layer in which the input \(\boldsymbol{x}\) is fed to calculate the output \(\boldsymbol{\hat{y}}\)\sidenote{\(\boldsymbol{\hat{y}}\) has become a vector since multiple neurons produce multiple output values}.
-The universal approximation theorem of Cybenko \sidecite{Cybenko_1989} proves that a shallow network with enough neurons can approximate any mapping function between inputs and outputs.
-However, very complex mapping functions may need too many hidden neurons.
-The neurons of the hidden layer extract features in the input space.
-Since only one layer is used, the features cannot be hierarchically organized and become complex enough.
+Therefore, also ANNs consist not only of one neuron but combine multiple neurons in a network. 
+These neurons are organized in layers.
+In the simplest case, all neurons from one layer are connected with all neurons of the subsequent layer. This is called a fully connected layer.
+For a network with multiple neurons within one layer, the input $\boldsymbol{x}$ is fed into all neurons to obtain $\boldsymbol{\hat{y}}$.
+If the layer has $k$ neurons, the output of the aggregation function becomes a vector $\boldsymbol{z} = (z_1, ..., z_k)$. The same applies to the output of the activation function $\boldsymbol{y} = (y_1, ..., y_k)$ and the bias $\boldsymbol{b} = (b_1, ..., b_k)$. The weight vector, on the other hand, becomes a matrix $\boldsymbol{W} = (\boldsymbol{w}_1, ..., \boldsymbol{w}_k)$. For a layer with multiple neurons, \eqref{nn} and \eqref{nn2} can be rewritten with matrix operations:
+%
+\begin{equation}\eqlbl{nn3}%
+	\boldsymbol{z} = \boldsymbol{W} \cdot \boldsymbol{x} + \boldsymbol{b}
+\end{equation}
+\begin{equation}
+	\hat{\boldsymbol{y}} = f(\boldsymbol{z})
+\end{equation}
+%
+which is equal to
+%
+\begin{equation}\eqlbl{nn4}%
+		\boldsymbol{z} = \begin{bmatrix}
+			z_1\\
+			z_2\\
+			...\\
+			z_k\\
+		\end{bmatrix} = \begin{bmatrix}
+			\boldsymbol{w}_1 \cdot \boldsymbol{x} + b_1\\
+			\boldsymbol{w}_2 \cdot \boldsymbol{x} + b_2\\
+			...\\
+			\boldsymbol{w}_k \cdot \boldsymbol{x} + b_k\\
+		\end{bmatrix} = \begin{bmatrix}
+			\left( \sum_{i=1}^{n}w_{1i} \cdot x_i \right) + b_1\\
+			\left( \sum_{i=1}^{n}w_{2i} \cdot x_i \right) + b_2\\
+			...\\
+			\left( \sum_{i=1}^{n}w_{ki} \cdot x_i \right) + b_k\\
+		\end{bmatrix}
+\end{equation}
+\begin{equation}\eqlbl{nn5}%
+		\hat{\boldsymbol{y}} = \begin{bmatrix}
+			y_1 = f(z_1)\\
+			y_2 = f(z_2)\\
+			...\\
+			y_k = f(z_k)\\
+		\end{bmatrix}
+\end{equation}
+%
 
-A multi-layer perceptron (MLP), on the other hand, consists of multiple layers.
-The different layers extract increasingly complex features.
-In a MLP. the input \(\boldsymbol{x}\) is fed into the first layer, each subsequent layer \(l\) gets the output of the previous layer \(l-1\) as input.
-In the following, we describe the mathematical model for fully connected layers, where all neurons of a layer are connected with the subsequent layer\sidenote{many modern network architectures are not fully connected and can have either missing or recurrent connections}.
-For a MLP with \(m\) layers, we define the output of the aggregation \(g\) as \(\boldsymbol{z}^{[l]}\) and the output the activation function as \(\boldsymbol{a}^{[l]}\) for layer \(l\).
-Furthermore, we use \(\boldsymbol{w}^{[l]}\) for the weight vector and \(b^{[l]}\) for the bias of layer \(l\).
-Thus, the mathematical model of a MLP is defined as
+The universal approximation theorem\sidecite{Cybenko_1989} proves that a shallow network with one hidden layer (i.e. one layer between input and output layer) and enough neurons can approximate any mapping function between inputs and outputs.
+However, very complex mapping functions may need too many neurons in the hidden layer.
+Sequentially arranging multiple layers is much more efficient for approximating complex functions.
+A sequential arrangement allows learning a hierarchy of features by dividing the mapping function over several successive processing steps.
+
+In an MLP, the input \(\boldsymbol{x}\) is fed into the first layer, and each subsequent layer \(l\) uses the output of the previous layer \(l-1\) as input.
+For a network with \(L\) layers, we denote the layer index as superscript square brackets, i.e. $(\cdot)^{[l]}$.
+For example, the weights of layer $l$ are denoted as $\boldsymbol{W}^{[l]}$, the bias as \(\boldsymbol{b}^{[l]}\), the output of the aggregation function as \(\boldsymbol{z}^{[l]}\), and the output of the activation function as \(\boldsymbol{a}^{[l]}\).
+The input in the first layer is the input data, i.e. $\boldsymbol{a}^{[0]} = \boldsymbol{x}$, and the output of the last layer is the model's prediction, i.e. $\boldsymbol{a}^{[L]} = \hat{\boldsymbol{y}}$. Thus, the mathematical model of an MLP is defined as
 
 \begin{equation}\eqlbl{mlp}
-	\begin{aligned}
-		\boldsymbol{z}^{[l]} = \boldsymbol{w}^{[l]}\boldsymbol{a}^{[l-1]} + b^{[l]}\\
+		\boldsymbol{z}^{[l]} = \boldsymbol{W}^{[l]}\boldsymbol{a}^{[l-1]} + \boldsymbol{b}^{[l]}
+\end{equation}
+\begin{equation}\eqlbl{mlp2}
 		\boldsymbol{a}^{[l]} = f({z}^{[l]})
-	\end{aligned}
 \end{equation}
 
-Since the input is fed into the first layer and the output is the result from the last layer \(\boldsymbol{x} = {a}^{[0]}\) and \(\boldsymbol{\hat{y}} = {a}^{[m]}\) holds true.
-
-So far, only the forward-pass which is used to calculate the output \(\boldsymbol{\hat{y}}\) was discussed.
-However, the model output \(\boldsymbol{\hat{y}}\) will only be close to the target output \(\boldsymbol{y}\) if the weights \(\boldsymbol{w}^{[l]}\) and biases \(b^{[l]}\) are properly defined.
+So far, only the forward pass used to calculate the output $\boldsymbol{\hat{y}}$ has been discussed.
+However, the model output $\boldsymbol{\hat{y}}$ will only be close to the target output $\boldsymbol{y}$ if the weights $\boldsymbol{W}^{[l]}$ and biases $\boldsymbol{b}^{[l]}$ are properly defined in every layer $l$.
 These parameters are learned during a training period.
-The training can take place in a supervised, semi-supervised, self-supervised, unsupervised, or reinforcement learning based manner.
-In supervised learning, the output of the model \(\boldsymbol{\hat{y}}\) for a given input \(\boldsymbol{x}\) is compared to manually created target outputs \(\boldsymbol{y}\).
-Unsupervised learning, on the other hand, tries to find patterns in the input \(\boldsymbol{x}\) and to cluster the samples into meaningful groups without using target labels.
-Semi-supervised learning is a hybrid approach of the the aforementioned principles that combines a small amount of labelled data with a large amount of unlabelled data.
-In self-supervised learning, the target outputs \(\boldsymbol{y}\) are directly derived from the input data \(\boldsymbol{x}\) (e.g. predict a masked part of the input \(\boldsymbol{x}\)).
-Lastly, reinforcement learning algorithms aim to maximize a reward that they become from an environment based on some action they executed.
+The training can take place in a supervised, semi-supervised, self-supervised (sometimes also called unsupervised), or reinforcement learning setting.
+In supervised learning, the output of the model $\boldsymbol{\hat{y}}$ is compared to a given target output $\boldsymbol{y}$.
+On the other hand, unsupervised learning tries to find patterns in the input data $\boldsymbol{x}$ and cluster the samples into meaningful groups without using pre-defined target labels. Typically, the target $\boldsymbol{y}$ is derived from the data automatically (e.g. predict a masked part of the data); since the model creates the target by itself, this approach is also called self-supervised.
+Semi-supervised learning is a hybrid approach of the aforementioned principles that combines a small amount of labelled data with a large amount of unlabelled data.
+Lastly, reinforcement learning algorithms aim to maximize the reward that they receive from an environment based on some action they executed.
 
-These learning principle have in common that a loss function \(\mathcal{L}\) can calculate a loss value based on the model output \(\boldsymbol{\hat{y}}\). 
-For example, the mean square error (MSE) can be used for regression problems or the negative log-likelihood for classification problems.
-The chosen loss function is minimized interatively with stochastic gradient descent (SGD)\sidenote{There exist also other optimizer methods such as SGD with momentum, RMSprop, or Adam \citep{Kingma2015AdamAM}} until the network converges.
-The idea behind stochastic gradient descent is to make use of the fact that the negative gradient of the loss value points to the direction of the steepest descent (i.e. in the direction where the loss gets smaller).
-SGD therefore updates the network parameters by taking a step of size \(\eta\) in the direction of their negative gradient
-
+These learning principles have in common that a loss function (also called objective function) $\mathcal{L}(\cdot)$ can calculate a loss value based on the model output $\boldsymbol{\hat{y}}$ and the target output ${\hat{y}}$. For example, the mean square error (MSE) can be used for regression problems or the negative log-likelihood for classification problems.
+The chosen loss function is minimized iteratively with stochastic gradient descent (SGD)\sidenote{there also exist other optimization algorithms such as SGD with momentum, RMSprop, or Adam \citep{Kingma2015AdamAM}} until the network converges to a (local) minima.
+The idea behind stochastic gradient descent is to make use of the fact that the negative gradient of the loss value points to the direction of the steepest descent (i.e. in the direction where the loss becomes smaller).
+Therefore, SGD updates the network parameters by taking a step of size $\eta$ toward their negative gradient:
+%
 \begin{equation}\eqlbl{sgd}
 	\begin{aligned}
-		\Delta \boldsymbol{w}^{[l]} = -\eta \nabla_{\boldsymbol{w}^{[l]}} \mathcal{L}\\
-		\Delta b^{[l]} = -\eta \nabla_{b^{[l]}} \mathcal{L}
+		\Delta \boldsymbol{W}^{[l]} = & -\eta \nabla_{\boldsymbol{W}^{[l]}} \mathcal{L}\\
+		\boldsymbol{W}^{[l]} \coloneqq & \boldsymbol{W}^{[l]} + \Delta \boldsymbol{W}^{[l]}
 	\end{aligned}
 \end{equation}
+%
+and
+%	
+\begin{equation}\eqlbl{sgd2}	
+	\begin{aligned}
+		\Delta \boldsymbol{b}^{[l]} = & -\eta \nabla_{\boldsymbol{b}^{[l]}} \mathcal{L}\\
+		\boldsymbol{b}^{[l]} \coloneqq & \boldsymbol{b}^{[l] + \Delta \boldsymbol{b}^{[l]}
+	\end{aligned}
+\end{equation}
+%
 
-The gradients of the weights \(\boldsymbol{w}^{[l]}\) and biases \(b^{[l]}\) can efficiently be calculated with an algorithm called backpropagation \sidecite{Rumelhart_Hinton_Williams_1986}, which is just a smart implementation of the chain rule\sidenote{While a detailed discussion on backpropagation is out of scope for this thesis, we refer interested reader to the deep learning course by Andrew Ng \cite{Coursera}}.
+
+
+
+
+TODO: make formula clearer!!!
+
+
+
+
+
+
+
+
+The gradients of the weights \(\boldsymbol{W}^{[l]}\) and biases \(\boldsymbol{b}^{[l]}\) can efficiently be calculated with an algorithm called backpropagation of error. \sidecite{Rumelhart_Hinton_Williams_1986}, which is in fact a smart implementation of the chain rule\sidenote{While a detailed discussion on backpropagation is out of scope for this thesis, we refer interested reader to the deep learning course by Andrew Ng \cite{Coursera}}.
 
 One of the most important design decisions in creating ANNs is how the neurons are connected.
 If the each neuron is connected to each neuron of the succeeding layer, it is called a Fully Connected Layer (FCN). 
 There exists several alternatives besides such dense connections.
 Since this thesis deals with the processing of visual scenes, only the most important neural network architectures for vision applications are presented in the following.
 
-\subsection{Convolutional Neural Networks}\seclbl{cnns}
+\subsection{Convolutional Networks}\seclbl{cnns}
 Convolutional Neural Networks (CNNs) are particularly useful for finding patterns in images but can also be used to analyze non-image data such as audio data or time series.
 Similar to FCNs, a CNN is composed of an input layer, an output layer, and many hidden layers in between.
 A typical CNN consists of subsequently connected convolutional layers and pooling layers.
@@ -219,7 +274,7 @@ More details on visual representation learning are provided in Section \secref*{
 Especially Autoencoders \sidecite{rumelhart1985learning} are explained in this section as they are applied in this thesis.
 
 
-\section{Limitations of Deep Learning}\seclbl{limitationsDL}
+\section{Limitations}\seclbl{limitationsDL}
 The rise of deep learning over the past decade has only been possible because of major technological advances in hardware.
 Without the computational resources and the storage capacity of the systems created in the last decades no system could run today's algorithm.
 Moreover, much of the progress of recent years was possible due to the improved hardware. 
