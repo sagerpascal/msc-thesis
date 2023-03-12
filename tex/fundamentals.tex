@@ -175,7 +175,7 @@ Therefore, SGD updates the network parameters by taking a step of size $\eta$ to
 %
 \begin{equation}\eqlbl{sgd}
 	\begin{aligned}
-		\Delta \boldsymbol{W}^{[l]} = & -\eta \nabla_{\boldsymbol{W}^{[l]}} \mathcal{L}\\
+		\Delta \boldsymbol{W}^{[l]} = & -\eta \cdot \left( \nabla_{\boldsymbol{W}^{[l]}} \mathcal{L} \right)\\
 		\boldsymbol{W}^{[l]} \coloneqq & \boldsymbol{W}^{[l]} + \Delta \boldsymbol{W}^{[l]}
 	\end{aligned}
 \end{equation}
@@ -184,17 +184,23 @@ and
 %	
 \begin{equation}\eqlbl{sgd2}	
 	\begin{aligned}
-		\Delta \boldsymbol{b}^{[l]} = & -\eta \nabla_{\boldsymbol{b}^{[l]}} \mathcal{L}\\
+		\Delta \boldsymbol{b}^{[l]} = & -\eta \cdot \left( \nabla_{\boldsymbol{b}^{[l]}} \mathcal{L} \right)\\
 		\boldsymbol{b}^{[l]} \coloneqq & \boldsymbol{b}^{[l] + \Delta \boldsymbol{b}^{[l]}
 	\end{aligned}
 \end{equation}
 %
+The term $\left( \nabla_{\boldsymbol{W}^{[l]}} \mathcal{L} \right)$ is the gradient of the weights \(\boldsymbol{W}^{[l]}\)  with respect to the loss $\mathcal{L}(\cdot)$ and the term $\left( \nabla_{\boldsymbol{b}^{[l]}} \mathcal{L} \right)$ is the gradient of the bias \(\boldsymbol{b}^{[l]}\)  with respect to $\mathcal{L}(\cdot)$.
+The gradients of the weights can efficiently be calculated with an algorithm called backpropagation of error \sidecite{Rumelhart_Hinton_Williams_1986}, which is, in fact, just an intelligent implementation of the chain rule\sidenote{While a detailed discussion on backpropagation is out of scope for this thesis, we refer interested readers to the deep learning course by Andrew Ng \cite{Coursera}}.
+
+One of the most critical design decisions in creating ANNs is how the neurons are connected.
+So far, only the case where every neuron of one layer is connected to every neuron of the following layer (so-called fully connected layer) has been described. 
+Besides such dense connections, there are several alternatives.
+Since this work deals with the processing of visual scenes, the most well-known image-processing network architecture, namely Convolutional Neuronal Networks (CNN), is presented below. This architecture is also primarily used in this thesis. However, various alternative architectures exist for computer vision, such as Vision Transformer (ViT)\sidecite{Dosovitskiy_Beyer_Kolesnikov_Weissenborn_Zhai_Unterthiner_Dehghani_Minderer_Heigold_Gelly_2021} or MLP Mixer\sidecite{tolstikhin2021mlp}, which, however, would go beyond the scope of this introduction to deep learning.
 
 
 
 
 
-TODO: make formula clearer!!!
 
 
 
@@ -203,12 +209,15 @@ TODO: make formula clearer!!!
 
 
 
-The gradients of the weights \(\boldsymbol{W}^{[l]}\) and biases \(\boldsymbol{b}^{[l]}\) can efficiently be calculated with an algorithm called backpropagation of error. \sidecite{Rumelhart_Hinton_Williams_1986}, which is in fact a smart implementation of the chain rule\sidenote{While a detailed discussion on backpropagation is out of scope for this thesis, we refer interested reader to the deep learning course by Andrew Ng \cite{Coursera}}.
 
-One of the most important design decisions in creating ANNs is how the neurons are connected.
-If the each neuron is connected to each neuron of the succeeding layer, it is called a Fully Connected Layer (FCN). 
-There exists several alternatives besides such dense connections.
-Since this thesis deals with the processing of visual scenes, only the most important neural network architectures for vision applications are presented in the following.
+
+
+
+
+
+
+
+
 
 \subsection{Convolutional Networks}\seclbl{cnns}
 Convolutional Neural Networks (CNNs) are particularly useful for finding patterns in images but can also be used to analyze non-image data such as audio data or time series.
