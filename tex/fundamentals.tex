@@ -185,7 +185,7 @@ and
 \begin{equation}\eqlbl{sgd2}	
 	\begin{aligned}
 		\Delta \boldsymbol{b}^{[l]} = & -\eta \cdot \left( \nabla_{\boldsymbol{b}^{[l]}} \mathcal{L} \right)\\
-		\boldsymbol{b}^{[l]} \coloneqq & \boldsymbol{b}^{[l] + \Delta \boldsymbol{b}^{[l]}
+		\boldsymbol{b}^{[l]} \coloneqq & \boldsymbol{b}^{[l]} + \Delta \boldsymbol{b}^{[l]}
 	\end{aligned}
 \end{equation}
 %
@@ -195,7 +195,7 @@ The gradients of the weights can efficiently be calculated with an algorithm cal
 One of the most critical design decisions in creating ANNs is how the neurons are connected.
 So far, only the case where every neuron of one layer is connected to every neuron of the following layer (so-called fully connected layer) has been described. 
 Besides such dense connections, there are several alternatives.
-Since this work deals with the processing of visual scenes, the most well-known image-processing network architecture, namely Convolutional Neuronal Networks (CNN), is presented below. This architecture is also primarily used in this thesis. However, various alternative architectures exist for computer vision, such as Vision Transformer (ViT)\sidecite{Dosovitskiy_Beyer_Kolesnikov_Weissenborn_Zhai_Unterthiner_Dehghani_Minderer_Heigold_Gelly_2021} or MLP Mixer\sidecite{tolstikhin2021mlp}, which, however, would go beyond the scope of this introduction to deep learning.
+Since this work deals with the processing of visual scenes, the most well-known image-processing network architecture, namely Convolutional Neuronal Networks (CNN), is presented below. This architecture is also primarily used in this thesis. However, various alternative architectures exist for computer vision, such as Vision Transformer (ViT) \sidecite{Dosovitskiy_Beyer_Kolesnikov_Weissenborn_Zhai_Unterthiner_Dehghani_Minderer_Heigold_Gelly_2021} or MLP Mixer \sidecite{tolstikhin2021mlp}, which, however, would go beyond the scope of this introduction to deep learning.
 
 
 

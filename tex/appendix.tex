@@ -226,20 +226,21 @@ The \emph{first} Hebbian based method can improve the results even after backpro
 \begin{table}[h] 
     \tablbl{nll_hebb_pruning}
     \centering
-	 \begin{tabular}{|l c c|} 
-    	\hline
-    	 & NLL-Loss & NLL-Loss \\
-        Dataset & without Hebbian Updates & with Hebbian Updates\\
+	 \begin{tabular}{l c c} 
+    	%\hline
+    	 & \textbf{NLL-Loss} & \textbf{NLL-Loss} \\
+        \textbf{Dataset} & \textbf{without Hebbian Updates} & \textbf{with Hebbian Updates}\\
         \hline
         MNIST & \(0.05314\) & \(0.03386\) \\
         MNIST-C & \(0.6013\) & \(0.4766\) \\
-        \hline
-    	 &Accuracy & Accuracy \\
-        Dataset & without Hebbian Updates & with Hebbian Updates\\
+         & & \\
+        %\hline
+    	 &\textbf{Accuracy} & \textbf{Accuracy} \\
+        \textbf{Dataset} & \textbf{without Hebbian Updates }& \textbf{with Hebbian Updates}\\
         \hline
         MNIST & \(98.94\%\) & \(98.97\%\) \\
         MNIST-C & \(88.74\%\) & \(89.94\%\) \\
-        \hline
+        %\hline
     \end{tabular}
     \caption[NLL Loss of Hebbian Pruning Network]{NLL loss of the model before and after the \emph{first} Hebbian-based pruning method.}
 \end{table}
@@ -396,22 +397,22 @@ The ``head'' is identical for all models and consists of a sequence of the follo
 \newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
     \tablbl{pre_study_models}
     \centering
-	 \begin{tabular}{|l L{9cm}|} 
-    	\hline
+	 \begin{tabular}{l L{9cm}} 
+    	%\hline
     	\textbf{No.} & \textbf{Encoder Description} \\
         \hline
-		1 & Conv. Layer (kernel size=$3\times3$, channels=$2$) $\rightarrow$ ReLU $\rightarrow$ head \\ \hline
-		2 & Conv. Layer (kernel size=$3\times3$, channels=$4$) $\rightarrow$ ReLU $\rightarrow$ head \\ \hline
-		3 & Conv. Layer (kernel size=$5\times5$, channels=$2$) $\rightarrow$ ReLU $\rightarrow$ head \\ \hline
-		4 & Conv. Layer (kernel size=$5\times5$, channels=$4$) $\rightarrow$ ReLU $\rightarrow$ head \\ \hline
-		5 & Conv. Layer (kernel size=$3\times3$, channels=$2$) $\rightarrow$ ReLU $\rightarrow$ Conv. Layer (kernel size=$3\times3$, channels=$4$) $\rightarrow$ ReLU $\rightarrow$ head \\ \hline
-		6 & Conv. Layer (kernel size=$3\times3$, channels=$4$) $\rightarrow$ ReLU $\rightarrow$ Conv. Layer (kernel size=$3\times3$, channels=$8$) $\rightarrow$ ReLU $\rightarrow$ head\\ \hline
-		7 & Conv. Layer (kernel size=$3\times3$, channels=$2$) $\rightarrow$ ReLU $\rightarrow$ Max Pooling $\rightarrow$ Conv. Layer (kernel size=$3\times3$, channels=$4$) $\rightarrow$ ReLU $\rightarrow$ head\\ \hline
-		8 & Conv. Layer (kernel size=$3\times3$, channels=$4$) $\rightarrow$ ReLU $\rightarrow$ Max Pooling $\rightarrow$ Conv. Layer (kernel size=$3\times3$, channels=$8$) $\rightarrow$ ReLU $\rightarrow$ head\\ \hline
-		9 & head \\ \hline
-		10 & FC (in size=$9*9$, out size=$12$) $\rightarrow$ ReLU $\rightarrow$ head \\ \hline
+		1 & Conv. Layer (kernel size=$3\times3$, channels=$2$) $\rightarrow$ ReLU $\rightarrow$ head \\ %\hline
+		2 & Conv. Layer (kernel size=$3\times3$, channels=$4$) $\rightarrow$ ReLU $\rightarrow$ head \\ %\hline
+		3 & Conv. Layer (kernel size=$5\times5$, channels=$2$) $\rightarrow$ ReLU $\rightarrow$ head \\ %\hline
+		4 & Conv. Layer (kernel size=$5\times5$, channels=$4$) $\rightarrow$ ReLU $\rightarrow$ head \\ %\hline
+		5 & Conv. Layer (kernel size=$3\times3$, channels=$2$) $\rightarrow$ ReLU $\rightarrow$ Conv. Layer (kernel size=$3\times3$, channels=$4$) $\rightarrow$ ReLU $\rightarrow$ head \\ %\hline
+		6 & Conv. Layer (kernel size=$3\times3$, channels=$4$) $\rightarrow$ ReLU $\rightarrow$ Conv. Layer (kernel size=$3\times3$, channels=$8$) $\rightarrow$ ReLU $\rightarrow$ head\\ %\hline
+		7 & Conv. Layer (kernel size=$3\times3$, channels=$2$) $\rightarrow$ ReLU $\rightarrow$ Max Pooling $\rightarrow$ Conv. Layer (kernel size=$3\times3$, channels=$4$) $\rightarrow$ ReLU $\rightarrow$ head\\ %\hline
+		8 & Conv. Layer (kernel size=$3\times3$, channels=$4$) $\rightarrow$ ReLU $\rightarrow$ Max Pooling $\rightarrow$ Conv. Layer (kernel size=$3\times3$, channels=$8$) $\rightarrow$ ReLU $\rightarrow$ head\\ %\hline
+		9 & head \\ %\hline
+		10 & FC (in size=$9*9$, out size=$12$) $\rightarrow$ ReLU $\rightarrow$ head \\ %\hline
 		11 & Hand Crafted Conv. Layer for vertical \& horizontal edge detection (kernel size=$3\times3$, channels=$2$) $\rightarrow$ ReLU $\rightarrow$ head \\
-        \hline
+        %\hline
     \end{tabular}
     \caption[Different architectures of classification networks that are investigated for net-fragments]{A description of the different classification networks that are investigated for net-fragments.}
 \end{table}
@@ -494,13 +495,13 @@ The two different autoencoder architectures used are shown in Table  \tabref*{pr
 \newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
     \tablbl{pre_study_ae_models}
     \centering
-	 \begin{tabular}{|l L{9cm}|} 
-    	\hline
+	 \begin{tabular}{l L{9cm}} 
+    	%\hline
     	\textbf{No.} & \textbf{Encoder Description} \\
         \hline
 		1 & FC (in size=$9*9$ out size=$12$) $\rightarrow$ ReLU $\rightarrow$ FC (in size=$12$ out size=$9*9$) \\ \hline
 		2 & FC (in size=$9*9$ out size=$40$) $\rightarrow$ ReLU $\rightarrow$ FC (in size=$40$ out size=$9*9$) \\ \hline
-        \hline
+        %\hline
     \end{tabular}
     \caption[Different architectures of autoencoders that are investigated for net-fragments]{A description of the different autoencoder networks that are investigated for net-fragments.}
 \end{table}
