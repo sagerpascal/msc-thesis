@@ -481,88 +481,86 @@ An input $\boldsymbol{x}$ is fed into the network by initialising $\boldsymbol{y
 Afterwards, the binary neurons flip until a point attractor is reached. Thereby, a pattern is attracted to the closest stable pattern.
 Thus, the network can be used as an associative memory, as an input pattern is converted to the nearest stable pattern.
 
-
-
-
-
-
-
-
-
-
-
-
-
-TODO in equation: check where to use y and where to use y with hat, and x_i was replaced by a_i
-
-
-McElice \sidecite{1057328} has shown that a binary Hopfield network with \(N\) neurons has a capacity of \(C=0.138N\) (i.e. the number of patterns that can be stored.
-Hebbian learning (c.f. Section \secref*{hebbian}) can be used to store pattern in a Hopfield network.
-To store a pattern, the weights \(\boldsymbol{w}\) must be choosen in a way so that the desired local patterns \((\boldsymbol{y}^1, ..., \boldsymbol{y}^P)\) are local minima of the energy function.
-By combining Hebbian learning with some smart mathematical transformations it can be shown that the weights can be directly learned with only one iteration over the training patterns\sidenote{for the derivation of this equation refer to \citep{Hopfield_1982}}:
+A binary Hopfield network with \(N\) neurons has a capacity\sidenote{the number of patterns that can be stored} of \(C=0.138N\)\sidecite{1057328}.
+However, so far, it has only been discussed how patterns can be retrieved for a given input.
+Hebbian learning (c.f. Section \secref*{hebbian}) can be used to \emph{store} specific patterns in a Hopfield network.
+To store a pattern, the weights \(\boldsymbol{w}\) must be chosen in a way so that $P$ desired patterns \((\boldsymbol{y}^1, ..., \boldsymbol{y}^P)\) are local minima of the energy function.
+By combining Hebbian learning with some smart mathematical transformations, it can be shown that the weights can be directly learned with only one iteration over the $P$ training patterns\sidenote{for the derivation of this equation refer to \citep{Hopfield_1982}}:
 
 \begin{equation}\eqlbl{hf_5}
 	\boldsymbol{w} = \frac{1}{p} \sum_{k=1}^{P} \boldsymbol{y}^k \times (\boldsymbol{y}^k)^T - \boldsymbol{I}
 \end{equation}
 
 where \(\boldsymbol{I}\) is the identity matrix.
-Later, Hopfield et al. \sidecite{Hopfield1983} extended the binary Hopfield network so that it can either learn pattern during an awake cycle or forget patterns during a sleep cycle.
+Later, the weight update of the binary Hopfield network was extended so that the network can either learn patterns during an awake cycle or forget patterns during a sleep cycle \sidecite{Hopfield1983}.
 
 One of the limiting factors of binary Hopfield networks is the capacity of \(C=0.138N\).
-The problems comes from the fact that the energy function is a quadratic function.
-More than three decades after the introduction of the binary Hopfield networks, Krotov and Hopfield \sidecite{10.5555/3157096.3157228} reformulated the energy function as a polynomial function to get polynomial capacity \(C\approx N^{a-1}\) where \(a\) is the order of the function.
-Later, the energy function was reformulated as exponential function \sidecite{Demircigil_Heusel_Löwe_Upgang_Vermet_2017} and thus modern Hopfield networks have an exponential capacity of \(C\approx 2^{\frac{N}{2}}\).
+The problem comes from the fact that the energy function is a quadratic function.
+More than three decades after the introduction of the binary Hopfield networks, Krotov and Hopfield \sidecite{10.5555/3157096.3157228} reformulated the energy function as a polynomial function to get polynomial capacity \(C\approx N^{a-1}\) where \(a\) is the order of the polynomial function.
+Later, the energy function was reformulated as an exponential function \sidecite{Demircigil_Heusel_Löwe_Upgang_Vermet_2017} and thus modern Hopfield networks have an exponential capacity of \(C\approx 2^{\frac{N}{2}}\).
 
 The second limiting factor of binary Hopfield networks is that only binary patterns can be stored.
-Ramsauer et al. \sidecite{Ramsauer} extended the binary Hopfield network to continous patterns by reformulating the energy function and the corresponding update rule.
-Continous Hopfield networks can retrieve continous patterns or even combination of several similar continous patterns.
-The authors claim that a continous Hopfield networks can replace fully-connected layers, attention layers \cite{10.5555/2969033.2969073}, LSTM layers \cite{Hochreiter_Schmidhuber_1997}, support vector machines (SVM) \cite{Cortes_Vapnik_1995}, and k nearest neighbor (k-NN) \cite{Cover_Hart_1967}.
+Recently, Hopfield networks have been extended to continuous patterns by reformulating the energy function and the corresponding update rule \sidecite{Ramsauer}.
+Continuous Hopfield networks can retrieve continuous patterns or a combination of several similar continuous patterns.
+The authors claim that continuous Hopfield networks can replace fully-connected layers, attention layers \cite{10.5555/2969033.2969073}, LSTM layers \cite{Hochreiter_Schmidhuber_1997}, support vector machines (SVM) \cite{Cortes_Vapnik_1995}, and k nearest neighbour (k-NN) \cite{Cover_Hart_1967}.
+
+
+
+
+
+
+
 
 
 \subsection{Spiking Neural Networks}\seclbl{spiking_networks}
-Biological neurons emit spikes.
+Biological neurons emit time-dependent spikes (c.f. \secref{neurons}).
 To transmit information, especially the firing rate (i.e. the number of spikes per second in Hz) and precise timing of the spikes are relevant.
-The amplitude and duration of the spike does not matter much.
-This behaviour has also been implemented in ANNs.
-So called Spiking neural networks (SNNs) incorporate the concept of time into their model.
-SNN do not transmit information in each forward-pass but rather transmit a signal when the membrane potential reaches a threshold value\sidenote{the membrane potential is related to the electrical charge of the membrane of a biological neuron}. 
-The neuron fires as soon as the threshold is reached and thereby influences the potential of other neurons.
+The amplitude and duration of the spike only matter a little.
+So-called Spiking neural networks (SNNs) incorporate the concept of time into a computational model.
+SNNs do not transmit information in each forward pass but rather transmit a signal when the membrane potential reaches a threshold value\sidenote{the membrane potential is related to the electrical charge of the membrane of a biological neuron}. 
+The neuron fires as soon as the threshold is reached, thereby influencing other neurons' potential.
 The most prominent model of a spiking neuron is the leaky integrate-and-fire (LIF) neuron \sidecite{Abbott1999LapicquesIO}.
 The LIF neuron models the membrane potential with a differential equation.
 Incoming spikes can either increase or decrease the membrane potential.
 The membrane potential either decays over time or is reset to a lower value if the threshold value is reached and the neuron has fired.
-There exists different integrate-and-fire (IF) neurons models such as the Izhikevich quadratic IF \sidecite{Izhikevich_2003} or the adaptive exponential IF \sidecite{Brette_Gerstner_2005}.
-While each of these model gas different mathematical properties, the concept of a membrane potential that is increased or decreased through spikes from other neurons and decays over time or by emitting a spike is similar to the LIF.
+There exist different integrate-and-fire (IF) neurons models such as the Izhikevich quadratic IF \sidecite{Izhikevich_2003} or the adaptive exponential IF \sidecite{Brette_Gerstner_2005}.
+While each model has different mathematical properties, the concept remains the same: Each model of a neuron has a membrane potential that is increased or decreased through spikes from other neurons and decays over time or is reset by emitting a spike on its own.
 
 Biological neurons have different dynamics.
-Some neurons fire regularly if the receive an input current, others slow down the firing rate over time or emits bursts of spikes.
+Some neurons regularly fire if they receive an input current, while others slow down the firing rate over time or emit bursts of spikes.
 Modern models of spiking neurons can recreate this behaviour of biological neurons \sidecite{Paugam_Moisy}.
 
-The synaptic plasticity can be modeled with Hebbian learning (c.f. Section \secref*{hebbian}).
-The spike-timing dependent (STDP) plasticity rule \sidecite{Bi_Poo_2001} distinguishes the tiring behaviour of pre-synaptic and post-synaptic neurons.
-If the pre-synaptic neurons fires before the post-synaptic neuron, the connection is strengthen, otherwise it is weaken.
+The synaptic plasticity can be modelled with an adapted version of Hebbian learning (c.f. \secref{hebbian}).
+The spike-timing dependent (STDP) plasticity rule \sidecite{Bi_Poo_2001} distinguishes the firing behaviour of pre-synaptic and post-synaptic neurons.
+If the pre-synaptic neurons fire before the post-synaptic neuron, the connection is strengthened; otherwise, it is weakened.
 
 For a long time, SNN only worked for very shallow networks.
-In 2018, Kheradpisheh et al. \sidecite{KHERADPISHEH201856} has proposed a SNN based on the idea of CNNs called a deep spiking convolutional network.
+In 2018, Kheradpisheh et al. \sidecite{KHERADPISHEH201856} proposed an SNN based on the idea of CNNs called a deep spiking convolutional network.
 This network uses convolutional and pooling layers with IF neurons instead of classical artificial neurones and is trained with STDP.
-First, the image is fed into DoG cells.
-This cells apply the difference of Gaussians (DoG) feature enhancement algorithm.
-This algorithm subtracts a Gaussian blurred version of an image from the original image.
-By doing so, positive or negative contrast is detected in the input image.
-The higher the contrast is, the stronger is a cell activated and the earlier it emits a spike.
+First, the image is fed into cells with a difference-of-Gaussian (DoG) function.
+DoG is a feature enhancement algorithm that subtracts a Gaussian blurred version of an image from the original image.
+Thereby, positive or negative contrast is detected in the input image.
+The higher the contrast, the stronger a cell is activated and the earlier it emits a spike.
 Thus, the order of the spikes depends on the order of the contrast.
 These spikes are forwarded to a convolutional layer.
-Deep spiking convolutional networks use two types of LIF neurons: On-center neurons fire when a bright area is surrounded by a darker area, off-center neurons do the opposite.
-Convolutional neurons emit a spike as soon as they detect their preferred visual feature\sidenote{the location of the feature is not relevant as convolution layers are translation invariant}.
+Deep spiking convolutional networks use two types of LIF neurons: On-center neurons fire when a darker area surrounds a bright area, and off-centre neurons do the opposite.
+Convolutional neurons emit a spike as soon as they detect their preferred visual feature\sidenote{the feature's location is irrelevant as convolution layers are translation invariant}.
 Neurons that fire early perform the STDP update with a winner-takes-all mechanism.
-This means that the neurons within a layer compete with each other and those which fire earlier learn the input pattern.
-This prevents other neurons from firing and guarantees a sparse connection.
+Thus, the neurons within a layer compete with each other and those which fire earlier learn the input pattern.
+This mechanism prevents other neurons from firing and guarantees a sparse connection.
 Later convolutional layers detect more complex features by integrating input spikes from the previous layer.
-The features from the last convolutional layer are flatten and a Support Vector Machine is used to classify the features.
+The features from the last convolutional layer are flattened, and a support vector machine is used to classify the features.
+
+
+
+
+
+
+
 
 
 \subsection{Reservoir Computing}\seclbl{reservoir_comp}
-As described in Section \secref*{biological_learning}, biological neurons are highly dynamical while artificial neurons are not.
+As described in \secref{biological_learning}, biological neurons are highly dynamical while artificial neurons are not.
 Reservoir computing introduces such dynamics into an artificial network.
 Reservoir computing is an umbrella term for networks based on the concepts of Echo State Networks (ESN) \sidecite{esn} and Liquid State Machines (LSM) \sidecite{Maass_Natschlager_Markram_2002}.
 A reservoir is a fixed non-linear system that maps a input vector \(\boldsymbol{x}\) to a higher dimensional computation space.
