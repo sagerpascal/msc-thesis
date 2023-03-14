@@ -157,7 +157,7 @@ A third GWR is used to combine these two streams and to create action–object m
 By doing so, they are able to learn human-object interactions and exhibit a model which is more robust to unseen samples than comparable deep learning approaches.
 
 
-\subsection{Self-Organization in Spiking Neural Networks}\seclbl{self_org_spiking}
+\subsection{Spiking Networks}\seclbl{self_org_spiking}
 Spiking neural networks (SNNs) (c.f. Section \secref{spiking_networks}) communicate through binary signals known as spikes and are very efficient on special event-based hardware\sidecite{8259423}.
 There exist several methods to self-organize such architectures.
 For the sake of completeness, two well-known approaches are described in the following.
@@ -197,7 +197,7 @@ The second type of self-organization is vertical self-organisation. In this appr
 These two types of self-organization are described in more detail in Chapter \chref*{methods}.
 
 
-\section{Alternative Training Algorithms}\seclbl{alt_train_algo}
+\section{Learning Algorithms}\seclbl{alt_train_algo}
 Neural networks, especially deep neural networks, are usually optimised by backpropagation of errors (c.f. Section \secref{ann}).
 Soon after backpropagation was published, it was question whether this algorithm is suitable to explain the learning in the brain \sidecite{Crick_1989, Grossberg_1987}.
 Besides the fact that backpropagation seems no biologically plausible and is responsible for many of the limitations described in Section \secref{limitationsDL}, it also has technical shortcomings.
@@ -345,7 +345,7 @@ Therefore, alternative learning algorithms is very relevant to this thesis.
 In fact, the approach based on vertical self-organisation uses proxy objective functions to train the layer locally as independent units (c.f. Chapter \chref*{methods}).
 Proxy objective functions are used as these are the only alternative learning algorithm known that scale well on large neural networks and large datasets.
 
-\section{Visual Representation Learning}\seclbl{visual_rep_learning}
+\section{Representation Learning}\seclbl{visual_rep_learning}
 One of the earliest methods of learning visual representations are \emph{Autoencoders}.
 \emph{Autoencoders} have been introduced 1985 \sidecite{rumelhart1985learning} and learn an encoder and a decoder function \sidecite{pmlrv27baldi12a}.
 The encoder $A$ maps the input from a high-dimensional space to a lower dimensional embedding space $A: \mathbb{R}^{n} \rightarrow \mathbb{R}^{e}$ and the decoder $B$ reverses this mapping $B: \mathbb{R}^{e} \rightarrow \mathbb{R}^{n}$.

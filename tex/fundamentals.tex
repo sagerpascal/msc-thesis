@@ -551,53 +551,44 @@ This mechanism prevents other neurons from firing and guarantees a sparse connec
 Later convolutional layers detect more complex features by integrating input spikes from the previous layer.
 The features from the last convolutional layer are flattened, and a support vector machine is used to classify the features.
 
-
-
-
-
-
-
-
-
 \subsection{Reservoir Computing}\seclbl{reservoir_comp}
-As described in \secref{biological_learning}, biological neurons are highly dynamical while artificial neurons are not.
-Reservoir computing introduces such dynamics into an artificial network.
-Reservoir computing is an umbrella term for networks based on the concepts of Echo State Networks (ESN) \sidecite{esn} and Liquid State Machines (LSM) \sidecite{Maass_Natschlager_Markram_2002}.
-A reservoir is a fixed non-linear system that maps a input vector \(\boldsymbol{x}\) to a higher dimensional computation space.
-After the input vector is mapped into computation space, a simple readout mechanism is trained to return the desired output based on the reservoir state.
+As described in \secref{biological_learning}, biological neurons are highly dynamic while artificial neurons are not.
+Another type of model that introduces such dynamics is based on reservoir computing.
+Reservoir computing is an umbrella term for networks based on the concepts of echo-state networks (ESN) \sidecite{esn} and liquid state machines (LSM) \sidecite{Maass_Natschlager_Markram_2002}.
+A reservoir is a fixed non-linear system that maps an input vector \(\boldsymbol{x}\) to a higher dimensional computation space.
+After the input vector is mapped into the computation space, a simple readout mechanism is trained to return the desired output based on the reservoir state.
 In principle, the system should be capable of any computation if it has a high enough complexity \sidecite{Konkoli_2018}.
-However, not every system is suited as reservoir.
+However, only some systems are suited as a reservoir.
 A good reservoir system distributes different inputs into different regions of the computation space \cite{Konkoli_2018}.
-
-A ESN is a set of sparsely connected recurrent neurons as visualized in Figure \figref*{reservoir}.
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.99\textwidth]{reservoir}
-    \caption[Structure of a Echo State Network]{Structure of a Echo State Network. The image is from \citeay{Tanaka_Yamane_Héroux_Nakane_Kanazawa_Takeda_Numata_Nakano_Hirose_2019}.}
+    \includegraphics[width=0.79\textwidth]{reservoir}
+    \caption[Structure of an echo state network]{Structure of an echo Ssate network. The image is from \citeay{Tanaka_Yamane_Héroux_Nakane_Kanazawa_Takeda_Numata_Nakano_Hirose_2019}.}
     \figlbl{reservoir}
 \end{figure}
 
-The reservoir consists of \(N\) nodes which are connected according a Erdős–Rényi graph model\sidenote{The Erdős–Rényi model is a model for generating random graphs where all graphs on a fixed set of vertices and edges is equally likely} \sidecite{erdos59a}.
-This graph model is represented by an adjacency matrix \(\boldsymbol{w}\)\sidenote{Figure \figref*{reservoir} uses upper case letter \(\boldsymbol{W}\)} of size \(N \times N\).
-The time varying input signal \(\boldsymbol{x(t)}\) is mapped to a sub-set of \(N/M\) graph nodes by multiplying it with \(\boldsymbol{w}_{\text{in}} \in \mathbb{R}^{N\times M}\) and the output by multiplying the reservoir state with \(\boldsymbol{w}_{\text{out}} \in \mathbb{R}^{M\times N}\).
-We refer interested reads to \sidecite{Lukoševičius_2012} to read more about the mathematical properties and how network is updated in detail.
+An ESN is a set of sparsely connected recurrent neurons as visualized in \figref{reservoir}.
+The reservoir consists of \(N\) nodes which are connected according to an Erdős–Rényi graph model\sidenote{the Erdős–Rényi model is a model for generating random graphs where all graphs on a fixed set of vertices and edges are equally likely} \sidecite{erdos59a}.
+This graph model is represented by an adjacency matrix \(\boldsymbol{W}\) of size \(N \times N\).
+The time varying input signal \(\boldsymbol{x(t)}\) is mapped to a sub-set of \(N/M\) graph nodes by multiplying it with \(\boldsymbol{W}_{\text{in}} \in \mathbb{R}^{N\times M}\) and the output by multiplying the reservoir state with \(\boldsymbol{W}_{\text{out}} \in \mathbb{R}^{M\times N}\).
+Interested readers are referred to \sidecite{Lukoševičius_2012} to learn more about the mathematical properties and how the network is updated in detail.
 
-In the original form of ESN, only the readout weights are learned, the rest is chosen randomly.
-The input \(\boldsymbol{x(t)}\) brings the recurrent units in a initial state.
+In the original form of ESN, only the readout weights are learned, and the rest is chosen randomly.
+The input \(\boldsymbol{x(t)}\) brings the recurrent units in an initial state.
 The recurrent connections inside the reservoir create different dynamics in the network.
 The readout neurons linearly transform the recurrent dynamics into temporal outputs.
-The readout weights \(\boldsymbol{w}_{\text{out}}\) are trained to reproduce a target function \(\boldsymbol{y(t)}\).
+The readout weights \(\boldsymbol{W}_{\text{out}}\) are trained to reproduce a target function \(\boldsymbol{y(t)}\).
 
-Liquid State machines use a spiking neural network instead of a graph of recurrent units as reservoir.
-The nodes of the spiking neural network are randomly connected together.
-Thus, every node receives time varying inputs from the inputs as well as from other nodes.
-The recurrent connections turns the varying input into a spatio-temporal pattern.
-Similar to ESN, the spatio-temporal patterns of activation are read out by a linear layer.
+Liquid State machines use a spiking neural network instead of a graph of recurrent units as reservoirs.
+The nodes of the spiking neural network are randomly connected.
+Thus, every node receives time-varying inputs from the inputs and other nodes.
+The recurrent connections turn the varying input into a spatiotemporal pattern.
+Similar to ESN, the spatiotemporal activation patterns are read out by a linear layer.
 
-In general, reservoirs are universal approximators and can approximate any non-linear function given there are enough neurons in the reservoir.
+In general, reservoirs are universal approximators and can approximate any non-linear function, given that there are enough neurons in the reservoir.
 They generalize better and faster than equivalent MLP.
-The main drawback of current systems is that cannot deal well with high-dimensional inputs such as images.
+Current systems' main drawback is that they cannot deal well with high-dimensional inputs such as images.
 
 
 
