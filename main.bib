@@ -78,12 +78,14 @@
 }
 
 
-@online{NCAs_distill,
-  author = {Distill},
-  title = {Growing Neural Cellular Automata},
-  year = {2022},
-  url = {https://distill.pub/2020/growing-ca},
-  urldate = {2022-09-05}
+@article{NCAs_distill,
+  title={Growing Neural Cellular Automata},
+  author={Mordvintsev, Alexander and Randazzo, Ettore and Niklasson, Eyvind and Levin, Michael},
+  journal={Distill},
+  volume={5},
+  number={2},
+  pages={e23},
+  year={2020}
 }
 
 @online{axios_hinton,
@@ -111,7 +113,7 @@
 }
 
 @online{Lambda_GPT3,
-  author = {Lambda},
+  author = {{Lambda Inc.}},
   title = {OpenAI's GPT-3 Language Model: A Technical Overview},
   year = 2021,
   url = {https://lambdalabs.com/blog/demystifying-gpt-3/},
@@ -137,6 +139,9 @@
 }
 
  @article{Shoeybi_Patwary_Puri_LeGresley_Casper_Catanzaro_2020, title={Megatron-LM: Training Multi-Billion Parameter Language Models Using Model Parallelism}, url={http://arxiv.org/abs/1909.08053}, abstractNote={Recent work in language modeling demonstrates that training large transformer models advances the state of the art in Natural Language Processing applications. However, very large models can be quite difficult to train due to memory constraints. In this work, we present our techniques for training very large transformer models and implement a simple, efficient intra-layer model parallel approach that enables training transformer models with billions of parameters. Our approach does not require a new compiler or library changes, is orthogonal and complimentary to pipeline model parallelism, and can be fully implemented with the insertion of a few communication operations in native PyTorch. We illustrate this approach by converging transformer based models up to 8.3 billion parameters using 512 GPUs. We sustain 15.1 PetaFLOPs across the entire application with 76% scaling efficiency when compared to a strong single GPU baseline that sustains 39 TeraFLOPs, which is 30% of peak FLOPs. To demonstrate that large language models can further advance the state of the art (SOTA), we train an 8.3 billion parameter transformer language model similar to GPT-2 and a 3.9 billion parameter model similar to BERT. We show that careful attention to the placement of layer normalization in BERT-like models is critical to achieving increased performance as the model size grows. Using the GPT-2 model we achieve SOTA results on the WikiText103 (10.8 compared to SOTA perplexity of 15.8) and LAMBADA (66.5% compared to SOTA accuracy of 63.2%) datasets. Our BERT model achieves SOTA results on the RACE dataset (90.9% compared to SOTA accuracy of 89.4%).}, note={arXiv:1909.08053 [cs]}, number={arXiv:1909.08053}, publisher={arXiv}, author={Shoeybi, Mohammad and Patwary, Mostofa and Puri, Raul and LeGresley, Patrick and Casper, Jared and Catanzaro, Bryan}, year={2020}, month=Mar }
+ 
+@article{Smith_Patwary_Norick_LeGresley_Rajbhandari_Casper_Liu_Prabhumoye_Zerveas_Korthikanti_etal, title={Using DeepSpeed and Megatron to Train Megatron-Turing NLG 530B, A Large-Scale Generative Language Model}, url={http://arxiv.org/abs/2201.11990}, abstractNote={Pretrained general-purpose language models can achieve state-of-the-art accuracies in various natural language processing domains by adapting to downstream tasks via zero-shot, few-shot and fine-tuning techniques. Because of their success, the size of these models has increased rapidly, requiring high-performance hardware, software, and algorithmic techniques to enable training such large models. As the result of a joint effort between Microsoft and NVIDIA, we present details on the training of the largest monolithic transformer based language model, Megatron-Turing NLG 530B (MT-NLG), with 530 billion parameters. In this paper, we first focus on the infrastructure as well as the 3D parallelism methodology used to train this model using DeepSpeed and Megatron. Next, we detail the training process, the design of our training corpus, and our data curation techniques, which we believe is a key ingredient to the success of the model. Finally, we discuss various evaluation results, as well as other interesting observations and new properties exhibited by MT-NLG. We demonstrate that MT-NLG achieves superior zero-, one-, and few-shot learning accuracies on several NLP benchmarks and establishes new state-of-the-art results. We believe that our contributions will help further the development of large-scale training infrastructures, large-scale language models, and natural language generations.}, note={arXiv:2201.11990 [cs]}, number={arXiv:2201.11990}, publisher={arXiv}, author={Smith, Shaden and Patwary, Mostofa and Norick, Brandon and LeGresley, Patrick and Rajbhandari, Samyam and Casper, Jared and Liu, Zhun and Prabhumoye, Shrimai and Zerveas, George and Korthikanti, Vijay and Zhang, Elton and Child, Rewon and Aminabadi, Reza Yazdani and Bernauer, Julie and Song, Xia and Shoeybi, Mohammad and He, Yuxiong and Houston, Michael and Tiwary, Saurabh and Catanzaro, Bryan}, year={2022}, month={Feb} }
+
  
  @article{Wu_Judd_Zhang_Isaev_Micikevicius_2020, title={Integer Quantization for Deep Learning Inference: Principles and Empirical Evaluation}, url={http://arxiv.org/abs/2004.09602}, abstractNote={Quantization techniques can reduce the size of Deep Neural Networks and improve inference latency and throughput by taking advantage of high throughput integer instructions. In this paper we review the mathematical aspects of quantization parameters and evaluate their choices on a wide range of neural network models for different application domains, including vision, speech, and language. We focus on quantization techniques that are amenable to acceleration by processors with high-throughput integer math pipelines. We also present a workflow for 8-bit quantization that is able to maintain accuracy within 1% of the floating-point baseline on all networks studied, including models that are more difficult to quantize, such as MobileNets and BERT-large.}, note={arXiv:2004.09602 [cs, stat]}, number={arXiv:2004.09602}, publisher={arXiv}, author={Wu, Hao and Judd, Patrick and Zhang, Xiaojie and Isaev, Mikhail and Micikevicius, Paulius}, year={2020}, month=Apr }
  

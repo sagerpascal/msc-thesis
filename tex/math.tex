@@ -21,6 +21,7 @@ Depending on the context, a variable can be a scalar value, a vector, or a matri
 	\textbf{Variable} & \textbf{Meaning}\\
 	\hline
 	$\eta$ & The learning rate of an optimization algorithm\\
+	$\psi$ & An estimate of the synaptic activity, used for Hebbian learning (i.e. an estimate of $a$)\\
 	$\theta$ & A threshold value that was used instead of the bias $b$ in early versions of neural networks\\
 	$a$ & The output of an activation function of a single neuron\\
 	$\boldsymbol{a}$ & The output of an activation function in an intermediate layer of a multi-layer network, the output of the model is typically denoted as $\boldsymbol{\hat{y}}$\\
@@ -30,7 +31,9 @@ Depending on the context, a variable can be a scalar value, a vector, or a matri
 	$L$ & The number of layers of a network\\
 	$l$ & The index of a layer, e.g. $\boldsymbol{W}^{[l]}$ is the weight matrix of layer $l$\\
 	$m$ & The number of input samples within a (mini-)batch\\
+	    & or the state of the memory in context of Hoppfield networks\\
 	$n$ & The length (size) of a vector, for example, an input sample is defined as $\boldsymbol{x} = (x_1, ..., x_n)$\\
+	$w_{ij}$ & The weight between neuron $i$ and neuron $j$\\
 	$\boldsymbol{w} = (w_1, ..., w_n)$ & A weight vector of a neuron\\
 	$\boldsymbol{W} = (\boldsymbol{w}_1, ..., \boldsymbol{w}_k)$ & A weight matrix of a network layer\\
 	$\boldsymbol{x} = (x_1, ..., x_n)$ & An input sample that is fed into a model or a network layer, typically a vector of length $n$\\
@@ -47,8 +50,12 @@ Depending on the context, a variable can be a scalar value, a vector, or a matri
 	\textbf{Function} & \textbf{Meaning}\\
 	\hline
 	$\mathcal{L}(\cdot)$ & Loss function to calculate the goodness of the model's prediction\\
-	$g(\cdot)$ & The aggregation function that calculates the scalar value that is fed into the activation function $f(\cdot)$ (c.f. \eqref{McCulloch_Pitts_agg}, \eqref{Perceptron_agg}, \eqref{nn})\\
+	$E(\cdot)$ & An encoder (typically multiple network layers) to transform an input to a latent representation\\
 	$f(\cdot)$ & An activation function such as $\sigma(\cdot)$, $(\cdot)^{+}$, or $\tanh(\cdot)$ (c.f. \eqref{act_functions})\\
+	$g(\cdot)$ & The aggregation function that calculates the scalar value that is fed into the activation function $f(\cdot)$ (c.f. \eqref{McCulloch_Pitts_agg}, \eqref{Perceptron_agg}, \eqref{nn})\\
+	$G(\cdot)$ & A function to update the memory of Hopfield networks\\
+	$O(\cdot)$ & An output function to calculate the output of a Hopfield network based on the input and the memory\\
+	$I(\cdot)$ & The energy function of a Hopfield network\\
 	$\sigma(\cdot)$ & The sigmoid activation function (c.f. \eqref{act_functions})\\
 	$(\cdot)^{+}$ & The ReLU activation function (c.f. \eqref{act_functions})\\
 	 $\tanh(\cdot)$ & The hyperbolic tangent activation function (c.f. \eqref{act_functions})\\
