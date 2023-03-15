@@ -22,7 +22,7 @@ Depending on the context, a variable can be a scalar value, a vector, or a matri
 	\hline
 	$\eta$ & The learning rate of an optimization algorithm\\
 	$\psi$ & An estimate of the synaptic activity, used for Hebbian learning (i.e. an estimate of $a$)\\
-	$\theta$ & A threshold value that was used instead of the bias $b$ in early versions of neural networks\\
+	$\theta$ & A threshold value that was used instead of the bias $b$ in early versions of neural networks or as goodness threshold in the forward-forward network\\
 	$a$ & The output of an activation function of a single neuron\\
 	$\boldsymbol{a}$ & The output of an activation function in an intermediate layer of a multi-layer network, the output of the model is typically denoted as $\boldsymbol{\hat{y}}$\\
 	$b$ & The bias of a single neuron\\
@@ -50,9 +50,12 @@ Depending on the context, a variable can be a scalar value, a vector, or a matri
 	\textbf{Function} & \textbf{Meaning}\\
 	\hline
 	$\mathcal{L}(\cdot)$ & Loss function to calculate the goodness of the model's prediction\\
-	$E(\cdot)$ & An encoder (typically multiple network layers) to transform an input to a latent representation\\
+	$D(\cdot)$ & A decoder (multiple network layers) to transform a latent representation to an output\\
+	$d(\cdot)$ & A decoder for a single layer to approximate the inverse of a layer $h^{-1}$\\
+	$E(\cdot)$ & An encoder (multiple network layers) to transform an input to a latent representation\\
 	$f(\cdot)$ & An activation function such as $\sigma(\cdot)$, $(\cdot)^{+}$, or $\tanh(\cdot)$ (c.f. \eqref{act_functions})\\
 	$g(\cdot)$ & The aggregation function that calculates the scalar value that is fed into the activation function $f(\cdot)$ (c.f. \eqref{McCulloch_Pitts_agg}, \eqref{Perceptron_agg}, \eqref{nn})\\
+	$h_l(\cdot)$ & The function implemented by a layer $l$\\
 	$G(\cdot)$ & A function to update the memory of Hopfield networks\\
 	$O(\cdot)$ & An output function to calculate the output of a Hopfield network based on the input and the memory\\
 	$I(\cdot)$ & The energy function of a Hopfield network\\

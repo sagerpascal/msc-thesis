@@ -172,7 +172,6 @@ In general, SNNs must ``convert'' static input data such as images to a dynamic 
 For example, all information about colour and thin structures is lost if DoG filters (c.f. \secref{spiking_networks}) are used to generate spikes.
 Currently, this seems to be one of the limiting factors why such SNNs cannot match the performance of deep learning algorithms and often only work well for small grey-scale image data sets such as MNIST \cite{Lecun_Bottou_Bengio_Haffner_1998}.
 
-
 \subsection{Relevance}\seclbl{self_org_relevance}
 Self-organisation is, according to von der Malsburg et al. \sidecite{von_der_Malsburg_Stadelmann_Grewe_2022}, one of the fundamental principles for natural intelligence.
 Therefore, this concept of local optimisation and interaction plays an essential role in this thesis.
@@ -184,152 +183,170 @@ These two types of self-organisation are described in more detail in Chapter \ch
 
 
 \section{Learning Algorithms}\seclbl{alt_train_algo}
-Neural networks, especially deep neural networks, are usually optimised by backpropagation of errors (c.f. Section \secref{ann}).
-Soon after backpropagation was published, it was question whether this algorithm is suitable to explain the learning in the brain \sidecite{Crick_1989, Grossberg_1987}.
-Besides the fact that backpropagation seems no biologically plausible and is responsible for many of the limitations described in Section \secref{limitationsDL}, it also has technical shortcomings.
-First, gradients might vanish or explode when propagated through too many layers \sidecite{Zhang_He_Sra_Jadbabaie_2020}.
-Second, it turns the networks into ``black boxes'' and prevents the users from getting useful insights from trained models\sidenote{training a model a layer-wise allows modularization, i.e. divide an conquer}.
-Training end-to-end does not allow to control the effect of the loss function on a hidden layer because of the non-linearity in the network \sidecite{pmlr-v38-lee15a}.
-Finally, the loss landscapes are non-optimal which might lead to slow convergence and the possibility that the reached local minimum is suboptimal \sidecite{Ioffe_Szegedy_2015}.
+Neural networks are usually optimised with backpropagation of errors (c.f. Section \secref{ann}).
+Soon after backpropagation was published, it was questioned whether this algorithm is suitable to explain learning in the brain \sidecite{Crick_1989, Grossberg_1987}.
+Besides the fact that backpropagation seems biologically not plausible and might be responsible for many of the limitations described in \secref{limitationsDL}, it also has technical shortcomings:
+First, gradients might vanish or explode when propagating through too many layers \sidecite{Zhang_He_Sra_Jadbabaie_2020}.
+Second, it turns the networks into ``black boxes'' and prevents users from getting valuable insights from trained models\sidenote{training a model layer-wise allows modularisation, i.e., dividing and conquering}.
+Training end-to-end does not allow controlling the loss function's effect on a hidden layer because of the non-linearity in the network \sidecite{pmlr-v38-lee15a}.
+Finally, the loss landscapes are non-optimal, which might lead to slow convergence, and the optimisation process can get stuck in a local minimum  \sidecite{Ioffe_Szegedy_2015}.
 
-Hebbian learning (c.f. Section \secref{hebbian}), on the other hand, is widely accepted in the fields of neurocomputing, psychology, neurology, and neurobilogy \sidecite{Widrow_Kim_Park_Perin_2019}.
-Hebbian mechanisms are for example sufficient for topographic mappings\sidenote{mapping input data to a discretized representation} \sidecite{Kohonen_1989, Grajski_Merzenich_1990}, neuroplasticity\sidenote{the networks ability to reorganize itself by forming new connections} \sidecite{Montague_Gally_Edelman_1991}, or recognizing non-linear patterns \sidecite{Mel_1992}, but also have limitations \sidecite{Anderson_1998}.
-Hebb's learning rule is insufficient as general rule and is limited temporally as it requires (almost) synchronous stimuli \sidecite{6302929}\cite{Anderson_1998}.
-However, many signals such as motor control problems, are sequential and Hebbian learning has therefore to be combined with additional memory mechanisms \sidecite{Grossberg_Schmajuk_1989}.
+Hebbian learning (c.f. Section \secref{hebbian}), on the other hand, is widely accepted in the fields of neurocomputing, psychology, neurology, and neurobiology \sidecite{Widrow_Kim_Park_Perin_2019}.
+Hebbian works well, for example, for topographic mappings\sidenote{mapping input data to a discretized representation} \sidecite{Kohonen_1989, Grajski_Merzenich_1990}, neuroplasticity\sidenote{the networks ability to reorganize itself by forming new connections} \sidecite{Montague_Gally_Edelman_1991}, or recognizing non-linear patterns \sidecite{Mel_1992}, but also have limitations \sidecite{Anderson_1998}.
+Hebb's learning rule is insufficient as a general rule and is for time-shifted signals as it requires (almost) synchronous stimuli \sidecite{6302929}\cite{Anderson_1998}.
+However, many signals, such as motor control problems, are sequential and Hebbian learning has to be combined with additional memory mechanisms \sidecite{Grossberg_Schmajuk_1989}.
 
-There exists many alternative learning functions to these two well known algorithms that might overcome the aforementioned limitations.
-A group of algorithms that do not require end-to-end forward or backward pass is called \emph{Proxy Objective}.
-These algorithms use a proxy objective function for each layer.
-While backpropagation calculates a global loss after the forward pass, this strategy uses a proxy function for each layer.
-The loss function of the first Layer $L_1$ (i.e. the proxy objective of the first layer) influence only the trainable parameters of the first layer $\theta_1$ but not the parameters of the second layer $\theta_2$.
-This allows to decouple the layers.
-The different instances of \emph{Proxy Objective} methods mainly differ in the proxy objective function.
-However, the idea behind the proxy objective function is always the same; namely to characterize the separability of the hidden representations.
-Minimizing $L_1$ encourages the first layer to improve the separability of its output representations, making the classification problem simpler for the subsequent layer.
-The separability between hidden representation vectors can be measured by distance/similarity metrics as done in \sidecite{Duan_Yu_Principe_2022, Duan_Yu_Chen_Principe_2020}.
-Wang et al. \sidecite{Wang_Ni_Song_Yang_Huang_2021} propose an auxiliary neural network to map the hidden representation to another feature space before computing their distance/similarity.
-This allows to choose the dimensionality of the feature space in which the proxy objective function is computed regardless of the given network layer dimension.
-Others \sidecite{belilovsky2019greedy, Mostafa_Ramesh_Cauwenberghs_2018, Marquez_Hare_Niranjan_2018} propose an additional network with either fixed or trainable weights as proxy function and used this auxiliary network's accuracy to quantify data separability.
+\subsection{Proxy Objective Functions}
+Many alternative learning functions exist to these two well-known algorithms that might overcome the aforementioned limitations.
+One way to optimise locally and to overcome end-to-end backward passes is to use \emph{proxy objective functions}.
+Using proxy objective functions means having a loss function for each layer instead of a global loss function for the entire model.
+The loss function of the first layer (i.e. the proxy objective of the first layer) influences only the trainable parameters of the first layer but not the parameters of the second layer.
+Thus, proxy objective functions allow the decoupling of layers.
+The different instances of this method mainly differ in the details of the proxy objective function.
+However, the aim is always the same: improving the separability of the hidden representations according to some measure.
+Minimising the proxy objective function encourages a layer to improve the separability of its output representations, making the separability problem simpler for the subsequent layer.
+A simple way to measure the separability between hidden representation vectors is to use distance or similarity metrics \sidecite{Duan_Yu_Principe_2022, Duan_Yu_Chen_Principe_2020}.
+Instead of measuring the distance between hidden representations directly, an auxiliary neural network can be used to first map the hidden representations to another feature space before calculating their distance \sidecite{Wang_Ni_Song_Yang_Huang_2021}.
+This allows to reduce the dimensionality of the feature space before calculating the proxy objective function.
+Reducing the dimensionality is especially helpful for layers with large output representations, such as the activation maps of convolutional layers.
+An auxiliary network can also be used to classify the latent representations in each layer and to use this auxiliary network's accuracy to quantify data separability \sidecite{belilovsky2019greedy, Mostafa_Ramesh_Cauwenberghs_2018, Marquez_Hare_Niranjan_2018}.
 Nokland and Eidnes \sidecite{pmlr-v97-nokland19a} combine the two aforementioned approaches by using two auxiliary networks; one network is trained with a ``similarity matching loss'' and the other with a cross-entropy loss (i.e. to quantify separability with an auxiliary classifier accuracy).
-A major issue of the first \emph{Proxy Objective} methods is that the models are trained layer-wise\sidenote{when layer $k$ is trained, the layers $1, ..., k-1$ are frozen and the layers $k+1, ..., n$ are not updated}.
-The resulting computational complexity can be reduced with synchronous or asynchronous training.
-In the synchronous setting is first a forward pass through all layers performed and afterwards are all layers trained simultaneously by minimizing their own proxy objective function \cite{belilovsky2019greedy}.
-In the asynchronous settings are all layers trained simultaneously by using a replay buffer for each layer that stores the layers output \sidecite{10.5555/3524938.3525007}.
-Each layer receives its input from such a buffer instead of the previous layer what eliminates the need for an end-to-end forward pass.
 
-Recently, Hinton \sidecite{ff_algo} introduced the \emph{Forward-Forward (FF) Algorithm} that uses a proxy objective functions over multiple time-steps.
+A significant issue of the many models based on proxy objective functions is that the models are usually trained layer-wise\sidenote{when layer $k$ is trained, the layers $1, ..., k-1$ are frozen, and the layers $k+1, ..., n$ are not updated}.
+The resulting computational inefficiency can be reduced with synchronous or asynchronous training.
+In the synchronous setting, a forward pass through all layers is done, and afterwards, all layers are trained simultaneously by minimising their own proxy objective function \cite{belilovsky2019greedy}.
+In the asynchronous setting, all layers are trained simultaneously by using a replay buffer for each layer that stores the layer's output \sidecite{10.5555/3524938.3525007}.
+Each layer receives input from such a buffer instead of the previous layer, which eliminates the need for an end-to-end forward pass.
+
+Recently, Hinton \sidecite{ff_algo} introduced the \emph{forward-forward (FF) algorithm}.
 This algorithm uses two forward passes, one with positive (i.e. real) data and one with negative data.
-Each layer has its own objective function which is to have a high ``goodness'' for positive data and a low ``goodness'' for negative data. 
-The goodness is measured by the sum of the squared neural activities.
+Each layer has its objective function that aims to have a high ``goodness'' for positive data and a low ``goodness'' for negative data. 
+The sum of the squared neural activities measures the goodness. Thus, having many (strongly) active neurons means having high goodness.
 The goal of the learning process is to make the goodness be above some threshold value for real data and below that threshold for negative data.
-More specifically, the aim is to correctly classify input vectors as positive data or negative data.
-The probability that an input vector is positive $p(positive)$ is given by applying the logistic function $\sigma$ to the goodness minus the threshold $\theta$
+The probability that an input vector is positive $P(\text{positive}
+)$ is given by applying the logistic function $\sigma$ to the goodness minus the threshold $\theta$
 
 \begin{equation}\eqlbl{ff2}
-	p(positive) = \sigma \biggl( \sum_j y^2_j - \theta \biggr)
+	P(\text{positive}) = \sigma \left( \sum_j y^2_j - \theta \right)
 \end{equation}
 
 where $y_j$ is the output of a hidden unit.
-To perform a classification task, the label is included in the input.
-Positive data consists of an input vector (e.g. an image) and the correct label, negative data consists of an input vector with the wrong label.
-The goal is then to have a high goodness in each layer for the positive data and a low goodness for the negative data.
-The only difference between positive and negative data is the label and thus the \emph{FF} algorithm only learns features that correlate with the label.
-During inference, the data is fed with each label through the network and the one with the highest goodness is kept as prediction.
+This algorithm can be used in different settings, for example, for supervised learning.
+The label must be included in the input to conduct a supervised classification task.
+Positive data consists of an input vector (e.g. an image) and the correct label, and negative data consists of an input vector with the wrong label.
+The goal is to have a high goodness in each layer for the positive data and a low goodness for the negative data.
+The only difference between positive and negative data is the label, and thus the FF algorithm only learns features that correlate with the label.
+During inference, the data is fed with each label through the network, and the one with the highest goodness is kept as the prediction.
 One major weakness is that one layer at a time is learned and later layers cannot affect what is learned in earlier layers.
-This limitation can be overcome by treating the static input vector as a sequence (i.e. use the same input for multiple steps) and by using a multi-layer recurrent network \sidecite{Hinton_2021}.
-The algorithm still runs forward in time but the activity vector at each layer is determined by the activity vector of the previous layer and the activity vector of the subsequent layer at the previous time-step.
+This limitation can be overcome by treating the static input vector as a sequence (i.e. using the same input for multiple timesteps) and using a multi-layer recurrent network \sidecite{Hinton_2021}.
+The trick is to feed the input into the network from one side and the label into the network from the other side. A layer receives as input the activity vector of the previous layer and the activity vector of the subsequent layer at the previous timestep. By enforcing high goodness when the input and label match, information must flow in both directions. Thus, hierarchical features can be learned without a backward pass or layer-wise training.
 
-\emph{Target Propagation} methods are a group of algorithms that require an end-to-end forward pass but not an end-to-end backward pass.
-These algorithms compute targets\sidenote{a target can be interpreted as the value that should be predicted by a layer} rather than gradients at each layer.
-Similar to gradients, the targets are propagated backward through the network.
-While the output layer obviously uses the true label as its target (i.e. the goal is to predict the label), the targets of previous layers are found sequentially (from the output layer to the input layer).
-Good targets are those that minimize the loss in the output layer if they are realized in the forward pass.
-The simplest solution would be to apply the inverse function of each layer to propagate the target backward.
-If $h_l$ are the activations and $\theta_l$ the parameters of layer $l$, we can define the forward pass as:
 
-\begin{equation}\eqlbl{tp1}
-	h_l = f(h_{l-1}; \theta_l)
+\subsection{Target Propagation}
+\emph{Target propagation} methods are a group of algorithms that require an end-to-end forward pass but not an end-to-end backward pass.
+These algorithms compute targets\sidenote{a target can be interpreted as the value that a layer should predict} rather than gradients at each layer.
+Similar to gradients, the targets are propagated backwards through the network.
+Each layer is trained to minimise the difference between its activations and its received target values.
+While the output layer obviously uses the true label as its target (i.e. the goal is to predict the true label), the targets of previous layers are found sequentially (from the output layer to the input layer).
+Good targets are those that minimise the loss in the output layer if they are realised in the forward pass.
+Intuitively, each layer tells the previous layer the best possible input.
+
+Let's define $h_l(\cdot)$ as a layer's function, i.e. layer $l$ calculates its activation $\boldsymbol{\hat{a}_l}$ based on the output of the previous layer $l-1$ as
+\begin{equation}\eqlbl{tp0}
+	\boldsymbol{\hat{a}_l} = h_l(\boldsymbol{\hat{a}_{l-1}})
 \end{equation}
 
-The inverse function that yields the target activation $\hat{h}_l$ would then be:
-
-\begin{equation}\eqlbl{tp2}
-	\hat{h}_l = f^{-1}(\hat{h}_{l+1}; \theta_{l+1})
-\end{equation}
-
-As mentioned before, the target of the final layer $\hat{h}_L$ is the loss-optimal output activation such as the correct label distribution.
-However, advanced neural networks are usually not invertible and approximate inverse transformations have to be learned with decoders
+In the context of target propagation, $\boldsymbol{\hat{a}_l}$ is the actual layer activation and $\boldsymbol{a_l}$ is the desired layer activation (i.e. the target).
+The output of a network with $L$ layers is a prediction $\boldsymbol{\hat{y}} = \boldsymbol{\hat{a}_L}$. If for each layer an inverse function $\boldsymbol{\hat{a}_{l-1}} = h_l^{-1}(\boldsymbol{\hat{a}_l})$ would exist, a layer's input could be calculated based on a layer's output. 
+This idea is used by target propagation: During the forward pass, a prediction $\boldsymbol{\hat{y}}$ is calculated. However, the goal is to calculate the correct label distribution $\boldsymbol{y}$. Therefore, $\boldsymbol{y}$ is fed through the inverse function of each layer $h_l^{-1}(\cdot)$ to calculate a target for the previous layer.
+Thus, if each layer predicted this target as output, the network's output would be the correct label distribution $\boldsymbol{y}$.
+However, advanced neural networks are usually not invertible, and approximate inverse transformations have to be learned with decoders
 
 \begin{equation}\eqlbl{tp3}
-	g(h_{l+1}; \lambda_{l+1}) \approx f^{-1}(h_{l+1}; \theta_{l+1})
+	d_l(\boldsymbol{\hat{a}_l}) \approx  h_l^{-1}(\boldsymbol{\hat{a}_l})
 \end{equation}
 
-where $\lambda_l$ are the trainable parameters of the decoder at layer $l$.
-Thus, the target activation can be approximated by an encoder:
+Thus, the target activation can be approximated by a decoder:
 
 \begin{equation}\eqlbl{tp4}
-	\hat{h}_l \approx g(\hat{h}_{l+1}; \lambda_{l+1}) 
+	\boldsymbol{a_{l}} \approx d_{l+1}(\boldsymbol{a_{l+1}}) 
 \end{equation}
 
 
-Different instances of \emph{Target Propagation} methods mainly differ in the way the the targets are generated and/or the loss function of the decoder $L_{g}$.
-Vanilla Target Propagation \sidecite{Bengio_2014} directly derives the target from the decoder $\hat{h}_l = g(\hat{h}_{l+1}; \lambda_{l+1})$ and trains the decoder $g()$ by minimizing
+
+Different instances of target propagation methods mainly differ in the way the targets are generated or the loss function of the decoder $L_{d}$ is calculated.
+Vanilla target propagation \sidecite{Bengio_2014} directly derives the target from the decoder $\boldsymbol{a_{l}} = d_{l+1}(\boldsymbol{a_{l+1}}) $ and trains the decoder $d(\cdot)$ by minimizing
 
 \begin{equation}\eqlbl{tp5}
-	L_{g} = \lVert g(h_{l+1} + \epsilon; \lambda_{l+1}) - (h_{l} + \epsilon) \rVert_2^2
+	L_{d} = \lVert d_{l+1}(\boldsymbol{\hat{a}_{l+1}} + \epsilon) - (\boldsymbol{\hat{a}_l} + \epsilon) \rVert_2^2
 \end{equation}
 
-where $\epsilon$ is some added Gaussian noise to enhance generalization.
-It is obvious that this loss functions encourages the decoder $g()$ to learn the inverse of $f()$ by minimizing the difference between the activations from the forward-pass $h_{l}$ of layer $l$ and the decoder's output (based on the activations of the subsequent layer $h_{l+1}$).
-The targets are predicted by feeding the \emph{target activations} $\hat{h}_{l+1}$ through the decoder\sidenote{note that these are two different kind of activations: The inverse function is learned based on the activation of the forward pass $h_l$, the target activation is predicted based on the loss-optimal output activation $\hat{h}_L$}.
+where $\epsilon$ is some added Gaussian noise to enhance generalisation.
+It is obvious that this loss function encourages the decoder $d_l(\cdot)$ to learn the inverse of $h_l(\cdot)$ by minimising the difference between the activations from the forward-pass $\boldsymbol{\hat{a}_l}$ of layer $l$ and the decoder's prediction of $\boldsymbol{\hat{a}_l}$ (calculated based on the activations of the subsequent layer $\boldsymbol{\hat{a}_{l+1}}$).
+Afterwards, the targets are predicted by feeding the target activations $\boldsymbol{a_{l+1}}$ through the decoder\sidenote{note that these are two different kinds of activations: The inverse function is learned based on the activation of the forward pass $\boldsymbol{\hat{a}_{l+1}}$, the target activation is predicted based on the loss-optimal output activation $\boldsymbol{a_{l+1}}$}.
 
-Later, a major improvement was to extend the decoder $g()$ of Vanilla \emph{Target Propagation} with a correction term that enables a more robust optimality guarantee for bigger networks \sidecite{Lee_Zhang_Fischer_Bengio_2015}.
-This method is known as \emph{Difference Target Propagation} and extends Equation \eqref*{tp4} as follows:
+A major improvement of vanilla target propagation is to extend the decoder $g()$ with a correction term that enables a more robust optimality guarantee for bigger networks \sidecite{Lee_Zhang_Fischer_Bengio_2015}.
+This method is known as \emph{difference target propagation} and extends Equation \eqref*{tp4} as follows:
 
 \begin{equation}\eqlbl{tp6}
-	\hat{h}_l = g(\hat{h}_{l+1}; \lambda_{l+1}) + [h_l - g(h_{l+1}; \lambda_{l+1})]
+	\boldsymbol{a_{l}} \approx d_{l+1}(\boldsymbol{a_{l+1}}) + \left[ \boldsymbol{\hat{a}_l} - d_{l+1}\boldsymbol{\hat{a}_{l+1}}) \right]
 \end{equation}
 
-The extra term $[h_l - g(h_{l+1}; \lambda_{l+1})]$ is to correct errors of the decoder in estimating the inverse.
-\emph{Difference Target Propagation} has been further improved by novel loss functions $L_{g}$ for the decoder.
-These methods are known as \emph{Difference Target Propagation with Difference Reconstruction Loss} and \emph{Direct Difference Target Propagation} \sidecite{10.5555/3495724.3497405}.
-However, since the concepts are roughly the same as for \emph{Difference Target Propagation} (despite adding some terms to the loss function), I do not summarize these methods in more detail here.
-An advantage of calculating targets is that only layer-wise gradients are required what allows models to have non-differentiable operations \cite{Lee_Zhang_Fischer_Bengio_2015}.
-A major drawback is that auxiliary models have to be trained to calculate the hidden targets $\hat{h}_l$ what might overweight the savings achieved by eliminating a full backward pass.
+The additional term $\left[ \boldsymbol{\hat{a}_l} - d_{l+1}\boldsymbol{\hat{a}_{l+1}}) \right]$ is to correct errors of the decoder in estimating the inverse.
+Difference target propagation has been further improved by novel loss functions $L_{d}$ for the decoder.
+These methods are known as \emph{difference target propagation with difference reconstruction loss} and \emph{direct difference target propagation} \sidecite{10.5555/3495724.3497405}.
+An advantage of calculating targets is that only layer-wise gradients are required, which allows models to have non-differentiable operations \cite{Lee_Zhang_Fischer_Bengio_2015}.
+A significant drawback is that auxiliary decoders must be trained to approximate the hidden targets $\boldsymbol{a_{l}}$, which might outweigh the savings achieved by eliminating a complete backward pass.
 
-Another group of alternative learning algorithms are known as \emph{Synthetic Gradients} \sidecite{pmlr-v70-jaderberg17a, 10.5555/3305381.3305475}.
-\emph{Synthetic Gradients} methods replace the gradients used in the backward pass by approximating local gradients with auxiliary models and utilize gradient-based optimization algorithms such as SGD to update the weights locally.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Other Methods}
+\emph{Synthetic gradients} methods \sidecite{pmlr-v70-jaderberg17a, 10.5555/3305381.3305475} replace the gradients used in the backward pass by approximating local gradients with auxiliary models and utilize gradient-based optimization algorithms such as stochastic gradient descent to update the weights locally.
 The auxiliary models are usually fully-connected networks that are trained to regress a layer's gradients when given the layer's activations.
 End-to-end backwards passes are only performed occasionally to acquire real gradients that can be used to trained the gradient approximation models.
 Thus, the frequency of end-to-end backward passes is reduced.
 When auxiliary input models are used to predicts the layer's input, the frequency of the forward pass can be reduced as well in the same manner as for the backward pass \cite{pmlr-v70-jaderberg17a}.
 It is also possible to get rid of the backward pass completely by training the auxiliary gradient models with local information only \sidecite{Lansdell_Prakash_Kording_2020}.
 However, this works significantly worse than when real gradients are used.
-An advantage of \emph{Synthetic Gradients} methods is that they can be used to approximate backpropagation through time (BTT) for an unlimited number of steps \cite{pmlr-v70-jaderberg17a}.
+An advantage of synthetic gradient methods is that they can be used to approximate backpropagation through time (BTT) for an unlimited number of steps \cite{pmlr-v70-jaderberg17a}.
 It has been shown that this allows more efficient training for learning long-range dependencies compared to BTT.
 
-Many other methods are motivated purely by biological plausibility.
-Some examples are \cite{10.5555.3157096.3157213, Lillicrap_Cownden_Tweed_Akerman_2016, Xiao_Chen_Liao_Poggio_2019, aaai.BalduzziVB15, 10.5555/3016100.3016156}.
+Many other methods are motivated purely by biological plausibility \cite{10.5555.3157096.3157213, Lillicrap_Cownden_Tweed_Akerman_2016, Xiao_Chen_Liao_Poggio_2019, aaai.BalduzziVB15, 10.5555/3016100.3016156}.
 However, these biological plausible methods have been significantly outperformed by backpropagation of error on meaningful benchmark datasets \sidecite{Bartunov_Santoro_Richards_Marris_Hinton_Lillicrap_2018}.
-In the following \emph{Feedback Alignment} methods are discussed as they seem to be the most popular group of biological plausible alternatives to backpropagation.
-From a biological point of view, one of the major criticisms of backpropagation is the ``weight transportation problem'' \sidecite{Lillicrap_Cownden_Tweed_Akerman_2016}; it is believed that the human brain doesn't have a backward pass where an error signal is passed to previous layers.
-\emph{Feedback Alignment} algorithms use fixed, random weights during the backward pass \cite{Lillicrap_Cownden_Tweed_Akerman_2016}.
+Probably the most popular group of biological plausible alternatives to backpropagation are methods based on \emph{feedback alignment}.
+From a biological point of view, one of the major criticisms of backpropagation is the ``weight transportation problem'' \sidecite{Lillicrap_Cownden_Tweed_Akerman_2016}; it is believed that the human brain doesn't have a backward pass that passes an error signal to previous layers.
+\emph{Feedback alignment} algorithms use fixed, random weights during the backward pass \cite{Lillicrap_Cownden_Tweed_Akerman_2016}.
+The gradients are calculated in the same way as when stochastic gradient descent is used but with random weights.
 Thus the symmetry between the weights used during the forward pass and the backward pass is broken.
+The network still learns to make the feedback useful even though the weights during forward and backward pass are different. 
 Later, the algorithm was improved by using fixed, random weights that share the signs with the actual weights of the network \sidecite{10.5555/3016100.3016156}.
 
-Lastly, \emph{Auxiliary Variables} are another group of learning algorithms \cite{pmlr-v33-carreira-perpinan14, 10.5555/3045390.3045677, 10.5555/3294771.3294935, Lau_Zeng_Wu_Yao_2018}.
+Lastly, another group of learning algorithms use \emph{auxiliary variables} \cite{pmlr-v33-carreira-perpinan14, 10.5555/3045390.3045677, 10.5555/3294771.3294935, Lau_Zeng_Wu_Yao_2018}.
 These methods use the idea of variable splitting, i.e. transform a complicated problem into a simpler one by introducing additional trainable variables.
 Introducing auxiliary variables may pose scalability issues, and these methods require special, usually tailor-made solvers.
-Therefore, such methods are not reviewed in more detail in this thesis.
+Therefore, such methods usually scale to specific use-cases only.
 
-According to \sidecite{Duan_Principe_2022} and \sidecite{Bartunov_Santoro_Richards_Marris_Hinton_Lillicrap_2018}, only proxy objective functions have achieved competitive performance with large models on large datasets such as ImageNet \cite{Deng_Dong_Socher_Li_KaiLi_LiFei_Fei_2009}.
-The other approaches work only on smaller datasets such as MNIST \cite{Lecun_Bottou_Bengio_Haffner_1998} or CIFAR-10 \cite{krizhevsky2009learning} so far.
-
+\subsection{Relevance}
 End-to-end backpropagation is not compatible with local self-organisation which is one of the key concepts of natural intelligence according to von der Malsburg et al. \sidecite{von_der_Malsburg_Stadelmann_Grewe_2022}.
 With end-to-end backpropagation, systems are trained as a single unit and consequently have no independent local units that can organise themselves.
-Therefore, alternative learning algorithms is very relevant to this thesis.
+Therefore, alternative learning algorithms are very relevant to this thesis.
 In fact, the approach based on vertical self-organisation uses proxy objective functions to train the layer locally as independent units (c.f. Chapter \chref*{methods}).
-Proxy objective functions are used as these are the only alternative learning algorithm known that scale well on large neural networks and large datasets.
+Proxy objective functions are used in this thesis as this method is the only known alternative to backpropagation of error that scales well to large neural networks and large datasets.
+According to \sideciteay{Duan_Principe_2022} and \sideciteay{Bartunov_Santoro_Richards_Marris_Hinton_Lillicrap_2018}, only proxy objective functions have achieved competitive performance with large models on large datasets such as ImageNet \cite{Deng_Dong_Socher_Li_KaiLi_LiFei_Fei_2009}.
+The other approaches work only on smaller datasets such as MNIST \cite{Lecun_Bottou_Bengio_Haffner_1998} or CIFAR-10 \cite{krizhevsky2009learning} so far.
 
 \section{Representation Learning}\seclbl{visual_rep_learning}
 One of the earliest methods of learning visual representations are \emph{Autoencoders}.
