@@ -1,200 +1,186 @@
 %% related_work.tex
-
-TODO: Teile auf in related work (zu Beginn) + optionales Kapitel mit weiteren relevanten Themen zu Natural Intelligence, die aber nicht wirklich related work sind sondern eher ein Survey
+This chapter presents the related work of the thesis. \secref{natural_intelligence} gives an introduction to a publication entitled ``A Theory of Natural Intelligence'' by von der Malsburg et al. \sidecite{von_der_Malsburg_Stadelmann_Grewe_2022}. This work is the main source of inspiration and is therefore summarised in detail. It identifies various concepts as the fundamentals of intelligence, including self-organisation. Therefore, the work associated with self-organisation is reviewed in \secref{self_org_related}. Self-organisation is not compatible with end-to-end backpropagation of error. Thus, alternative training algorithms are presented in \secref{alt_train_algo}. Then, \secref{visual_rep_learning} reviews different methods for learning image representations. Finally, meta-learning is summarised in \secref{meta_learning}. Meta-learning is of limited relevance to this thesis but is important for the proposed future work.
 
 \section{Natural Intelligence}\seclbl{natural_intelligence}
-This thesis is inspired by the work ''A Theory of Natural Intelligence`` from von der Malsburg et al. \sidecite{von_der_Malsburg_Stadelmann_Grewe_2022}.
-Therefore, summarize their work in detail in the following.
-
-According \cite{von_der_Malsburg_Stadelmann_Grewe_2022}, the process of learning is influenced by ``nature'', ``nurture'', and ``emergence''\sidenote{nature refers to the influence of genes and evolution, nurture to the influence of experience and education}.
-They point out that human genome (as of nature) only contain 1GB of information \sidecite{hbcrd} and humans only absorb a few GB into permanent memory over a lifetime (as of nurture) but it requires about 1PB to describe the connectivity in human brain.
-Therefore, it is important to distinguish the amount of information to describe a structure from the amount of information needed to generate it.
-Similar, nature and nurture only require a few GB to construct, respectively instruct the entire human brain.
-Therefore, they argue that the human brain must be highly structured (i.e. nature and nurture ``generate'' the human brain by selecting from a set pre-structured patterns).
-The authors call the process of generating the highly structured network in the human brain the ``Kolmogorov \sidecite{Kolmogorov_1998} Algorithm of the Brain''\sidenote{as the Kolmogorov complexity describes the number of bits required by the shortest algorithm that can generate the structure}.
-Network self-organization is the only mechanism that has not yet been disproved by experiments as the brains Kolmogorov algorithm \sidecite{Willshaw_VonDerMalsburg_1976, Willshaw_VonDerMalsburg_1979}.
+According to \cite{von_der_Malsburg_Stadelmann_Grewe_2022}, the process of learning is influenced by ``nature'', ``nurture'', and ``emergence''\sidenote{nature refers to the influence of genes and evolution, nurture to the influence of experience and education, and emergence to the construction of network structures}.
+They point out that the human genome (as of nature) only contains 1GB of information \sidecite{hbcrd} and humans only absorb a few GB into permanent memory over a lifetime (as of nurture), but it requires about 1PB to describe the connectivity in the human brain.
+Thus, there is a massive gap between the amount of information needed to describe the brain's structure and the amount of information needed to generate it.
+Therefore, they argue that the human brain must be highly structured and that the processes of nature and nurture construct the human brain by selecting from a set of pre-structured patterns.
+The authors call the process of generating the highly structured network in the human brain the ``Kolmogorov \sidecite{Kolmogorov_1998} Algorithm of the Brain''\sidenote{the Kolmogorov complexity describes the number of bits required by the shortest algorithm that can generate a given structure}.
+Network self-organisation is the only mechanism that experiments have not yet disproved as the brains Kolmogorov algorithm \sidecite{Willshaw_VonDerMalsburg_1976, Willshaw_VonDerMalsburg_1979}.
 This mechanism loops between activity and connectivity, with activity acting back on connectivity through synaptic plasticity until a steady state, called an attractor network, is reached.
 The consistency property of an attractor network means that a network has many alternative signal pathways between pairs of neurons \sidecite{Malsburg_1987}.
 Thus, the brain develops as an overlay of attractor networks called net-fragments \sidecite{vonderMalsburg_2018}.
-Net-fragments consist of small sets of neurons, whereby each neuron can be part of several net fragments.
-The network self-organization has to start from an already established coarse global structure which is improved in a coarse-to-fine manner to avoid being caught in a local optima.
+Net fragments consist of small sets of neurons, whereby each neuron can be part of several net fragments.
+The network self-organisation has to start from an already established coarse global structure which is improved in a coarse-to-fine manner to avoid being caught in local optima.
 
-Also, von der Malsburg et al. \cite{von_der_Malsburg_Stadelmann_Grewe_2022} discuss scene representation (i.e. how a scene is represented in the brain) even tough they point out that this is a contested concept \sidecite{freeman1990representations}.
-Scene representation is a organization framework to put abstract interpretation of scene layouts, elements, potential actions, and emotional responses in relation.
-The details are not rendered as in photographic images but the framework supports the detailed reconstructions of narrow sectors of the scene.
-The basic goal if learning is to integrate a behavioral schema into the flow of scene representations.
-They propose the hypothesis that the network structure resulting from self-organization together with the neural activation in the framework of scene representation are the inductive bias that tunes the brain to the natural environment.
+Also, von der Malsburg et al. \cite{von_der_Malsburg_Stadelmann_Grewe_2022} discuss scene representation (i.e. how a scene is represented in the brain) even though they point out that this is a contested concept \sidecite{freeman1990representations}.
+Scene representation is an organisational framework to put abstract interpretations of scene layouts, elements, potential actions, and emotional responses in relation.
+The details are not rendered as in photographic images, but the framework supports the detailed reconstructions of narrow sectors of the scene.
+The primary goal of learning is to integrate a behavioural schema into the flow of scene representations.
+They propose the hypothesis that the network structure resulting from self-organisation and the neural activation in the framework of scene representation is the inductive bias that tunes the brain to the natural environment.
 
 Finally, they discuss how net fragments can be used to implement such structures and processes using vision as an example.
-They point out that a neuron is grouped in one or multiple net fragments through network self-organization.
-The net fragments can be considered as filters that detect previously seen patterns in the visual input signal.
+They point out that network self-organisation groups neurons in one or multiple net fragments.
+The net fragments can be considered filters that detect previously seen patterns in the visual input signal.
 An object is represented by multiple net fragments, where each fragment responds to the surface of that object and has shared neurons and connections with other net fragments representing that object.
 Thus, net fragments render the topological structure of the surfaces that dominate the environment.
-Von der Malsburg et al. \cite{von_der_Malsburg_Stadelmann_Grewe_2022} propose that net fragments represent shape primitives which can adapt to the shape of actual objects\sidenote{adapt in spite of metric deformations, depth rotation, and position}.
+Von der Malsburg et al. \cite{von_der_Malsburg_Stadelmann_Grewe_2022} propose that net fragments represent shape primitives which can adapt to the shape of actual objects\sidenote{adapt despite deformations, depth rotation, and position}.
 Shifter circuits are one possible implementation of networks that enable invariant responses to the position- and shape-variant representations \sidecite{Arathorn_2002, Olshausen1995}.
-They are composed of net-fragments that can be formed by network self-organization \sidecite{Fernandes_vonderMalsburg_2015}.
-Ref. \cite{von_der_Malsburg_Stadelmann_Grewe_2022} also argue that net fragments are the compositional data structure used by the brain.
-A hierarchy of features may be represented by nested net fragments of different size.
-Complex objects, such as mental constructs, can thus be seen as larger net fragments composed as mergers of pre-existing smaller net fragments.
+They comprise net fragments that can be formed by network self-organisation \sidecite{Fernandes_vonderMalsburg_2015}.
+Ref. \cite{von_der_Malsburg_Stadelmann_Grewe_2022} also argues that net fragments are the compositional data structure used by the brain.
+Nested net fragments of different sizes may represent a hierarchy of features.
+Complex objects, such as mental constructs, can thus be seen as larger net fragments composed of mergers of pre-existing smaller net fragments.
 
-Von der Malsburg et al. \cite{von_der_Malsburg_Stadelmann_Grewe_2022} do not address how their interesting theoretical concepts can be implemented in a mathematical model.
+Von der Malsburg et al. \cite{von_der_Malsburg_Stadelmann_Grewe_2022} have not addressed how their interesting theoretical concepts can be implemented in a mathematical model.
 However, a concrete implementation was done by Claude Lehmann in the form of a Master's thesis \sidecite{lehmann}.
 He proposes a new layer called the laterally connected layer (LCL).
 The LCL layer extends convolutional layers by forming lateral intra-layer connections based on the Hebbian learning rule (c.f. Section \secref{hebbian}).
 Similar to a convolutional filter, the convolutional feature map is calculated.
-Afterwards, the convolutional feature maps are compared and the lateral impact between feature maps is calculated (i.e. the covariance between the feature maps).
-When two feature maps are similar in the same pixel locations, their connection strength is increased.
-By using Hebbian learning, lateral connections are formed between the feature maps with a high lateral impact.
+Afterwards, the convolutional feature maps are compared, and the lateral impact between feature maps is calculated (i.e. the covariance between the feature maps).
+When two feature maps are similar in pixel locations, their connection strength increases.
+Hebbian learning forms lateral connections between the feature maps with a high lateral impact.
 Thus, new filters are formed based on existing filters with a high covariance.
 Lehmann found that LCL layers increase robustness for object recognition.
-He shows on the MNIST dataset \cite{Lecun_Bottou_Bengio_Haffner_1998} that for a small reduction in accuracy of 1\%, the performance on corrupted images increases by up to 21\% and that it works especially well for noisy types of corruptions.
-However, this layers improved performance only on very small networks.
+He shows on the MNIST dataset \cite{Lecun_Bottou_Bengio_Haffner_1998} that for a slight reduction in accuracy of 1\%, the performance on corrupted images increases by up to 21\% and that it works well for noisy types of corruptions.
+However, the proposed layer has only improved performance on small networks, and its effectiveness on larger networks has yet to be demonstrated.
 
 In this thesis, the ideas from the work of von der Malsburg et al. \cite{von_der_Malsburg_Stadelmann_Grewe_2022} are incorporated into a deep learning model.
 Thus, this work is considered to be \emph{the} inspiration for this thesis.
 However, this thesis is based on other concepts than the thesis by Lehmann \cite{lehmann} and therefore has little in common with his work.
 
-\section{Self-Organization}\seclbl{self_org_related}
-Self-organization is the process by which systems consisting of many units spontaneously acquire their structure or function without interference from a external agent or system.
-They organize their global behavior by local interactions amongst themselves.
-The absence of a central control unit allow self-organizing systems to quickly adjust to new environmental conditions.
-Additionally, such systems have in-built redundancy with a high degree of robustness as they  are made of many simpler individual units.
+
+
+\section{Self-Organisation}\seclbl{self_org_related}
+\emph{Self-organisation} is the process by which systems consisting of many units spontaneously acquire their structure or function without interference from an external agent or system.
+They organise their global behaviour through local interactions amongst themselves.
+The absence of a central control unit allows self-organising systems to adjust to new environmental conditions quickly.
+Additionally, such systems have built-in redundancy with a high degree of robustness as they consist of many simpler individual units.
 These individual units can even fail without the overall system breaking down.
 
-In nature, groups of millions units that solve complex tasks by using only local interactions can be observed.
-For example, ants can navigate difficult terrain with a local pheromone-based communication and thus form a collective type of intelligence.
-Such observations inspired researchers to build algorithms which are based on local communication and self-organization, for example ant colony optimization algorithms \sidecite{dorigo1997ant}.
+In nature, groups of millions of units that solve complex tasks using only local interactions can be observed.
+For example, ants can navigate rugged terrain with local pheromone-based communication and thus form a collective type of intelligence.
+Such observations inspired researchers to build algorithms based on local communication and self-organisation, for example, ant colony optimisation algorithms \sidecite{dorigo1997ant}.
 DeepSwarm \sidecite{Byla_Pang_2020} is a neural architecture search method that uses this algorithm to search for the best neural architecture.
-This methods achieves competitive performance on rather small datasets such as MNIST \cite{Lecun_Bottou_Bengio_Haffner_1998}, Fashion-MNIST \cite{xiao2017/online}, and CIFAR-10 \cite{krizhevsky2009learning}.
-
-%Robotic is another research area that uses ideas from collective intelligence such as self-assembly or self-organization.
-%For example, swarm systems consist of multiple robots that work together to solve complex tasks \sidecite{Hamann_2018}.
-%A famous example of self-assembling robots was presented in 2014 by Rubenstein et al. \sidecite{Rubenstein_Cornejo_Nagpal_2014}.
-%They teach kilobots\sidenote{kilobots are 3.3cm tall low-cost swarm robots developed at Harvard University} to self-assemble into target shapes such as letters or stars solely based on local communication between robots.
-%However, the kilobots still rely on hand-crafted algorithms to determine their position in the global coordinate system.
-
-%TODO: Write more about swarm intelligence or delete thie paragraph above (does not really fit in here....)
+This method achieves competitive performance on relatively small datasets such as MNIST \cite{Lecun_Bottou_Bengio_Haffner_1998}, Fashion-MNIST \cite{xiao2017/online}, and CIFAR-10 \cite{krizhevsky2009learning}.
 
 Cellular Automata mimic developmental processes in multi-cell organisms.
-They contain a grid of similar cells with an internal state which is updated periodically.
-The transition from a given state to a subsequent state is defined by some update rules.
-During an update, cells are only allowed to communicate with the neighbouring cells.
-Thus, self-organization is enforced by the definition of the update rules.
+They contain a grid of similar cells with an internal state updated periodically.
+Update rules define the transition from a given state to a subsequent state.
+During an update, cells can only communicate with the neighbouring cells.
+Thus, self-organisation is enforced by the definition of the update rules.
 Such automata can be used to study biological pattern formations \sidecite{Wolfram1984} or physical systems \sidecite{VICHNIAC198496}.
-Neural Cellular Automata \sidecite{Wulff1992LearningCA} use neural networks to learn the update rule.
-The input in such a neural network is the state of a given cell and its neighbours, the output the subsequent cell state.
+Neural Cellular Automata \sidecite{Wulff1992LearningCA}.  Neural networks can be used to learn the update rule.
+The input in such a neural network is the state of a given cell and its neighbours, and the output is the following cell state.
 Usually, the same network is applied to all cells.
-In this case, a fully connected neural network which is applied to each cell and its local neighbours can be reformulated as a CNN\sidecite{PhysRevE}.
+In this case, a fully connected neural network applied to each cell and its local neighbours can be reformulated as a CNN\sidecite{PhysRevE}.
 NCAs can be trained efficiently with gradient descent to grow given 2D patterns such as images\sidecite{48963, Mordvintsev_Randazzo_Fouts_2022}.
-These images are grown through self-organisation (i.e. the pixels pick a color based on the color of neighboring pixels) and are surprisingly resistant to damage.
-For example, large parts of the images can be removed and the system is able to rebuild these pixels\sidenote{a demo of this regeneration process is available at \cite{NCAs_distill}}.
+These images are grown through self-organisation (i.e. the pixels pick a colour based on the colour of neighbouring pixels) and are surprisingly resistant to damage.
+For example, large parts of the images can be removed, and the system can still rebuild the entire image\sidenote{a demo of this regeneration process is available at \cite{NCAs_distill}}.
 However, the aforementioned approaches can only grow the pattern they were trained on.
-A recent method called Variational Neural Cellular Automata \sidecite{Palm_GonDuque_Sudhakaran_Risi_2022} use an NCA as decoder of a Variational Autoencoder \sidecite{Kingma_Welling_2014}.
-This probabilistic generative model can grow a large variety of images from a given input encoded in a vector format.
+A recent method called Variational Neural Cellular Automata \sidecite{Palm_GonDuque_Sudhakaran_Risi_2022} use an NCA as the decoder of a variational auto-encoder \sidecite{Kingma_Welling_2014}.
+This probabilistic generative model can grow many images from a given input encoded in a vector format.
 However, there is still a big gap in performance compared to state-of-the-art generative models.
-Besides growing 2D patterns, NCAs can also create 3D patterns such as buildings in the popular video game Minecraft by utilizing 3D CNNs \sidecite{Sudhakaran_Grbic_Li_Katona_Najarro_Glanois_Risi_2021} or generate structures with specific function such as simulated robots able to locomote\sidecite{Horibe_Walker_Risi_2021}.
-Moreover, self-assembling approaches based on NCAs are not restricted to grid-structures.
-NCAs can be generalized to graph neural networks \sidecite{Grattarola_Livi_Alippi_2021}.
+Besides growing 2D patterns, NCAs can also create 3D patterns such as buildings in the popular video game Minecraft by utilising 3D CNNs \sidecite{Sudhakaran_Grbic_Li_Katona_Najarro_Glanois_Risi_2021} or generate structures with a specific function such as simulated robots able to locomote\sidecite{Horibe_Walker_Risi_2021}.
+Moreover, self-assembling approaches based on NCAs are not restricted to grid structures.
+NCAs can be generalised to graph neural networks \sidecite{Grattarola_Livi_Alippi_2021}.
 Graph cellular automata (GCA) use graph neural networks \sidecite{Zhou_Cui_Hu_Zhang_Yang_Liu_Wang_Li_Sun_2021} instead of CNNs to learn the state transition rules and can thus deal with more complex pattern structures than just 2D and 3D grids.
 The process of growing images from cells of an NCA can also be inverted.
 Randazzo et al. \sidecite{randazzo2020self_classifying} propose to use NCA to classify given structures such as images.
 They apply the same network to each pixel and its neighbours of an image.
 In an iterative process based on local communication, the image fragments then agree on which object they represent.
 NCAs can even be used to control reinforcement learning (RL) agents.
-Variengien et al. \sidecite{Variengien_Nichele_Glover_Pontes_Filho_2021} use the observations of the environment as state of the NCA, the subsequent state predicted by the NCA are used as Q-value estimates of a deep Q-learning algorithm \sidecite{Mnih_Kavukcuoglu_Silver_Graves_Antonoglou_Wierstra_Riedmiller_2013}.
+Variengien et al. \sidecite{Variengien_Nichele_Glover_Pontes_Filho_2021} use the observations of the environment as cell states of the NCA. The following states predicted by the NCA are used as Q-value estimates of a deep Q-learning algorithm \sidecite{Mnih_Kavukcuoglu_Silver_Graves_Antonoglou_Wierstra_Riedmiller_2013}.
 
-Self-organization can not only be used to generate structures but also to optimize the weights of a neural networks over the agents lifetime.
-For example, a Hebbian learning rule for meta-learning can be used to self-organize the weights of a RL agent over his lifetime\sidecite{NEURIPS2020_ee23e7ad}.
-This means that across multiple episodes the weights of a Hebbian based model are learned.
-The weights of the agents policy are reset in every episode and the Hebbian based model is used to update them.
+Self-organisation can not only be used to generate structures, but also to optimise the weights of neural networks over the agent's lifetime.
+For example, a Hebbian learning rule for meta-learning can be used to self-organise the weights of an RL agent over his lifetime\sidecite{NEURIPS2020_ee23e7ad}.
+This means that the weights of a Hebbian-based model are learned across multiple episodes.
+The weights of the agent's policy are reset in every episode, and the Hebbian-based model is used to update them.
 This allows the agent to adapt better to the changed conditions within the environment.
 
-Besides optimizing the weights, self-organization has also been used to change the learning rule itself.
-The method ``Evolve and Merge`` \sidecite{Pedersen_Risi_2021} uses the so called ``ABCD'' Hebbian learning rule which updates the weights as follows:
+Besides optimising the weights, self-organisation has also been used to change the learning rule.
+
+The method ``evolve and merge`` \sidecite{Pedersen_Risi_2021} uses the so called ``ABCD'' Hebbian learning rule which updates the weights as follows:
 \begin{equation}\eqlbl{McCulloch_Pitts_act}
-	\Delta w_{ij} = \alpha (A o_i o_j + B o_i + C o_j + D)
+	\Delta w_{ij} = \alpha (A a_i a_j + B a_i + C a_j + D)
 \end{equation}%
 
-$\alpha$ is the learning rate, $o_i$ and $o_j$ are the activity levels of connected neurons and $A$, $B$, $C$, and $D$ are learned constants.
-For each connection in the network is one learning rule initialized and the constants are learned.
-After a pre-defined number of epochs, the learning rules are clustered and the ones with similar constants are merged.
-By repeating this process, the number of parameters can be reduced and robustness increases according to the authors.
+$\alpha$ is the learning rate, $a_i$ and $a_j$ are the activity levels of connected neurons and $A$, $B$, $C$, and $D$ are learned parameters.
+For each connection in the network, the four parameters are learned.
+After a pre-defined number of epochs, the learning rules are clustered, and the ones with similar parameters are merged.
+By repeating this process, the number of parameters can be reduced, and robustness increases, according to the authors.
 
-Alternatively, it is also possible to initialize the network with shared parameters instead of starting with many rules and merging them over time.
-Kirsch and Schmidhuber \sidecite{kirsch2021meta} use multiple tiny recurrent neural networks (RNNs) that have the same weight parameters but different internal states\sidenote{Intuitively, these tiny RNNs can be interpreted as more complex neurons.}.
-By using self-organization and Hebbian learning, they show that it is possible to learn powerful learning algorithms such as backpropagation while running the network in forward-mode mode only.
+Alternatively, it is also possible to initialise the network with shared parameters instead of starting with many rules and merging them over time.
+Kirsch and Schmidhuber \sidecite{kirsch2021meta} use multiple tiny recurrent neural networks (RNNs) that have the same weight parameters but different internal states\sidenote{intuitively, these tiny RNNs can be interpreted as more complex neurons.}.
+By using self-organisation and Hebbian learning, they show that it is possible to learn powerful learning algorithms such as backpropagation while running the network in forward-mode mode only.
 However, it works only for small-scale problems as it can get stuck in local optima.
-In general seem self-organizing systems to be hard to optimize and only to work for small datasets or simple problems so far.
+In general, self-organising systems are hard to optimise and only work for small data sets or simple problems so far.
 
-Risi \sidecite{risi2021selfassemblingAI} describes why self-organizing systems are hard to train;
-First, the system is hard to control because there is no central entity in charge but the system must still be nudges into the right direction.
-Second, self-organizing systems are unpredictable (i.e. there exist no mathematical model that tells the outcome of the self-organizing process).
+Risi \sidecite{risi2021selfassemblingAI} describes why self-organising systems are hard to train;
+First, the system is hard to control because no central entity is in charge, but the system must still be nudged in the right direction.
+Second, self-organising systems are unpredictable (i.e., no mathematical model tells the outcome of the self-organising process). Therefore, he concludes that training such systems is much more complex to train than a system with central supervision, such as end-to-end backpropagation of error.
+
 
 \subsection{Growing Networks}
-Unsupervised learning techniques usually map high dimensional input data to a lower-dimensional representation.
-One approach to do so are self-organizing maps (SOM) \sidecite{Kohonen_1982, Kohonen_1989}.
-They map the input data to a discretized representation of the input space of the training samples, called a map.
-In opposite to ANNs, they use competitive learning instead of error correction learning (i.e. back-propagation with gradient descent).
-A weight vector is used to map the data to a node in the mapping field.
-The datapoints ``compete'' for the weight vectors.
-The weight vector of a node in the map that best matches a datapoint is moved closer to that input, as are nodes that are in the neighbourhood.
+Unsupervised learning techniques usually map high-dimensional input data to a lower-dimensional representation.
+One approach implementing such a mapping is based on self-organizing maps (SOM) \sidecite{Kohonen_1982, Kohonen_1989}.
+SOMs map the input data to a discretized representation space of the training samples called a map.
+Unlike ANNs, they use competitive learning instead of error correction learning (i.e. backpropagation or error).
+A weight vector maps the data to a node in the mapping field.
+The data points ``compete'' for the weight vectors.
+The weight vector of a node in the map that best matches a datapoint is moved closer to that input, as are nodes in the neighbourhood.
 By doing so, samples that are close in the input space are also closed in the resulting maps.
 
-However, SOM have two major limitations; First, the network structure must be pre-defined which constraints the result mapping accuracy. Second, the capacity of the map is predefined through the number of nodes.
-Growing networks are able to overcome this limitations.
-Growing networks add nodes or whole layers of nodes into the network structure at the positions of the map where the error is highest.
+However, SOMs have two significant limitations; First, the network structure must be pre-defined, limiting the mapping accuracy. Second, the map's capacity is pre-defined through the number of nodes.
+Growing networks can overcome these limitations:
+More advanced growing networks can add nodes or whole layers of nodes into the network structure at the positions of the map where the error is highest.
 Many growing networks \sidecite{NIPS1994_d56b9fc4, Reilly_Cooper_Elbaum_1982, Fritzke_1994} add such units after a fixed number of iterations in which the error is accumulated.
 After adding a unit, it takes several iterations to accumulate the error again until the next node can be added.
 
 Grow When Required (GWR) networks \sidecite{Marsland_Shapiro_Nehmzow_2002} use a different criterion to add nodes.
-Instead of adding nodes to support the node with the highest error, nodes are added when a given input samples cannot be matched with the current nodes by some pre-defined accuracy.
-This allows the network to adapt the growing process rather fast; The networks stops growing when the input space is matched b the network with some accuracy and the networks starts growing again if the input distribution changes.
+Instead of adding nodes to support the node with the highest error, nodes are added when a given input sample cannot be matched with the current nodes by some pre-defined accuracy.
+This allows the network to adapt to the growing process relatively fast; The network stops growing when the inputs can be matched with existing latent representations with a good-enough accuracy, and the network starts growing again if the input distribution changes.
 
 Such GWR networks can be used to build self-organizing architectures.
 For example, Mici et al. \sidecite{Mici_Parisi_Wermter_2018} build a self-organizing architecture based on GWR to learn human-object interactions from videos.
 They use two GWR in parallel, one to process feature representations of body postures and another to process manipulated objects.
-A third GWR is used to combine these two streams and to create action–object mappings in a self-organized manner.
-By doing so, they are able to learn human-object interactions and exhibit a model which is more robust to unseen samples than comparable deep learning approaches.
+A third GWR combines these two streams and creates action–object mappings in a self-organized manner.
+By doing so, they can learn human-object interactions and exhibit a model more robust to unseen samples than comparable deep learning approaches.
 
 
 \subsection{Spiking Networks}\seclbl{self_org_spiking}
 Spiking neural networks (SNNs) (c.f. Section \secref{spiking_networks}) communicate through binary signals known as spikes and are very efficient on special event-based hardware\sidecite{8259423}.
-There exist several methods to self-organize such architectures.
-For the sake of completeness, two well-known approaches are described in the following.
-However, since this thesis focuses on self-organization in deep learning systems, these approaches are only roughly described and for detailed explanations please refer to the respective literature.
+There exist several methods to self-organise such architectures.
+For completeness, two well-known approaches are described in the following.
+However, since this thesis focuses on the self-organisation of deep learning systems without time-dependent spikes, these approaches are only roughly described, and interested readers may refer to the respective literature.
 
-Similar to deep learning, there exists a multitude of different network architectures; Shallow \sidecite{masquelier2007unsupervised, 6469239} and deep networks \sidecite{kheradpisheh2018stdp, mozafari2019bio} structures, fully connected \sidecite{diehl2015unsupervised} and convolutional layers \sidecite{cao2015spiking, tavanaei2016bio}, as well as based on different learning rules such as supervised \sidecite{diehl2015fast, zenke2018superspike}, unsupervised \sidecite{diehl2015unsupervised, ferre2018unsupervised} and reinforcement learning based \sidecite{mozafari2018first}.
+Similar to deep learning, there exists a multitude of different spiking network architectures; Shallow \sidecite{masquelier2007unsupervised, 6469239} and deep \sidecite{kheradpisheh2018stdp, mozafari2019bio} network structures, networks based on fully connected layers \sidecite{diehl2015unsupervised} or convolutional layers \sidecite{cao2015spiking, tavanaei2016bio}, as well as networks that are trained with different learning principles such as supervised \sidecite{diehl2015fast, zenke2018superspike}, unsupervised \sidecite{diehl2015unsupervised, ferre2018unsupervised} and reinforcement learning \sidecite{mozafari2018first}.
 
-A representable method for self-organization in SNNs is proposed by Raghavan et al. \sidecite{Raghavan_Lin_Thomson_2020}.
-They introduce a stackable tool-kit to assemble multi-layer neural networks.
-This tool-kit is a dynamical system that encapsulates the dynamics of spiking neurons, their interactions as well as the plasticity rules that control the flow of information between layers.
-Based on the input, spatio-temporal waves are generated that travel across multiple layers.
-A dynamic learning rule tunes the connectivity between layers based on the properties of the waves tiling the layers\sidenote{for more information please refer to \cite{Raghavan_Lin_Thomson_2020}}.
+One type of methodology for self-organisation of SNNs is based on a stackable toolkit to assemble multi-layer neural networks \sidecite{Raghavan_Lin_Thomson_2020}.
+This toolkit is a dynamical system that encapsulates the dynamics of spiking neurons, their interactions, and the plasticity rules that control the flow of information between layers.
+Based on the input, spatiotemporal waves are generated that travel across multiple layers.
+A dynamic learning rule tunes the connectivity between layers based on the properties of the waves tiling the layers\sidenote{for more information, please refer to \cite{Raghavan_Lin_Thomson_2020}}.
 
-An alternative method proposed by Raghavan and Thomson \sidecite{Raghavan2019NeuralNG} grows a neural network.
-They start with a single computational ``cell'' and use a wiring algorithm to generate a pooling architecture in a self-organizing fashion.
-The pooling architecture emerges through two processes; First, a layered neural network is grown. Second, self-organization of its inter-layer connections is used to form defined ``pools'' or receptive fields.
-They us the Izikhevich neuron model \sidecite{Izhikevich_2003} in the first layer to generate spatio-temporal waves.
-The units in the second layer learn the ``underlying'' pattern of activity generated in the first layer. 
-Based on the learned patterns, the inter-layer connections are modified to generate a pooling architecture\sidenote{for more information please refer to \cite{Raghavan2019NeuralNG}}.
+An alternative method grows a spiking network through self-organisation \sidecite{Raghavan2019NeuralNG}; The growing process starts with a single computational ``cell'', and a wiring algorithm is used to generate a pooling architecture in a self-organising fashion.
+The pooling architecture emerges through two processes; First, a network layer is grown. Second, self-organisation of its inter-layer connections forms defined receptive fields.
+The first layer uses the Izikhevich neuron model \sidecite{Izhikevich_2003} to generate spatiotemporal waves.
+The neurons in the following layers learn the ``underlying'' pattern of activity generated in the first layer. 
+Based on the learned patterns, the inter-layer connections are modified to generate a pooling architecture\sidenote{for more information, please refer to \cite{Raghavan2019NeuralNG}}.
 
-In general, SNNs have to ``convert'' static input data such as images to a dynamic signal.
-For example, images are often converted to such signals by using Difference of Gaussian (DoG) convolution filters \sidecite{Vaila_Chiasson_Saxena_2019, KHERADPISHEH201856}.
-Such filters subtract one Gaussian blurred version of an original image from another, less blurred version\sidenote{DoG filter can thus be used to reduce noise and to detect edges}.
-This subtraction results in spikes for each pixel.
-To encode the filter output into a temporal signal, bigger spikes are forwarded earlier in time than smaller spikes.
-However, such approaches lose a lot of information about the input.
-For example, in the process described above are all information about color and thin structures lost.
-To the author of this thesis, this seems to be the reason why these SNNs can't match the performance of deep learning algorithms so far and often only work well for small gray-scale image-datasets such as MNIST \cite{Lecun_Bottou_Bengio_Haffner_1998}.
+In general, SNNs must ``convert'' static input data such as images to a dynamic signal (c.f. \secref{spiking_networks
+}). However, such approaches lose a lot of information about the input.
+For example, all information about colour and thin structures is lost if DoG filters (c.f. \secref{spiking_networks}) are used to generate spikes.
+Currently, this seems to be one of the limiting factors why such SNNs cannot match the performance of deep learning algorithms and often only work well for small grey-scale image data sets such as MNIST \cite{Lecun_Bottou_Bengio_Haffner_1998}.
+
 
 \subsection{Relevance}\seclbl{self_org_relevance}
-Self-organization is, according to von der Malsburg et al. \sidecite{von_der_Malsburg_Stadelmann_Grewe_2022}, one of the key elements for natural intelligence.
-Therefore, this concept of local optimization and interaction plays a very important role in this thesis.
-Specifically, two types of self-organization are proposed in this thesis;
+Self-organisation is, according to von der Malsburg et al. \sidecite{von_der_Malsburg_Stadelmann_Grewe_2022}, one of the fundamental principles for natural intelligence.
+Therefore, this concept of local optimisation and interaction plays an essential role in this thesis.
+Specifically, two types of self-organisation are proposed in this thesis;
 Vertical self-organisation is based on layer-wise learning. In this approach, the layers of a neural network are considered separate units and are updated independently.
 The communication between these units takes place by feeding data sequentially through the layers.
-The second type of self-organization is vertical self-organisation. In this approach, data is divided into patches and then analysed by independent networks. Thus, small networks form the self-organising units and communicate with each other by adding the output of one network to the input of another network.
-These two types of self-organization are described in more detail in Chapter \chref*{methods}.
+The second type of self-organisation is vertical self-organisation. In this approach, data is divided into patches and then analysed by independent networks. Thus, small networks form self-organising units and communicate with each other by adding the output of one network to the input of another network.
+These two types of self-organisation are described in more detail in Chapter \chref*{methods}.
 
 
 \section{Learning Algorithms}\seclbl{alt_train_algo}
@@ -390,8 +376,8 @@ vertical self-organisation uses a type of contrastive learning by forcing sample
 Horizontal self-organisation uses independently trained variational autoencoders to obtain good representations of input patches.
 
 
-\section{Meta-Learning}
-TODO: NOT SURE IF THIS CHAPTER IS STILL NEEDED -> ADD REFERENCE TO THIS CHAPTER
+\section{Meta-Learning}\seclbl{meta_learning}
+TODO: NOT SURE IF THIS SECTION IS NEEDED / SHOULD BE KEPT... -> NOT THAT RELEVANT SO FAR
 
 Meta-learning is the process of distilling experience from multiple learning cycles and using the accumulated experience to improve the future learning process \sidecite{Hospedales_Antoniou_Micaelli_Storkey_2021}.
 Therefore, meta-learning is also referred to as ``learning-to-learn'' \sidecite{Thrun_Pratt_1998} and improves learning on a lifetime (i.e. single agent) and evolutionary timescale (i.e. population of agents) \sidecite{Schrier_1984}.
