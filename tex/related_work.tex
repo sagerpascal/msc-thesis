@@ -298,164 +298,160 @@ These methods are known as \emph{difference target propagation with difference r
 An advantage of calculating targets is that only layer-wise gradients are required, which allows models to have non-differentiable operations \cite{Lee_Zhang_Fischer_Bengio_2015}.
 A significant drawback is that auxiliary decoders must be trained to approximate the hidden targets $\boldsymbol{a_{l}}$, which might outweigh the savings achieved by eliminating a complete backward pass.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 \subsection{Other Methods}
-\emph{Synthetic gradients} methods \sidecite{pmlr-v70-jaderberg17a, 10.5555/3305381.3305475} replace the gradients used in the backward pass by approximating local gradients with auxiliary models and utilize gradient-based optimization algorithms such as stochastic gradient descent to update the weights locally.
+\emph{Synthetic gradients} methods \sidecite{pmlr-v70-jaderberg17a, 10.5555/3305381.3305475} replace the gradients used in the backward pass by approximating local gradients with auxiliary models and utilise gradient-based optimisation algorithms such as stochastic gradient descent to update the weights locally.
 The auxiliary models are usually fully-connected networks that are trained to regress a layer's gradients when given the layer's activations.
-End-to-end backwards passes are only performed occasionally to acquire real gradients that can be used to trained the gradient approximation models.
+End-to-end backward passes are only performed occasionally to acquire actual gradients that can be used to train the gradient approximation models.
 Thus, the frequency of end-to-end backward passes is reduced.
-When auxiliary input models are used to predicts the layer's input, the frequency of the forward pass can be reduced as well in the same manner as for the backward pass \cite{pmlr-v70-jaderberg17a}.
-It is also possible to get rid of the backward pass completely by training the auxiliary gradient models with local information only \sidecite{Lansdell_Prakash_Kording_2020}.
-However, this works significantly worse than when real gradients are used.
-An advantage of synthetic gradient methods is that they can be used to approximate backpropagation through time (BTT) for an unlimited number of steps \cite{pmlr-v70-jaderberg17a}.
+When additional auxiliary input models are used to predict the layer's input, the frequency of the forward pass can be reduced as well in the same manner as for the backward pass \cite{pmlr-v70-jaderberg17a}.
+It is also possible to eliminate the backward pass by training the auxiliary gradient models with local information only \sidecite{Lansdell_Prakash_Kording_2020}.
+However, this works significantly worse than when actual gradients are used.
+An advantage of synthetic gradient methods is that they can approximate backpropagation through time (BTT) for an unlimited number of timesteps \cite{pmlr-v70-jaderberg17a}.
 It has been shown that this allows more efficient training for learning long-range dependencies compared to BTT.
 
 Many other methods are motivated purely by biological plausibility \cite{10.5555.3157096.3157213, Lillicrap_Cownden_Tweed_Akerman_2016, Xiao_Chen_Liao_Poggio_2019, aaai.BalduzziVB15, 10.5555/3016100.3016156}.
-However, these biological plausible methods have been significantly outperformed by backpropagation of error on meaningful benchmark datasets \sidecite{Bartunov_Santoro_Richards_Marris_Hinton_Lillicrap_2018}.
-Probably the most popular group of biological plausible alternatives to backpropagation are methods based on \emph{feedback alignment}.
-From a biological point of view, one of the major criticisms of backpropagation is the ``weight transportation problem'' \sidecite{Lillicrap_Cownden_Tweed_Akerman_2016}; it is believed that the human brain doesn't have a backward pass that passes an error signal to previous layers.
+However, these biologically plausible methods have been significantly outperformed by backpropagation of error on meaningful benchmark datasets \sidecite{Bartunov_Santoro_Richards_Marris_Hinton_Lillicrap_2018}.
+Probably the most popular group of biologically plausible alternatives to backpropagation are methods based on \emph{feedback alignment}.
+From a biological point of view, one of the major criticisms of backpropagation is the ``weight transportation problem'' \sidecite{Lillicrap_Cownden_Tweed_Akerman_2016}; it is believed that the human brain does not have a backward pass that passes an error signal to previous layers.
 \emph{Feedback alignment} algorithms use fixed, random weights during the backward pass \cite{Lillicrap_Cownden_Tweed_Akerman_2016}.
-The gradients are calculated in the same way as when stochastic gradient descent is used but with random weights.
-Thus the symmetry between the weights used during the forward pass and the backward pass is broken.
-The network still learns to make the feedback useful even though the weights during forward and backward pass are different. 
+The gradients are calculated similarly to stochastic gradient descent but with random weights.
+Thus the symmetry between the weights used during the forward and the backward pass is broken.
+The network still learns to make the feedback useful even though the weights during forward and backward passes are different. 
 Later, the algorithm was improved by using fixed, random weights that share the signs with the actual weights of the network \sidecite{10.5555/3016100.3016156}.
 
 Lastly, another group of learning algorithms use \emph{auxiliary variables} \cite{pmlr-v33-carreira-perpinan14, 10.5555/3045390.3045677, 10.5555/3294771.3294935, Lau_Zeng_Wu_Yao_2018}.
-These methods use the idea of variable splitting, i.e. transform a complicated problem into a simpler one by introducing additional trainable variables.
+These methods use the idea of variable splitting, i.e. transforming a complicated problem into a simpler one by introducing additional trainable variables.
 Introducing auxiliary variables may pose scalability issues, and these methods require special, usually tailor-made solvers.
-Therefore, such methods usually scale to specific use-cases only.
+Therefore, such methods usually scale to specific use cases only.
 
 \subsection{Relevance}
-End-to-end backpropagation is not compatible with local self-organisation which is one of the key concepts of natural intelligence according to von der Malsburg et al. \sidecite{von_der_Malsburg_Stadelmann_Grewe_2022}.
-With end-to-end backpropagation, systems are trained as a single unit and consequently have no independent local units that can organise themselves.
+End-to-end backpropagation is incompatible with local self-organisation, which is one of the fundamental concepts of natural intelligence according to von der Malsburg et al. \sidecite{von_der_Malsburg_Stadelmann_Grewe_2022}.
+With end-to-end backpropagation, systems are trained as a single unit and consequently have no independent local units to organise themselves.
 Therefore, alternative learning algorithms are very relevant to this thesis.
-In fact, the approach based on vertical self-organisation uses proxy objective functions to train the layer locally as independent units (c.f. Chapter \chref*{methods}).
+The approach based on vertical self-organisation uses proxy objective functions to train the layer locally as independent units (c.f. Chapter \chref*{methods}).
 Proxy objective functions are used in this thesis as this method is the only known alternative to backpropagation of error that scales well to large neural networks and large datasets.
 According to \sideciteay{Duan_Principe_2022} and \sideciteay{Bartunov_Santoro_Richards_Marris_Hinton_Lillicrap_2018}, only proxy objective functions have achieved competitive performance with large models on large datasets such as ImageNet \cite{Deng_Dong_Socher_Li_KaiLi_LiFei_Fei_2009}.
-The other approaches work only on smaller datasets such as MNIST \cite{Lecun_Bottou_Bengio_Haffner_1998} or CIFAR-10 \cite{krizhevsky2009learning} so far.
+The other approaches work only on smaller datasets such as MNIST \cite{Lecun_Bottou_Bengio_Haffner_1998}, or CIFAR-10 \cite{krizhevsky2009learning} so far.
 
 \section{Representation Learning}\seclbl{visual_rep_learning}
-One of the earliest methods of learning visual representations are \emph{Autoencoders}.
-\emph{Autoencoders} have been introduced 1985 \sidecite{rumelhart1985learning} and learn an encoder and a decoder function \sidecite{pmlrv27baldi12a}.
-The encoder $A$ maps the input from a high-dimensional space to a lower dimensional embedding space $A: \mathbb{R}^{n} \rightarrow \mathbb{R}^{e}$ and the decoder $B$ reverses this mapping $B: \mathbb{R}^{e} \rightarrow \mathbb{R}^{n}$.
-Typically, neural networks are used to learn the encoder function $A$ and decoder function $B$ by minimizing a reconstruction loss \sidecite{Ranzato_Huang_Boureau_LeCun_2007}.
-In order that the functions $A$ and $B$ are not just the identity operators, some regularization is needed.
-One of the simplest regularization methods is to introduce a bottleneck, i.e. to compress the representation with the encoder while still being able to re-create the original input as good as possible with the decoder.
-With a bottleneck layer, the number of neurons is limited.
-An alternative (or a supplement) is to limit the number of activations by enforcing sparsity.
-Autoencoders with such a sparsity constraint are also known as \emph{Sparse Autoencoders}.
-A sparsity constraint can be imposed with $L_1$ regularization or a kullback-leibler (KL) divergence between expected average neuron activation and an ideal distribution \sidecite{10-5555-3042573-3042641}.
-Other popular versions of \emph{Autoencoders} are \emph{Denoising Autoencoders} \sidecite{10-1145-1390156-1390294}, \emph{Contractive Autoencoders} \sidecite{10-5555-3104482-3104587}, and \emph{Variational Autoencoders (VAE)} \sidecite{Kingma_Welling_2014}.
-In \emph{Denoising Autoencoders}, the input is disrupted by noise (e.g. by adding Gaussian noise or removing some pixels by using Dropout) and fed into the encoder $A$.
-The goal of the decoding function $B$ is to reconstruct the clean version of the input without the added noise.
-By doing so, the \emph{Denoising Autoencoders} learns to create more robust representation of the input or can be used for error correction.
-\emph{Contractive Autoencoders}, on the other hand, try to make the feature extraction less sensitive to small perturbations.
-By adding the squared Jacobian norm to the reconstruction loss, the latent representations of the input tend to be more similar to each other.
-This diminishes latent representations that are not important for the reconstruction and only important variations between the inputs are kept.
-The encoder of \emph{Variational Autoencoders} map the input to a probabilistic distribution; Instead of mapping the input to an encoding vector, the input is mapped to a vector representing the means $\mu$ and another vector representing the standard deviations $\sigma$.
-This done by adding two fully connected layers after the encoder $A$, one layer to predict $\mu$ and the other layer to predict $\sigma$.
-Afterwards, a variable is sampled from this distribution $z \sim \mathcal{N}(\mu,\,\sigma^{2})$\sidenote{this process is also called the re-parameterization trick} and fed into the decoder $B$.
-By doing so, the latent space becomes by design continuous and allows random sampling and interpolation of data.
 
-Other approaches for \emph{self-supervised learning} typically augment the visual scene and either predict the augmentation parameters, reconstruct the original version of the image, or learn consistent representations among augmented views of the image.
+\subsection{Autoencoders}
+\emph{Autoencoders} are one of the best-known methods to learn visual representations in an unsupervised fashion.
+Autoencoders were introduced in 1985 \sidecite{rumelhart1985learning} and learn an encoder and decoder function \sidecite{pmlrv27baldi12a}.
+The encoder $E$ maps the input from a high-dimensional space to a lower-dimensional embedding space $E: \mathbb{R}^{n} \rightarrow \mathbb{R}^{e}$ and the decoder $D$ reverses this mapping $D: \mathbb{R}^{e} \rightarrow \mathbb{R}^{n}$.
+Typically, neural networks are used to learn the encoder function $E$ and decoder function $B$ by minimizing a reconstruction loss between the encoder input and the decoder output \sidecite{Ranzato_Huang_Boureau_LeCun_2007}.
+However, regularisation is needed so that the functions $E$ and $D$ do not convergence to the identity operators.
+One of the simplest regularization methods is to introduce a bottleneck, i.e., compress the representation with the encoder while still re-creating the original input as well as possible with the decoder.
+Thus, a bottleneck layer limits the number of neurons.
+An alternative (or a supplement) is to limit the number of active neurons by enforcing sparsity.
+Autoencoders with a sparsity constraint are also known as \emph{sparse autoencoders}.
+A sparsity constraint can be imposed with $L_1$ or $L_2$ regularization or with a kullback-leibler (KL) divergence\sidtenote{the kullback-leibler divergence is a measure of how one probability distribution differs from another reference probability distribution} between average neuron activations and an ideal activation distribution \sidecite{10-5555-3042573-3042641}.
+Other popular versions of autoencoders are denoising autoencoders \sidecite{10-1145-1390156-1390294}, contractive autoencoders \sidecite{10-5555-3104482-3104587}, and variational autoencoders (VAE) \sidecite{Kingma_Welling_2014}.
+For \emph{denoising autoencoders}, the input is disrupted with noise (e.g. by adding Gaussian noise or removing some pixels by using dropout) before it is fed into the encoder $E$.
+The goal of the decoding function $D$ is to reconstruct the clean version of the input without the added noise.
+By doing so, \emph{denoising autoencoders} learn to create a more robust representation of the input or can be used for error correction.
+\emph{Contractive autoencoders}, on the other hand, try to make the feature extraction less sensitive to small perturbations.
+By adding the squared Jacobian norm to the reconstruction loss, the latent representations of the input tend to be more similar to each other.
+This diminishes latent representations that are unimportant for the reconstruction, and only essential variations between the inputs are kept.
+The encoder of \emph{variational autoencoders} map the input to a probabilistic distribution; Instead of mapping the input to an encoding vector, the input is mapped to a vector representing the mean $\boldsymbol{\mu}$ and another vector representing the standard deviation $\boldsymbol{\sigma}$ of a multivariate Gaussian distribution.
+This is done by adding two fully connected layers after the encoder $E$, one layer to predict $\boldsymbol{\mu}$ and the other layer to predict $\boldsymbol{\sigma}$.
+Afterwards, a variable is sampled from this distribution $z \sim \mathcal{N}(\boldsymbol{\mu},\, \boldsymbol{\sigma}^{2} \cdot \epsilon)$, where $\epsilon \sim \mathcal{N}(0,\,1)$ \sidenote{this process is also called the re-parameterisation trick} and fed into the decoder $D$.
+By doing so, the latent space becomes, by design, continuous and allows random sampling and data interpolation.
+
+
+
+\subsection{Self-Supervised Learning}
+Other approaches do not compress data but generate a supervision signal themselves.
+These methods are thus based on \emph{self-supervised learning}.
+Typically, the input is augmented, and either the augmentation parameters are predicted, the original version of the image is reconstructed, or consistent representations among augmented views of the image are learned.
 For example, some models use masking to learn visual representation;
-A part of the input image is removed and the model predicts the missing part (image inpainting) \cite{Elharrouss_Almaadeed_Al-Maadeed_Akbari_2020}.
-This not only allows to generate part of images but also to learn visual representations of the image \sidecite{Pathak_Krahenbuhl_Donahue_Darrell_Efros_2016, he2022masked, shi2022adversarial}.
+a part of the input image is removed, and the model predicts the missing part (image inpainting) \cite{Elharrouss_Almaadeed_Al-Maadeed_Akbari_2020}.
+This not only allows us to generate part of images but also to learn visual representations of the image \sidecite{Pathak_Krahenbuhl_Donahue_Darrell_Efros_2016, he2022masked, shi2022adversarial}.
 Other approaches rotate images and predict the rotation angle to generate representations \sidecite{komodakis2018unsupervised, Zhai_Oliver_Kolesnikov_Beyer_2019}.
-There exist many other methods that augment images and learn good visual representations based on it.
+Many other methods exist that augment images and learn good visual representations of them.
 A comprehensive overview is given by \sidecite{chen2022semi}.
 
-Another popular \emph{self-supervised learning} paradigm is \emph{contrastive learning}.
-The idea of \emph{contrastive learning} is that similar images should yield similar representations.
-Typically, \emph{contrastive learning} models are trained without labels.
-In this case, two augmented views of the same image are created, fed through an encoder and the representation of this two views are pushed together in the embedding space by maximizing their similarity \sidecite{chen2020simple, he2020momentum, caron2020unsupervised}.
-Subsequently, the encoder can be used to generate image representations that are used for other downstream tasks such as image classification.
-However, \emph{contrastive learning} can also leverage information from annotations.
-For example, Khosla et al. \sidecite{khosla2020supervised} use labels in a contrastive setting to pull the representations of images of the same class together in the embedding space, while simultaneously pushing apart clusters of samples from different classes.
+Another popular self-supervised learning paradigm is \emph{contrastive learning}.
+The idea of contrastive learning is that similar images should yield similar representations.
+Typically, contrastive learning models are trained without labels.
+In this case, two augmented views of the same image are created, fed through an encoder and the representations of these two views are pushed together in the embedding space by maximising their similarity \sidecite{chen2020simple, he2020momentum, caron2020unsupervised}.
+Subsequently, the encoder can be used to generate image representations that are used for other downstream tasks, such as image classification.
+However, contrastive learning can also leverage information from additional annotations.
+For example, \sideciteay{khosla2020supervised} use labels in a contrastive setting to pull the representations of images of the same class together in the embedding space while simultaneously pushing apart clusters of samples from different classes.
 
-In this thesis, representations of images are learned.
-Two different principles are applied;
-vertical self-organisation uses a type of contrastive learning by forcing samples from the same class to have similar representations and samples from different classes to have high diversity.
+\subsection{Relevance}
+In this thesis, representations of images are learned with two different principles;
+vertical self-organisation uses contrastive learning by forcing samples from the same class to have similar representations and samples from different classes to have high diversity.
 Horizontal self-organisation uses independently trained variational autoencoders to obtain good representations of input patches.
+Thus, image representations are learned without the aforementioned methods.
 
 
 \section{Meta-Learning}\seclbl{meta_learning}
 TODO: NOT SURE IF THIS SECTION IS NEEDED / SHOULD BE KEPT... -> NOT THAT RELEVANT SO FAR
 
-Meta-learning is the process of distilling experience from multiple learning cycles and using the accumulated experience to improve the future learning process \sidecite{Hospedales_Antoniou_Micaelli_Storkey_2021}.
+\emph{Meta-learning} is the process of distilling experience from multiple learning cycles and using the accumulated experience to improve the future learning process \sidecite{Hospedales_Antoniou_Micaelli_Storkey_2021}.
 Therefore, meta-learning is also referred to as ``learning-to-learn'' \sidecite{Thrun_Pratt_1998} and improves learning on a lifetime (i.e. single agent) and evolutionary timescale (i.e. population of agents) \sidecite{Schrier_1984}.
-Typically, meta-learning includes \emph{base learning} (also referred to as \emph{inner} or \emph{lower} learning) and \emph{meta-learning} (also referred to as \emph{outer} or \emph{upper} learning).
-During \emph{base learning}, the model learns a typical task such as image classification based on a dataset and a objective function.
-During \emph{meta-learning}, an algorithm updates the \emph{base learning} algorithm based on a meta objective function\sidenote{Typical meta objective function aim to improve generalization or learning speed}.
+Typically, meta-learning includes \emph{base learning} (also referred to as inner or lower learning) and \emph{meta-learning} (also referred to as outer or upper learning).
+During base learning, the model learns a typical task, such as image classification, based on a dataset and an objective function.
+During meta-learning, an algorithm updates the base learning algorithm based on a meta objective function\sidenote{typical meta objective functions aim to improve generalisation or learning speed}.
 Thus, meta-learning usually iterates between learning a task and improving the learning algorithm that is used to learn the task.
 
-In the following, I use the categorisation according to Hospedales et al. \cite{Hospedales_Antoniou_Micaelli_Storkey_2021} to describe the different aspects of meta-learning algorithm.
+In the following, the categorisation according to Hospedales et al. \sidecite{Hospedales_Antoniou_Micaelli_Storkey_2021} is used to describe the different characteristics of meta-learning algorithms.
 \begin{description}
-   \item[Meta-Representation] What meta-knowledge shall be learned by the outer \emph{meta-learning} algorithm.
-   \item[Meta-Optimizer] How the outer \emph{meta-learning} algorithm learns, i.e. the from of the learning algorithm.
-   \item[Meta-Objective] What the goal of the \emph{meta-learning} algorithm is.
+   \item[Meta-Representation] What meta-knowledge should be learned by the outer meta-learning algorithm.
+   \item[Meta-Optimiser] How the outer meta-learning algorithm learns, i.e. the form of the learning algorithm.
+   \item[Meta-Objective] What the goal of the meta-learning algorithm is.
 \end{description}
 
-The first dimension of the meta-learning landscape is the \textbf{meta-representation}.
-Meta-representations describe which part of the learning strategy should be learned.
-One possibility is to learn good \emph{initial parameters} that can be used by the model during \emph{base learning}.
-Good initial parameters are only a few gradient steps away from a set of parameters that can solve a task $\mathcal{T}$ drawn from a set of tasks $p(\mathcal{T})$.
-A popular algorithm to learn initial parameters is called MAML \sidecite{10-5555-3305381-3305498, 10-5555-3327546-3327622} and works well on smaller networks.
-However, a major challenge is that the outer \emph{meta-learning} algorithm has to find a solution for as many parameters as the inner \emph{base learning} needs.
-Therefore, many approaches focus on isolating a subset of parameters to meta-learn \cite{lee2018gradient, qiao2018few, rusu2018meta}.
-\emph{Black-box models}, on the other hand, use \emph{meta-learning} to directly provide the parameters required to classify data (i.e. the \emph{base learning} algorithm maps a sample directly to class without iterative parameter optimization) \cite{heskes2000empirical, 10-5555-3454287-3455002, Ha_Dai_Le_2016}.
-A special case of the black-box models are the approaches based on \emph{metric learning}\sidenote{an explanation why this approach can be considered black-box learning is provided by Hospedales et al. \cite{Hospedales_Antoniou_Micaelli_Storkey_2021}}.
-The outer \emph{meta-learning} process optimizes a model to transform inputs into representations that can be used for recognition by similarity comparison (e.g. by using cosine similarity or euclidean distance) \cite{10-5555-3294996-3295163, qiao2018few, Chen_Liu_Kira_Wang_Huang_2020}.
 
-Other approaches learn the \emph{optimizer} of the inner \emph{base learning} algorithm \cite{ravi2016optimization, Li_Malik_2016, Li_Zhou_Chen_Li_2017}.
-Typically, such approaches generate each optimization step of the \emph{base learning} algorithm based on the models parameter and a given base objective function.
-The trainable component can for example be simple hyper-parameters such as the learning rate \cite{Li_Zhou_Chen_Li_2017} or more sophisticated such as pre-conditioned matrices \cite{Park_Oliva_2020}.
+\subsection{Meta-Representation}
+The first dimension of the meta-learning landscape is the \emph{meta-representation}, i.e. defining the meta-knowledge to be learned.
+One possibility is to learn good initial parameters that the model can use during base learning.
+Good initial parameters are only a few gradient steps away from a set of parameters that can solve a task drawn from a set of tasks.
+A popular algorithm to learn initial parameters is called MAML \sidecite{10-5555-3305381-3305498, 10-5555-3327546-3327622} and works well on smaller networks.
+However, a major challenge is that the outer meta-learning algorithm has to find a solution for as many parameters as the inner base learning needs.
+Therefore, many approaches focus on isolating a subset of parameters to meta-learn \sidecite{lee2018gradient, qiao2018few, rusu2018meta}.
+
+On the other hand, black-box models use meta-learning to directly provide the parameters to the base learning algorithms that are required to fulfil a task such as classification, i.e. the base learning algorithm assigns a sample directly to a class with the given parameters, without parameter optimisation \sidecite{heskes2000empirical, 10-5555-3454287-3455002, Ha_Dai_Le_2016}.
+Special cases of black-box models are approaches based on metric learning\sidenote{an explanation why this approach can be considered black-box learning is provided by Hospedales et al. \cite{Hospedales_Antoniou_Micaelli_Storkey_2021}}:
+The outer meta-learning process optimises a model to transform inputs into representations that the inner process can use for classification by comparing the cosine similarity or euclidean distance between them \sidecite{10-5555-3294996-3295163, qiao2018few, Chen_Liu_Kira_Wang_Huang_2020}.
+
+Other approaches meta-learn the optimiser of the inner base learning algorithm \sidecite{ravi2016optimization, Li_Malik_2016, Li_Zhou_Chen_Li_2017}.
+Typically, such approaches generate each optimisation step of the base learning algorithm based on the model's parameters and a given base objective function.
+The trainable component can, for example, be simple hyper-parameters such as the learning rate \sidecite{Li_Zhou_Chen_Li_2017} or more sophisticated such as pre-conditioned matrices \sidecite{Park_Oliva_2020}.
 Even the learning algorithm itself can be learned \sidecite{kirsch2021meta}.
 
-The outer \emph{meta-learning} algorithm can also be used to learn the \emph{inner objective function} (while the outer objective function is fixed).
-Such loss-learning approaches output a scalar value that is treated as loss by the inner optimizer based on relevant quantities such as prediction/ground truth pairs or model parameters.
-Common goals of this approach are to obtain a loss that has less local minima \cite{NEURIPS2018_7876acb6, Sung_Zhang_Xiang_Hospedales_Yang_2017}, provides better generalization \cite{NEURIPS2018_b9a25e42, NEURIPS2019_e0e2b58d, gonzalez2020improved}, leads to more robust models \cite{li2019feature}, or to learn from unlabelled data \cite{NEURIPS2019_6018df18, Boney2018SemiSupervisedFL}.
+The outer meta-learning algorithm can also be used to learn the inner objective function (while the outer objective function is fixed).
+Such loss-learning approaches output a scalar value that is used as loss value by the inner optimiser.
+Common goals of these approaches are to obtain a loss that has less local minima \sidecite{NEURIPS2018_7876acb6, Sung_Zhang_Xiang_Hospedales_Yang_2017}, provides better generalisation \sidecite{NEURIPS2018_b9a25e42, NEURIPS2019_e0e2b58d, gonzalez2020improved}, leads to more robust models \cite{li2019feature}, or to learn from unlabelled data \sidecite{NEURIPS2019_6018df18, Boney2018SemiSupervisedFL}.
 
-Other approaches use the outer \emph{meta-learning} loop to learn \emph{network architectures} for the inner \emph{base learning} cycle.
-Some approaches use reinforcement learning in the outer loop to learn CNN architectures \cite{zoph2017neural}, while other approaches use evolutionary algorithms to learn the topology of LSTM cells \cite{Bayer_Wierstra_Togelius_Schmidhuber_2009} or to model the network by a graph of network-blocks \cite{10-1609-aaai-v33i01-33014780}.
+Other approaches use the outer meta-learning loop to learn network architectures for the inner base learning cycle.
+Some approaches use reinforcement learning in the outer loop to learn CNN architectures \sidecite{zoph2017neural}, while other approaches use evolutionary algorithms to learn the topology of LSTM cells \sidecite{Bayer_Wierstra_Togelius_Schmidhuber_2009} or to model the network by a graph of network-blocks \sidecite{10-1609-aaai-v33i01-33014780}.
 
-The outer \emph{meta-learning} loop can also meta-learn hyper-parameters such as regularization-strength \cite{pmlr-v80-franceschi18a, Micaelli_Storkey_2021}, task-relatedness for multi-task learning \cite{10-5555-3305381-3305502}, or sparsity-strength \cite{10-5555-3305381-3305502}. Furthermore, it can meta learn suitable data augmentation methods \cite{Cubuk_2019_CVPR, Li_Hu_Wang_Hospedales_Robertson_Yang_2020}, or improve the selection process for the samples of a mini-batch \cite{10-1609-aaai-v33i01-33015741, fan2018learning}.
-Even the dataset itself can be learned with dataset distillation; A rather large datasets can be summarized a smaller dataset with only a few support images \cite{Wang_Zhu_Torralba_Efros_2020, pmlr-v108-lorraine20a} that still allow good generalization on real test images. In sim2real learning \cite{Andrychowicz_Baker_Chociej_Józefowicz_McGrew_Pachocki_Petron_Plappert_Powell_Ray_2020}, also the graphics engine \cite{ruiz2018learning, Vuong_Vikram_Su_Gao_Christensen_2019} can be trained in an outer loop so that the performance on real-world data is maximized.
+The outer meta-learning loop can also meta-learn hyper-parameters such as regularisation-strength \sidecite{pmlr-v80-franceschi18a, Micaelli_Storkey_2021}, task-relatedness for multi-task learning \sidecite{10-5555-3305381-3305502}, or sparsity-strength \sidecite{10-5555-3305381-3305502}. Furthermore, it can meta-learn suitable data augmentation methods \sidecite{Cubuk_2019_CVPR, Li_Hu_Wang_Hospedales_Robertson_Yang_2020} or improve the selection process for the samples of a mini-batch \sidecite{10-1609-aaai-v33i01-33015741, fan2018learning}.
+Even the dataset itself can be learned with dataset distillation; a rather large dataset can be summarised as a smaller dataset with only a few support images \sidecite{Wang_Zhu_Torralba_Efros_2020, pmlr-v108-lorraine20a} that still allow good generalisation on test images. In sim2real learning \sidecite{Andrychowicz_Baker_Chociej_Józefowicz_McGrew_Pachocki_Petron_Plappert_Powell_Ray_2020}, also the graphics engine \sidecite{ruiz2018learning, Vuong_Vikram_Su_Gao_Christensen_2019} can be trained in an outer loop so that the performance on real-world data is maximised.
 
-The second dimension of the meta-learning landscape is the \textbf{meta-optimizer}.
-The meta-optimizer describes how the algorithm in the outer \emph{meta-learning} loop is learned.
-Many methods use backpropagation of error and gradient descent (c.f. Section \secref{ann}) to optimize the meta parameters \cite{ravi2016optimization, 10-5555-3305381-3305498, li2019feature, 10-5555-3305381-3305502, pmlr-v80-franceschi18a, Micaelli_Storkey_2021, pmlr-v108-lorraine20a}.
-However, this algorithm has some well-known downsides (c.f. Section XXXXXXXXXX) and requires differentiability.
-When the inner \emph{base learning} algorithm includes non-differentiable steps \cite{Cubuk_2019_CVPR} or the outer meta objective function is non-differentiable \cite{huang2019addressing}, many methods utilize the RL paradigm to optimize the outer objective \cite{Duan_Schulman_Chen_Bartlett_Sutskever_Abbeel_2016}.
-However, using RL to alleviate requirement for differentiability is usually computationally very costly.
-Finally, evolutionary algorithms can be used for learning the outer \emph{meta-learning} function \cite{schmidhuber-1987, Stanley_Clune_Lehman_Miikkulainen_2019, Salimans_Ho_Chen_Sidor_Sutskever_2017}.
-These algorithms have no differentiability constraints, do not suffer from gradient degradation issues, are highly parallelizable, and can often avoid local minima better than gradient-based methods \cite{Salimans_Ho_Chen_Sidor_Sutskever_2017}.
-The downside of evolutionary algorithms is that often a large population size is required (especially if many parameters have to be learned) and the performance is generally inferior to gradient-based methods for large models.
-These three learning methods are also used in conventional machine learning.
-However, meta-learning comparatively uses RL and evolutionary algorithms more frequently as some components are often non-differentiable in the meta-learning setup.
+\subsection{Meta-Optimiser}
+The second dimension of the meta-learning landscape is the \emph{meta-optimiser}.
+The meta-optimiser describes how the algorithm in the outer meta-learning loop is learned.
+Many methods use backpropagation of error and gradient descent (c.f. Section \secref{ann}) to optimise the meta parameters \cite{ravi2016optimization, 10-5555-3305381-3305498, li2019feature, 10-5555-3305381-3305502, pmlr-v80-franceschi18a, Micaelli_Storkey_2021, pmlr-v108-lorraine20a}.
+However, this algorithm has some well-known weaknesses (c.f. \secref{limitationsDL}) and requires differentiability.
+When the inner base learning algorithm includes non-differentiable steps \sidecite{Cubuk_2019_CVPR} or the outer meta objective function is non-differentiable \sidecite{huang2019addressing}, many methods utilise the RL paradigm to optimise the outer objective \sidecite{Duan_Schulman_Chen_Bartlett_Sutskever_Abbeel_2016}.
+However, using RL to alleviate the differentiability requirement is usually computationally very costly.
+Besides gradient descent and TL, evolutionary algorithms can be used for learning the outer meta-learning function \cite{schmidhuber-1987, Stanley_Clune_Lehman_Miikkulainen_2019, Salimans_Ho_Chen_Sidor_Sutskever_2017}.
+These algorithms have no differentiability constraints, do not suffer from gradient degradation issues, are highly parallelisable, and can often avoid local minima better than gradient-based methods \sidecite{Salimans_Ho_Chen_Sidor_Sutskever_2017}.
+The downside of evolutionary algorithms is that large population size is often required (especially if many parameters have to be learned), and the performance is generally inferior to gradient-based methods for large models.
 
-The third dimension of the meta-learning landscape is the \textbf{meta-objective}.
-The meta-objective describes what the goal of the meta-learning algorithm is.
+\subsection{Meta-Objective}
+The third dimension of the meta-learning landscape is the \emph{meta-objective}.
+The meta-objective describes the goal of the meta-learning algorithm.
 Typically, the performance of a meta-learning algorithm is evaluated with a metric on the inner loop or a meta-metric on the outer loop.
 However, there are several design options within the meta-learning framework.
-First, the inner base-learning episodes can either take few \cite{ravi2016optimization, 10-5555-3305381-3305498} or many \cite{10-5555-3305381-3305502, 10-5555-3305890-3306069} samples and thus the goal can be to either improve few- or -many-shot performance.
-Second, the validation loss of the inner base-learning algorithm can either be calculated at the end of a learning episode to encourage a better \emph{final} performance of the base task or as sum of the loss calculated after each update step to encourage \emph{faster} learning \cite{antoniou2018how}.
-Third, the goal of the meta-learning can either be to better solve any task drawn from a set of (often related) tasks (i.e. multi-task setting) \cite{10-5555-3305381-3305498, 10-5555-3294996-3295163, li2019feature}, or to solve one specific task better than when only the inner base learning algorithm is used (i.e. single task setting) \cite{10-5555-3305381-3305502}.
-Finally, the meta-optimization can either be done offline (i.e. the inner and outer loop alternate) \cite{10-5555-3305381-3305498} or online (i.e. the meta-learning takes place within a base learning episode) \cite{li2019feature}.
+First, the inner base-learning episodes can either take few \cite{ravi2016optimization, 10-5555-3305381-3305498} or many \cite{10-5555-3305381-3305502, 10-5555-3305890-3306069} samples, and thus the goal can be to either improve few- or many-shot performance.
+Second, the validation loss of the inner base-learning algorithm can either be calculated at the end of a learning episode to encourage a better \emph{final} performance of the base task or as the sum of the loss calculated after each update step to encourage \emph{faster} learning \cite{antoniou2018how}.
+Third, the goal of the meta-learning can either be to solve better any task drawn from a set of (often related) tasks (i.e. multi-task setting) \cite{10-5555-3305381-3305498, 10-5555-3294996-3295163, li2019feature}, or to solve one specific task better than when only the inner base learning algorithm is used (i.e. single task setting) \cite{10-5555-3305381-3305502}.
+Finally, the meta-optimisation can either be done offline (i.e. the inner and outer loop alternate) \cite{10-5555-3305381-3305498} or online (i.e. the meta-learning takes place within a base learning episode) \cite{li2019feature}.
+
 
 
 %\section{Correlation within CNNs}
