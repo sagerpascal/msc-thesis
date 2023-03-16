@@ -57,11 +57,16 @@
 
 \pagebreak
 \chapter{Experiments Hebbian Learning}\chlbl{exp_hebb_learning}
-I used different variants of Hebbian Learning with the goal of generating good latent representations of visual scenes.
-However, all preliminary experiments with different implementations were not promising.
-In my experiments, classical Hebbian learning (as described in Equation \eqref{hebb_1}) led to symmetric weights, which in turn led to poor representations.
-This symmetry could be broken by using the ABCD-Hebbian learning rule \sidecite{Niv_Joel_Meilijson_Ruppin_2001}.
-The ABCD learning rule calculates the weight update \(\Delta w_{ij}\) from neuron \(i\) to neuron \(j\) based on the pre-synaptic activity \(r_i\) of neuron \(i\) and post-synaptic activity \(r_j\) of neuron \(j\) as follows:
+Hebbian learning is the most plausible learning algorithm from a biological point of view (c.f. \secref{hebbian}).
+Because of this high plausibility, the effectiveness of Hebbian learning for extracting image representations was investigated in many preliminary experiments.
+It was observed that Hebbian learning sometimes works well for tiny networks but does not scale well for larger networks or more complex data sets.
+Of course, it cannot be concluded from these experiments that Hebbian Learning cannot be used to learn networks for extracting good representation from visual scenes.
+However, it was found that it is not trivial and that just applying the Hebbian learning rule is insufficient, especially if the network has a structure of modern Deep Learning architectures with many parameters.
+
+When the classical Hebbian learning rule (as described in \eqref{hebb_1}) is used, the weights in the network become symmetric.
+As a result, the model does not learn different features, and the image representations are very poor.
+This symmetry can be broken using the ABCD-Hebbian learning rule \sidecite{Niv_Joel_Meilijson_Ruppin_2001}.
+The ABCD learning rule calculates the weight update \(\Delta w_{ij}\) from neuron \(i\) to neuron \(j\) based on the pre-synaptic activity \(a_i\) of neuron \(i\) and post-synaptic activity \(a_j\) of neuron \(j\) as follows:
 
 \begin{equation}\eqlbl{hebb_abcd}
 	\Delta w_{ij} = \eta_w \cdot (A_wr_ir_j+B_wr_i+C_wr_j+D_w)
@@ -69,21 +74,23 @@ The ABCD learning rule calculates the weight update \(\Delta w_{ij}\) from neuro
 
 where \(\eta_w\) is a weight-specific learning rate, and \(A_w\) is a correlation coefficient, \(B_w\) is a presynaptic coefficient, \(C_w\) is a postsynaptic coefficient, and \(D_w\) is a bias coefficient.
 The bias coefficient \(D_w\) can be interpreted as an individual inhibitory or excitatory bias of each connection in the network.
-Similar to Najarro and Risi \sidecite{NEURIPS2020_ee23e7ad}, the coefficient were learnt through an evolution strategy \sidecite{Salimans_Ho_Chen_Sidor_Sutskever_2017}.
-However, this method does not scale for large networks with many parameters and did not achieve the desired performance in my experiments.
+As proposed by Najarro and Risi \sidecite{NEURIPS2020_ee23e7ad}, the coefficients are learnt through an evolution strategy \sidecite{Salimans_Ho_Chen_Sidor_Sutskever_2017}.
+The symmetry is broken by applying the ABCD learning rule, and the image representations improve.
+However, image processing networks usually consist of many parameters and using an evolutionary strategy to find them does not scale well.
+Thus, the author's impression is that pure Hebbian learning is only of limited use for learning image representations.
 
-Of course, it cannot be concluded from these experiments that Hebbian Learning cannot be used to learn networks for extracting good representation from visual scenes.
-However, it was found that it is not trivial and that just applying the Hebbian learning rule is not sufficient, especially if the network has a structure of modern Deep Learning architectures with many parameters.
 
-However, in further preliminary experiments it was found that Hebbian Learning has interesting properties for pruning.
-A good performing CNN was created and trained on MNIST with backpropagation.
-The network consists of two convolutional layers, followed by a pooling layer and three linear layers.
-The first convolutional layer increases the number of channels from \([\text{width} \times \text{height} \times \text{n\_channels}]\) to \([\text{width} \times \text{height} \times 32]\).
-The second convolutional layer further increases the number of channels to \([\text{width} \times \text{height} \times 64]\).
-The subsequent max. pooling layer decreases the size to \([\text{width}/2 \times \text{height}/2 \times 64]\).
-The activation map is then flatten and fed into 3 fully connected layers with an output size of \(1024\), \(128\), and \(10\) respectively.
-Between each layer, ReLU activtions are employed.
-The network is visualized in Figure \figref{hebb_pruning}.
+\subsection{Hebbian Pruning}
+Hebbian learning has not led to good image representations.
+However, it was found that Hebbian Learning might be promising to prune models trained with end-to-end backpropagation of error:
+In the following, Hebbian learning is used to push weights between neurons towards zero or to set them exactly to zero.
+
+Therefore, a neural network consisting of two convolutional layers, followed by a max-pooling layer, and three linear layers is used.
+The convolutional layers have a kernel size of $3\times3$ and a stride of $1$. The first convolutional layer has $32$ channels, and the second has $64$ channels.
+The max-pooling layer has a kernel size of $2\times2$ and thus halves the size of the feature map. 
+The activation map is then flattened and fed into $3$ fully connected layers with an output size of \(1024\), \(128\), and \(10\), respectively.
+Between each layer, ReLU activations are employed.
+The network is visualized in \figref{hebb_pruning}.
 
 \begin{figure}[h]
     \centering
@@ -197,31 +204,32 @@ The network is visualized in Figure \figref{hebb_pruning}.
     \figlbl{hebb_pruning}
 \end{figure}
 
-The image classification model is trained with backpropagation to minimize the negative log likelihood (NLL) loss.
-Adam \sidecite{Kingma_Ba_2017} is used as optimization algorithm with a mini-batch size of \(32\) a learning rate of \(5\cdot 10^{-4}\).
-As soon as the loss reaches a plateau, the learning rate is reduced to \(1\cdot 10^{-4}\).
+The model is trained to classify digits with backpropagation of error on the MNIST data set \cite{Lecun_Bottou_Bengio_Haffner_1998}.
+Adam \sidecite{Kingma_Ba_2017} is used as optimisation algorithm to minimise the negative log-likelihood (NLL) loss.
+The mini-batch size is \(32\) and the learning rate is \(5\cdot 10^{-4}\).
+When the loss reaches a plateau, the learning rate is reduced to \(1\cdot 10^{-4}\).
 
-After the model is trained, the first two fully connected layers within the network are pruned with Hebbian learning based methods.
-The convolutional layers cannot be pruned because such layers employ a convolutional function that impedes calculating the correlation between an input and an output neuron.
-The last layer, on the other hand, cannot be pruned as it corresponds to the number of classes.
-
-The \emph{first} Hebbian based method proposed pushes the weights between neuron \(i\) and neuron \(j\) towards \(0\) if \(i\) and \(j\) have a low correlation within a mini-batch.
-First, a mini-batch is sampled.
-Afterwards, the correlation between \(i\) and \(j\) is calculated for each sample.
-if the correlation is below \(0.02\) for at least \(20\%\) of the samples (i.e. \(7\) samples or more for a mini-batch size of \(32\)), the weight is updated as follows:
+After the model is trained, the first two fully connected layers within the network are pruned with Hebbian learning:
+The \emph{first} Hebbian-based method proposed pushes the weights between neuron \(i\) and neuron \(j\) towards \(0\) if \(i\) and \(j\) have a low correlation within a mini-batch.
+Therefore, a mini-batch is sampled, and the correlation between all neurons is calculated for each sample.
+if the correlation is below \(0.02\) for at least \(20\%\) of the samples (i.e. \(7\) samples or more for a mini-batch size of \(32\)), the weight is reduced with:
 \begin{equation}\eqlbl{hebb_towards_0}
 	\Delta w_{ij} = - \eta_H \cdot w_{ij}
 \end{equation}
 
 where \(\eta_H\) is the Hebbian learning rate set to \(1\cdot 10^{-5}\).
 
-The \emph{second} Hebbian based method proposed pushes some of the weights exactly to \(0\) while all other weights remain the same.
+The \emph{second} Hebbian-based method proposed pushes some weights exactly to \(0\) while all other weights remain the same.
 During an epoch, the correlation between neurons \(i\) and \(j\) is measured for each weight \(w_{ij}\).
 Afterwards, the weights with the lowest correlations are set to \(0\).
 How many weights are set to \(0\) is a hyper-parameter that has to be specified in advance.
 
-For both methods, the model is pre-trained and pruned on the MNIST dataset \cite{MNIST} and evaluated on the MNIST as well as on the MNIST-C\sidenote{MNIST-C is a corrupted version of MNIST and well suited to measure model robustness} dataset \cite{Mu_Gilmer_2019}.
-The \emph{first} Hebbian based method can improve the results even after backpropagation as shown in Table \tabref{nll_hebb_pruning}.
+
+\subsection{Results}
+For both methods, the model is trained on the MNIST training dataset \cite{MNIST}, and the weights are frozen.
+Afterwards, the weights are pruned based on the MNIST training dataset and evaluated on the MNIST and MNIST-C\sidenote{MNIST-C is a corrupted version of MNIST and well suited to measure model robustness} \sidecite{Mu_Gilmer_2019} test dataset.
+The \emph{first} Hebbian-based method can further improve the results even after the training has converged, as shown in \tabref{nll_hebb_pruning}.
+
 
 \begin{table}[h] 
     \tablbl{nll_hebb_pruning}
@@ -238,34 +246,46 @@ The \emph{first} Hebbian based method can improve the results even after backpro
     	 &\textbf{Accuracy} & \textbf{Accuracy} \\
         \textbf{Dataset} & \textbf{without Hebbian Updates }& \textbf{with Hebbian Updates}\\
         \hline
-        MNIST & \(98.94\%\) & \(98.97\%\) \\
+        MNIST & \(98.94\%\) & \(99.31\%\) \\
         MNIST-C & \(88.74\%\) & \(89.94\%\) \\
         %\hline
     \end{tabular}
     \caption[NLL Loss of Hebbian Pruning Network]{NLL loss of the model before and after the \emph{first} Hebbian-based pruning method.}
 \end{table}
 
-The NLL-loss on the MNIST test dataset decreases from \(0.05314\) to \(0.03386\), while the loss on MNIST-C test dataset decreases from \(0.6013\) to \(0.4766\) after applying the \emph{first} Hebbian based method.
-However, in terms of accuracy the improvements are marginal.
-Furthermore, it has to be considered that this is only a preliminary experiment and this method certainly offers various potential for improvement.
-This experiments indicates that Hebbian in combination with back-propagation could lead to better or more robust representations because the Hebbian updates improved performance on both datasets.
+The NLL loss on the MNIST test dataset decreases from \(0.05314\) to \(0.03386\), while the loss on the MNIST-C test dataset decreases from \(0.6013\) to \(0.4766\) after applying the \emph{first} Hebbian based method.
+Furthermore, the accuracy increases roughly by $1.2\%$ on MNIST-C, which is remarkable, considering that the model has been trained with gradient descent until convergence and only the weights are reduced after training (without further parameter updates).
+It also has to be considered that this is only a preliminary experiment, and this method might be further improved.
+Thus, this experiment indicates that Hebbian could be used as a post-training step to improve robustness by reducing the model's weights.
 
-The \emph{second} Hebbian based method sets weights between neurons with a low correlation to \(0\).
+The \emph{second} Hebbian-based method sets weights between neurons with a low correlation to \(0\).
 The network trained with back-propagation has an accuracy of \(98.94\%\) on MNIST.
 By setting up to \(40\%\) of the weights to \(0\), the accuracy remains above \(>98\%\).
 Setting weights to \(0\) can make the network smaller and more efficient \sidecite{Liang_Glossner_Wang_Shi_Zhang_2021}.
 Furthermore, it leads to sparse representations that can improve robustness.
-Figure \figref{hebb_prune} visualizes the loss of the \emph{second} Hebbian based method for different ratios of kept weights.
-Furthermore, the correlation based method is compared to randomly setting the same fraction of weights to \(0\).
+Figure \figref{hebb_prune} visualizes the loss of the \emph{second} Hebbian-based method for different ratios of kept weights.
+Furthermore, the correlation-based method is compared to randomly setting the same fraction of weights to \(0\).
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.99\textwidth]{loss_hebb_pruning}
-    \caption[NLL Loss of Hebbian Pruning]{The NLL loss of the \emph{second} Hebbian based pruning method compared to removing random weights. The y axis shows the loss while the x axis shos the ratio of weights kept. }
+    \caption[NLL Loss of Hebbian Pruning]{The NLL loss of the \emph{second} Hebbian-based pruning method compared to removing random weights. The y-axis shows the loss, while the x-axis shows the ratio of weights kept. }
     \figlbl{hebb_prune}
 \end{figure}
 
 It can be observed that the performance is better when weights between neurons with low correlation are set to \(0\) than if random weights are set to \(0\).
+Thus, Hebbian learning might be promising the reduce the number of parameters within a network.
+
+
+
+
+
+
+
+
+
+
+
 
 
 \pagebreak
