@@ -1,8 +1,8 @@
 %% related_work.tex
-This chapter presents the related work of the thesis. \secref{natural_intelligence} gives an introduction to a publication entitled ``A Theory of Natural Intelligence'' by von der Malsburg et al. \sidecite{von_der_Malsburg_Stadelmann_Grewe_2022}. This work is the main source of inspiration and is therefore summarised in detail. It identifies various concepts as the fundamentals of intelligence, including self-organisation. Therefore, the work associated with self-organisation is reviewed in \secref{self_org_related}. Self-organisation is not compatible with end-to-end backpropagation of error. Thus, alternative training algorithms are presented in \secref{alt_train_algo}. Then, \secref{visual_rep_learning} reviews different methods for learning image representations. Finally, meta-learning is summarised in \secref{meta_learning}. Meta-learning is of limited relevance to this thesis but is important for the proposed future work.
+This chapter presents the related work of the thesis. \secref{natural_intelligence} gives an introduction to a publication entitled ``A Theory of Natural Intelligence'' by von der Malsburg et al. \cite{von_der_Malsburg_Stadelmann_Grewe_2022}. This work is the main source of inspiration and is therefore summarised in detail. It identifies various concepts as the fundamentals of intelligence, including self-organisation. Therefore, the work associated with self-organisation is reviewed in \secref{self_org_related}. Self-organisation is not compatible with end-to-end backpropagation of error. Thus, alternative training algorithms are presented in \secref{alt_train_algo}. Then, \secref{visual_rep_learning} reviews different methods for learning image representations. Finally, meta-learning is summarised in \secref{meta_learning}. Meta-learning is of limited relevance to this thesis but is important for the proposed future work.
 
 \section{Natural Intelligence}\seclbl{natural_intelligence}
-According to \cite{von_der_Malsburg_Stadelmann_Grewe_2022}, the process of learning is influenced by ``nature'', ``nurture'', and ``emergence''\sidenote{nature refers to the influence of genes and evolution, nurture to the influence of experience and education, and emergence to the construction of network structures}.
+According to \sideciteay{von_der_Malsburg_Stadelmann_Grewe_2022}, the process of learning is influenced by ``nature'', ``nurture'', and ``emergence''\sidenote{nature refers to the influence of genes and evolution, nurture to the influence of experience and education, and emergence to the construction of network structures}.
 They point out that the human genome (as of nature) only contains 1GB of information \sidecite{hbcrd} and humans only absorb a few GB into permanent memory over a lifetime (as of nurture), but it requires about 1PB to describe the connectivity in the human brain.
 Thus, there is a massive gap between the amount of information needed to describe the brain's structure and the amount of information needed to generate it.
 Therefore, they argue that the human brain must be highly structured and that the processes of nature and nurture construct the human brain by selecting from a set of pre-structured patterns.
@@ -32,7 +32,7 @@ Ref. \cite{von_der_Malsburg_Stadelmann_Grewe_2022} also argues that net fragment
 Nested net fragments of different sizes may represent a hierarchy of features.
 Complex objects, such as mental constructs, can thus be seen as larger net fragments composed of mergers of pre-existing smaller net fragments.
 
-Von der Malsburg et al. \cite{von_der_Malsburg_Stadelmann_Grewe_2022} have not addressed how their interesting theoretical concepts can be implemented in a mathematical model.
+Von der Malsburg et al. \sidecite{von_der_Malsburg_Stadelmann_Grewe_2022} have not addressed how their interesting theoretical concepts can be implemented in a mathematical model.
 However, a concrete implementation was done by Claude Lehmann in the form of a Master's thesis \sidecite{lehmann}.
 He proposes a new layer called the laterally connected layer (LCL).
 The LCL layer extends convolutional layers by forming lateral intra-layer connections based on the Hebbian learning rule (c.f. Section \secref{hebbian}).
@@ -309,17 +309,17 @@ However, this works significantly worse than when actual gradients are used.
 An advantage of synthetic gradient methods is that they can approximate backpropagation through time (BTT) for an unlimited number of timesteps \cite{pmlr-v70-jaderberg17a}.
 It has been shown that this allows more efficient training for learning long-range dependencies compared to BTT.
 
-Many other methods are motivated purely by biological plausibility \cite{10.5555.3157096.3157213, Lillicrap_Cownden_Tweed_Akerman_2016, Xiao_Chen_Liao_Poggio_2019, aaai.BalduzziVB15, 10.5555/3016100.3016156}.
+Many other methods are motivated purely by biological plausibility \sidecite{10.5555.3157096.3157213, Lillicrap_Cownden_Tweed_Akerman_2016, Xiao_Chen_Liao_Poggio_2019, aaai.BalduzziVB15, 10.5555/3016100.3016156}.
 However, these biologically plausible methods have been significantly outperformed by backpropagation of error on meaningful benchmark datasets \sidecite{Bartunov_Santoro_Richards_Marris_Hinton_Lillicrap_2018}.
 Probably the most popular group of biologically plausible alternatives to backpropagation are methods based on \emph{feedback alignment}.
 From a biological point of view, one of the major criticisms of backpropagation is the ``weight transportation problem'' \sidecite{Lillicrap_Cownden_Tweed_Akerman_2016}; it is believed that the human brain does not have a backward pass that passes an error signal to previous layers.
-\emph{Feedback alignment} algorithms use fixed, random weights during the backward pass \cite{Lillicrap_Cownden_Tweed_Akerman_2016}.
+\emph{Feedback alignment} algorithms use fixed, random weights during the backward pass \sidecite{Lillicrap_Cownden_Tweed_Akerman_2016}.
 The gradients are calculated similarly to stochastic gradient descent but with random weights.
 Thus the symmetry between the weights used during the forward and the backward pass is broken.
 The network still learns to make the feedback useful even though the weights during forward and backward passes are different. 
 Later, the algorithm was improved by using fixed, random weights that share the signs with the actual weights of the network \sidecite{10.5555/3016100.3016156}.
 
-Lastly, another group of learning algorithms use \emph{auxiliary variables} \cite{pmlr-v33-carreira-perpinan14, 10.5555/3045390.3045677, 10.5555/3294771.3294935, Lau_Zeng_Wu_Yao_2018}.
+Lastly, another group of learning algorithms use \emph{auxiliary variables} \sidecite{pmlr-v33-carreira-perpinan14, 10.5555/3045390.3045677, 10.5555/3294771.3294935, Lau_Zeng_Wu_Yao_2018}.
 These methods use the idea of variable splitting, i.e. transforming a complicated problem into a simpler one by introducing additional trainable variables.
 Introducing auxiliary variables may pose scalability issues, and these methods require special, usually tailor-made solvers.
 Therefore, such methods usually scale to specific use cases only.
@@ -330,12 +330,12 @@ With end-to-end backpropagation, systems are trained as a single unit and conseq
 Therefore, alternative learning algorithms are very relevant to this thesis.
 The approach based on vertical self-organisation uses proxy objective functions to train the layer locally as independent units (c.f. Chapter \chref*{methods}).
 Proxy objective functions are used in this thesis as this method is the only known alternative to backpropagation of error that scales well to large neural networks and large datasets.
-According to \sideciteay{Duan_Principe_2022} and \sideciteay{Bartunov_Santoro_Richards_Marris_Hinton_Lillicrap_2018}, only proxy objective functions have achieved competitive performance with large models on large datasets such as ImageNet \cite{Deng_Dong_Socher_Li_KaiLi_LiFei_Fei_2009}.
+According to \sideciteay{Duan_Principe_2022} and \sideciteay{Bartunov_Santoro_Richards_Marris_Hinton_Lillicrap_2018}, only proxy objective functions have achieved competitive performance with large models on large datasets such as ImageNet \sidecite{Deng_Dong_Socher_Li_KaiLi_LiFei_Fei_2009}.
 The other approaches work only on smaller datasets such as MNIST \cite{Lecun_Bottou_Bengio_Haffner_1998}, or CIFAR-10 \cite{krizhevsky2009learning} so far.
 
 \section{Representation Learning}\seclbl{visual_rep_learning}
 
-\subsection{Autoencoders}
+\subsection{Autoencoders}\seclbl{visual_rep_learning_ae}
 \emph{Autoencoders} are one of the best-known methods to learn visual representations in an unsupervised fashion.
 Autoencoders were introduced in 1985 \sidecite{rumelhart1985learning} and learn an encoder and decoder function \sidecite{pmlrv27baldi12a}.
 The encoder $E$ maps the input from a high-dimensional space to a lower-dimensional embedding space $E: \mathbb{R}^{n} \rightarrow \mathbb{R}^{e}$ and the decoder $D$ reverses this mapping $D: \mathbb{R}^{e} \rightarrow \mathbb{R}^{n}$.
@@ -345,7 +345,7 @@ One of the simplest regularization methods is to introduce a bottleneck, i.e., c
 Thus, a bottleneck layer limits the number of neurons.
 An alternative (or a supplement) is to limit the number of active neurons by enforcing sparsity.
 Autoencoders with a sparsity constraint are also known as \emph{sparse autoencoders}.
-A sparsity constraint can be imposed with $L_1$ or $L_2$ regularization or with a kullback-leibler (KL) divergence\sidtenote{the kullback-leibler divergence is a measure of how one probability distribution differs from another reference probability distribution} between average neuron activations and an ideal activation distribution \sidecite{10-5555-3042573-3042641}.
+A sparsity constraint can be imposed with $L_1$ or $L_2$ regularization or with a kullback-leibler (KL) divergence\sidenote{the kullback-leibler divergence is a measure of how one probability distribution differs from another reference probability distribution} between average neuron activations and an ideal activation distribution \sidecite{10-5555-3042573-3042641}.
 Other popular versions of autoencoders are denoising autoencoders \sidecite{10-1145-1390156-1390294}, contractive autoencoders \sidecite{10-5555-3104482-3104587}, and variational autoencoders (VAE) \sidecite{Kingma_Welling_2014}.
 For \emph{denoising autoencoders}, the input is disrupted with noise (e.g. by adding Gaussian noise or removing some pixels by using dropout) before it is fed into the encoder $E$.
 The goal of the decoding function $D$ is to reconstruct the clean version of the input without the added noise.
@@ -396,7 +396,7 @@ During base learning, the model learns a typical task, such as image classificat
 During meta-learning, an algorithm updates the base learning algorithm based on a meta objective function\sidenote{typical meta objective functions aim to improve generalisation or learning speed}.
 Thus, meta-learning usually iterates between learning a task and improving the learning algorithm that is used to learn the task.
 
-In the following, the categorisation according to Hospedales et al. \sidecite{Hospedales_Antoniou_Micaelli_Storkey_2021} is used to describe the different characteristics of meta-learning algorithms.
+In the following, the categorisation according to Hospedales et al. \cite{Hospedales_Antoniou_Micaelli_Storkey_2021} is used to describe the different characteristics of meta-learning algorithms.
 \begin{description}
    \item[Meta-Representation] What meta-knowledge should be learned by the outer meta-learning algorithm.
    \item[Meta-Optimiser] How the outer meta-learning algorithm learns, i.e. the form of the learning algorithm.
@@ -410,26 +410,29 @@ One possibility is to learn good initial parameters that the model can use durin
 Good initial parameters are only a few gradient steps away from a set of parameters that can solve a task drawn from a set of tasks.
 A popular algorithm to learn initial parameters is called MAML \sidecite{10-5555-3305381-3305498, 10-5555-3327546-3327622} and works well on smaller networks.
 However, a major challenge is that the outer meta-learning algorithm has to find a solution for as many parameters as the inner base learning needs.
-Therefore, many approaches focus on isolating a subset of parameters to meta-learn \sidecite{lee2018gradient, qiao2018few, rusu2018meta}.
+Therefore, many approaches focus on isolating a subset of parameters to meta-learn \cite{lee2018gradient, qiao2018few, rusu2018meta}.
 
-On the other hand, black-box models use meta-learning to directly provide the parameters to the base learning algorithms that are required to fulfil a task such as classification, i.e. the base learning algorithm assigns a sample directly to a class with the given parameters, without parameter optimisation \sidecite{heskes2000empirical, 10-5555-3454287-3455002, Ha_Dai_Le_2016}.
+On the other hand, black-box models use meta-learning to directly provide the parameters to the base learning algorithms that are required to fulfil a task such as classification, i.e. the base learning algorithm assigns a sample directly to a class with the given parameters, without parameter optimisation \cite{heskes2000empirical, 10-5555-3454287-3455002, Ha_Dai_Le_2016}.
 Special cases of black-box models are approaches based on metric learning\sidenote{an explanation why this approach can be considered black-box learning is provided by Hospedales et al. \cite{Hospedales_Antoniou_Micaelli_Storkey_2021}}:
-The outer meta-learning process optimises a model to transform inputs into representations that the inner process can use for classification by comparing the cosine similarity or euclidean distance between them \sidecite{10-5555-3294996-3295163, qiao2018few, Chen_Liu_Kira_Wang_Huang_2020}.
+The outer meta-learning process optimises a model to transform inputs into representations that the inner process can use for classification by comparing the cosine similarity or euclidean distance between them \cite{10-5555-3294996-3295163, qiao2018few, Chen_Liu_Kira_Wang_Huang_2020}.
 
-Other approaches meta-learn the optimiser of the inner base learning algorithm \sidecite{ravi2016optimization, Li_Malik_2016, Li_Zhou_Chen_Li_2017}.
+Other approaches meta-learn the optimiser of the inner base learning algorithm \cite{ravi2016optimization, Li_Malik_2016, Li_Zhou_Chen_Li_2017}.
 Typically, such approaches generate each optimisation step of the base learning algorithm based on the model's parameters and a given base objective function.
 The trainable component can, for example, be simple hyper-parameters such as the learning rate \sidecite{Li_Zhou_Chen_Li_2017} or more sophisticated such as pre-conditioned matrices \sidecite{Park_Oliva_2020}.
 Even the learning algorithm itself can be learned \sidecite{kirsch2021meta}.
 
 The outer meta-learning algorithm can also be used to learn the inner objective function (while the outer objective function is fixed).
 Such loss-learning approaches output a scalar value that is used as loss value by the inner optimiser.
-Common goals of these approaches are to obtain a loss that has less local minima \sidecite{NEURIPS2018_7876acb6, Sung_Zhang_Xiang_Hospedales_Yang_2017}, provides better generalisation \sidecite{NEURIPS2018_b9a25e42, NEURIPS2019_e0e2b58d, gonzalez2020improved}, leads to more robust models \cite{li2019feature}, or to learn from unlabelled data \sidecite{NEURIPS2019_6018df18, Boney2018SemiSupervisedFL}.
+Common goals of these approaches are to obtain a loss that has less local minima \cite{NEURIPS2018_7876acb6, Sung_Zhang_Xiang_Hospedales_Yang_2017}, provides better generalisation \cite{NEURIPS2018_b9a25e42, NEURIPS2019_e0e2b58d, gonzalez2020improved}, leads to more robust models \cite{li2019feature}, or to learn from unlabelled data \cite{NEURIPS2019_6018df18, Boney2018SemiSupervisedFL}.
 
 Other approaches use the outer meta-learning loop to learn network architectures for the inner base learning cycle.
 Some approaches use reinforcement learning in the outer loop to learn CNN architectures \sidecite{zoph2017neural}, while other approaches use evolutionary algorithms to learn the topology of LSTM cells \sidecite{Bayer_Wierstra_Togelius_Schmidhuber_2009} or to model the network by a graph of network-blocks \sidecite{10-1609-aaai-v33i01-33014780}.
 
-The outer meta-learning loop can also meta-learn hyper-parameters such as regularisation-strength \sidecite{pmlr-v80-franceschi18a, Micaelli_Storkey_2021}, task-relatedness for multi-task learning \sidecite{10-5555-3305381-3305502}, or sparsity-strength \sidecite{10-5555-3305381-3305502}. Furthermore, it can meta-learn suitable data augmentation methods \sidecite{Cubuk_2019_CVPR, Li_Hu_Wang_Hospedales_Robertson_Yang_2020} or improve the selection process for the samples of a mini-batch \sidecite{10-1609-aaai-v33i01-33015741, fan2018learning}.
-Even the dataset itself can be learned with dataset distillation; a rather large dataset can be summarised as a smaller dataset with only a few support images \sidecite{Wang_Zhu_Torralba_Efros_2020, pmlr-v108-lorraine20a} that still allow good generalisation on test images. In sim2real learning \sidecite{Andrychowicz_Baker_Chociej_Józefowicz_McGrew_Pachocki_Petron_Plappert_Powell_Ray_2020}, also the graphics engine \sidecite{ruiz2018learning, Vuong_Vikram_Su_Gao_Christensen_2019} can be trained in an outer loop so that the performance on real-world data is maximised.
+The outer meta-learning loop can also meta-learn hyper-parameters such as regularisation-strength \cite{pmlr-v80-franceschi18a, Micaelli_Storkey_2021}, task-relatedness for multi-task learning \sidecite{10-5555-3305381-3305502}, or sparsity-strength \cite{10-5555-3305381-3305502}. Furthermore, it can meta-learn suitable data augmentation methods \cite{Cubuk_2019_CVPR, Li_Hu_Wang_Hospedales_Robertson_Yang_2020} or improve the selection process for the samples of a mini-batch \cite{10-1609-aaai-v33i01-33015741, fan2018learning}.
+Even the dataset itself can be learned with dataset distillation; a rather large dataset can be summarised as a smaller dataset with only a few support images \cite{Wang_Zhu_Torralba_Efros_2020, pmlr-v108-lorraine20a} that still allow good generalisation on test images. In sim2real learning \sidecite{Andrychowicz_Baker_Chociej_Józefowicz_McGrew_Pachocki_Petron_Plappert_Powell_Ray_2020}, also the graphics engine \cite{ruiz2018learning, Vuong_Vikram_Su_Gao_Christensen_2019} can be trained in an outer loop so that the performance on real-world data is maximised.
+
+
+
 
 \subsection{Meta-Optimiser}
 The second dimension of the meta-learning landscape is the \emph{meta-optimiser}.
@@ -447,10 +450,20 @@ The third dimension of the meta-learning landscape is the \emph{meta-objective}.
 The meta-objective describes the goal of the meta-learning algorithm.
 Typically, the performance of a meta-learning algorithm is evaluated with a metric on the inner loop or a meta-metric on the outer loop.
 However, there are several design options within the meta-learning framework.
-First, the inner base-learning episodes can either take few \cite{ravi2016optimization, 10-5555-3305381-3305498} or many \cite{10-5555-3305381-3305502, 10-5555-3305890-3306069} samples, and thus the goal can be to either improve few- or many-shot performance.
+First, the inner base-learning episodes can either take few \sidecite{ravi2016optimization, 10-5555-3305381-3305498} or many \sidecite{10-5555-3305381-3305502, 10-5555-3305890-3306069} samples, and thus the goal can be to either improve few- or many-shot performance.
 Second, the validation loss of the inner base-learning algorithm can either be calculated at the end of a learning episode to encourage a better \emph{final} performance of the base task or as the sum of the loss calculated after each update step to encourage \emph{faster} learning \cite{antoniou2018how}.
-Third, the goal of the meta-learning can either be to solve better any task drawn from a set of (often related) tasks (i.e. multi-task setting) \cite{10-5555-3305381-3305498, 10-5555-3294996-3295163, li2019feature}, or to solve one specific task better than when only the inner base learning algorithm is used (i.e. single task setting) \cite{10-5555-3305381-3305502}.
-Finally, the meta-optimisation can either be done offline (i.e. the inner and outer loop alternate) \cite{10-5555-3305381-3305498} or online (i.e. the meta-learning takes place within a base learning episode) \cite{li2019feature}.
+Third, the goal of the meta-learning can either be to solve better any task drawn from a set of (often related) tasks (i.e. multi-task setting) \sidecite{10-5555-3305381-3305498, 10-5555-3294996-3295163, li2019feature}, or to solve one specific task better than when only the inner base learning algorithm is used (i.e. single task setting) \sidecite{10-5555-3305381-3305502}.
+Finally, the meta-optimisation can either be done offline (i.e. the inner and outer loop alternate) \sidecite{10-5555-3305381-3305498} or online (i.e. the meta-learning takes place within a base learning episode) \cite{li2019feature}.
+
+
+
+
+
+
+
+
+
+
 
 
 
