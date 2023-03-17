@@ -2,72 +2,73 @@
 In this thesis, two different concepts of self-organisation are implemented.
 This chapter presents a method based on vertical self-organisation (c.f. \secref{neuro_concepts_self_org}).
 Vertical self-organisation is based on training small units within a network independent from each other.
-The first section presents the methodology (i.e. how vertical self-organization was implemented) and the second section describes the obtained results.
+The first section presents the methodology (i.e. how vertical self-organisation was implemented), and the second section evaluates the obtained results.
 
 
 \section{Methods}\seclbl{vertical_self_org_methods}
 The first choice for networks based on vertical self-organisation is what the independent units are, i.e. which network parameters are trained independently.
-In this thesis, a linear layer was selected as a self-contained unit. This is a small unit (e.g. compared to a model part that contains many layers) but can still be trained efficiently.
-Smaller units would be neurons or parts of a layer, but training them separately would be very inefficient, since the efficiency of matrix operations on GPUs could no longer be fully exploited\sidenote{the layer output can be efficiently calculated by a single matrix multiplications and addition, i.e. $\boldsymbol{z} = \boldsymbol{w} \cdot \boldsymbol{x} + \boldsymbol{b}$ (c.f. \secref{ann})}.
+In this thesis, a single layer is used as a self-contained unit. One layer is a small unit (e.g. compared to a model part that contains many layers) but can still be trained efficiently.
+Smaller units would be neurons or parts of a layer, but training them separately would be very inefficient since the efficiency of matrix operations on GPUs could no longer be fully exploited\sidenote{the layer output can be efficiently calculated by single matrix multiplication and addition, i.e. $\boldsymbol{z} = \boldsymbol{w} \cdot \boldsymbol{x} + \boldsymbol{b}$ (c.f. \secref{ann})}.
 
-Each layer optimises its own proxy objective function.
-Proxy objective functions are used because this type of local optimisation allows very good performance even on larger data sets, in contrast to other target functions such as target propagation, synthetic gradients or feedback alignment (c.f. \secref{alt_train_algo}). 
-Figure \figref{vertical_gradient_flow} visualizes the updates based on a proxy objective function.
-A objective function is calculated for each layer and the optimization algorithm only updates the parameters within this layer.
-Thus, the gradients do not flow backwards to preceding layers.
+Each layer optimises a proxy objective function.
+Proxy objective functions are used because this type of local optimisation allows excellent performance even on larger data sets, in contrast to other local learning algorithms such as target propagation, synthetic gradients or feedback alignment (c.f. \secref{alt_train_algo}). 
+ \figref{vertical_gradient_flow} visualises the updates based on a proxy objective function.
+An objective function is calculated for each layer, and the optimisation algorithm only updates the parameters within this layer.
+Thus, the gradients do not flow back to preceding layers.
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.99\textwidth]{vertical_gradient_flow}
-    \caption[The flow of gradients within the network based on vertical self-organisation]{The flow of gradients within the network based on vertical self-organisation: The data is fed from layer to layer during the forward pass. The layers, are trained independently and the gradients do not flow from one layer to the previous one.}
+    \caption[The flow of gradients within the network based on vertical self-organisation]{The flow of gradients within the network based on vertical self-organisation: The data is fed from layer to layer during the forward pass. The layers are trained independently, and the gradients do not flow from one layer to the previous one.}
     \figlbl{vertical_gradient_flow}
 \end{figure}
 
-A combination of diversity and sparsity constraints is used as the loss function, which leads to representations that are easy to interpret and suitable for net fragments (c.f. \secref{neuro_concepts_net_fragments}) and also increases robustness (c.f. \secref{neuro_concepts_sparsity}).
-Identical to the preliminary experiments in Appendix \chref{net_fragments}, the sparsity is achieved by using the kullback-leibler (KL) divergence \sidecite{10-5555-3042573-3042641}.
-The model consists of several linear layers $l$ with a relu activation function $(z)^+ = max(0, z)$.
-A layer consists of $m^{(l)}$ neurons and the activations $\boldsymbol{z}^{(l)}$ of a linear layer $l$ are calculated for a given input $\boldsymbol{z}^{(l-1)}$ as
+A combination of diversity and sparsity constraints is used as a loss function, which leads to representations that are easy to interpret, suitable for net fragments (c.f. \secref{neuro_concepts_net_fragments}), and also increases robustness (c.f. \secref{neuro_concepts_sparsity}).
+Identical to the preliminary experiments in appendix \chref{net_fragments}, the sparsity is achieved by using the kullback-leibler (KL) divergence \sidecite{10-5555-3042573-3042641}.
+The model consists of several linear layers $l$ with a ReLU activation function (c.f. \eqref{act_functions}).
+
+A layer consists of $n^{[l]}$ neurons and the activations $\boldsymbol{a}^{[l]}$ of a linear layer $l$ are calculated for a given input $\boldsymbol{a}^{[l-1]}$ as
 
 \begin{equation}\eqlbl{vso_1}
-		\boldsymbol{z}^{(l)} = z^{(l)}_1, ..., z^{(l)}_m = \boldsymbol{w}^{(l)} \cdot \boldsymbol{z}^{(l-1)} + \boldsymbol{b}^{(l)}
+		\boldsymbol{a}^{[l]} = a^{[l]}_1, ..., a^{[l]}_n = \boldsymbol{W}^{[l]} \cdot \boldsymbol{a}^{([l-1]} + \boldsymbol{b}^{[l]}
 \end{equation}
 
-whereby $\boldsymbol{w}^{(l)}$ is the weight and $\boldsymbol{b}^{(l)}$ the bias of layer $l$.
-
-The activation probability can be calculated for each neuron. If a mini-batch contains $n$ samples, the activation probability $\hat{\rho}^{(i)}$ of a neuron $z^{(i)}$ can be calculated as:
+whereby $\boldsymbol{W}^{[l]}$ is the weight and $\boldsymbol{b}^{[l]}$ the bias of layer $l$.
+The activation probability can be calculated for each neuron. If a mini-batch contains $m$ samples, the activation probability $\hat{\rho}^{[l]}_i$ of a neuron $a^{([l]}_i$ can be calculated as:
 
 \begin{equation}\eqlbl{vso_2}
-		\hat{\rho}^{(l)}_i = \frac{1}{n} \sum^n_i \frac{1}{1+e^{-z^{(l)}_i}}
+		\hat{\rho}^{[l]}_i= \frac{1}{n} \sum^n_{i=1} \left( \frac{1}{1+e^{-a^{([l]}_i}} \right)
 \end{equation}
 
-where $\frac{1}{1+e^{-z^{(i)}}}$ is the sigmoid function that squeezes the activation in the range between $0$ and $1$.
-With the KL divergence, the divergence of the current activation probability $\hat{\rho}^{(i)}$ and a desired activation probability $\rho=0.05$ can be calculated:
+where $\left( \frac{1}{1+e^{-a^{([l]}_i}} \right)$ is the sigmoid function that squeezes the activation in the range between $0$ and $1$.
+With the KL divergence, the divergence of the current activation probability $\hat{\rho}^{[l]}_i$ and a desired activation probability $\rho=0.05$ can be calculated:
 
 \begin{equation}\eqlbl{vso_3}
-		KL(\rho || \hat{\rho}^{(l)}_i) = \rho \cdot \log \frac{\rho}{\hat{\rho}^{(l)}_i} + (1-\rho) \cdot \log \frac{1-\rho}{1-\hat{\rho}^{(l)}_i}
+		KL(\rho || \hat{\rho}^{[l]}_i) = \rho \cdot \log \frac{\rho}{\hat{\rho}^{[l]}_i} + (1-\rho) \cdot \log \frac{1-\rho}{1-\hat{\rho}^{[l]}_i}
 \end{equation}
 
-The sparsity loss $L_{s}$ is the sum of the divergence between all $\hat{\rho}^{(i)}$ and $\rho$:
+The sparsity loss $\mathcal{L}^{[l]}_{s}$ of layer $l$ is the sum of the divergence between all $\hat{\rho}^{[l]}_i$ and $\rho$:
 
 \begin{equation}\eqlbl{vso_4}
-		L_{s}(\rho, \hat{\rho}) = \sum_{i=1}^{m} KL(\rho || \hat{\rho}^{(l)}_i)
+		\mathcal{L}^{[l]}_{s}(\rho, \hat{\rho}^{[l]}) = \sum_{i=1}^{m} KL(\rho || \hat{\rho}^{[l]}_i)
 \end{equation}
 
-The second constraint is a diversity constraint. The goal is that the activations of \emph{different} objects are diverse. For this purpose, the activations $\boldsymbol{z}^{(l)}$ are made as identical as possible (i.e. pushed together in feature space) if they stem from the same class and as different as possible if they stem from different classes.
-The cosine similarity is used to calculate the similarity between two activations $z^{(l)}_i$ and $z^{(l)}_j$:
+
+The second constraint is a diversity constraint. The goal is that the activations of \emph{different} objects are diverse. For this purpose, the activations $\boldsymbol{a}^{[l]}$ are made as identical as possible (i.e. pushed together in feature space) if they stem from the same class and as different as possible if they stem from different classes.
+The cosine similarity is used to calculate the similarity between the activations $\boldsymbol{a}^{[l](i)}$ and $\boldsymbol{a}^{[l](j)}$ of two samples $\boldsymbol{x}^{(i)}$ and $\boldsymbol{x}^{(j)}$:
 
 \begin{equation}\eqlbl{vso_5}
-		\text{cos}(z^{(l)}_i, z^{(l)}_j) = \frac{z^{(l)}_i \cdot z^{(l)}_j}{\max(||z^{(l)}_i||_2, ||z^{(l)}_j||_2)}
+		\text{cos}\left( \boldsymbol{a}^{[l](i)}, \boldsymbol{a}^{[l](j)} \right) = \frac{\boldsymbol{a}^{[l](i)} \cdot \boldsymbol{a}^{[l](j)}}{\max \left( ||\boldsymbol{a}^{[l](i)}||_2, ||\boldsymbol{a}^{[l](j)}||_2 \right)}
 \end{equation}
 
-In order to make representations of different objects different, resp. to make representations of identical objects identical, the information of image labels $y_i$ is needed. Thus, $y_i \in C$ where $C$ is the set of classes.
-The diversity loss $L_d$ minimises the similarity $\text{cos}(z^{(l)}_i, z^{(l)}_j)$ if the two activations stem from different classes $y_i \neq y_j$, or maximises the similarity if they stem from the same class $y_i = y_j$.
+The information of image labels $y^{(i)} \in C$ is needed to push representations of identical objects together or to push representations of different objects apart.
+The diversity loss $\mathcal{L}^{[l]}_d$ minimises the similarity $\text{cos} \left(\boldsymbol{a}^{[l](i)}, \boldsymbol{a}^{[l](j)} \right)$ if the activations stem from different classes (i.e. $y^{(i)} \neq y^{(j)}$), or maximises the similarity if they stem from the same class (i.e. $y^{(i)} = y^{(j)}$).
 
 \begin{equation}\eqlbl{vso_6}
-		L_{d}(\boldsymbol{z}^{(l)}) = \frac{1}{n^2} \sum_{i=1}^{n} \sum_{j=1}^{n} k \cdot \text{cos}(z^{(l)}_i, z^{(l)}_j)
+		\mathcal{L}^{[l]}_{d} \left(\boldsymbol{a}^{[l]} \right) = \frac{1}{n^2} \sum_{i=1}^{n} \sum_{j=1}^{n} k \cdot \text{cos} \left( \boldsymbol{a}^{[l](i)}, \boldsymbol{a}^{[l](j)} \right) \text{ if } i \neq j
 \end{equation}
 
-whereby $k$ changes sign depending on the class:
+whereby $k$ changes the sign depending on the class:
 
 \begin{equation}\eqlbl{vso_7}
 		k = \begin{cases}
@@ -76,32 +77,38 @@ whereby $k$ changes sign depending on the class:
     	\end{cases}
 \end{equation}
 
-However, it was found that the loss is more stable if the similarity is not calculated between two activations but between one activation and the average activation of a class. The average activation of a class $c$ can be calculated over $n_c$ samples from this class as:
+However, the loss was found to be more stable if the similarity is not calculated between two activations but between one activation and the average activation of a class. The average activation $\bar{a}[c]$ of a class $c$ can be calculated over $n_c$ samples as:
 
 \begin{equation}\eqlbl{vso_8}
-		z^{(l)}[c] = \frac{1}{n} \sum_{i=1}^{n_c} z^{(l)}_i \text{, for } y_i = c
+		\bar{a}[c]^{[l]} = \frac{1}{n_c} \sum_{i=1}^{n_c} a^{[l]}_i \text{, for } y_i = c
 \end{equation}
 
-Another problem of is loss is if all activations are identical, then $\text{cos}(z^{(l)}_i, z^{(l)}_j) = 1$ and the loss gets $L_{d}=0$, since the similarities of the same and different classes neutralise each other.
+Thus, the loss becomes
+\begin{equation}\eqlbl{vso_80}
+		\mathcal{L}^{[l]}_{d} \left(\boldsymbol{a}^{[l]} \right) = \frac{1}{n\cdot n_c} \sum_{i=1}^{n} \sum_{c \in C} k \cdot \text{cos} \left( \boldsymbol{a}^{[l](i)}, \bar{\boldsymbol{a}[c]}^{[l]} \right)
+\end{equation}
+
+Another problem of this loss is that if all activations are identical, then $\text{cos} \left(\boldsymbol{a}^{[l](i)}, \bar{\boldsymbol{a}[c]}^{[l]} \right) = 1$, and the loss becomes $\mathcal{L}^{[l]}_{d}=0$, since the similarities of the same and different classes neutralise each other.
 Therefore, a margin between the similarities is enforced, as done for the triplet-margin-loss  \sidecite{Balntas_Riba_Ponsa_Mikolajczyk_2016}.
 
 \begin{equation}\eqlbl{vso_9}
-		L_{d}(\boldsymbol{z}^{(l)}) = \frac{1}{n} \sum_{i=1}^{n} \max(\text{cos}(z^{(l)}_i, z^{(l)}[v]) - \text{cos}(z^{(l)}_i, z^{(l)}[y_i]) + \text{margin}, 1)
+		\mathcal{L}^{[l]}_{d}(\boldsymbol{a}^{[l]}) = \frac{1}{n} \sum_{i=1}^{n} \max \left[ \text{cos}(\boldsymbol{a}^{[l](i)}, \bar{a}[v]^{[l]}) - \text{cos}(\boldsymbol{a}^{[l](i)}, \bar{a}[y^{(i)}]^{[l]}) + \text{margin}, 1 \right]
 \end{equation}
 
 where $v$ is a random class drawn from the set $v ~ \{C \\ y_i\}$ and $\text{margin}$ is a hpyer-parameter that was set to $1$.
-Thus, the triplet-margin-loss is calculated but the $L2$-norm is replaced by the cosine-similarity as distance measure and the positive, resp. negative anchor is replaced with the average class activation from the same resp. from a randomly selected different class.
+Thus, the triplet-margin-loss is calculated but the cosine-similarity replaces the $L2$-norm as distance measure and the positive, resp. negative anchor is replaced with the average class activation from the same resp. from a randomly selected different class.
 
 The loss used is the sum of sparsity loss and diversity loss, with the diversity loss weighted by $\lambda=0.1$:
 \begin{equation}\eqlbl{vso_10}
-		L = L_{s}(\rho, \hat{\rho}) + \lambda \cdot L_{d}(\boldsymbol{z}^{(l)}) 
+		\mathcal{L}^{[l]} =\mathcal{L}^{[l]}_{s}(\rho, \hat{\rho}^{[l]}) 
+ + \lambda \cdot \mathcal{L}^{[l]}_{d}(\boldsymbol{a}^{[l]})
 \end{equation}
 
 
-One problem with proxy objective functions is that this type of training often requires layer-wise training. First, layer $1$ is trained completely, then the weights are frozen, then layer $2$ is trained and so on.
-This is inefficient because it requires more forward-passes than if the model is trained with end-to-end backpropagation.
-It was found that this loss functions allows to train all layers simultaneously. With a forward-pass, all activations are calculated, followed by a layer-wise backward-pass where the gradients from one layer do not propagate back into the previous layer.
-Since the gradients are only needed locally, no large graph of gradients has to be calculated, which reduces the memory utilization on GPUs and allows larger mini-batch sizes. In addition, this type of architecture is very easy to parallelise, since theoretically each layer (i.e. each independently trained unit) or a group of layers can be assigned to a different GPU.
+One problem with proxy objective functions is that this type of training often requires layer-wise training. First, layer $1$ is trained until convergence, then the weights are frozen, then layer $2$ is trained and so on.
+Such sequential training is inefficient because it requires more forward passes than if the model is trained with end-to-end backpropagation.
+It was found that this loss function allows to train all layers simultaneously. With a forward pass, all activations are calculated, followed by a layer-wise backward pass where the gradients from one layer do not propagate back into the previous layer.
+Since the gradients are only needed locally, no large graph of gradients has to be calculated, which reduces the memory utilisation on GPUs and allows larger mini-batch sizes. In addition, this type of architecture is straightforward to parallelise since each layer (i.e. each independently trained unit) or a group of layers can be trained on a different GPU:
 In contrast to end-to-end backpropagation of error architectures, the gradients only flow backwards locally on a GPU and do not have to be passed on to other GPUs.
 
 \begin{figure}[h]
@@ -194,33 +201,33 @@ In contrast to end-to-end backpropagation of error architectures, the gradients 
     \figlbl{vertical_org_arch1}
 \end{figure}
 
-
-The model used consists of $4$ fully connected layers with relu activation. The first layer has $512$ neurons, the second $256$ neurons, the third $128$ neurons and the fourth $64$ neurons. The model is illustrated in Figure \figref{vertical_org_arch1}. Each layer is trained separately by minimising the loss of equation \eqref{vso_10} with the Adam optimizer\sidecite{Kingma_Ba_2017} and a learning rate of $\eta = 1 \cdot 10^{-3}$. The mini-batch size is $60,000$. 
+The model used consists of $4$ fully connected layers with ReLU activation. The first layer has $512$ neurons, the second $256$ neurons, the third $128$ neurons and the fourth $64$ neurons. The model is illustrated in Figure \figref{vertical_org_arch1}. Each layer is trained separately by minimising the loss of equation \eqref{vso_10} with the Adam optimizer\sidecite{Kingma_Ba_2017} and a learning rate of $\eta = 1 \cdot 10^{-3}$. The mini-batch size is $60,000$. 
 
 \subsection{Extraction of Representations}\seclbl{vertical_self_org_representations}
-In accordance with net-fragments as in \secref{neuro_concepts_net_fragments}, the representations are not extracted at a specific point (i.e. a pre-defined layer) but all representations from all layers are taken into account to fulfil a task.
+In accordance with net-fragments as in \secref{neuro_concepts_net_fragments}, the representations are not extracted at a specific point in the network (i.e. a pre-defined layer), but all representations from all layers are taken into account to fulfil a task.
 In the following, this is demonstrated based on a classification task, but other tasks are also conceivable in the future.
-After training, the average activation $z^{(l)}[c]$ for each class $c \in C$ in each layer $l$ is determined, as done in Equation \eqref{vso_8}.
-These averages from the training set represent prototypes of each class object in each layer and can be considered as reference representation per class. Thus, the representations needed for this task are computed \emph{after} training and are not part of the training as for example in the case of a classification loss based on cross-entropy\sidenote{but in the case of classification this information is implicit in the loss function}.
-When a new sample $\boldsymbol{x}_s$ is classified, the cosine similarity between the activations $\boldsymbol{z}^{(l)}_s$ of this sample and the class prototypes $\boldsymbol{z}^{(l)}[c]$ is calculated in each layer.
+After training, the average activation $\bar{\boldsymbol{a}[c]}^{[l]}
+$ for each class $c \in C$ and layer $l$ is determined, as done in Equation \eqref{vso_8}.
+These averages from the training set represent prototypes of each class in each layer and can be considered a reference representation per class. Thus, the representations needed for this task are computed \emph{after} training and are not part of the training as, for example, in the case of a classification loss based on cross-entropy.
+When a new sample $\boldsymbol{x}^{(i)}$ is classified, the cosine similarity between the activations $\boldsymbol{a}^{[l](i)}$ of this sample and the class prototypes $\bar{\boldsymbol{a}[c]}^{[l]}$ is calculated in each layer.
 
 \begin{equation}\eqlbl{vso_11}
-		\text{cos}^{(l)}_s[c] = \text{cos}(\boldsymbol{z}^{(l)}_s, \boldsymbol{z}^{(l)}[c]) = \frac{\boldsymbol{z}^{(l)}_s \cdot \boldsymbol{z}^{(l)}[c]}{\max(||\boldsymbol{z}^{(l)}_s||_2, ||\boldsymbol{z}^{(l)}[c]||_2)} \text{, for } c \in C
+		\text{cos}[c]^{[l](i)} = \text{cos} \left( \boldsymbol{a}^{[l](i)}, \bar{\boldsymbol{a}[c]}^{[l]} \right) = \frac{\boldsymbol{a}^{[l](i)} \cdot \bar{\boldsymbol{a}[c]}^{[l]}}{\max \left( ||\boldsymbol{a}^{[l](i)}||_2, ||\bar{\boldsymbol{a}[c]}^{[l]}||_2 \right)} \text{, for } c \in C
 \end{equation}
 
-Thus, the cosine similarity $\text{cos}^{(l)}[c]$ for each class $c \in C$ and each of the for layers $l \in {1, ..., 4}$ is calculated. Afterwards, the average class $c$ with the highest average cosine similarity between the sample activations $\boldsymbol{z}^{(l)}_s$ and the class prototypes $\boldsymbol{z}^{(l)}[c]$ is used as prediction.
+Thus, the cosine similarity $\text{cos}[c]^{[l](i)}$ for each class $c \in C$ and each of the layers $l \in {1, ..., 4}$ is calculated. Afterwards, the class $c$ with the highest average cosine similarity between the sample activations $\boldsymbol{a}^{[l](i)}$ and the class prototypes $\bar{\boldsymbol{a}[c]}^{[l]} 
+$ is used as prediction.
 
 \begin{equation}\eqlbl{vso_12}
-		\argmax_{c \in C} \frac{1}{4} \sum_{l=1}^{4} \text{cos}^{(l)}_s[c]
+		\argmax_{c \in C} \frac{1}{4} \sum_{l=1}^{4} \text{cos}[c]^{[l](i)}
 \end{equation}
 
-This results in a weighted voting; if a layer is very sure that the sample belongs to a specific class, then the sample has a high cosine similarity with one class prototype and a low similarity with all other class prototypes. Accordingly, this layer influences the prediction more than a layer that cannot clearly assign the sample to one class and calculates a similarly high cosine similarity between the sample and all prototypes.
-
+This results in a weighted voting; if a layer is certain that the sample belongs to a specific class, the sample has a high cosine similarity with one class prototype and a low similarity with all other class prototypes. Accordingly, this layer influences the prediction more than a layer that cannot assign the sample to one class and calculates a similarly high cosine similarity between the sample and all prototypes.
 
 \subsection{Lateral Connections}
-As described in section \secref{neuro_concepts_lateral_connections}, lateral connections serve neurons to support their activations among each other.
-In this chapter it is also described in detail that this can be implemented through recurrent connections.
-There are several ways to implement recurrent connections. A very simple possibility is to concatenate the layer input $\boldsymbol{z}^{(l-1)}_t$ at time $t$ with the layer output $\boldsymbol{z}^{(l)}_{t-1}$  at time $t-1$. This is visualized in Figure \figref{lateral_concat}. Of course, $\boldsymbol{z}^{(l)}_{t-1}$ is undefined at $t=0$. In this case, $\boldsymbol{z}^{(l)}_{t-1}$ is initialized with zeros.
+As described in \secref{neuro_concepts_lateral_connections}, lateral connections in the human brain serve neurons to support each other.
+There, it is also described that lateral connections can be implemented as recurrent connections.
+There are several ways to implement recurrent connections. A straightforward possibility is to concatenate the layer input $\boldsymbol{a}^{[l-1]}[t]$ at time $t$ with the layer output $\boldsymbol{a}^{[l]}[t-1]$  at time $t-1$. This is visualised in \figref{lateral_concat}. Of course, $\boldsymbol{a}^{[l]}[t-1]$ is undefined at $t=0$. In this case, $\boldsymbol{a}^{[l]}[t-1]$ is initialized with zeros.
 
 \begin{figure}[h]
     \centering
@@ -230,14 +237,14 @@ There are several ways to implement recurrent connections. A very simple possibi
 \end{figure}
 
 
-A second option is to use a second weight matrix as it is usually done in recurrent layers and to expand the equation \eqref{vso_1} for the activation function as follows:
+A second option is to use a second weight matrix, as it is usually done in recurrent layers. Therefore, the equation \eqref{vso_1} is extended as follows:
 
 \begin{equation}\eqlbl{vso_13}
-		\boldsymbol{z}^{(l)}_t =  \boldsymbol{w}_x^{(l)} \cdot \boldsymbol{z}^{(l-1)}_t + \boldsymbol{b}^{(l)} + \overbrace{\boldsymbol{w}_h^{(l)} \cdot \boldsymbol{z}^{(l)}_{t-1} }^{\text{lateral connection}}
+		\boldsymbol{a}^{[l]}[t] =  \boldsymbol{W}_x^{[l]} \cdot \boldsymbol{a}^{[l-1]}[t] + \boldsymbol{b}^{[l]} + \overbrace{\boldsymbol{W}_h^{[l]} \cdot \boldsymbol{a}^{[l]}[t-1] }^{\text{lateral connection}}
 \end{equation}
 
-whereby $\boldsymbol{w}_x^{(l)}$ is the weight multiplied with the layer input and $\boldsymbol{w}_h^{(l)}$ the weight multiplied with the previous layer output. In both cases, the layer receives information about the activations at the previous time-step.
-However, this only seems helpful if the model input is not static. Therefore, the model input is available over several time-steps and is augmented after each time-step. Thus, the model receives different views of the same image and can adjust its activations from the previous time-step if necessary. The following image augmentation techniques are applied, each with a probability of $p=0.8$:
+whereby $\boldsymbol{W}_x^{[l]}$ is the weight multiplied with the layer input and $\boldsymbol{W}_h^{[l]}$ the weight multiplied with the previous layer output. In both cases, the layer receives information about the activations at the previous time step.
+However, this only seems helpful if the model input is not static. Therefore, the model input is available over several time steps and is augmented after each step. Thus, the model receives different views of the same image and can adjust its activations from the previous time step if necessary. The following image augmentation techniques are applied, each with a probability of $p=0.8$:
 
 \begin{itemize}
 	\item \textbf{Color Jitter}: Randomly change brightness, contrast, and saturation of the image.
@@ -246,31 +253,32 @@ However, this only seems helpful if the model input is not static. Therefore, th
 	\item \textbf{Adjust Sharpness}: Randomly adjust the sharpness of the image.
 \end{itemize}
 
-Figure \figref{mnist_augmented} visualises how this augmentation affects samples of the MNIST data set \cite{Lecun_Bottou_Bengio_Haffner_1998}. The original image is shown on the left and $9$ augmented versions of it are shown on the right. This allows the model to perceive the same image from different views.
+\figref{mnist_augmented} visualises how this augmentation affects samples of the MNIST data set \cite{Lecun_Bottou_Bengio_Haffner_1998}. The original image is shown on the left, and $9$ augmented versions of it are shown on the right. This allows the model to perceive the same image from different views.
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.99\textwidth]{mnist_augmented}
-    \caption[Data augmentation applied on $10$ samples of the MNIST data set]{Data augmentation applied on $10$ samples of the MNIST data set. The original samples as it is in the data set is shown on the left, $9$ augmented versions of the same samples are shown on the right.}
+    \caption[Data augmentation applied on $10$ samples of the MNIST data set]{Data augmentation applied on $10$ samples of the MNIST data set. The original samples from the data set are shown on the left, and $9$ augmented versions of the same samples are shown on the right.}
     \figlbl{mnist_augmented}
 \end{figure}
 
 
-Recurrent connections, which in this context represent lateral connections, are typically used to process sequential data or text. In this case, the data is collected cumulatively before an output is generated. For example, in text processing, all word tokens of a sentence are typically read before the model classifies the sentence as heat-speech or not. This is necessary because all sentence information is required and classification cannot be done on the basis of a single token. Such models are typically trained with backpropagation through time (BTT). Thereby, the gradients flow backwards over several time steps. This leads to well-known problems such as vanishing and exploding gradients.
+Recurrent connections, which in this context represent lateral connections, are typically used to process sequential data or text. In this case, the data is collected cumulatively before an output is generated. For example, in text processing, all word tokens of a sentence are typically read before the model classifies a sentence. This is necessary because all information is required, and classification cannot be done on the basis of a single token. Such models are typically trained with backpropagation through time (BTT). Thereby, the gradients flow backwards over several time steps. This leads to well-known problems such as vanishing and exploding gradients.
 
-In this thesis, BTT is not used, which means that a prediction is made after each time-step, but the prediction potentially improves with more time-steps. This leads to desirable properties: (i) Problems with vanishing or exploiding gradients do not exist, regardless of how many time-steps the model requires. (ii) After each time-step, representations can be extracted according to Section \secref{vertical_self_org_representations}. If a task can be solved correctly with a high probability on the basis of these representations (e.g. the object representation can clearly be assigned to one class label), the sequential analysis of the image can be aborted. If this is not the case, further time-steps can be carried out until the model has a sufficiently high confidence in its prediction. Thus, the number of time-steps can be sample-dependent.
+In this thesis, BTT is not used, which means that a prediction is made after each time step, but the prediction potentially improves with more time steps. This leads to desirable properties: (i) Problems with vanishing or exploding gradients do not exist, regardless of how many time steps the model requires. (ii) After each time step, representations can be extracted according to \secref{vertical_self_org_representations}. If an object representation can be assigned to one class label with a high probability, the sequential processing of different image views can be aborted. If this is not the case, further time steps can be carried out until the model has sufficiently high confidence in its prediction. Thus, the number of time steps can be sample-dependent.
 
 
 % Idee: Mehr Robustheit indem z.b. in einem timestep noise als Input genutzt wird oder bei 1 von 10 timesteps (ausser in den ersten 2) das Bild zufälligerweise vertauscht wird. -> Lateral connections should help
 
-
 \subsection{Hierarchical Features}\seclbl{vertical_self_org_hierarchical_features}
-A criticism of the proposed model is that it does not learn hierarchical features, even tough hierarchical features are one of the main reasons for the good performance of deep learning systems. The diversity loss (c.f. Equation \eqref{vso_9}) forces enforces in each layer that the latent representations of objects of the same class are similar and that the representations of different classes are different. This violates the concept of hierarchical feautres; the first layers should learn general features that are helpful for all classes, but cannot necessarily be assigned to a specific class. Only later layers build class representations that are specific to a class. In the current setting, however, already the first layers generate class specific representations.
+A criticism of the proposed model is that it does not learn hierarchical features, even though hierarchical features are one of the main reasons for the excellent performance of deep learning systems. The diversity loss (c.f. \eqref{vso_9})  enforces in each layer that the latent representations of objects of the same class are similar and that the representations of different classes are different. This violates the concept of hierarchical features; the first layers should learn general features that are helpful for all classes but cannot necessarily be assigned to a specific class. Only later layers build class representations that are specific to a class. In the current setting, however, already the first layers generate class-specific representations.
 
-In the following, three possible measures are described to counteract this problem: (i) The fully connected layers are replaced by convolutional layers, so that the first layers have a smaller field of view and can only recognise local features. (ii) An adapted version of diversity loss forces a separation of features by class only in the last layers. (iii) While the very specific image information flows into the network from one side, general information in the form of class labels is fed into the network from the other side and these two types of information are fused. These three measures can be applied either individually or in combination with each other.
+In the following, three possible measures are described to counteract this problem: (i) The fully connected layers are replaced by convolutional layers so that the first layers have a smaller field of view and can only recognise local features. (ii) An adapted version of the diversity loss enforces a separation of features by class only in the last layers. (iii) While specific information in the form of the input image flows into the network from one side, general information in the form of class labels is fed into the network from the other side, and these two types of information are fused. Thus, the training process enforces a hierarchy by fusing specific and general information over multiple layers.
+These three measures can be applied either individually or in combination with each other.
+
 
 \subsubsection{Convolutional Architecture}
-corresponding layer has a sufficiently large field-of-view\sidenote{the field-of-view are all pixels of the input image that can influence a neuron's activity}. In a CNN, the field-of-view in the first layers is restricted by design, but not in fully connected layers. Consequently, it might help to use a CNN architecture instead of a model based on fully connected layers only. This means that the network is no longer able to separate the representations based on the class in the first layers as the field-of-view is too small, but can only do this in the later layers, which have a larger field-of-view.
+In a CNN, the field of view in the first layers is restricted by design but becomes larger in subsequent layers. Consequently, using a CNN architecture instead of a model based on fully connected layers alleviates the problem of non-hierarchical features.
 
 
 \begin{figure}[h]
@@ -368,8 +376,30 @@ corresponding layer has a sufficiently large field-of-view\sidenote{the field-of
     \figlbl{vertical_org_arch2}
 \end{figure}
 
-The CNN architecture used in this thesis is shown in Figure \figref{vertical_org_arch2}.
-Three convolutional layers with ReLU activation function and with $16$, $32$, and $64$ channels are used, and max-pooling layers are applied between each convolutional layer. For training, the same hyperparameters and loss functions are used as for the model with fully connected layers.
+The CNN architecture used in this thesis is shown in \figref{vertical_org_arch2}.
+Three convolutional layers with ReLU activation functions and with $16$, $32$, and $64$ channels are used, and max-pooling layers are applied between each convolutional layer. For training, the same hyperparameters and loss functions are used as for the model with fully connected layers.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \subsubsection{Hierarchical Diversity Loss}
 A second measure can be to adapt the diversity constraint of the loss function. In the current version, it forces the latent representations of objects of the same class to be similar and those of different classes to be different. This is useful in the last layers, where high-level features (i.e. high-level net-fragments) or object representations should be detected and be separated from each other. In the first layers, on the other hand, the separation should not depend on the class label. Nevertheless, the activations should also be diverse if low-level features are detected (c.f. Section \secref{neuro_concepts_net_fragments}).

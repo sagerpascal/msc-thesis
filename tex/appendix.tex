@@ -537,7 +537,7 @@ The hidden representations $\boldsymbol{h}$ in the bottleneck layer with length 
 Furthermore, the average activation probability of a neuron $h_j$ over the input data $\boldsymbol{x}$ can be calculated as
 
 \begin{equation}\eqlbl{ae_kldd}
-		\hat{\rho}_j = \frac{1}{n} \sum^n_{i=0} \left( \frac{1}{1+e^{-h_j}} \right)
+		\hat{\rho}_j = \frac{1}{n} \sum^n_{i=1} \left( \frac{1}{1+e^{-h_j}} \right)
 \end{equation}
 
 where $\left( \frac{1}{1+e^{-h_j}} \right)$ is the sigmoid function that squeezes the activation in the range between $0$ and $1$. Furthermore, $\rho=0.05$ is a sparsity parameter that can be interpreted as a target activation probability of each neuron. If the kullback-leibler divergence between all $\hat{\rho}_j$ and $\rho$ is minimised, then an average activation probability per neuron in the hidden layer of $\rho$ is enforced. The corresponding Kullback-Leibler divergence for each $\hat{\rho}_j$ is defined as:
