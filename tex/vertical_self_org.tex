@@ -379,34 +379,12 @@ In a CNN, the field of view in the first layers is restricted by design but beco
 The CNN architecture used in this thesis is shown in \figref{vertical_org_arch2}.
 Three convolutional layers with ReLU activation functions and with $16$, $32$, and $64$ channels are used, and max-pooling layers are applied between each convolutional layer. For training, the same hyperparameters and loss functions are used as for the model with fully connected layers.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 \subsubsection{Hierarchical Diversity Loss}
-A second measure can be to adapt the diversity constraint of the loss function. In the current version, it forces the latent representations of objects of the same class to be similar and those of different classes to be different. This is useful in the last layers, where high-level features (i.e. high-level net-fragments) or object representations should be detected and be separated from each other. In the first layers, on the other hand, the separation should not depend on the class label. Nevertheless, the activations should also be diverse if low-level features are detected (c.f. Section \secref{neuro_concepts_net_fragments}).
+A second measure to obtain hierarchical features is to adapt the diversity constraint of the loss function. The current version forces the latent representations of objects of the same class to be similar and those of different classes to be different. This is useful in the last layers, where high-level features (i.e. high-level net fragments) or object representations should be detected and separated from each other. In the first layers, on the other hand, the separation should not depend on the class label. Nevertheless, the activations should also be diverse if low-level features are detected (c.f. Section \secref{neuro_concepts_net_fragments}).
 
 Therefore, the sparsity constraint is split into two parts: One part ensures that the activations within a (large) mini-batch are diverse and thus enforces that different features are captured and represented by different neurons. The second part ensures, as before, that the activations are diverse for different classes. Thus, one part of the constraint ensures \emph{diversity within the mini-batch} and the other part ensures \emph{diversity between different classes}.
 
-These two parts are weighted linearly from the first to the last layer. Since the first layer should have a high diversity within the mini-batch, it has a high weight on the first part of the diversity constraint and a low weight on the second part. The last layer has an inverse weighting and pays more attention to the second part of the diversity constraint than to the first part.
+These two parts are weighted linearly from the first to the last layer. Since the first layer should have a high diversity within the mini-batch, it has a high weight on the first part of the diversity constraint and a low weight on the second part. The last layer has an inverse weighting and pays more attention to the diversity constraint's second part than the first part.
 
 The first part of the diversity constraints ensures diversity within a mini-batch. This is achieved by ensuring that each neuron within a mini-batch should be active. 
 
@@ -414,42 +392,41 @@ TODO: At the moment, various experiments are still ongoing to find out how this 
 
 
 \subsubsection{Two-Way Information Flow}
-Hinton \sidecite{ff_algo} introduced with the forward-forward (FF) algorithm (c.f. Section \secref{alt_train_algo}) a promising idea for models based on proxy objective functions; 
-The image is fed into the input layer of the network and the corresponding label is fed into the output layer of the network. The image remains static for several time-steps and the network is trained to push the layer's activations above a certain threshold. In a second stage, the image is fed into the network together with the wrong label and the network is trained to push the activations below a certain threshold. He found that when low-level features (i.e. images) are fed into the network from one end and high-level features (i.e. class labels) are fed into the network at the other end, a feature hierarchy is created. However, this approach has one major disadvantage: During inference, each possible sample-label combination has to be fed into the model and the label that caused the highest neural activity is used as the model's prediction.
+Hinton \sidecite{ff_algo} introduced with the forward-forward (FF) algorithm (c.f. Section \secref{alt_train_algo}) a promising idea for models based on proxy objective functions: 
+The image is fed into the input layer of the network, and the corresponding label is fed into the output layer of the network. The image remains static for several time steps, and the network is trained to push the layer's activations above a certain threshold. In a second stage, the image is fed into the network with the wrong label and the network is trained to push the activations below a certain threshold. He found that a feature hierarchy is created when low-level features (i.e. images) are fed into the network from one end and high-level features (i.e. class labels) are fed into the network from the other end. However, this approach has one major disadvantage: During inference, each possible sample-label combination has to be fed into the model, and the label that caused the highest neural activity is used as the model's prediction.
 
-In this thesis, this is implemented in a different way, which does not have this disadvantage. Identical to the FF algorithm, the image is fed into the input layer of the network for multiple time-steps. The label, on the other hand, is not fed directly into the output layer but is made available to the last layer within the loss function. Each layer maximizes the mutual information (MI) between its own activations and the activations of the previous and subsequent layers. Thus, the first layer maximizes the MI between the input image and its activations, the last layer maximises the MI between its activations and a label vector. This creates a feature pyramid in which a smooth transition from concrete sample to abstract class label is learned. During inference, the last label then directly predicts latent representations that can be assigned to a class.
+In this thesis, this is implemented in a different way, which does not have this disadvantage. Identical to the FF algorithm, the image is fed into the network's input layer for multiple time steps. Conversely, the label is not fed directly into the output layer but is made available to the last layer within the loss function. Each layer maximises the mutual information (MI) between its activations and the activations of the previous and subsequent layers. Thus, the first layer maximises the MI between the input image and its activations, the last layer maximises the MI between its activations and a label vector. This creates a feature pyramid in which a smooth transition from concrete samples to abstract class labels is learned. During inference, the last layer directly predicts latent representations that can be assigned to a class.
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.99\textwidth]{mi_loss}
-    \caption[Vertical self-organization with mutual information loss]{Vertical self-organization with mutual information loss: Each layer maximizes the mutual information (MI) between its activations and the activations of the previous and subsequent layer. The first layer maximizes the MI between its activations and the input image (instead of the previous layer) and the last layer maximizes the MI between its activations and the image label (instead of the subsequent layer).}
+    \caption[Vertical self-organisation with mutual information loss]{Vertical self-organisation with mutual information loss: Each layer maximises the mutual information (MI) between its activations and the activations of the previous and subsequent layers. The first layer maximises the MI between its activations and the input image (instead of the previous layer), and the last layer maximises the MI between its activations and the image label (instead of the subsequent layer).}
     \figlbl{mi_loss}
 \end{figure}
 
-This process is visualized in Figure \figref{mi_loss}. 
+This process is visualised in Figure \figref{mi_loss}. 
 
 
-TODO: At the moment, various experiments are still ongoing to find out how this can be implemented (therefore, not yet explained in more detail).
+TODO: Currently, various experiments are ongoing to find out how this can be implemented (therefore, yet to be explained in more detail).
 
 
 %\subsection{Efficient Parallel Training}
 %Idee: Nachfolgelayer einbeziehen in Loss -> Nachfolgelayer ist gefroren, Output muss aber möglichst gut sein (sollte Performance nicht verschlechtern von Nachfolgelayer) + eigene Performance verbessern
 
 
-
 \section{Results}\seclbl{vertical_self_org_methods_results}
-The results obtained by this model are presented below. It is important to note that the goal of these models is not to achieve the best possible results on a benchmark. In large-scale comparisons, it has already been found many times that end-to-end backpropagation of error is far superior to other methods, especially in the area of image classification \sidecite{Bartunov_Santoro_Richards_Marris_Hinton_Lillicrap_2018}. Rather, the aim here is to examine interesting concepts that are more biologically plausible and can serve as inspiration for future work.
+The results obtained by this model are presented below. It is important to note that these models aim not to achieve the best possible results in terms of classification accuracy on a benchmark. In large-scale comparisons, it has often been found that end-to-end backpropagation of error is far superior to other methods, especially in image classification \sidecite{Bartunov_Santoro_Richards_Marris_Hinton_Lillicrap_2018}. Instead, the aim here is to examine interesting concepts that are more biologically plausible and can inspire future work.
 
 \subsection{Data set}\seclbl{vertical_self_org_methods_dataset}
 The model was trained and evaluated on the MNIST \cite{Lecun_Bottou_Bengio_Haffner_1998} data set. It is a data set of handwritten digits with $60'000$ training samples and $10'000$ test samples.
-In this thesis the predefined training and test split is used.
+In this thesis, the predefined training and test split is used.
 The samples are images of a digit with the resolution $28 \times 28$ pixel in grayscale, i.e. has one colour channel.
 
-In addition, the models are evaluated on MNIST-C \sidecite{Mu_Gilmer_2019}, a corrupted MNIST benchmark for testing out-of-distribution robustness of image classification models. This data set consists of the MNIST data with $15$ types of corruptions applied to the samples.
+In addition, the models are evaluated on MNIST-C \sidecite{Mu_Gilmer_2019}, a corrupted MNIST benchmark for testing the out-of-distribution robustness of image classification models. This data set consists of the MNIST data with $15$ types of corruptions applied to the samples.
 
 \subsection{Baseline Model}
 The base model consists of $4$ fully connected layers with $512$, $256$, $128$ and $64$ neurons as shown in \figref{vertical_org_arch1}.
-No lateral connections or communication across multiple time-steps are used for the baseline. In addition, the measures described in \secref{vertical_self_org_hierarchical_features} are not used.
+No lateral connections or communication across multiple time steps are used for the baseline. In addition, the measures described in \secref{vertical_self_org_hierarchical_features} are not used.
 This model achieves an accuracy on MNIST of $93.7\%$. This accuracy is remarkably good considering that the model has never been explicitly trained for classification with, for example, a cross-entropy loss.
 Furthermore, the model is trained extremely fast because these local updates are suitable for batch-gradient descent and not only mini-batch gradient descent.
 Each layer also has a different accuracy, typically in the range of $90.1\% - 92.9\%$. However, due to the implicit voting using the sum over the cosine similarities, the prediction of the entire model is better than that of a single layer.
@@ -461,7 +438,6 @@ TODO: How do lateral connections improve the result?
 
 \subsection{Hierarchical Features}
 TODO: How do hierarchical features improve the result?
-
 
 
 
