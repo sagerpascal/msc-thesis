@@ -509,89 +509,95 @@ If each VAE predicts the Gaussian parameters of the other VAEs, then these predi
 TODO: At the moment, various experiments are still ongoing to find out how this can be implemented (therefore, not yet explained in more detail).
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 \subsubsection{Reconstructed Images}
-As described in \secref{horizontal_self_org_methods_bigger_patches}, the prediction of larger patches helps to better arrange the latent space. The prediction of larger patches can also be used for communication with neighbouring VAEs. Instead of extracting representations from the latent space and transmitting them to neighbouring VAEs as described in the last section, the reconstructed image can also be exchanged. This is done by predicting a part of the image in a first time-step and by adding this prediction to an additional input channel of another VAE in the next time-step. Various data can be forwarded to other VAEs:% and is explained below. Let $\boldymbol{x}$ be the input image and $\boldymbol{\hat{x}}$ the reconstructed image. For $n$ VAEs, the input sample $\boldymbol{x}$ is split into $n$ non-overlapping patches $\boldymbol{x}^{(1)}, ..., \boldymbol{x}^{(n)}$. The reconstructed patches are denoted as $\boldymbol{\hat{x}}^{(1)}, ..., \boldymbol{\hat{x}}^{(n)}$. If a VAE reconstructs the same patch as it received as input, $\boldymbol{x}^{(i)} \approx \boldymbol{\hat{x}}^{(i)}$ is valid. However, when a bigger patch is predicted than the one that was fed into the model, then this term is not valid anymore, i.e. $\boldymbol{x}^{(i)} \not\approx \boldymbol{\hat{x}}^{(i)}$. However, if only a part of the prediction $\boldymbol{\hat{x}}^{(i)}$ is considered (i.e. the prediction is cropped), then $\boldymbol{x}^{(i)}$ is contained in this cropped version of the prediction $\boldymbol{\hat{x}}^{(i)}_C$.
+As described in \secref{horizontal_self_org_methods_bigger_patches}, the prediction of larger patches helps to arrange the latent space better. However, the prediction of larger patches can also be used for communication with neighbouring VAEs: Instead of extracting representations from the latent space and transmitting them to neighbouring VAEs as described in the last section, the reconstructed image can also be exchanged. This is done by predicting a part of the image in a first time-step and by adding this prediction to an additional input channel of another VAE in the next time-step. Various data can be forwarded to other VAEs:
 
 
 \begin{figure}
     \centering
     \includegraphics[width=0.80\textwidth]{recon_patch_forw}
-    \caption[Communication between VAEs by forwarding reconstructed patch]{Communication between VAEs by forwarding reconstructed patch, example on the basis of the first VAE: The first VAE predicts the image and forwards the reconstructed patch (the same patch that was fed into the model) to the other VAEs.}
+    \caption[Communication between VAEs by forwarding reconstructed patch]{Communication between VAEs by forwarding reconstructed patch, example based on the first VAE: The first VAE predicts the image and forwards the reconstructed patch (the same patch that was fed into the model) to the other VAEs.}
     \figlbl{recon_patch_forw}
 \end{figure}
 
 \begin{figure}
     \centering
     \includegraphics[width=0.80\textwidth]{neighbouring_patch_forw}
-    \caption[Communication between VAEs by forwarding prediction of neighbouring patches]{Communication between VAEs by forwarding prediction of neighbouring patches, example on the basis of the first VAE: The first VAE predicts the image and forwards a prediction of how the neighbourhood could look like to the other VAEs. Thus, each other VAE receives a patch and a prediction of the first VAE how this patch could look like as input.}
+    \caption[Communication between VAEs by forwarding prediction of neighbouring patches]{Communication between VAEs by forwarding prediction of neighbouring patches, example based on the first VAE: The first VAE predicts the image and forwards a prediction of how the neighbourhood could look like to the other VAEs. Thus, each other VAE receives a patch and a prediction of the first VAE how this patch could look as input.}
     \figlbl{neighbouring_patch_forw}
 \end{figure}
 
 \begin{figure}
     \centering
     \includegraphics[width=0.80\textwidth]{recon_img_forw}
-    \caption[Communication between VAEs by forwarding prediction of the entire image]{Communication between VAEs by forwarding prediction of the entire image, example on the basis of the first VAE: The first VAE predicts the image and forwards the prediction of the image to the other VAEs.}
+    \caption[Communication between VAEs by forwarding prediction of the entire image]{Communication between VAEs by forwarding prediction of the entire image, example based on the first VAE: The first VAE predicts the image and forwards the prediction of the image to the other VAEs.}
     \figlbl{recon_img_forw}
 \end{figure}
 
 
 
 \begin{description}
-	\item [Reconstructed Patch] Each VAE reconstructs its input patch and optionally a part of the neighbourhood. It tells the other VAEs what the reconstructed version of its input patch looks like. Information about the optionally reconstructed neighbourhood is not communicated to other VAEs. Thus, a reconstructed version of the input is sent to other VAEs and added as a new channel to their input. This process is exemplified for the first VAE in \figref{recon_patch_forw}. The problem with this approach is that in the first time-step all VAEs reconstruct their patch and the reconstructed version is communicated to the neighbouring VAEs. As a result, in the second time-step, each VAE receives information about the entire image and thus has access to global instead of only local image information\sidenote{even with a very large number of VAEs and communication restricted to the local neighbourhood, information about the entire image propagates to all VAEs over time, provided enough time-steps are executed}.  
-	\item [Neighbouring Patch] Instead of communicating the reconstructed input patch to the neighbours, a prediction can be made of what the input patch of the neighbour looks like and this prediction can be communicated. This has the advantage that each UAE receives different versions of the same patch as input and thus has no global image information. This process for the first VAE is visualised in \figref{neighbouring_patch_forw}. Intuitively, this can solve the following problem: If a VAE cannot decide which digit to predict, neighbouring VAEs can help it by predicting its input patch in a form that is more similar to one of the digits and thus support the VAE by making its decision. 
-	\item[Entire image] The simplest version is when each VAE predicts the entire image and communicates this to all other VAEs. In the first time-step, only local information is available, in the second time-step, various predictions of how the image could look are additionally provided. Each VAE can then correct its own prediction based on these predictions of the other VAEs. This process is represented in \figref{recon_img_forw}. Identical to ``reconstructed patches'', global image information is made available to each VAE. This problem can be alleviated if for each VAE $i$ that receives the input patch $\boldsymbol{x}^{(i)}$, the part from its prediction of the whole image corresponding to $\boldsymbol{x}^{(i)}$ is masked. Otherwise, an input patch of a VAE is fed through the encoder and decoder and then communicated to the other VAEs. Then implicitly reconstructed data and not just neighbourhood predictions gets to each VAE as input. 
+	\item [Reconstructed Patch] Each VAE reconstructs its input patch and optionally a part of the neighbourhood. It tells the other VAEs how the reconstructed version of its input patch looks. Information about the optionally reconstructed neighbourhood is not communicated to other VAEs. Thus, a reconstructed version of the input is sent to other VAEs and added as a new channel to their input. This process is visualised for the first VAE in \figref{recon_patch_forw}. The problem with this approach is that during the first time-step, all VAEs communicate their reconstructed patch to the neighbouring VAEs. As a result, in the second time-step, each VAE receives information about the entire image and thus has access to global instead of only local image information\sidenote{even with a huge number of VAEs and communication restricted to the local neighbourhood, information about the entire image propagates to all VAEs over time, provided enough time-steps are executed}.  
+	\item [Neighbouring Patch] Instead of communicating the reconstructed input patch to the neighbours, a prediction can be made of what the input patch of the neighbour looks like, and this prediction can be communicated. This has the advantage that each VAE receives different versions of the same patch as input and thus has no global image information. This process for the first VAE is visualised in \figref{neighbouring_patch_forw}. Intuitively, this can solve the following problem: If a VAE cannot decide which digit to predict, neighbouring VAEs can help it by predicting its input patch in a form that is more similar to one of the digits and thus support the VAE by making its decision. 
+	\item[Entire image] The simplest version is when each VAE predicts the entire image and communicates this to all other VAEs. In the first time-step, only local information is available. In the second time-step, various predictions of how the image could look are additionally provided. Each VAE can then correct its prediction based on these predictions of the other VAEs. This process is represented in \figref{recon_img_forw}. Identical to ``reconstructed patches'', global image information is made available to each VAE. This problem can be alleviated if each VAE $i$ that receives the input patch $\boldsymbol{p}_i \subset
+ \boldsymbol{x}$, masks out $\boldsymbol{p}_i$ in its predictions, i.e. only communicates $\boldsymbol{c}_i \subset \boldsymbol{\hat{x}}$ where $\boldsymbol{p}_i \nsubseteq \boldsymbol{c}_i$. Otherwise, an input patch of a VAE is fed through the encoder, and the decoder's prediction is communicated to the other VAEs. Then implicitly reconstructed data, not just neighbourhood predictions, are forwarded to other VAEs as input. 
 \end{description}
 
 
 
-\subsubsection{Communication Channel}
-Another way to communicate is through a dedicated communication channel. For this purpose, each VAE has not only $1$ input and $1$ output channel but $4$ input and output channels. The input patch is fed into the first channel and a reconstructed version of it is predicted in the first output channel. This corresponds to a classic VAE and the loss function remains identical.
-The remaining three channels are for communication: Each VAE generates a separate communication output for its $3$ neighbouring VAEs on the remaining $3$ channels. Each of these channels is then stacked to the input of the corresponding VAE. For example, the first VAE receives a given patch on the input channel $1$ and communication data from the 2nd, 3rd, and 4th VAE on the input channels $2$-$4$. Based on this information, it outputs a reconstruction of the patch on the output channel $1$ and communication data to the 2nd, 3rd, and 4th VAE on the output channels $2$-$4$. Thus, there is a dedicated two-way communication channel between each neighbouring VAE. This is shown in \figref{vae_comm_channel}.
 
+
+
+
+
+
+
+
+
+\subsubsection{Communication Channel}
+Another way to communicate is through a dedicated communication channel. For this purpose, each VAE has not only $1$ input and $1$ output channel but $4$ input and output channels. The input patch is fed into the first channel, and a reconstructed version is predicted in the first output channel. Thus, the first channels correspond to a classic VAE, and the loss function remains identical.
+The remaining three channels are for communication: Each VAE generates a separate communication output for its three neighbouring VAEs. Thus, each VAE receives an input patch to reconstruct and communication data. These four input matrices are stacked and fed into the encoder. For example, the first VAE receives a given patch on the input channel $1$ and communication data from the 2nd, 3rd, and 4th VAE on the input channels $2$-$4$. Based on this information, it outputs a patch reconstruction on the output channel $1$ and communication data that is sent to the 2nd, 3rd, and 4th VAE on the output channels $2$-$4$. Thus, there is a dedicated two-way communication channel between each neighbouring VAE. This is shown in \figref{vae_comm_channel}.
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.89\textwidth]{vae_comm_channel}
-    \caption[Communication between VAEs with a dedicated communication channel]{Each VAE has one and output channel to receive and reconstruct a given image patch. The other input and output channels are used for communication: Each VAE has for each other VAE a separate output channel to send messages and an additional input channel to receive messages.}
+    \caption[Communication between VAEs with a dedicated communication channel]{Each VAE has one output channel to receive and reconstruct a given image patch. The other input and output channels are used for communication: Each VAE has for each other VAE a separate output channel to send messages and an additional input channel to receive messages.}
     \figlbl{vae_comm_channel}
 \end{figure}
 
-The loss function remains the same for the first output channel since the goal is still the same, i.e. to reconstruct the output as good as possible. The only difference is that model can now access $4$ input channels to reconstruct the input instead of one channel. However, the communication channels must be trained in order for them to be helpful for input reconstruction. Therefore, an additional loss term is applied on the $3$ output communication channels. Thereby, the idea is to optimize the output of these communication channels in a way so that the other VAEs can better reconstruct their patch.
+The loss function remains the same for the first output channel since the goal is still the same, i.e. to reconstruct the output as well as possible and to have a well-shaped latent space. The only difference is that model can now access four input channels instead of one. However, the communication channels must be trained in order for them to be helpful for input reconstruction. Therefore, an additional loss term is applied to the $3$ output communication channels. Thereby, the idea is to optimise the output of these communication channels so that the other VAEs can better reconstruct their patch.
 
-Let $V = {V_1, ..., V_n}$ be the set of $n$ VAEs. Each VAE has $n$ output channels, one channel for the reconstructed image and $n-1$ channels for communication. Furthermore, each VAE $V_i$ has a loss $L_{\text{VAE}_i}$ based on the reconstruction goodness and the shape of the latent space (c.f. \eqref{hso_6}). The $3$ communication channels of a VAE $i$ can influence the loss $L_{VAE_j}$ of VAE $j$ (i.e. help to improve the loss by providing better information). How helpful the communication channels are can therefore be determined by the average of the loss of the other VAEs.
+Let $V = {V_1, ..., V_n}$ be the set of $n$ VAEs. Each VAE has $n$ output channels, one channel for the reconstructed image and $n-1$ channels for communication. Furthermore, each VAE $V_i$ has a loss $\mathcal{L}_{\text{VAE}_i}$ based on the reconstruction goodness and the shape of the latent space (c.f. \eqref{hso_6}). The $3$ communication channels of VAE $i$ can influence the loss $\mathcal{L}_{VAE_j}$ of VAE $j$ (i.e. help to improve the loss by providing better information). How helpful the communication channels are can therefore be determined by the average loss of the other VAEs.
 
 \begin{equation}\eqlbl{hso_9}
-	L_{c_i} = \frac{1}{n-1} \sum_{n}^{j=1} L_{\text{VAE}_j} \text{, if } i \neq j
+	\mathcal{L}_{c_i} = \frac{1}{n-1} \sum_{n}^{j=1} \mathcal{L}_{\text{VAE}_j} \text{, if } i \neq j
 \end{equation}
 
-Thus, the loss of a VAE with communication channel is
+Thus, the loss of a VAE with a communication channel is
 
 \begin{equation}\eqlbl{hso_10}
-		L_{{\text{VAE}_C}_i} = L_{\text{VAE}_i} + \beta \cdot L_{\text{KLD}_i} + \beta_2 \cdot L_{c_i}
+		\mathcal{L}_{{\text{VAE}_C}_i} = \mathcal{L}_{\text{VAE}_i} + \beta \cdot \mathcal{L}_{\text{KLD}_i} + \beta_2 \cdot \mathcal{L}_{c_i}
 \end{equation}
 
-where $\beta_2$ is a weight factor for the communication channel. Thus, each model optimizes its own reconstruction error, the shape of the latent space, and tries to improve the latent space and reconstruction error of other VAEs.
+where $\beta_2$ is a weight factor for the communication channel. Thus, each model optimises its own reconstruction error, the shape of the latent space, and tries to improve the latent space and reconstruction error of other VAEs.
 
 
-TODO: This has not been implemented yet (therefore, not explained in more detail).
+TODO: This still needs to be implemented (therefore, not explained in more detail).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 \subsection{Class Prediction}
@@ -736,7 +742,7 @@ The accuracy was calculated by comparing a sample with \emph{one} prototype per 
 
 
 
-TODO: Model Head is missing in this evaulation
+%TODO: Model Head is missing in this evaulation
 
 
 
