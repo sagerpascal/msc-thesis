@@ -4,21 +4,23 @@
 
 Depending on the context, a variable can be a scalar value, a vector, or a matrix. The following formatting is used:
 
-\begin{tabular}{ p{4cm} p{3cm} p{7cm} }
+\begin{tabular}{ p{5cm} p{2cm} p{7cm} }
 	\textbf{Formatting} & \textbf{Example} & \textbf{Meaning}\\
 	\hline
   	No formatting, lower case & $a$ & A scalar value\\
   	Bold, lower case & $\boldsymbol{a}$ & A vector\\
   	Bold, upper case & $\boldsymbol{A}$ & A matrix\\
   	Curved brackets with a point & $a(\cdot)$ & A function, where $(\cdot)$ is a placeholder for a variable\\
-  	Rectangular brackets after a variable & $a[t]$ & Depending on the context, either variable $a$ at time $t$\\
-  	                                      & $\boldsymbol{x}[c]$ & or variable $\boldsymbol{x}$ is from class $c$\\
+  	Rectangular brackets    & $a[t]$ & Depends on context, either variable $a$ at time $t$\\
+							& $\boldsymbol{x}[c]$ & or variable $\boldsymbol{x}$ is from class $c$\\
   	Superscript rectangular brackets & $a^{[l]}$ & $l$ is the index of the layer, e.g. $\boldsymbol{W}^{[l]}$ is the weight matrix of layer $l$\\
   	Superscript curved brackets & $a^{(i)}$ & $i$ is the index of the sample, e.g. $\boldsymbol{x}^{(i)}$ is the$i$-th sample of a data set\\
 \end{tabular}
 
 
 \section{Variables}
+
+
 
 \begin{tabular}{ p{3cm} p{11cm} }
 	\textbf{Variable} & \textbf{Meaning}\\
@@ -35,12 +37,18 @@ Depending on the context, a variable can be a scalar value, a vector, or a matri
 	$b$ & The bias of a single neuron\\
 	$\boldsymbol{b}$ & The bias of a network layer\\
 	$C$ & The set of classes of a classification task\\
-	$\boldsymbol{h}$ & The latent representations of a network that are typically used in a subsequent downstream task\\
+	$\boldsymbol{h}$ & The latent representations of a network that are typically used in a subsequent downstream task\\  % OK
 	$k$ & The number of neurons within a layer\\
 	$L$ & The number of layers of a network\\
 	$l$ & The index of a layer, e.g. $\boldsymbol{W}^{[l]}$ is the weight matrix of layer $l$\\
 	$m$ & The number of input samples within a (mini-)batch\\
 	    & or the state of the memory in context of Hoppfield networks\\
+\end{tabular}
+
+
+\begin{tabular}{ p{3cm} p{11cm} }
+	\textbf{Variable} & \textbf{Meaning}\\
+	\hline
 	$n$ & The length (size) of a vector, for example, an input sample is defined as $\boldsymbol{x} = (x_1, ..., x_n)$\\
 	$w_{ij}$ & The weight between neuron $i$ and neuron $j$\\
 	$\boldsymbol{w} = (w_1, ..., w_n)$ & A weight vector of a neuron\\
