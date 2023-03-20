@@ -201,7 +201,7 @@ In contrast to end-to-end backpropagation of error architectures, the gradients 
     \figlbl{vertical_org_arch1}
 \end{figure}
 
-The model used consists of $4$ fully connected layers with ReLU activation. The first layer has $512$ neurons, the second $256$ neurons, the third $128$ neurons and the fourth $64$ neurons. The model is illustrated in Figure \figref{vertical_org_arch1}. Each layer is trained separately by minimising the loss of equation \eqref{vso_10} with the Adam optimizer\sidecite{Kingma_Ba_2017} and a learning rate of $\eta = 1 \cdot 10^{-3}$. The mini-batch size is $60,000$. 
+The model used consists of $4$ fully connected layers with ReLU activation. The first layer has $512$ neurons, the second $256$ neurons, the third $128$ neurons and the fourth $64$ neurons. The model is illustrated in Figure \figref{vertical_org_arch1}. Each layer is trained separately by minimising the loss of equation \eqref{vso_10} with the Adam optimizer\sidecite{Kingma2015AdamAM} and a learning rate of $\eta = 1 \cdot 10^{-3}$. The mini-batch size is $60,000$. 
 
 \subsection{Extraction of Representations}\seclbl{vertical_self_org_representations}
 In accordance with net-fragments as in \secref{neuro_concepts_net_fragments}, the representations are not extracted at a specific point in the network (i.e. a pre-defined layer), but all representations from all layers are taken into account to fulfil a task.
