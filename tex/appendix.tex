@@ -232,7 +232,6 @@ The \emph{first} Hebbian-based method can further improve the results even after
 
 
 \begin{table}[h] 
-    \tablbl{nll_hebb_pruning}
     \centering
 	 \begin{tabular}{l c c} 
     	%\hline
@@ -251,6 +250,7 @@ The \emph{first} Hebbian-based method can further improve the results even after
         %\hline
     \end{tabular}
     \caption[NLL Loss of Hebbian Pruning Network]{NLL loss of the model before and after the \emph{first} Hebbian-based pruning method.}
+    \tablbl{nll_hebb_pruning}
 \end{table}
 
 The NLL loss on the MNIST test dataset decreases from \(0.05314\) to \(0.03386\), while the loss on the MNIST-C test dataset decreases from \(0.6013\) to \(0.4766\) after applying the \emph{first} Hebbian based method.
@@ -394,7 +394,6 @@ The ``head'' is identical for all models and consists of a sequence of the follo
 \newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 \newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 \newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
-    \tablbl{pre_study_models}
     \centering
 	 \begin{tabular}[t]{l L{9cm}} 
     	%\hline
@@ -418,6 +417,7 @@ The ``head'' is identical for all models and consists of a sequence of the follo
 		   & edge detection (ks=$3\times3$, ch=$2$) $\rightarrow$ ReLU $\rightarrow$ head \\ %\hline
     \end{tabular}
     \caption[Different architectures of classification networks investigated for net-fragments]{A description of the different classification networks investigated for net-fragments. A ReLU activation is employed between each layer. ``ks'' is the kernel size of a convolutional layer, and ``ch'' is the number of channels.}
+    \tablbl{pre_study_models}
 \end{table}
 
 After each epoch, the model's weights and activations of each layer are stored.
@@ -497,7 +497,6 @@ The two autoencoder architectures used are shown in \tabref{pre_study_ae_models}
 \newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 \newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 \newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
-    \tablbl{pre_study_ae_models}
     \centering
 	 \begin{tabular}{l L{9cm}} 
     	%\hline
@@ -510,6 +509,7 @@ The two autoencoder architectures used are shown in \tabref{pre_study_ae_models}
         %\hline
     \end{tabular}
     \caption[Different architectures of autoencoders that are investigated for net-fragments]{A description of the different autoencoder networks that are investigated for net-fragments.}
+    \tablbl{pre_study_ae_models}
 \end{table}
 
 The autoencoder's parameters are optimised by minimising a reconstruction loss (i.e. a distance measurement between the input and the reconstructed output) with the Adam optimiser \sidecite{Kingma2015AdamAM} so that the output looks similar to the input even though a bottleneck-layer reduces the network's capacity in the middle.
