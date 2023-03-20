@@ -62,7 +62,7 @@ In nature, groups of millions of units that solve complex tasks using only local
 For example, ants can navigate rugged terrain with local pheromone-based communication and thus form a collective type of intelligence.
 Such observations inspired researchers to build algorithms based on local communication and self-organisation, for example, ant colony optimisation algorithms \sidecite{dorigo1997ant}.
 DeepSwarm \sidecite{Byla_Pang_2020} is a neural architecture search method that uses this algorithm to search for the best neural architecture.
-This method achieves competitive performance on relatively small datasets such as MNIST \cite{Lecun_Bottou_Bengio_Haffner_1998}, Fashion-MNIST \cite{xiao2017/online}, and CIFAR-10 \cite{krizhevsky2009learning}.
+This method achieves competitive performance on relatively small datasets such as MNIST \cite{Lecun_Bottou_Bengio_Haffner_1998}, Fashion-MNIST \cite{xiao2017/online}, and CIFAR-10 \cite{cifar_10}.
 
 Cellular Automata mimic developmental processes in multi-cell organisms.
 They contain a grid of similar cells with an internal state updated periodically.
@@ -74,7 +74,7 @@ Neural Cellular Automata \sidecite{Wulff1992LearningCA}.  Neural networks can be
 The input in such a neural network is the state of a given cell and its neighbours, and the output is the following cell state.
 Usually, the same network is applied to all cells.
 In this case, a fully connected neural network applied to each cell and its local neighbours can be reformulated as a CNN\sidecite{PhysRevE}.
-NCAs can be trained efficiently with gradient descent to grow given 2D patterns such as images\sidecite{48963, Mordvintsev_Randazzo_Fouts_2022}.
+NCAs can be trained efficiently with gradient descent to grow given 2D patterns such as images\sidecite{NCAs_distill, Mordvintsev_Randazzo_Fouts_2022}.
 These images are grown through self-organisation (i.e. the pixels pick a colour based on the colour of neighbouring pixels) and are surprisingly resistant to damage.
 For example, large parts of the images can be removed, and the system can still rebuild the entire image\sidenote{a demo of this regeneration process is available at \cite{NCAs_distill}}.
 However, the aforementioned approaches can only grow the pattern they were trained on.
@@ -154,7 +154,7 @@ There exist several methods to self-organise such architectures.
 For completeness, two well-known approaches are described in the following.
 However, since this thesis focuses on the self-organisation of deep learning systems without time-dependent spikes, these approaches are only roughly described, and interested readers may refer to the respective literature.
 
-Similar to deep learning, there exists a multitude of different spiking network architectures; Shallow \sidecite{masquelier2007unsupervised, 6469239} and deep \sidecite{kheradpisheh2018stdp, mozafari2019bio} network structures, networks based on fully connected layers \sidecite{diehl2015unsupervised} or convolutional layers \sidecite{cao2015spiking, tavanaei2016bio}, as well as networks that are trained with different learning principles such as supervised \sidecite{diehl2015fast, zenke2018superspike}, unsupervised \sidecite{diehl2015unsupervised, ferre2018unsupervised} and reinforcement learning \sidecite{mozafari2018first}.
+Similar to deep learning, there exists a multitude of different spiking network architectures; Shallow \sidecite{masquelier2007unsupervised, 6469239} and deep \sidecite{KHERADPISHEH201856, mozafari2019bio} network structures, networks based on fully connected layers \sidecite{diehl2015unsupervised} or convolutional layers \sidecite{cao2015spiking, tavanaei2016bio}, as well as networks that are trained with different learning principles such as supervised \sidecite{diehl2015fast, zenke2018superspike}, unsupervised \sidecite{diehl2015unsupervised, ferre2018unsupervised} and reinforcement learning \sidecite{mozafari2018first}.
 
 One type of methodology for self-organisation of SNNs is based on a stackable toolkit to assemble multi-layer neural networks \sidecite{Raghavan_Lin_Thomson_2020}.
 This toolkit is a dynamical system that encapsulates the dynamics of spiking neurons, their interactions, and the plasticity rules that control the flow of information between layers.
@@ -330,8 +330,8 @@ With end-to-end backpropagation, systems are trained as a single unit and conseq
 Therefore, alternative learning algorithms are very relevant to this thesis.
 The approach based on vertical self-organisation uses proxy objective functions to train the layer locally as independent units (c.f. Chapter \chref*{methods}).
 Proxy objective functions are used in this thesis as this method is the only known alternative to backpropagation of error that scales well to large neural networks and large datasets.
-According to \sideciteay{Duan_Principe_2022} and \sideciteay{Bartunov_Santoro_Richards_Marris_Hinton_Lillicrap_2018}, only proxy objective functions have achieved competitive performance with large models on large datasets such as ImageNet \sidecite{Deng_Dong_Socher_Li_KaiLi_LiFei_Fei_2009}.
-The other approaches work only on smaller datasets such as MNIST \cite{Lecun_Bottou_Bengio_Haffner_1998}, or CIFAR-10 \cite{krizhevsky2009learning} so far.
+According to \sideciteay{Duan_Principe_2022} and \sideciteay{Bartunov_Santoro_Richards_Marris_Hinton_Lillicrap_2018}, only proxy objective functions have achieved competitive performance with large models on large datasets such as ImageNet \sidecite{deng2009imagenet}.
+The other approaches work only on smaller datasets such as MNIST \cite{Lecun_Bottou_Bengio_Haffner_1998}, or CIFAR-10 \cite{cifar_10} so far.
 
 \section{Representation Learning}\seclbl{visual_rep_learning}
 
@@ -416,7 +416,7 @@ On the other hand, black-box models use meta-learning to directly provide the pa
 Special cases of black-box models are approaches based on metric learning\sidenote{an explanation why this approach can be considered black-box learning is provided by Hospedales et al. \cite{Hospedales_Antoniou_Micaelli_Storkey_2021}}:
 The outer meta-learning process optimises a model to transform inputs into representations that the inner process can use for classification by comparing the cosine similarity or euclidean distance between them \cite{10-5555-3294996-3295163, qiao2018few, Chen_Liu_Kira_Wang_Huang_2020}.
 
-Other approaches meta-learn the optimiser of the inner base learning algorithm \cite{ravi2016optimization, Li_Malik_2016, Li_Zhou_Chen_Li_2017}.
+Other approaches meta-learn the optimiser of the inner base learning algorithm \cite{ravi2017optimization, Li_Malik_2016, Li_Zhou_Chen_Li_2017}.
 Typically, such approaches generate each optimisation step of the base learning algorithm based on the model's parameters and a given base objective function.
 The trainable component can, for example, be simple hyper-parameters such as the learning rate \sidecite{Li_Zhou_Chen_Li_2017} or more sophisticated such as pre-conditioned matrices \sidecite{Park_Oliva_2020}.
 Even the learning algorithm itself can be learned \sidecite{kirsch2021meta}.
@@ -437,7 +437,7 @@ Even the dataset itself can be learned with dataset distillation; a rather large
 \subsection{Meta-Optimiser}
 The second dimension of the meta-learning landscape is the \emph{meta-optimiser}.
 The meta-optimiser describes how the algorithm in the outer meta-learning loop is learned.
-Many methods use backpropagation of error and gradient descent (c.f. Section \secref{ann}) to optimise the meta parameters \cite{ravi2016optimization, 10-5555-3305381-3305498, li2019feature, 10-5555-3305381-3305502, pmlr-v80-franceschi18a, Micaelli_Storkey_2021, pmlr-v108-lorraine20a}.
+Many methods use backpropagation of error and gradient descent (c.f. Section \secref{ann}) to optimise the meta parameters \cite{ravi2017optimization, 10-5555-3305381-3305498, li2019feature, 10-5555-3305381-3305502, pmlr-v80-franceschi18a, Micaelli_Storkey_2021, pmlr-v108-lorraine20a}.
 However, this algorithm has some well-known weaknesses (c.f. \secref{limitationsDL}) and requires differentiability.
 When the inner base learning algorithm includes non-differentiable steps \sidecite{Cubuk_2019_CVPR} or the outer meta objective function is non-differentiable \sidecite{huang2019addressing}, many methods utilise the RL paradigm to optimise the outer objective \sidecite{Duan_Schulman_Chen_Bartlett_Sutskever_Abbeel_2016}.
 However, using RL to alleviate the differentiability requirement is usually computationally very costly.
@@ -450,7 +450,7 @@ The third dimension of the meta-learning landscape is the \emph{meta-objective}.
 The meta-objective describes the goal of the meta-learning algorithm.
 Typically, the performance of a meta-learning algorithm is evaluated with a metric on the inner loop or a meta-metric on the outer loop.
 However, there are several design options within the meta-learning framework.
-First, the inner base-learning episodes can either take few \sidecite{ravi2016optimization, 10-5555-3305381-3305498} or many \sidecite{10-5555-3305381-3305502, 10-5555-3305890-3306069} samples, and thus the goal can be to either improve few- or many-shot performance.
+First, the inner base-learning episodes can either take few \sidecite{ravi2017optimization, 10-5555-3305381-3305498} or many \sidecite{10-5555-3305381-3305502, 10-5555-3305890-3306069} samples, and thus the goal can be to either improve few- or many-shot performance.
 Second, the validation loss of the inner base-learning algorithm can either be calculated at the end of a learning episode to encourage a better \emph{final} performance of the base task or as the sum of the loss calculated after each update step to encourage \emph{faster} learning \cite{antoniou2018how}.
 Third, the goal of the meta-learning can either be to solve better any task drawn from a set of (often related) tasks (i.e. multi-task setting) \sidecite{10-5555-3305381-3305498, 10-5555-3294996-3295163, li2019feature}, or to solve one specific task better than when only the inner base learning algorithm is used (i.e. single task setting) \sidecite{10-5555-3305381-3305502}.
 Finally, the meta-optimisation can either be done offline (i.e. the inner and outer loop alternate) \sidecite{10-5555-3305381-3305498} or online (i.e. the meta-learning takes place within a base learning episode) \cite{li2019feature}.
