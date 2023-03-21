@@ -10,7 +10,7 @@ The authors call the process of generating the highly structured network in the 
 Network self-organisation is the only mechanism that experiments have not yet disproved as the brains Kolmogorov algorithm \sidecite{Willshaw_VonDerMalsburg_1976, Willshaw_VonDerMalsburg_1979}.
 This mechanism loops between activity and connectivity, with activity acting back on connectivity through synaptic plasticity until a steady state, called an attractor network, is reached.
 The consistency property of an attractor network means that a network has many alternative signal pathways between pairs of neurons \sidecite{Malsburg_1987}.
-Thus, the brain develops as an overlay of attractor networks called net-fragments \sidecite{vonderMalsburg_2018}.
+Thus, the brain develops as an overlay of attractor networks called net fragments \sidecite{vonderMalsburg_2018}.
 Net fragments consist of small sets of neurons, whereby each neuron can be part of several net fragments.
 The network self-organisation has to start from an already established coarse global structure which is improved in a coarse-to-fine manner to avoid being caught in local optima.
 
@@ -78,7 +78,7 @@ NCAs can be trained efficiently with gradient descent to grow given 2D patterns 
 These images are grown through self-organisation (i.e. the pixels pick a colour based on the colour of neighbouring pixels) and are surprisingly resistant to damage.
 For example, large parts of the images can be removed, and the system can still rebuild the entire image\sidenote{a demo of this regeneration process is available at \cite{NCAs_distill}}.
 However, the aforementioned approaches can only grow the pattern they were trained on.
-A recent method called Variational Neural Cellular Automata \sidecite{Palm_GonDuque_Sudhakaran_Risi_2022} use an NCA as the decoder of a variational auto-encoder \sidecite{Kingma_Welling_2014}.
+A recent method called Variational Neural Cellular Automata \sidecite{Palm_GonDuque_Sudhakaran_Risi_2022} use an NCA as the decoder of a variational autoencoder \sidecite{Kingma_Welling_2014}.
 This probabilistic generative model can grow many images from a given input encoded in a vector format.
 However, there is still a big gap in performance compared to state-of-the-art generative models.
 Besides growing 2D patterns, NCAs can also create 3D patterns such as buildings in the popular video game Minecraft by utilising 3D CNNs \sidecite{Sudhakaran_Grbic_Li_Katona_Najarro_Glanois_Risi_2021} or generate structures with a specific function such as simulated robots able to locomote\sidecite{Horibe_Walker_Risi_2021}.
@@ -101,9 +101,9 @@ This allows the agent to adapt better to the changed conditions within the envir
 Besides optimising the weights, self-organisation has also been used to change the learning rule.
 
 The method ``evolve and merge`` \sidecite{Pedersen_Risi_2021} uses the so called ``ABCD'' Hebbian learning rule which updates the weights as follows:
-\begin{equation}\eqlbl{McCulloch_Pitts_act}
+\begin{align}\eqlbl{McCulloch_Pitts_act}
 	\Delta w_{ij} = \alpha (A a_i a_j + B a_i + C a_j + D)
-\end{equation}%
+\end{align}%
 
 $\alpha$ is the learning rate, $a_i$ and $a_j$ are the activity levels of connected neurons and $A$, $B$, $C$, and $D$ are learned parameters.
 For each connection in the network, the four parameters are learned.
@@ -114,7 +114,7 @@ Alternatively, it is also possible to initialise the network with shared paramet
 Kirsch and Schmidhuber \sidecite{kirsch2021meta} use multiple tiny recurrent neural networks (RNNs) that have the same weight parameters but different internal states\sidenote{intuitively, these tiny RNNs can be interpreted as more complex neurons.}.
 By using self-organisation and Hebbian learning, they show that it is possible to learn powerful learning algorithms such as backpropagation while running the network in forward-mode mode only.
 However, it works only for small-scale problems as it can get stuck in local optima.
-In general, self-organising systems are hard to optimise and only work for small data sets or simple problems so far.
+In general, self-organising systems are hard to optimise and only work for small datasets or simple problems so far.
 
 Risi \sidecite{risi2021selfassemblingAI} describes why self-organising systems are hard to train;
 First, the system is hard to control because no central entity is in charge, but the system must still be nudged in the right direction.
@@ -170,7 +170,7 @@ Based on the learned patterns, the inter-layer connections are modified to gener
 In general, SNNs must ``convert'' static input data such as images to a dynamic signal (c.f. \secref{spiking_networks
 }). However, such approaches lose a lot of information about the input.
 For example, all information about colour and thin structures is lost if DoG filters (c.f. \secref{spiking_networks}) are used to generate spikes.
-Currently, this seems to be one of the limiting factors why such SNNs cannot match the performance of deep learning algorithms and often only work well for small grey-scale image data sets such as MNIST \cite{Lecun_Bottou_Bengio_Haffner_1998}.
+Currently, this seems to be one of the limiting factors why such SNNs cannot match the performance of deep learning algorithms and often only work well for small grey-scale image datasets such as MNIST \cite{Lecun_Bottou_Bengio_Haffner_1998}.
 
 \subsection{Relevance}\seclbl{self_org_relevance}
 Self-organisation is, according to von der Malsburg et al. \sidecite{von_der_Malsburg_Stadelmann_Grewe_2022}, one of the fundamental principles for natural intelligence.
@@ -226,9 +226,9 @@ The goal of the learning process is to make the goodness be above some threshold
 The probability that an input vector is positive $P(\text{positive}
 )$ is given by applying the logistic function $\sigma$ to the goodness minus the threshold $\theta$
 
-\begin{equation}\eqlbl{ff2}
+\begin{align}\eqlbl{ff2}
 	P(\text{positive}) = \sigma \left( \sum_j y^2_j - \theta \right)
-\end{equation}
+\end{align}
 
 where $y_j$ is the output of a hidden unit.
 This algorithm can be used in different settings, for example, for supervised learning.
@@ -252,9 +252,9 @@ Good targets are those that minimise the loss in the output layer if they are re
 Intuitively, each layer tells the previous layer the best possible input.
 
 Let's define $h_l(\cdot)$ as a layer's function, i.e. layer $l$ calculates its activation $\boldsymbol{\hat{a}_l}$ based on the output of the previous layer $l-1$ as
-\begin{equation}\eqlbl{tp0}
+\begin{align}\eqlbl{tp0}
 	\boldsymbol{\hat{a}_l} = h_l(\boldsymbol{\hat{a}_{l-1}})
-\end{equation}
+\end{align}
 
 In the context of target propagation, $\boldsymbol{\hat{a}_l}$ is the actual layer activation and $\boldsymbol{a_l}$ is the desired layer activation (i.e. the target).
 The output of a network with $L$ layers is a prediction $\boldsymbol{\hat{y}} = \boldsymbol{\hat{a}_L}$. If for each layer an inverse function $\boldsymbol{\hat{a}_{l-1}} = h_l^{-1}(\boldsymbol{\hat{a}_l})$ would exist, a layer's input could be calculated based on a layer's output. 
@@ -262,24 +262,24 @@ This idea is used by target propagation: During the forward pass, a prediction $
 Thus, if each layer predicted this target as output, the network's output would be the correct label distribution $\boldsymbol{y}$.
 However, advanced neural networks are usually not invertible, and approximate inverse transformations have to be learned with decoders
 
-\begin{equation}\eqlbl{tp3}
+\begin{align}\eqlbl{tp3}
 	d_l(\boldsymbol{\hat{a}_l}) \approx  h_l^{-1}(\boldsymbol{\hat{a}_l})
-\end{equation}
+\end{align}
 
 Thus, the target activation can be approximated by a decoder:
 
-\begin{equation}\eqlbl{tp4}
+\begin{align}\eqlbl{tp4}
 	\boldsymbol{a_{l}} \approx d_{l+1}(\boldsymbol{a_{l+1}}) 
-\end{equation}
+\end{align}
 
 
 
 Different instances of target propagation methods mainly differ in the way the targets are generated or the loss function of the decoder $L_{d}$ is calculated.
 Vanilla target propagation \sidecite{Bengio_2014} directly derives the target from the decoder $\boldsymbol{a_{l}} = d_{l+1}(\boldsymbol{a_{l+1}}) $ and trains the decoder $d(\cdot)$ by minimizing
 
-\begin{equation}\eqlbl{tp5}
+\begin{align}\eqlbl{tp5}
 	L_{d} = \lVert d_{l+1}(\boldsymbol{\hat{a}_{l+1}} + \epsilon) - (\boldsymbol{\hat{a}_l} + \epsilon) \rVert_2^2
-\end{equation}
+\end{align}
 
 where $\epsilon$ is some added Gaussian noise to enhance generalisation.
 It is obvious that this loss function encourages the decoder $d_l(\cdot)$ to learn the inverse of $h_l(\cdot)$ by minimising the difference between the activations from the forward-pass $\boldsymbol{\hat{a}_l}$ of layer $l$ and the decoder's prediction of $\boldsymbol{\hat{a}_l}$ (calculated based on the activations of the subsequent layer $\boldsymbol{\hat{a}_{l+1}}$).
@@ -288,9 +288,9 @@ Afterwards, the targets are predicted by feeding the target activations $\boldsy
 A major improvement of vanilla target propagation is to extend the decoder $g()$ with a correction term that enables a more robust optimality guarantee for bigger networks \sidecite{Lee_Zhang_Fischer_Bengio_2015}.
 This method is known as \emph{difference target propagation} and extends Equation \eqref*{tp4} as follows:
 
-\begin{equation}\eqlbl{tp6}
+\begin{align}\eqlbl{tp6}
 	\boldsymbol{a_{l}} \approx d_{l+1}(\boldsymbol{a_{l+1}}) + \left[ \boldsymbol{\hat{a}_l} - d_{l+1}\boldsymbol{\hat{a}_{l+1}}) \right]
-\end{equation}
+\end{align}
 
 The additional term $\left[ \boldsymbol{\hat{a}_l} - d_{l+1}\boldsymbol{\hat{a}_{l+1}}) \right]$ is to correct errors of the decoder in estimating the inverse.
 Difference target propagation has been further improved by novel loss functions $L_{d}$ for the decoder.
@@ -485,9 +485,9 @@ Finally, the meta-optimisation can either be done offline (i.e. the inner and ou
 %A Gram matrix calculates the correlations between the convolutional maps (i.e. between the filter responses) of a convolutional layer output.
 %For a convolutional filter output $F$ of layer $l$ and two flattened convolutional maps $i$ and $j$ it is defined as \sidecite{7780634}:
 
-%\begin{equation}\eqlbl{Gram_mat}
+%\begin{align}\eqlbl{Gram_mat}
 %		G_{ij}^{l} = \sum_k F^{l}_{ik} \cdot F^{l}_{jk}
-%\end{equation}%
+%\end{align}%
 
 %Thereby, $k$ is a hyperparameter defining how many elements of the convolutional output $F$ are compared.
 %Gatys et al. \sidecite{7780634} applied this formula the first time to convolutional filters but did not fully explain why it works.

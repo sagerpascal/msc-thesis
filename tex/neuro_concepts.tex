@@ -46,7 +46,7 @@ In fact, the plausibility of backpropagation of error for explaining how the bra
 The biologically most plausible learning algorithm is Hebbian learning (c.f. Section \secref{hebbian}) and its variants, such as contrastive Hebbian learning \sidecite{Movellan_1991}.
 However, Hebbian learning is not well suited for learning good image representation if a network is trained from scratch. However, it might be more promising for processing already retrieved representations (c.f. Appendix \chref{exp_hebb_learning}).
 
-Besides Hebbian learning, many alternative and biologically more plausible algorithms have been proposed, such as the feedback alignment (FA) algorithm \sidecite{Lillicrap_Cownden_Tweed_Akerman_2014}, generalised recirculation \sidecite{O_Reilly_1996}, as well as target propagation (TP) \sidecite{Le__Cun_1986} (c.f. \secref{alt_train_algo}).
+Besides Hebbian learning, many alternative and biologically more plausible algorithms have been proposed, such as the feedback alignment (FA) algorithm \sidecite{Lillicrap_Cownden_Tweed_Akerman_2016}, generalised recirculation \sidecite{O_Reilly_1996}, as well as target propagation (TP) \sidecite{Le__Cun_1986} (c.f. \secref{alt_train_algo}).
 However, Bartunov et al. \sidecite{Bartunov_Santoro_Richards_Marris_Hinton_Lillicrap_2018} have demonstrated that these algorithms do not scale to large vision datasets such as ImageNet \cite{deng2009imagenet}, and only work for smaller datasets such as MNIST \cite{MNIST}, and CIFAR-10 \cite{cifar_10}.
 The only algorithms that scale well and rely on local updates only use proxy objective functions (c.f. Section \secref*{alt_train_algo}).
 Thus, the use of proxy objective functions\sidenote{proxy objective functions are loss functions that are only applied to local units of a system} seems promising; the weight updates are done in separate local units, yet the power of current deep learning training algorithms can be exploited. Thus, it allows to create complex systems that scale to large datasets while being based on local units interacting with each other.
@@ -93,7 +93,7 @@ However, there is one big difference: The features used to fulfil a specific tas
 On the other hand, net fragments in the human brain are not believed to be present at a specific layer but to be built up over multiple neurons and over a short period of time.
 
 \begin{claim}
-	Network fragments are represented by groups of neurons and their activity over several time-dependent spikes. In addition, several network fragments can be combined to form higher-level fragments. Thus, objects are not represented by a single neuron but by all neurons across all layers that were activated due to this object.
+	Net fragments are represented by groups of neurons and their activity over several time-dependent spikes. In addition, several net fragments can be combined to form higher-level fragments. Thus, objects are not represented by a single neuron but by all neurons across all layers that were activated due to this object.
 \end{claim}
 
 Deep learning models are not based on time-dependent spikes of neurons that compose features to more complex features.
@@ -104,7 +104,7 @@ Low-level features that are detected within the first layers activate higher-lev
 An object, however, is not represented in the last layer of a neural network but through all activations within the network.
 Thus, representations of objects cannot be extracted from a single but from multiple layers.
 Intuitively, this seems promising:
-For example, auto-regressive models applied to speech capture different information at different layers of the network \sidecite{Chung_Hsu_Tang_Glass_2019}.
+For example, auto-regressive models applied to speech capture different information at different layers of the network \sidecite{chung19_interspeech}.
 While the first layers contain more information to distinguish speakers, representations in later layers provide more phonetic content.
 Thus, extracting information from several layers could lead to representations containing more relevant information.
 
@@ -258,7 +258,7 @@ Such a behaviour could be implemented within the agent, for example, by optimisi
 %Sind alle Vektoren bold?
 
 % TODO: target function und objective function vereinheitlichen
-% TODO: net-fragment or net fragment
+% TODO: net fragment or net fragment
 
 
 
@@ -272,5 +272,5 @@ Such a behaviour could be implemented within the agent, for example, by optimisi
 %Sind alle Vektoren bold?
 
 % TODO: target function und objective function vereinheitlichen
-% TODO: net-fragment or net fragment
+% TODO: net fragment or net fragment
 

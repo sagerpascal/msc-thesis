@@ -12,49 +12,49 @@ Typical autoencoders fed an input image $\boldsymbol{x}$ through an encoder to m
 
 A variational autoencoder models the latent space as a multivariate Gaussian distribution. The input image $\boldsymbol{x}$ is also fed through an encoder, and a latent representation $\boldsymbol{h}$ is obtained. Afterwards, $\boldsymbol{h}$ is fed through two independent parallel fully connected layers to obtain the $\boldsymbol{\mu}$ and $\boldsymbol{\sigma}$ vectors of the multivariate Gaussian distribution. Afterwards, the re-parametrisation trick is used to sample a variable $\boldsymbol{z}'$ from this distribution:
 
-\begin{equation}\eqlbl{hso_1}
+\begin{align}\eqlbl{hso_1}
 	\boldsymbol{z}' \sim \mathcal{N}(\boldsymbol{\mu},\,\boldsymbol{\sigma}^{2} \cdot \epsilon)
-\end{equation}
+\end{align}
 
 $\epsilon$ is a random variable sampled from  $\mathcal{N}(0, 1)$ and determines the magnitude of the variance. The sampled latent representation is then fed through the decoder, and the image $\hat{\boldsymbol{x}}$ is recreated. The model is trained to minimise a distance measure between the input image $\boldsymbol{x}$ and the reconstructed image $\hat{\boldsymbol{x}}$. In this thesis, the mean square error is used. For $m$ images $\boldsymbol{X} = \boldsymbol{x}^{(1)}, ..., \boldsymbol{x}^{(m)}$, the loss is defined as
 
-\begin{equation}\eqlbl{hso_2}
+\begin{align}\eqlbl{hso_2}
 	\mathcal{L}_{\text{rec}} = \frac{1}{m} \sum_{i=1}^{m} (\boldsymbol{x}^{(i)} - \boldsymbol{\hat{x}}^{(i)})^2
-\end{equation}
+\end{align}
 
 However, the latent space does not form a multivariate Gaussian distribution based on this reconstruction loss and the network architecture. A second loss constraint is necessary to obtain a probability distribution in the latent space: Let $P(\boldsymbol{X})$ be the probability distribution of the data $\boldsymbol{X}$, $P(\boldsymbol{h})$ the probability distribution of the latent variable $\boldsymbol{h}$ and $P(\boldsymbol{X}|\boldsymbol{h})$ the conditional probability of generating $\boldsymbol{X}$ for a given $\boldsymbol{h}$. The objective of the encoder is to infer $P(\boldsymbol{h})$ from $P(\boldsymbol{h}|\boldsymbol{X})$ which is the probability distribution that maps $\boldsymbol{X}$ into latent space. Simply put: the goal is to know the latent variable $\boldsymbol{h}$ of the input data $\boldsymbol{X}$.
 However, $P(\boldsymbol{h}|\boldsymbol{X})$ is unknown and we have to estimate it from a simpler distribution $Q(\boldsymbol{h}|\boldsymbol{X})$. This simpler distribution $Q(\boldsymbol{h}|\boldsymbol{X})$ is learned by the encoder and should be as close as possible to the real distribution $P(\boldsymbol{h}|\boldsymbol{X})$. This is accomplished by minimising the KL divergence\sidenote{the Kullback-Leibler (KL) divergence can ``measure'' the difference between two probability distributions} between these two probability distributions.
 
-\begin{equation}\eqlbl{hso_3}
+\begin{align}\eqlbl{hso_3}
 	KL \left[ Q(\boldsymbol{h}|\boldsymbol{X}) || P(\boldsymbol{h}|\boldsymbol{X}) \right] = E \left[ \log Q(\boldsymbol{h}|\boldsymbol{X}) - \log P(\boldsymbol{h}|\boldsymbol{X}) \right]
-\end{equation}
+\end{align}
 
 In the case of two Gaussian distributions, the KL divergence is defined as:
-\begin{equation}\eqlbl{hso_4}
+\begin{align}\eqlbl{hso_4}
 	KL\left[ \mathcal{N}_Q(\boldsymbol{\mu}_Q, \boldsymbol{\sigma}_Q)||\mathcal{N}_P(\boldsymbol{\mu}_P, \boldsymbol{\sigma}_P) \right] = \log \frac{\boldsymbol{\sigma}_P}{\boldsymbol{\sigma}_Q} + \frac{\boldsymbol{\sigma}_Q^2 + (\boldsymbol{\mu}_Q-\boldsymbol{\mu}_P)^2}{2\boldsymbol{\sigma}_P^2} - \frac{1}{2}
-\end{equation}
+\end{align}
 
 
 If the target distribution $P(\boldsymbol{h}|\boldsymbol{X})$ is a multivariate Gaussian distribution with $\boldsymbol{\mu}_P = 0$ and $\boldsymbol{\sigma}_P=1$ (i.e. $\mathcal{N}(0, 1)$) and the encoder predicts $\boldsymbol{\mu}_Q$ and $\boldsymbol{\sigma}_Q$ to model $Q(\boldsymbol{h}|\boldsymbol{X})$ as $\mathcal{N}(\boldsymbol{\mu}_Q, \boldsymbol{\sigma}_Q)$, then the KL divergence simplifies to
 
 
-\begin{equation*}\eqlbl{hso_5}
+\begin{align}\eqlbl{hso_5}
 \begin{split}
 		\mathcal{L}_{KLD} = KL \left[ \mathcal{N}_Q(\boldsymbol{\mu}_Q, \boldsymbol{\sigma}_Q)||\mathcal{N}(0, 1) \right] & = -\log \boldsymbol{\sigma}_Q + \frac{\boldsymbol{\sigma}_Q^2 \boldsymbol{\mu}_Q^2}{2} - \frac{1}{2} \\
 		 & = \frac{1}{2} \left( \boldsymbol{\sigma}_Q^2 \boldsymbol{\mu}_Q^2 - 1 - 2\log \boldsymbol{\sigma}_Q \right)
 \end{split}
-\end{equation*}
+\end{align}
 
 Interested readers may find a formal proof of the formulas above and a more detailed derivation in the original paper \cite{Kingma_Welling_2014}.
 Thus, the loss for the variational autoencoder is defined as:
 
 
-\begin{equation*}\eqlbl{hso_6}
+\begin{align}\eqlbl{hso_6}
 \begin{split}
 		\mathcal{L}_{\text{VAE}} & = \mathcal{L}_{\text{rec}} + \beta \cdot KL \left[ \mathcal{N}_Q(\boldsymbol{\mu}_Q, \boldsymbol{\sigma}_Q)||\mathcal{N}(0, 1) \right] \\
 		  & = \underbrace{\frac{1}{n} \sum_{i=1}^{n} (\boldsymbol{x}_i - \boldsymbol{\hat{x}}_i)^2}_{\text{reconstruction loss}} + \lambda \cdot \overbrace{\frac{1}{2} (\boldsymbol{\sigma}_Q^2 \boldsymbol{\mu}_Q^2 - 1 - 2\log \boldsymbol{\sigma}_Q)}^{\text{KL divergence}}
 \end{split}
-\end{equation*}
+\end{align}
 
 where $\beta$ is a weight factor of the KL divergence. Training a variational autoencoder with this loss function can lead to excellent image reconstruction.
 In the case of horizontal self-organisation, however, a well-formed latent space is of more interest than an outstanding image reconstruction: The goal is to obtain good image representations, and thus the goal is to have a well-formed latent space and not perfect reconstruction.
@@ -69,7 +69,7 @@ When $\beta$ is increased, the model gradually improves the shape of the data di
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.5\textwidth]{beta_annealing}
-    \caption[Annealing strategy of the KL weight term in variational autoencoders]{Two annealing strategies for the $\beta$ term that weights the KL divergence in the loss function of variational autoencoders. The upper graph shows a monotonic increase of $\beta$, and the lower graph a cyclical annealing strategy. The picture is from \cite{Fu_Li_Liu_Gao_Celikyilmaz_Carin_2019}.}
+    \caption[Annealing strategy of the KL weight term of variational autoencoders]{Two annealing strategies for the $\beta$ term that weights the KL divergence in the loss function of variational autoencoders. The upper graph shows a monotonic increase of $\beta$, and the lower graph a cyclical annealing strategy. The picture is from \cite{Fu_Li_Liu_Gao_Celikyilmaz_Carin_2019}.}
     \figlbl{beta_annealing}
 \end{figure}
 
@@ -240,7 +240,7 @@ The network architecture is shown in \figref{horizontal_org_arch1}.
 
 \end{tikzpicture}
 }
-    \caption[Architecture of the variational autoencoder used for horizontal self-organisation]{Architecture of the variational autoencoder used for horizontal self-organisation.}
+    \caption[Architecture of the VAEs]{Architecture of the variational autoencoders used for horizontal self-organisation.}
     \figlbl{horizontal_org_arch1}
 \end{figure}
 
@@ -440,7 +440,7 @@ In this thesis, an additional layer is used in the decoder to predict larger pat
 
 \end{tikzpicture}
 }
-    \caption[Architecture of the VAE used for horizontal self-organisation with bigger field-of-view up-sampling]{Architecture of the variational autoencoder used for horizontal self-organisation with bigger field-of-view up-sampling.}
+    \caption[Architecture of the VAEs with bigger field-of-view up-sampling]{Architecture of the variational autoencoders used for horizontal self-organisation with bigger field-of-view up-sampling.}
     \figlbl{horizontal_org_arch2}
 \end{figure}
 
@@ -457,8 +457,8 @@ When using $4$ VAEs, the input is divided into $4$ patches. If the decoder makes
 
 \subsection{Communication}\seclbl{horizontal_self_org_methods_communication}
 The VAEs receive patches of the input image and thus have a limited field of view on the image.
-Figure \figref{average_sample} visualises the patches that are fed into the VAEs when the MNIST data set \cite{Lecun_Bottou_Bengio_Haffner_1998} is used.
-The first row shows the average of all images of the same class. Thus, these images are very representative for the data set.
+Figure \figref{average_sample} visualises the patches that are fed into the VAEs when the MNIST dataset \cite{Lecun_Bottou_Bengio_Haffner_1998} is used.
+The first row shows the average of all images of the same class. Thus, these images are very representative for the dataset.
 However, none of the models receives the entire image as input. Instead, the patches shown in the 2nd to the 5th row are fed into the VAEs.
 The patches, which only depict a quarter of the image, look rather similar for some classes. For example, the top-left patches of the classes $0$ and $9$, as well as the classes $4$, $5$, and $6$, look very similar.
 Thus, these classes are not separable by \emph{one} single VAE on its own.
@@ -467,7 +467,7 @@ Therefore, communication with neighbouring models is necessary to agree on an im
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.99\textwidth]{average_sample}
-    caption[Average sample of the MNIST data set per class]{The average of all samples in the MNIST data set for each class. The first row shows the average of all samples, and the 2nd to 5th row is the average per patch fed into the models.}
+    caption[Average sample of the MNIST dataset per class]{The average of all samples in the MNIST dataset for each class. The first row shows the average of all samples, and the 2nd to 5th row is the average per patch fed into the models.}
     \figlbl{average_sample}
 \end{figure}
 
@@ -485,15 +485,15 @@ The arrangement of the representations within the latent space is not predetermi
 
 In this thesis, it is proposed to learn a linear transformation to map the Gaussian parameters of one VAE to the Gaussian parameters of another VAE. The mapping from $\boldsymbol{mu}_1$ to $\boldsymbol{mu}_2$, respectively from $\boldsymbol{sigma}_1$ to $\boldsymbol{sigma}_2$ is done by the simple transformation
 
-\begin{equation}\eqlbl{hso_7}
+\begin{align}\eqlbl{hso_7}
 	\boldsymbol{\hat{\mu}}_2 = \boldsymbol{w}_{m12} \cdot \boldsymbol{\mu}_1
-\end{equation}
+\end{align}
 
 resp.
 
-\begin{equation}\eqlbl{hso_8}
+\begin{align}\eqlbl{hso_8}
 	\boldsymbol{\hat{\sigma}}_2 = \boldsymbol{w}_{s12} \cdot \boldsymbol{\sigma}_1
-\end{equation}
+\end{align}
 
 The weights $\boldsymbol{w}_{mij}$ and $\boldsymbol{w}_{sij}$ between VAE $i$ and VAE $j$ are learned by minimising the mean square error with gradient descent between the predicted and true Gaussian parameters, i.e. between $\boldsymbol{\mu}_j$ and $\boldsymbol{\hat{\mu}}_j$, resp. $\boldsymbol{\sigma}_j$ and $\boldsymbol{\hat{\sigma}}_j$. This process is illustrated for VAE 1 in \figref{hso_head}: First, the Gaussian parameters of each model must be predicted for the same sample. Afterwards, the Gaussian parameters of one model can be used to predict the Gaussian parameters of the other models with a linear transformation.
 
@@ -569,15 +569,15 @@ The loss function remains the same for the first output channel since the goal i
 
 Let $V = {V_1, ..., V_n}$ be the set of $n$ VAEs. Each VAE has $n$ output channels, one channel for the reconstructed image and $n-1$ channels for communication. Furthermore, each VAE $V_i$ has a loss $\mathcal{L}_{\text{VAE}_i}$ based on the reconstruction goodness and the shape of the latent space (c.f. \eqref{hso_6}). The $3$ communication channels of VAE $i$ can influence the loss $\mathcal{L}_{VAE_j}$ of VAE $j$ (i.e. help to improve the loss by providing better information). How helpful the communication channels are can therefore be determined by the average loss of the other VAEs.
 
-\begin{equation}\eqlbl{hso_9}
+\begin{align}\eqlbl{hso_9}
 	\mathcal{L}_{c_i} = \frac{1}{n-1} \sum_{n}^{j=1} \mathcal{L}_{\text{VAE}_j} \text{, if } i \neq j
-\end{equation}
+\end{align}
 
 Thus, the loss of a VAE with a communication channel is
 
-\begin{equation}\eqlbl{hso_10}
+\begin{align}\eqlbl{hso_10}
 		\mathcal{L}_{{\text{VAE}_C}_i} = \mathcal{L}_{\text{VAE}_i} + \beta \cdot \mathcal{L}_{\text{KLD}_i} + \beta_2 \cdot \mathcal{L}_{c_i}
-\end{equation}
+\end{align}
 
 where $\beta_2$ is a weight factor for the communication channel. Thus, each model optimises its own reconstruction error, the shape of the latent space, and tries to improve the latent space and reconstruction error of other VAEs.
 
@@ -588,22 +588,22 @@ TODO: This still needs to be implemented (therefore, not explained in more detai
 The VAEs are examined to determine whether they are suitable for predicting the class label. First, all VAEs are trained until they can reliably reconstruct images and the latent space is well formed.
 After training, the average value of $\boldsymbol{\mu}$ is determined for each class $c \in C$ from the training set and each VAE. This average value is called $\boldsymbol{\mu}_{\text{avg}_c}$ and is defined for $n_c$ samples of the class $c$ as
 
-\begin{equation}\eqlbl{hso_12}
+\begin{align}\eqlbl{hso_12}
 		\boldsymbol{\mu}_{\text{avg}_{vc}} = \frac{1}{n_c} \sum_{i=1}^{n_c} \boldsymbol{\mu}_i
-\end{equation}
+\end{align}
 
 This average value can be considered the ``cluster centre'' of a class in latent space. In addition, $\boldsymbol{\mu}_{\text{avg}_{vc}}$ is a world model of a class. A given sample is matched against these world models per class to make a prediction. As with vertical self-organisation, the cosine similarity between a sample and the class prototypes is used to determine their similarity. To predict a sample $s$, it is fed through the encoder to obtain $\boldsymbol{\mu}_{vs}$ is determined. Then, this sample is compared with all class prototpyes by computing the cosine similarity: 
 
-\begin{equation}\eqlbl{hso_13}
+\begin{align}\eqlbl{hso_13}
 		\text{cos}_{vsc} = \text{cos}(\boldsymbol{\mu}_{vs}, \boldsymbol{\mu}_{\text{avg}_{vc}}) = \frac{\boldsymbol{\mu}_vs \cdot \boldsymbol{\mu}_{\text{avg}_{vc}}}{\max(||\boldsymbol{\mu}_{vs}||_2, ||\boldsymbol{\mu}_{\text{avg}_{vc}}||_2)}
-\end{equation}
+\end{align}
 
 Thus, the cosine similarity $\text{cos}_{vsc}$ is calculated for each VAE $v$ between the class prototypes $c$ and the sample $s$.
 Afterwards, the class $c$ with the highest average cosine similarity between the sample activations $\boldsymbol{\mu}_{vs}$ and the class prototype $\boldsymbol{\mu}_{\text{avg}_{vc}}$ over all VAEs $v$ is used as the prediction.
 
-\begin{equation}\eqlbl{hso_14}
+\begin{align}\eqlbl{hso_14}
 		\argmax_{c \in C} \frac{1}{4} \sum_{v=1}^{4} \text{cos}_{vsc}
-\end{equation}
+\end{align}
 
 Similar to vertical self-organisation, VAEs with higher confidence have a higher cosine similarity between a class prototype and a specific class and thus have more influence on the class prediction than if the confidence is lower and the cosine similarity between the sample and all class prototypes is similarly large.
 
@@ -627,7 +627,7 @@ TODO: This still needs to be implemented (therefore, not explained in more detai
 
 
 \section{Results}\seclbl{horizontal_self_org_results}
-As for vertical self-organisation (.c.f \secref{vertical_self_org_methods_dataset}), the MNIST \cite{Lecun_Bottou_Bengio_Haffner_1998} and MNIST-C \cite{Mu_Gilmer_2019} data sets are used to evaluate the models. 
+As for vertical self-organisation (.c.f \secref{vertical_self_org_methods_dataset}), the MNIST \cite{Lecun_Bottou_Bengio_Haffner_1998} and MNIST-C \cite{Mu_Gilmer_2019} datasets are used to evaluate the models. 
 
 Different models are trained to evaluate this architecture. A single VAE is used as the baseline (i), which receives the entire image as input and reconstructs it. This VAE is obviously trained without time steps and communication. Horizontal self-organisation is done using $4$ VAEs ($2\times 2$) in different settings: Four independent VAEs are trained (without time steps and communication), each VAE receives a non-overlapping image patch as input and either reconstructs the received patch (ii) or predicts the entire image (iii). Furthermore, different types of communication are added: First, the VAEs forward the reconstructed \emph{input patch} to the other VAEs (according to \figref{recon_patch_forw}). This communication takes place over $4$ time steps, and the VAEs are trained by either reconstructing the input patch (iv) or predicting the entire image\sidenote{but despite the prediction of the entire image, only the prediction of the reconstructed patch is communicated to the other VAEs.} (v). Second, each VAE predicts the whole image and forwards the predicted \emph{input patch of the neighbour} to the other VAEs over $4$ time steps  (vi) (c.f. \figref{neighbouring_patch_forw}). Third, the VAEs are used to predict the whole image over one time step, and the \emph{predicted image} is forwarded to the other VAEs (e.g. \figref{recon_img_forw}) (vii). \tabref{hso_models} gives an overview of the models described.
 
@@ -645,7 +645,7 @@ Different models are trained to evaluate this architecture. A single VAE is used
 		vi & 4 & Image & Neighbouring Patch & $4$\\ %p_same
 		vii & 4 & Image & Image & $1$\\
     \end{tabular}
-    \caption[Different Models to Evaluate Horizontal Self-Organisation]{Different models for evaluating horizontal self-organisation: The first column shows a number used as a reference id in this thesis. The second column shows the number of VAEs used, the third column whether the input field or the whole image is reconstructed, the fourth column what is communicated to the neighbouring VAEs, and the fifth column over how many time steps the communication takes place.}
+    \caption[Different models to evaluate horizontal self-organisation]{Different models for evaluating horizontal self-organisation: The first column shows a number used as a reference id in this thesis. The second column shows the number of VAEs used, the third column whether the input field or the whole image is reconstructed, the fourth column what is communicated to the neighbouring VAEs, and the fifth column over how many time steps the communication takes place.}
     \tablbl{hso_models}
 \end{table}
 
@@ -696,10 +696,10 @@ A slight improvement through communication can also be observed. Model (iii) con
     \tablbl{hso_nmi}
 \end{table}
 
-Finally, the proposed classification method is evaluated. For this purpose, the accuracy on the MNIST and MNIST-C data sets is determined for each model. The results are shown in \tabref{hso_accuracy}.
+Finally, the proposed classification method is evaluated. For this purpose, the accuracy on the MNIST and MNIST-C datasets is determined for each model. The results are shown in \tabref{hso_accuracy}.
 For each VAE of a model, the cosine similarity according to \eqref{hso_13} between a sample and a class prototype is calculated. Thus, the accuracy can be calculated not only for the entire model (i.e. all $4$ VAEs together) but also for each VAE independently. \tabref{hso_accuracy} shows the average accuracy per VAE in the column ``Avg. VAEs''. Furthermore, by calculating the average cosine similarity, voting over all VAEs is performed. The accuracy of this voting is shown in the column ``Overall''. The voting works exceptionally well: for example, model (ii) has $4$ VAEs with an average accuracy of $62.4\%$ on the MNIST dataset. The best VAE has an accuracy of $66.1\%$, and the worst $59.7\%$. By voting, the overall accuracy increases to $81.7\%$, significantly better than the best VAE.
 
-On the MNIST data set, the base model (i) is significantly outperformed by some models in terms of accuracy. However, robustness (measured on MNIST-C) is not significantly improved by using multiple VAEs. As with the evaluation of the NMI score, it can be observed that models that predict the entire image perform better than models that only reconstruct a patch of the image. Furthermore, the accuracy of the models without communication is generally very high, suggesting that the image patches are too large and more VAEs should be used.
+On the MNIST dataset, the base model (i) is significantly outperformed by some models in terms of accuracy. However, robustness (measured on MNIST-C) is not significantly improved by using multiple VAEs. As with the evaluation of the NMI score, it can be observed that models that predict the entire image perform better than models that only reconstruct a patch of the image. Furthermore, the accuracy of the models without communication is generally very high, suggesting that the image patches are too large and more VAEs should be used.
 
 
 
@@ -717,7 +717,7 @@ On the MNIST data set, the base model (i) is significantly outperformed by some 
 		vi & $88.4\%$ & $91.1\%$ & $50.4\%$ & $59.2\%$ \\
 		vii & $78.5\%$ & $90.0\%$ & $46.8\%$ & $64.2\%$ \\
     \end{tabular}
-    \caption[Accuracy of different architectures on MNIST and MNIST-C]{The accuracy of different models on MNIST and MNIST-C. The average accuracy per VAE and overall accuracy are reported for both data sets. The average per VAE is the average accuracy when each VAE makes a prediction on its own (i.e. choosing the highest cosine similarity per VAE according to \eqref{hso_13}). The overall accuracy is calculated by averaging the cosine similarity according to \eqref{hso_14}.}
+    \caption[Accuracy of different architectures]{The accuracy of different models on the MNIST and MNIST-C dataset. The average accuracy per VAE and overall accuracy are reported for both datasets. The average per VAE is the average accuracy when each VAE makes a prediction on its own (i.e. choosing the highest cosine similarity per VAE according to \eqref{hso_13}). The overall accuracy is calculated by averaging the cosine similarity according to \eqref{hso_14}.}
     \tablbl{hso_accuracy}
 \end{table}
 
@@ -730,6 +730,6 @@ The accuracy was calculated by comparing a sample with \emph{one} prototype per 
 %Sind alle Vektoren bold?
 
 % TODO: target function und objective function vereinheitlichen
-% TODO: net-fragment or net fragment, dataset or data set, time-step or time step
+% TODO: net fragment or net fragment, dataset or dataset, time-step or time step
 
 

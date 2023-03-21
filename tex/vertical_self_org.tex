@@ -11,7 +11,7 @@ In this thesis, a single layer is used as a self-contained unit. One layer is a 
 Smaller units would be neurons or parts of a layer, but training them separately would be very inefficient since the efficiency of matrix operations on GPUs could no longer be fully exploited\sidenote{the layer output can be efficiently calculated by single matrix multiplication and addition, i.e. $\boldsymbol{z} = \boldsymbol{w} \cdot \boldsymbol{x} + \boldsymbol{b}$ (c.f. \secref{ann})}.
 
 Each layer optimises a proxy objective function.
-Proxy objective functions are used because this type of local optimisation allows excellent performance even on larger data sets, in contrast to other local learning algorithms such as target propagation, synthetic gradients or feedback alignment (c.f. \secref{alt_train_algo}). 
+Proxy objective functions are used because this type of local optimisation allows excellent performance even on larger datasets, in contrast to other local learning algorithms such as target propagation, synthetic gradients or feedback alignment (c.f. \secref{alt_train_algo}). 
  \figref{vertical_gradient_flow} visualises the updates based on a proxy objective function.
 An objective function is calculated for each layer, and the optimisation algorithm only updates the parameters within this layer.
 Thus, the gradients do not flow back to preceding layers.
@@ -29,80 +29,83 @@ The model consists of several linear layers $l$ with a ReLU activation function 
 
 A layer consists of $n^{[l]}$ neurons and the activations $\boldsymbol{a}^{[l]}$ of a linear layer $l$ are calculated for a given input $\boldsymbol{a}^{[l-1]}$ as
 
-\begin{equation}\eqlbl{vso_1}
+\begin{align}\eqlbl{vso_1}
 		\boldsymbol{a}^{[l]} = a^{[l]}_1, ..., a^{[l]}_n = \boldsymbol{W}^{[l]} \cdot \boldsymbol{a}^{([l-1]} + \boldsymbol{b}^{[l]}
-\end{equation}
+\end{align}
 
 whereby $\boldsymbol{W}^{[l]}$ is the weight and $\boldsymbol{b}^{[l]}$ the bias of layer $l$.
 The activation probability can be calculated for each neuron. If a mini-batch contains $m$ samples, the activation probability $\hat{\rho}^{[l]}_i$ of a neuron $a^{([l]}_i$ can be calculated as:
 
-\begin{equation}\eqlbl{vso_2}
+\begin{align}\eqlbl{vso_2}
 		\hat{\rho}^{[l]}_i= \frac{1}{n} \sum^n_{i=1} \left( \frac{1}{1+e^{-a^{([l]}_i}} \right)
-\end{equation}
+\end{align}
 
 where $\left( \frac{1}{1+e^{-a^{([l]}_i}} \right)$ is the sigmoid function that squeezes the activation in the range between $0$ and $1$.
 With the KL divergence, the divergence of the current activation probability $\hat{\rho}^{[l]}_i$ and a desired activation probability $\rho=0.05$ can be calculated:
 
-\begin{equation}\eqlbl{vso_3}
+\begin{align}\eqlbl{vso_3}
 		KL(\rho || \hat{\rho}^{[l]}_i) = \rho \cdot \log \frac{\rho}{\hat{\rho}^{[l]}_i} + (1-\rho) \cdot \log \frac{1-\rho}{1-\hat{\rho}^{[l]}_i}
-\end{equation}
+\end{align}
 
 The sparsity loss $\mathcal{L}^{[l]}_{s}$ of layer $l$ is the sum of the divergence between all $\hat{\rho}^{[l]}_i$ and $\rho$:
 
-\begin{equation}\eqlbl{vso_4}
+\begin{align}\eqlbl{vso_4}
 		\mathcal{L}^{[l]}_{s}(\rho, \hat{\rho}^{[l]}) = \sum_{i=1}^{m} KL(\rho || \hat{\rho}^{[l]}_i)
-\end{equation}
+\end{align}
 
 
 The second constraint is a diversity constraint. The goal is that the activations of \emph{different} objects are diverse. For this purpose, the activations $\boldsymbol{a}^{[l]}$ are made as identical as possible (i.e. pushed together in feature space) if they stem from the same class and as different as possible if they stem from different classes.
 The cosine similarity is used to calculate the similarity between the activations $\boldsymbol{a}^{[l](i)}$ and $\boldsymbol{a}^{[l](j)}$ of two samples $\boldsymbol{x}^{(i)}$ and $\boldsymbol{x}^{(j)}$:
 
-\begin{equation}\eqlbl{vso_5}
+\begin{align}\eqlbl{vso_5}
 		\text{cos}\left( \boldsymbol{a}^{[l](i)}, \boldsymbol{a}^{[l](j)} \right) = \frac{\boldsymbol{a}^{[l](i)} \cdot \boldsymbol{a}^{[l](j)}}{\max \left( ||\boldsymbol{a}^{[l](i)}||_2, ||\boldsymbol{a}^{[l](j)}||_2 \right)}
-\end{equation}
+\end{align}
 
 The information of image labels $y^{(i)} \in C$ is needed to push representations of identical objects together or to push representations of different objects apart.
 The diversity loss $\mathcal{L}^{[l]}_d$ minimises the similarity $\text{cos} \left(\boldsymbol{a}^{[l](i)}, \boldsymbol{a}^{[l](j)} \right)$ if the activations stem from different classes (i.e. $y^{(i)} \neq y^{(j)}$), or maximises the similarity if they stem from the same class (i.e. $y^{(i)} = y^{(j)}$).
 
-\begin{equation}\eqlbl{vso_6}
+\begin{align}\eqlbl{vso_6}
 		\mathcal{L}^{[l]}_{d} \left(\boldsymbol{a}^{[l]} \right) = \frac{1}{n^2} \sum_{i=1}^{n} \sum_{j=1}^{n} k \cdot \text{cos} \left( \boldsymbol{a}^{[l](i)}, \boldsymbol{a}^{[l](j)} \right) \text{ if } i \neq j
-\end{equation}
+\end{align}
 
 whereby $k$ changes the sign depending on the class:
 
-\begin{equation}\eqlbl{vso_7}
+\begin{align}\eqlbl{vso_7}
 		k = \begin{cases}
       		+1, & \text{if}\ y_i \neq y_j \\
       		-1, & \text{otherwise}
     	\end{cases}
-\end{equation}
+\end{align}
 
-However, the loss was found to be more stable if the similarity is not calculated between two activations but between one activation and the average activation of a class. The average activation $\bar{a}[c]$ of a class $c$ can be calculated over $n_c$ samples as:
+However, the loss was found to be more stable if the similarity is not calculated between two activations but between one activation and the average activation of a class. The average activation $\overline{a[c]}$ of a class $c$ can be calculated over $n_c$ samples as:
 
-\begin{equation}\eqlbl{vso_8}
-		\bar{a}[c]^{[l]} = \frac{1}{n_c} \sum_{i=1}^{n_c} a^{[l]}_i \text{, for } y_i = c
-\end{equation}
+\begin{align}\eqlbl{vso_8}
+		\overline{a[c]^{[l]}} = \frac{1}{n_c} \sum_{i=1}^{n_c} a^{[l]}_i \text{, for } y_i = c
+\end{align}
 
 Thus, the loss becomes
-\begin{equation}\eqlbl{vso_80}
-		\mathcal{L}^{[l]}_{d} \left(\boldsymbol{a}^{[l]} \right) = \frac{1}{n\cdot n_c} \sum_{i=1}^{n} \sum_{c \in C} k \cdot \text{cos} \left( \boldsymbol{a}^{[l](i)}, \bar{\boldsymbol{a}[c]}^{[l]} \right)
-\end{equation}
+\begin{align}\eqlbl{vso_80}
+		\mathcal{L}^{[l]}_{d} \left(\boldsymbol{a}^{[l]} \right) = \frac{1}{n\cdot n_c} \sum_{i=1}^{n} \sum_{c \in C} k \cdot \text{cos} \left( \boldsymbol{a}^{[l](i)}, \overline{\boldsymbol{a}[c]}^{[l]} \right)
+\end{align}
 
-Another problem of this loss is that if all activations are identical, then $\text{cos} \left(\boldsymbol{a}^{[l](i)}, \bar{\boldsymbol{a}[c]}^{[l]} \right) = 1$, and the loss becomes $\mathcal{L}^{[l]}_{d}=0$, since the similarities of the same and different classes neutralise each other.
+Another problem of this loss is that if all activations are identical, then $\text{cos} \left(\boldsymbol{a}^{[l](i)}, \overline{\boldsymbol{a}[c]}^{[l]} \right) = 1$, and the loss becomes $\mathcal{L}^{[l]}_{d}=0$, since the similarities of the same and different classes neutralise each other.
 Therefore, a margin between the similarities is enforced, as done for the triplet-margin-loss  \sidecite{Balntas_Riba_Ponsa_Mikolajczyk_2016}.
 
-\begin{equation}\eqlbl{vso_9}
-		\mathcal{L}^{[l]}_{d}(\boldsymbol{a}^{[l]}) = \frac{1}{n} \sum_{i=1}^{n} \max \left[ \text{cos}(\boldsymbol{a}^{[l](i)}, \bar{a}[v]^{[l]}) - \text{cos}(\boldsymbol{a}^{[l](i)}, \bar{a}[y^{(i)}]^{[l]}) + \text{margin}, 1 \right]
-\end{equation}
+\begin{align}\eqlbl{vso_9}
+\begin{split}
+		\mathcal{L}^{[l]}_{d}(\boldsymbol{a}^{[l]}) = \frac{1}{n} \sum_{i=1}^{n} \max \biggl[ & \text{cos}(\boldsymbol{a}^{[l](i)}, \overline{a[v]^{[l]}}) \\
+		& - \text{cos}(\boldsymbol{a}^{[l](i)}, \overline{a[y^{(i)}]^{[l]}}) + \text{margin}, 1 \biggr]
+\end{split}
+\end{align}
 
 where $v$ is a random class drawn from the set $v ~ \{C \\ y_i\}$ and $\text{margin}$ is a hpyer-parameter that was set to $1$.
 Thus, the triplet-margin-loss is calculated but the cosine-similarity replaces the $L2$-norm as distance measure and the positive, resp. negative anchor is replaced with the average class activation from the same resp. from a randomly selected different class.
 
 The loss used is the sum of sparsity loss and diversity loss, with the diversity loss weighted by $\lambda=0.1$:
-\begin{equation}\eqlbl{vso_10}
+\begin{align}\eqlbl{vso_10}
 		\mathcal{L}^{[l]} =\mathcal{L}^{[l]}_{s}(\rho, \hat{\rho}^{[l]}) 
  + \lambda \cdot \mathcal{L}^{[l]}_{d}(\boldsymbol{a}^{[l]})
-\end{equation}
+\end{align}
 
 
 One problem with proxy objective functions is that this type of training often requires layer-wise training. First, layer $1$ is trained until convergence, then the weights are frozen, then layer $2$ is trained and so on.
@@ -204,23 +207,23 @@ In contrast to end-to-end backpropagation of error architectures, the gradients 
 The model used consists of $4$ fully connected layers with ReLU activation. The first layer has $512$ neurons, the second $256$ neurons, the third $128$ neurons and the fourth $64$ neurons. The model is illustrated in Figure \figref{vertical_org_arch1}. Each layer is trained separately by minimising the loss of equation \eqref{vso_10} with the Adam optimizer\sidecite{Kingma2015AdamAM} and a learning rate of $\eta = 1 \cdot 10^{-3}$. The mini-batch size is $60,000$. 
 
 \subsection{Extraction of Representations}\seclbl{vertical_self_org_representations}
-In accordance with net-fragments as in \secref{neuro_concepts_net_fragments}, the representations are not extracted at a specific point in the network (i.e. a pre-defined layer), but all representations from all layers are taken into account to fulfil a task.
+In accordance with net fragments as in \secref{neuro_concepts_net_fragments}, the representations are not extracted at a specific point in the network (i.e. a pre-defined layer), but all representations from all layers are taken into account to fulfil a task.
 In the following, this is demonstrated based on a classification task, but other tasks are also conceivable in the future.
-After training, the average activation $\bar{\boldsymbol{a}[c]}^{[l]}
+After training, the average activation $\overline{\boldsymbol{a}[c]}^{[l]}
 $ for each class $c \in C$ and layer $l$ is determined, as done in Equation \eqref{vso_8}.
 These averages from the training set represent prototypes of each class in each layer and can be considered a reference representation per class. Thus, the representations needed for this task are computed \emph{after} training and are not part of the training as, for example, in the case of a classification loss based on cross-entropy.
-When a new sample $\boldsymbol{x}^{(i)}$ is classified, the cosine similarity between the activations $\boldsymbol{a}^{[l](i)}$ of this sample and the class prototypes $\bar{\boldsymbol{a}[c]}^{[l]}$ is calculated in each layer.
+When a new sample $\boldsymbol{x}^{(i)}$ is classified, the cosine similarity between the activations $\boldsymbol{a}^{[l](i)}$ of this sample and the class prototypes $\overline{\boldsymbol{a}[c]}^{[l]}$ is calculated in each layer.
 
-\begin{equation}\eqlbl{vso_11}
-		\text{cos}[c]^{[l](i)} = \text{cos} \left( \boldsymbol{a}^{[l](i)}, \bar{\boldsymbol{a}[c]}^{[l]} \right) = \frac{\boldsymbol{a}^{[l](i)} \cdot \bar{\boldsymbol{a}[c]}^{[l]}}{\max \left( ||\boldsymbol{a}^{[l](i)}||_2, ||\bar{\boldsymbol{a}[c]}^{[l]}||_2 \right)} \text{, for } c \in C
-\end{equation}
+\begin{align}\eqlbl{vso_11}
+		\text{cos}[c]^{[l](i)} = \text{cos} \left( \boldsymbol{a}^{[l](i)}, \overline{\boldsymbol{a}[c]}^{[l]} \right) = \frac{\boldsymbol{a}^{[l](i)} \cdot \overline{\boldsymbol{a}[c]}^{[l]}}{\max \left( ||\boldsymbol{a}^{[l](i)}||_2, ||\overline{\boldsymbol{a}[c]}^{[l]}||_2 \right)} \text{, for } c \in C
+\end{align}
 
-Thus, the cosine similarity $\text{cos}[c]^{[l](i)}$ for each class $c \in C$ and each of the layers $l \in {1, ..., 4}$ is calculated. Afterwards, the class $c$ with the highest average cosine similarity between the sample activations $\boldsymbol{a}^{[l](i)}$ and the class prototypes $\bar{\boldsymbol{a}[c]}^{[l]} 
+Thus, the cosine similarity $\text{cos}[c]^{[l](i)}$ for each class $c \in C$ and each of the layers $l \in {1, ..., 4}$ is calculated. Afterwards, the class $c$ with the highest average cosine similarity between the sample activations $\boldsymbol{a}^{[l](i)}$ and the class prototypes $\overline{\boldsymbol{a}[c]}^{[l]} 
 $ is used as prediction.
 
-\begin{equation}\eqlbl{vso_12}
+\begin{align}\eqlbl{vso_12}
 		\argmax_{c \in C} \frac{1}{4} \sum_{l=1}^{4} \text{cos}[c]^{[l](i)}
-\end{equation}
+\end{align}
 
 This results in a weighted voting; if a layer is certain that the sample belongs to a specific class, the sample has a high cosine similarity with one class prototype and a low similarity with all other class prototypes. Accordingly, this layer influences the prediction more than a layer that cannot assign the sample to one class and calculates a similarly high cosine similarity between the sample and all prototypes.
 
@@ -239,9 +242,9 @@ There are several ways to implement recurrent connections. A straightforward pos
 
 A second option is to use a second weight matrix, as it is usually done in recurrent layers. Therefore, the equation \eqref{vso_1} is extended as follows:
 
-\begin{equation}\eqlbl{vso_13}
+\begin{align}\eqlbl{vso_13}
 		\boldsymbol{a}^{[l]}[t] =  \boldsymbol{W}_x^{[l]} \cdot \boldsymbol{a}^{[l-1]}[t] + \boldsymbol{b}^{[l]} + \overbrace{\boldsymbol{W}_h^{[l]} \cdot \boldsymbol{a}^{[l]}[t-1] }^{\text{lateral connection}}
-\end{equation}
+\end{align}
 
 whereby $\boldsymbol{W}_x^{[l]}$ is the weight multiplied with the layer input and $\boldsymbol{W}_h^{[l]}$ the weight multiplied with the previous layer output. In both cases, the layer receives information about the activations at the previous time step.
 However, this only seems helpful if the model input is not static. Therefore, the model input is available over several time steps and is augmented after each step. Thus, the model receives different views of the same image and can adjust its activations from the previous time step if necessary. The following image augmentation techniques are applied, each with a probability of $p=0.8$:
@@ -253,12 +256,12 @@ However, this only seems helpful if the model input is not static. Therefore, th
 	\item \textbf{Adjust Sharpness}: Randomly adjust the sharpness of the image.
 \end{itemize}
 
-\figref{mnist_augmented} visualises how this augmentation affects samples of the MNIST data set \cite{Lecun_Bottou_Bengio_Haffner_1998}. The original image is shown on the left, and $9$ augmented versions of it are shown on the right. This allows the model to perceive the same image from different views.
+\figref{mnist_augmented} visualises how this augmentation affects samples of the MNIST dataset \cite{Lecun_Bottou_Bengio_Haffner_1998}. The original image is shown on the left, and $9$ augmented versions of it are shown on the right. This allows the model to perceive the same image from different views.
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.99\textwidth]{mnist_augmented}
-    \caption[Data augmentation applied on $10$ samples of the MNIST data set]{Data augmentation applied on $10$ samples of the MNIST data set. The original samples from the data set are shown on the left, and $9$ augmented versions of the same samples are shown on the right.}
+    \caption[Data augmentation applied on $10$ samples of the MNIST dataset]{Data augmentation applied on $10$ samples of the MNIST dataset. The original samples from the dataset are shown on the left, and $9$ augmented versions of the same samples are shown on the right.}
     \figlbl{mnist_augmented}
 \end{figure}
 
@@ -417,12 +420,12 @@ TODO: Currently, various experiments are ongoing to find out how this can be imp
 \section{Results}\seclbl{vertical_self_org_methods_results}
 The results obtained by this model are presented below. It is important to note that these models aim not to achieve the best possible results in terms of classification accuracy on a benchmark. In large-scale comparisons, it has often been found that end-to-end backpropagation of error is far superior to other methods, especially in image classification \sidecite{Bartunov_Santoro_Richards_Marris_Hinton_Lillicrap_2018}. Instead, the aim here is to examine interesting concepts that are more biologically plausible and can inspire future work.
 
-\subsection{Data set}\seclbl{vertical_self_org_methods_dataset}
-The model was trained and evaluated on the MNIST \cite{Lecun_Bottou_Bengio_Haffner_1998} data set. It is a data set of handwritten digits with $60'000$ training samples and $10'000$ test samples.
+\subsection{Dataset}\seclbl{vertical_self_org_methods_dataset}
+The model was trained and evaluated on the MNIST \cite{Lecun_Bottou_Bengio_Haffner_1998} dataset. It is a dataset of handwritten digits with $60'000$ training samples and $10'000$ test samples.
 In this thesis, the predefined training and test split is used.
 The samples are images of a digit with the resolution $28 \times 28$ pixel in grayscale, i.e. has one colour channel.
 
-In addition, the models are evaluated on MNIST-C \sidecite{Mu_Gilmer_2019}, a corrupted MNIST benchmark for testing the out-of-distribution robustness of image classification models. This data set consists of the MNIST data with $15$ types of corruptions applied to the samples.
+In addition, the models are evaluated on MNIST-C \sidecite{Mu_Gilmer_2019}, a corrupted MNIST benchmark for testing the out-of-distribution robustness of image classification models. This dataset consists of the MNIST data with $15$ types of corruptions applied to the samples.
 
 \subsection{Baseline Model}
 The base model consists of $4$ fully connected layers with $512$, $256$, $128$ and $64$ neurons as shown in \figref{vertical_org_arch1}.
@@ -450,5 +453,5 @@ TODO: How do hierarchical features improve the result?
 %Sind alle Vektoren bold?
 
 % TODO: target function und objective function vereinheitlichen
-% TODO: net-fragment or net fragment
+% TODO: net fragment or net fragment
 

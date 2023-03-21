@@ -34,10 +34,10 @@
 %\begin{itemize}
 %  \item The brain is highly structured
 %  \item Self-organization is the most promising approach to achieve natural intelligence. It loops between activity and connectivity
-%  \item Self-organization forms net-fragments, one neuron can be part of multiple fragments
+%  \item Self-organization forms net fragments, one neuron can be part of multiple fragments
 %  \begin{itemize}
-%    \item An object can be represented by multiple net-fragments
-%    \item A hierarchy of features can be represented by nested net-fragments
+%    \item An object can be represented by multiple net fragments
+%    \item A hierarchy of features can be represented by nested net fragments
 %  \end{itemize}
 %  \item The self-organizing process has to start from an already established coarse structure
 %  \item There exists many alternative pathways in the network
@@ -59,7 +59,7 @@
 \chapter{Experiments Hebbian Learning}\chlbl{exp_hebb_learning}
 Hebbian learning is the most plausible learning algorithm from a biological point of view (c.f. \secref{hebbian}).
 Because of this high plausibility, the effectiveness of Hebbian learning for extracting image representations was investigated in many preliminary experiments.
-It was observed that Hebbian learning sometimes works well for tiny networks but does not scale well for larger networks or more complex data sets.
+It was observed that Hebbian learning sometimes works well for tiny networks but does not scale well for larger networks or more complex datasets.
 Of course, it cannot be concluded from these experiments that Hebbian Learning cannot be used to learn networks for extracting good representation from visual scenes.
 However, it was found that it is not trivial and that just applying the Hebbian learning rule is insufficient, especially if the network has a structure of modern Deep Learning architectures with many parameters.
 
@@ -68,9 +68,9 @@ As a result, the model does not learn different features, and the image represen
 This symmetry can be broken using the ABCD-Hebbian learning rule \sidecite{Niv_Joel_Meilijson_Ruppin_2001}.
 The ABCD learning rule calculates the weight update \(\Delta w_{ij}\) from neuron \(i\) to neuron \(j\) based on the pre-synaptic activity \(a_i\) of neuron \(i\) and post-synaptic activity \(a_j\) of neuron \(j\) as follows:
 
-\begin{equation}\eqlbl{hebb_abcd}
+\begin{align}\eqlbl{hebb_abcd}
 	\Delta w_{ij} = \eta_w \cdot (A_wr_ir_j+B_wr_i+C_wr_j+D_w)
-\end{equation}
+\end{align}
 
 where \(\eta_w\) is a weight-specific learning rate, and \(A_w\) is a correlation coefficient, \(B_w\) is a presynaptic coefficient, \(C_w\) is a postsynaptic coefficient, and \(D_w\) is a bias coefficient.
 The bias coefficient \(D_w\) can be interpreted as an individual inhibitory or excitatory bias of each connection in the network.
@@ -200,11 +200,11 @@ The network is visualized in \figref{hebb_pruning}.
 
 \end{tikzpicture}
 }
-    \caption[Hebbian Pruning Network]{The network architecture used to perform Hebbian-based weight pruning.}
+    \caption[Hebbian pruning network]{The network architecture used to perform Hebbian-based weight pruning.}
     \figlbl{hebb_pruning}
 \end{figure}
 
-The model is trained to classify digits with backpropagation of error on the MNIST data set \cite{Lecun_Bottou_Bengio_Haffner_1998}.
+The model is trained to classify digits with backpropagation of error on the MNIST dataset \cite{Lecun_Bottou_Bengio_Haffner_1998}.
 Adam \sidecite{Kingma_Ba_2017} is used as optimisation algorithm to minimise the negative log-likelihood (NLL) loss.
 The mini-batch size is \(32\) and the learning rate is \(5\cdot 10^{-4}\).
 When the loss reaches a plateau, the learning rate is reduced to \(1\cdot 10^{-4}\).
@@ -213,9 +213,9 @@ After the model is trained, the first two fully connected layers within the netw
 The \emph{first} Hebbian-based method proposed pushes the weights between neuron \(i\) and neuron \(j\) towards \(0\) if \(i\) and \(j\) have a low correlation within a mini-batch.
 Therefore, a mini-batch is sampled, and the correlation between all neurons is calculated for each sample.
 if the correlation is below \(0.02\) for at least \(20\%\) of the samples (i.e. \(7\) samples or more for a mini-batch size of \(32\)), the weight is reduced with:
-\begin{equation}\eqlbl{hebb_towards_0}
+\begin{align}\eqlbl{hebb_towards_0}
 	\Delta w_{ij} = - \eta_H \cdot w_{ij}
-\end{equation}
+\end{align}
 
 where \(\eta_H\) is the Hebbian learning rate set to \(1\cdot 10^{-5}\).
 
@@ -249,7 +249,7 @@ The \emph{first} Hebbian-based method can further improve the results even after
         MNIST-C & \(88.74\%\) & \(89.94\%\) \\
         %\hline
     \end{tabular}
-    \caption[NLL Loss of Hebbian Pruning Network]{NLL loss of the model before and after the \emph{first} Hebbian-based pruning method.}
+    \caption[NLL loss of the Hebbian pruning network]{NLL loss of the model before and after the \emph{first} Hebbian-based pruning method.}
     \tablbl{nll_hebb_pruning}
 \end{table}
 
@@ -269,7 +269,7 @@ Furthermore, the correlation-based method is compared to randomly setting the sa
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.99\textwidth]{loss_hebb_pruning}
-    \caption[NLL Loss of Hebbian Pruning]{The NLL loss of the \emph{second} Hebbian-based pruning method compared to removing random weights. The y-axis shows the loss, while the x-axis shows the ratio of weights kept. }
+    \caption[NLL loss of the Hebbian pruning network]{The NLL loss of the \emph{second} Hebbian-based pruning method compared to removing random weights. The y-axis shows the loss, while the x-axis shows the ratio of weights kept. }
     \figlbl{hebb_prune}
 \end{figure}
 
@@ -281,7 +281,7 @@ Thus, Hebbian learning might be promising the reduce the number of parameters wi
 \chapter{Net Fragments}\chlbl{net_fragments}
 This chapter examines how representations of typical deep learning architectures look like.
 Especially net fragments are of interest, i.e. (groups of) neurons representing particular objects' features.
-Net-fragments are discussed in \secref{neuro_concepts_net_fragments}.
+Net fragments are discussed in \secref{neuro_concepts_net_fragments}.
 There, it is described that the interpretation of net fragments in this thesis relies on two principles:
 
 \begin{itemize}
@@ -311,17 +311,17 @@ Tiny networks are sufficient to analyze these images, and this dataset thus lead
     \figlbl{pre_study_dataset}
 \end{figure}
 
-Even in this small data set, various features and, consequently, many net fragments exist.
+Even in this small dataset, various features and, consequently, many net fragments exist.
 In the following, an example is given so that readers understand how net fragments are interpreted in this thesis.
-A very intuitive way for humans to construct features on this data set is to interpret each line as a feature.
-For example, the $10$ different digits in this data set could be composed of $9$ basic lines.
+A very intuitive way for humans to construct features on this dataset is to interpret each line as a feature.
+For example, the $10$ different digits in this dataset could be composed of $9$ basic lines.
 Thus, a low-level net fragment could represent a basic line and be combined to higher-level net fragments like digits.
 \figref{pre_study_components} visualises such an intuitive composition (basic lines on the left, digits on the right).
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.99\textwidth]{pre_study_components}
-    \caption[Line Types in Straight Line Digits Dataset]{A visualisation of all the lines (left) needed to compose the digits in the data set (right). The coloured lines in-between illustrate the relationship between the lines and the digits.}
+    \caption[Line types in the straight line digits dataset]{A visualisation of all the lines (left) needed to compose the digits in the dataset (right). The coloured lines in-between illustrate the relationship between the lines and the digits.}
     \figlbl{pre_study_components}
 \end{figure}
 
@@ -335,7 +335,7 @@ This example demonstrates that a fragment representing a digit can be composed o
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.99\textwidth]{pre_study_composition}
-    \caption[Sample Net Fragment Composition]{A sample composition of the net fragment that could represent the digit $9$.}
+    \caption[Composition of net fragment]{A sample composition of the net fragment that could represent the digit $9$.}
     \figlbl{pre_study_composition}
 \end{figure}
 
@@ -416,7 +416,7 @@ The ``head'' is identical for all models and consists of a sequence of the follo
 		11 & Hand Crafted conv. layer for vertical \& horizontal\\
 		   & edge detection (ks=$3\times3$, ch=$2$) $\rightarrow$ ReLU $\rightarrow$ head \\ %\hline
     \end{tabular}
-    \caption[Different architectures of classification networks investigated for net-fragments]{A description of the different classification networks investigated for net-fragments. A ReLU activation is employed between each layer. ``ks'' is the kernel size of a convolutional layer, and ``ch'' is the number of channels.}
+    \caption[Different classification networks investigated for net fragments]{A description of the different classification networks investigated for net fragments. A ReLU activation is employed between each layer. ``ks'' is the kernel size of a convolutional layer, and ``ch'' is the number of channels.}
     \tablbl{pre_study_models}
 \end{table}
 
@@ -459,7 +459,7 @@ However, when the activations of the corresponding classes are compared, it is e
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.99\textwidth]{pre_study_activations}
-    \caption[Network activations of classification networks on the straight line dataset]{The activations of the first fully connected layer in the ``head'' of the different networks. For each model, the activity of the $12$ neurons is shown for each class (activations along the vertical axis, classes along the horizontal axis). Red means low activation, green means high activation, and blue means activation is off (i.e. $0$).}
+    \caption[Network activations of the classification networks]{The activations of the first fully connected layer in the ``head'' of the different networks. For each model, the activity of the $12$ neurons is shown for each class (activations along the vertical axis, classes along the horizontal axis). Red means low activation, green means high activation, and blue means activation is off (i.e. $0$).}
     \figlbl{pre_study_activations}
 \end{figure}
 
@@ -476,7 +476,7 @@ However, since these rather random-looking pixel combinations maximise the proba
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.99\textwidth]{pre_study_inputs_max}
-    \caption[Inputs that Maximize the Class Output Probability]{The inputs that maximize the probability that the different models predict a specific class. For example, the image in the top left corner maximizes the probability that model number $1$ predicts that this is class $0$ (digit $0$).}
+    \caption[Inputs that maximize the class output probability]{The inputs that maximize the probability that the different models predict a specific class. For example, the image in the top left corner maximizes the probability that model number $1$ predicts that this is class $0$ (digit $0$).}
     \figlbl{pre_study_inputs_max}
 \end{figure}
 
@@ -508,7 +508,7 @@ The two autoencoder architectures used are shown in \tabref{pre_study_ae_models}
 		  & $\rightarrow$ FC (in size=$40$ out size=$9*9$) \\ %\hline
         %\hline
     \end{tabular}
-    \caption[Different architectures of autoencoders that are investigated for net-fragments]{A description of the different autoencoder networks that are investigated for net-fragments.}
+    \caption[Different autoencoders investigated for net fragments]{A description of the different autoencoder networks that are investigated for net fragments.}
     \tablbl{pre_study_ae_models}
 \end{table}
 
@@ -518,12 +518,12 @@ The learning rate is $5 \cdot 10^{-4}$, the mini-batch size is $32$ samples, and
 The reconstruction loss $\mathcal{L}_{\text{rec}}$ used for the different experiments is either the L1 distance (mean absolute error) or the L2 distance (mean square error). For example, if $\boldsymbol{x}$ is the input data with $n$ pixels and $\hat{\boldsymbol{x}}$ is the reconstructed data, then the reconstruction loss can be written as follows:
 
 
-\begin{equation}\eqlbl{ae_recon}
+\begin{align}\eqlbl{ae_recon}
 		\mathcal{L}_{\text{rec}}(\boldsymbol{x}, \hat{\boldsymbol{x}}) = \begin{cases}
       		\frac{1}{n} \sum^{n}_{i=1}|x_i - \hat{x}_i|, & \text{if L1 distance}\\
       		\frac{1}{n} \sum^{n}_{i=1} (x_i - \hat{x}_i)^2, & \text{if L2 distance}
     	\end{cases}
-\end{equation}
+\end{align}
 
 % https://debuggercafe.com/sparse-autoencoders-using-kl-divergence-with-pytorch/
 Since specific neurons of a net fragment represent certain features, they should only be active if the feature is present.
@@ -536,21 +536,21 @@ For the sparsity loss $\mathcal{L}_{s}$, the kullback-leibler (KL) divergence is
 The hidden representations $\boldsymbol{h}$ in the bottleneck layer with length $n_h$ (i.e. $n_h$ neurons in the bottleneck layer) are defined as $\boldsymbol{h} = h_1, ..., h_{n_h}$.
 Furthermore, the average activation probability of a neuron $h_j$ over the input data $\boldsymbol{x}$ can be calculated as
 
-\begin{equation}\eqlbl{ae_kldd}
+\begin{align}\eqlbl{ae_kldd}
 		\hat{\rho}_j = \frac{1}{n} \sum^n_{i=1} \left( \frac{1}{1+e^{-h_j}} \right)
-\end{equation}
+\end{align}
 
 where $\left( \frac{1}{1+e^{-h_j}} \right)$ is the sigmoid function that squeezes the activation in the range between $0$ and $1$. Furthermore, $\rho=0.05$ is a sparsity parameter that can be interpreted as a target activation probability of each neuron. If the kullback-leibler divergence between all $\hat{\rho}_j$ and $\rho$ is minimised, then an average activation probability per neuron in the hidden layer of $\rho$ is enforced. The corresponding Kullback-Leibler divergence for each $\hat{\rho}_j$ is defined as:
 
-\begin{equation}\eqlbl{ae_kld}
+\begin{align}\eqlbl{ae_kld}
 		KL(\rho || \hat{\rho}_j) = \rho \cdot \log \frac{\rho}{\hat{\rho}_j} + (1-\rho) \cdot \log \frac{1-\rho}{1-\hat{\rho}_j}
-\end{equation}
+\end{align}
 
 The sparsity loss $\mathcal{L}_{s}$ is the sum of the Kullback-Leibler divergence between all $\hat{\rho}_j$ and $\rho$ and thus enforces that on average only $5\%$ of the hidden representations $\boldsymbol{h}$ are active:
 
-\begin{equation}\eqlbl{ae_kldl}
+\begin{align}\eqlbl{ae_kldl}
 		L\mathcal{L}{s}(\rho, \hat{\rho}) = \sum_{j=1}^{n_h} KL(\rho || \hat{\rho}_j)
-\end{equation}
+\end{align}
 
 Thus, this constraint ensures that the activations are sparse, consistent with the net fragments concept.
 Another property of net fragments is that the activations should be diverse.
@@ -558,16 +558,16 @@ Therefore, a novel diversity loss $\mathcal{L}_{d}$ is proposed.
 This loss is based on the fact that the activations in the bottleneck layer $(\boldsymbol{h}$ should be as different as possible for all samples of a mini-batch $(\boldsymbol{x}^{(1)}, ..., \boldsymbol{x}^{(m)})$.
 The sum of the dot product between the activation of a sample $\boldsymbol{h}^{(i)}$ and all other samples $\boldsymbol{h}^{(j)}$, for $i \neq j$ is small if the samples within a batch have a high diversity. Therefore, the diversity loss can be defined as:
 
-\begin{equation}\eqlbl{ae_kldl2}
+\begin{align}\eqlbl{ae_kldl2}
 		L_{d}(\boldsymbol{z}) = \frac{1}{n} \sum_{i=1}^n\sum_{j=1}^{n_h} \boldsymbol{z}^{(i)} \cdot \boldsymbol{z}^{(j)}, \text{ if } i\neq j
-\end{equation}
+\end{align}
 
 Minimising $\mathcal{L}_{d}$ results in the bottleneck layer activations not only being sparse but also diverse. 
 The overall loss can be defined as the sum of these three loss components, with $\lambda_s$ and $\lambda_d$ being hyperparameters that control the influence of the diversity and sparsity loss.
 
-\begin{equation}\eqlbl{ae_kldl2}
+\begin{align}\eqlbl{ae_kldl2}
 		L = L_{\text{rec}} + \lambda_s \cdot L_{s} + \lambda_d \cdot L_{d}
-\end{equation}
+\end{align}
 
 In the experiments, these hyperparameters were set to $\lambda_s = 0.02$ and $\lambda_d = 0.02$, respectively $\lambda_s = 0$ and $\lambda_d = 0$ if the sparsity and diversity loss should not be used.
 
@@ -577,13 +577,13 @@ These vectors are visualised and investigated for net fragments.
 \subsection{Results}\seclbl{pre_study_ae_results}
 The activations of the autoencoders trained with reconstruction loss only and without diversity or sparsity constraint (i.e. $\lambda_s = 0$ and $\lambda_d = 0$) look very similar to those of the classification network; about half of the neurons are always active regardless of the object depicted in the image, and the other half of neurons are always inactive. Thus, this version of the autoencoder has the same problem as the classification networks. Adding a sparsity constraint (i.e. $\lambda_s = 0.02$ and $\lambda_d = 0$) improves this issue slightly. The activations become sparse, but the same neurons are always active independent of the objects in the image. Only in a few cases can a set of neurons be identified that represents specific objects or features.
 
-However, if all three loss components are used, the activations look much better. In this case, specific neuron combinations represent object-dependent features and are only active for specific objects. There are no more neurons that are constantly active. It is even possible to infer image labels based on a binary activity state (i.e. which neuron is active or inactive) without knowing the strength of the activation, even though labels are not used during training. Thus, an autoencoder with additional sparsity and diversity constraint can represent net-fragments to some extent\sidenote{except that constraint 1, which says that net fragments span several layers by design, is violated (c.f. \secref{net_fragments})}.
+However, if all three loss components are used, the activations look much better. In this case, specific neuron combinations represent object-dependent features and are only active for specific objects. There are no more neurons that are constantly active. It is even possible to infer image labels based on a binary activity state (i.e. which neuron is active or inactive) without knowing the strength of the activation, even though labels are not used during training. Thus, an autoencoder with additional sparsity and diversity constraint can represent net fragments to some extent\sidenote{except that constraint 1, which says that net fragments span several layers by design, is violated (c.f. \secref{net_fragments})}.
 
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.99\textwidth]{pre_study_ae1}
-    \caption[Network activations of the smaller autoencoder network on the straight line dataset]{The activations in the bottleneck layer of the smaller autoencoder ``model 1'' for different loss functions. For each loss function, the activity of the $12$ neurons in the bottleneck layer is shown for each class (activations along the vertical axis, classes along the horizontal axis). Red means low activation, green means high activation, and blue means activation is off (i.e. $0$).}
+    \caption[Network activations of the smaller autoencoder model]{The activations in the bottleneck layer of the smaller autoencoder ``model 1'' for different loss functions. For each loss function, the activity of the $12$ neurons in the bottleneck layer is shown for each class (activations along the vertical axis, classes along the horizontal axis). Red means low activation, green means high activation, and blue means activation is off (i.e. $0$).}
     \figlbl{pre_study_ae1}
 \end{figure}
 
@@ -596,7 +596,7 @@ This becomes even more obvious when the activations of the bigger autoencoder ``
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.99\textwidth]{pre_study_ae2}
-    \caption[Network activations of the bigger autoencoder network on the straight line dataset]{On the left side (a), the activations in the bottleneck layer of the bigger autoencoder ``model 2'' are shown. The activity of the $40$ neurons in the bottleneck layer is shown for each class (activations along the vertical axis, classes along the horizontal axis). On the right side (b), the output of the decoder is shown when the 18th neuron is set to $1$, and all other neurons are set to $0$. The $18$-th neurons is a feature that is needed to generate the numbers $5$ and $9$.}
+    \caption[Network activations of the bigger autoencoder model]{On the left side (a), the activations in the bottleneck layer of the bigger autoencoder ``model 2'' are shown. The activity of the $40$ neurons in the bottleneck layer is shown for each class (activations along the vertical axis, classes along the horizontal axis). On the right side (b), the output of the decoder is shown when the 18th neuron is set to $1$, and all other neurons are set to $0$. The $18$-th neurons is a feature that is needed to generate the numbers $5$ and $9$.}
     \figlbl{pre_study_ae2}
 \end{figure}
 
@@ -607,13 +607,13 @@ Figure \figref*{pre_study_ae2} (b) shows which feature the $18$-th neuron repres
 Thus, it is a feature (i.e. a net fragment) that assembles with other features to represent an object.
 
 \section{Conclusion}\seclbl{pre_study_conclusion}
-Different architectures have been trained with different targets on a very simple and easily interpretable data set.
+Different architectures have been trained with different targets on a very simple and easily interpretable dataset.
 The network activations are tracked during training and analysed for net fragments.
 Typical vision architectures are sequential and build up a composition of features (i.e. net fragments) over several layers.
 Usually, the embeddings of a pre-defined layer are used for downstream tasks such as classification.
 Autoencoders typically use the bottleneck layer, a classification networks typically have a classification head (i.e. a FC layer with a Softmax activation) after the last model layer and thus extract these embeddings from the last model layer.
 Thus, embeddings are extracted from one layer.
-Net-fragments, on the other hand, span over multiple layers\sidenote{net-fragments can be thought of as the ``path'' of features through a network} and hence this principle is violated.
+Net fragments, on the other hand, span over multiple layers\sidenote{net fragments can be thought of as the ``path'' of features through a network} and hence this principle is violated.
 
 Furthermore, net fragments are strongly activated when the corresponding feature they represent is present in the input and are weakly active or not active at all when it is not present.
 Typical deep learning networks have neurons that are never active, while the active neurons usually remain active regardless of the class of the input data and only change their activity slightly.

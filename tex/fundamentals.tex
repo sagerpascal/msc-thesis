@@ -48,54 +48,54 @@ Similar to how a neuron of the human brain transmits electrical impulses through
 A neuron takes an input vector $\boldsymbol{x} = (x_1, ..., x_n)$ where $x_i \in \{0, 1\}$ and maps it to an output $\hat{y} \in \{0, 1\}$.
 The mapping from the input to the output is done by using an aggregation function $g(\cdot)$ that sums up the input vector $\boldsymbol{x}$ and an activation function $f(\cdot)$ that outputs $1$ if the output of $g(\cdot)$ is bigger than a threshold $\theta$ and $0$ otherwise.
 %
-\begin{equation}\eqlbl{McCulloch_Pitts_agg}%
+\begin{align}\eqlbl{McCulloch_Pitts_agg}%
 	z = g(\boldsymbol{x}) = g(x_1, ..., x_n) = \sum_{i=1}^{n}x_i\\
-\end{equation}
+\end{align}
 %
-\begin{equation}\eqlbl{McCulloch_Pitts_act}%
+\begin{align}\eqlbl{McCulloch_Pitts_act}%
 		\hat{y} = f(z) = \begin{cases}
       		1, & \text{if}\ z \geq \theta \\
       		0, & \text{otherwise}
     	\end{cases}
-\end{equation}
+\end{align}
 %
 In 1958, \sideciteay{Rosenblatt_1958} developed the Perceptron, which works with real numbers as input.
 The input vector $\boldsymbol{x} \in \mathbb{R}^n$ is multiplied with a weight vector $\boldsymbol{w} \in \mathbb{R}^n$ with the same length $n$.
 %
-\begin{equation}\eqlbl{Perceptron_agg}%
+\begin{align}\eqlbl{Perceptron_agg}%
 	z = g(\boldsymbol{x}) = g(x_1, ..., x_n) = \sum_{i=1}^{n} w_i \cdot x_i\\
-\end{equation}
+\end{align}
 %
 The output $\hat{y} \in \{0, 1\}$ is similar to the McCulloch and Pitts neuron $1$ if the aggregated value is greater than a threshold $\theta$ and $0$ otherwise as described in \eqref{McCulloch_Pitts_act}. With real numbers as input, the equations \eqref*{Perceptron_agg} and \eqref*{McCulloch_Pitts_act} can be rewritten as
 %
-\begin{equation}\eqlbl{Perceptron}%
+\begin{align}\eqlbl{Perceptron}%
 		\hat{y} =f(g(\boldsymbol{x})) = \begin{cases}
       		1, & \text{if}\ z - \theta \geq 0 \\
       		0, & \text{otherwise}
     	\end{cases}
-\end{equation}
+\end{align}
 %
 Later, the step-function \(f(\cdot)\) was replaced with other functions so that the output can also be a real number \(\hat{y} \in \mathbb{R}\). Often-used activation functions are
 %
-\begin{equation}\eqlbl{act_functions}%
+\begin{align}\eqlbl{act_functions}%
 	\begin{aligned}
 		\text{Sigmoid: } & \sigma(z) = \frac{1}{1+\mathrm{e}^{-z}}\\
 		\text{Rectified linear unit (ReLU): } & (z)^{+} = \max\{0, z\}\\
 		\text{Hyperbolic tangent (tanh): }  & \tanh(z) = \frac{\mathrm{e}^{z}-\mathrm{e}^{-z}}{\mathrm{e}^{z}+\mathrm{e}^{-z}}
 	\end{aligned}
-\end{equation}
+\end{align}
 %
 By convention, a positive bias $b$ is often used instead of the negative threshold $- \theta$, which leads to:
 %
-\begin{equation}\eqlbl{nn}%
+\begin{align}\eqlbl{nn}%
 	z = g(\boldsymbol{x}) = \boldsymbol{w} \cdot \boldsymbol{x} + b = \left( \sum_{i=1}^{n}w_i \cdot x_i \right) + b
-\end{equation}
+\end{align}
 %
 The neuron's output is calculated with the activation function of $z$:
 %
-\begin{equation}\eqlbl{nn2}%
+\begin{align}\eqlbl{nn2}%
 	\hat{y} = f(z)
-\end{equation}
+\end{align}
 %
 So far, only the output of a single neuron has been discussed.
 However, the brain consists of multiple neurons which are connected through synapses.
@@ -105,16 +105,16 @@ In the simplest case, all neurons from one layer are connected with all neurons 
 For a network with multiple neurons within one layer, the input $\boldsymbol{x}$ is fed into all neurons to obtain $\boldsymbol{\hat{y}}$.
 If the layer has $k$ neurons, the output of the aggregation function becomes a vector $\boldsymbol{z} = (z_1, ..., z_k)$. The same applies to the output of the activation function $\boldsymbol{y} = (y_1, ..., y_k)$ and the bias $\boldsymbol{b} = (b_1, ..., b_k)$. The weight vector, on the other hand, becomes a matrix $\boldsymbol{W} = (\boldsymbol{w}_1, ..., \boldsymbol{w}_k)$. For a layer with multiple neurons, \eqref{nn} and \eqref{nn2} can be rewritten with matrix operations:
 %
-\begin{equation}\eqlbl{nn3}%
+\begin{align}\eqlbl{nn3}%
 	\boldsymbol{z} = \boldsymbol{W} \cdot \boldsymbol{x} + \boldsymbol{b}
-\end{equation}
-\begin{equation}
+\end{align}
+\begin{align}
 	\hat{\boldsymbol{y}} = f(\boldsymbol{z})
-\end{equation}
+\end{align}
 %
 which is equal to
 %
-\begin{equation}\eqlbl{nn4}%
+\begin{align}\eqlbl{nn4}%
 		\boldsymbol{z} = \begin{bmatrix}
 			z_1\\
 			z_2\\
@@ -131,15 +131,15 @@ which is equal to
 			...\\
 			\left( \sum_{i=1}^{n}w_{ki} \cdot x_i \right) + b_k\\
 		\end{bmatrix}
-\end{equation}
-\begin{equation}\eqlbl{nn5}%
+\end{align}
+\begin{align}\eqlbl{nn5}%
 		\hat{\boldsymbol{y}} = \begin{bmatrix}
 			y_1 = f(z_1)\\
 			y_2 = f(z_2)\\
 			...\\
 			y_k = f(z_k)\\
 		\end{bmatrix}
-\end{equation}
+\end{align}
 %
 
 The universal approximation theorem\sidecite{Cybenko_1989} proves that a shallow network with one hidden layer (i.e. one layer between input and output layer) and enough neurons can approximate any mapping function between inputs and outputs.
@@ -152,12 +152,12 @@ For a network with \(L\) layers, we denote the layer index as superscript square
 For example, the weights of layer $l$ are denoted as $\boldsymbol{W}^{[l]}$, the bias as \(\boldsymbol{b}^{[l]}\), the output of the aggregation function as \(\boldsymbol{z}^{[l]}\), and the output of the activation function as \(\boldsymbol{a}^{[l]}\).
 The input in the first layer is the input data, i.e. $\boldsymbol{a}^{[0]} = \boldsymbol{x}$, and the output of the last layer is the model's prediction, i.e. $\boldsymbol{a}^{[L]} = \hat{\boldsymbol{y}}$. Thus, the mathematical model of an MLP is defined as
 
-\begin{equation}\eqlbl{mlp}
+\begin{align}\eqlbl{mlp}
 		\boldsymbol{z}^{[l]} = \boldsymbol{W}^{[l]}\boldsymbol{a}^{[l-1]} + \boldsymbol{b}^{[l]}
-\end{equation}
-\begin{equation}\eqlbl{mlp2}
+\end{align}
+\begin{align}\eqlbl{mlp2}
 		\boldsymbol{a}^{[l]} = f({z}^{[l]})
-\end{equation}
+\end{align}
 
 So far, only the forward pass used to calculate the output $\boldsymbol{\hat{y}}$ has been discussed.
 However, the model output $\boldsymbol{\hat{y}}$ will only be close to the target output $\boldsymbol{y}$ if the weights $\boldsymbol{W}^{[l]}$ and biases $\boldsymbol{b}^{[l]}$ are properly defined in every layer $l$.
@@ -173,21 +173,21 @@ The chosen loss function is minimized iteratively with stochastic gradient desce
 The idea behind stochastic gradient descent is to make use of the fact that the negative gradient of the loss value points to the direction of the steepest descent (i.e. in the direction where the loss becomes smaller).
 Therefore, SGD updates the network parameters by taking a step of size $\eta$ toward their negative gradient:
 %
-\begin{equation}\eqlbl{sgd}
+\begin{align}\eqlbl{sgd}
 	\begin{aligned}
 		\Delta \boldsymbol{W}^{[l]} = & -\eta \cdot \left( \nabla_{\boldsymbol{W}^{[l]}} \mathcal{L} \right)\\
 		\boldsymbol{W}^{[l]} \coloneqq & \boldsymbol{W}^{[l]} + \Delta \boldsymbol{W}^{[l]}
 	\end{aligned}
-\end{equation}
+\end{align}
 %
 and
 %	
-\begin{equation}\eqlbl{sgd2}	
+\begin{align}\eqlbl{sgd2}	
 	\begin{aligned}
 		\Delta \boldsymbol{b}^{[l]} = & -\eta \cdot \left( \nabla_{\boldsymbol{b}^{[l]}} \mathcal{L} \right)\\
 		\boldsymbol{b}^{[l]} \coloneqq & \boldsymbol{b}^{[l]} + \Delta \boldsymbol{b}^{[l]}
 	\end{aligned}
-\end{equation}
+\end{align}
 %
 The term $\left( \nabla_{\boldsymbol{W}^{[l]}} \mathcal{L} \right)$ is the gradient of the weights \(\boldsymbol{W}^{[l]}\)  with respect to the loss $\mathcal{L}(\cdot)$ and the term $\left( \nabla_{\boldsymbol{b}^{[l]}} \mathcal{L} \right)$ is the gradient of the bias \(\boldsymbol{b}^{[l]}\)  with respect to $\mathcal{L}(\cdot)$.
 The gradients of the weights can efficiently be calculated with an algorithm called backpropagation of error \sidecite{Rumelhart_Hinton_Williams_1986}, which is, in fact, just an intelligent implementation of the chain rule\sidenote{While a detailed discussion on backpropagation is out of scope for this thesis, we refer interested readers to the deep learning course by Andrew Ng \cite{Coursera}}.
@@ -263,7 +263,7 @@ These techniques are called weakly-supervised or un-supervised learning and are 
 Not only specific tasks can be learned, but also task-independent representations.
 These representations are typically learned unsupervised\sidenote{also called self-supervised learning because the target labels are derived from the data itself} and can be used for one or several downstream tasks.
 More details on visual representation learning are provided in \secref{visual_rep_learning}.
-Especially auto-encoders \sidecite{rumelhart1985learning} are explained in this section as they are applied in this thesis.
+Especially autoencoders \sidecite{rumelhart1985learning} are explained in this section as they are applied in this thesis.
 
 
 \section{Limitations}\seclbl{limitationsDL}
@@ -274,7 +274,7 @@ Nevertheless, not only has the hardware improved massively recently, but deep le
 An analysis by OpenAI shows that since 2012 the amount of computing used by AI models has increased exponentially with a doubling time of \(3.4\) months \sidecite{OpenAI_compute}.
 Thus, the compute usage increases even faster than the progress of hardware.
 
-Many recent improvements in deep learning models are due to massively growing model and data set sizes.
+Many recent improvements in deep learning models are due to massively growing model and dataset sizes.
 For example, the growth of language models over the last five years is remarkable:
 While a state-of-the-art language model from 2018 \sidecite{Peters_Neumann_Iyyer_Gardner_Clark_Lee_Zettlemoyer_2018} had around \(94\)M parameters, the state-of-the-art in 2020 \sidecite{NEURIPS2020_1457c0d6} already had \(175\)B parameters. Training such a model on a single V100 GPU would take about 355 years and cost about \(4.6\)M dollars in the cloud \sidecite{Lambda_GPT3}.
 A recent language model from Microsoft and NVIDIA \sidecite{Smith_Patwary_Norick_LeGresley_Rajbhandari_Casper_Liu_Prabhumoye_Zerveas_Korthikanti_etal} even has \(530\)B parameters.
@@ -286,7 +286,7 @@ Even though there exist techniques to shrink the model size after training, such
 Another major issue of deep learning systems is that they suffer from catastrophic forgetting.
 If a model is trained on a specific task and afterwards trained (or fine-tuned) on another task, the model suffers a "catastrophic" drop in performance over the first task.
 The reason for this effect is that during training on the second task, the model adjusts the parameters learned during the first task and therefore ``forgets'' the learned mapping functions.
-Mixing all data sets or learning all tasks in parallel in a multi-task setting \cite{Zhang_Yang_2021} does not seem feasible to achieve general intelligence as general intelligence might require training on many unrelated tasks. Therefore, models should not forget previously learned knowledge.
+Mixing all datasets or learning all tasks in parallel in a multi-task setting \cite{Zhang_Yang_2021} does not seem feasible to achieve general intelligence as general intelligence might require training on many unrelated tasks. Therefore, models should not forget previously learned knowledge.
 Catastrophic forgetting is also caused by the fact that learning is mostly done offline\sidenote{offline in this context means that the model parameters are not adapted after training during inference time}.
 Online learning \cite{Sahoo_Pham_Lu_Hoi_2017} and lifelong learning \cite{Parisi_Kemker_Part_Kanan_Wermter_2019} are hot research topics.
 However, these methods still need to be established. Moreover, such models do not solve catastrophic forgetting but can adapt better to changing conditions.
@@ -357,9 +357,9 @@ Donald Hebb describes how the connections between cells in the nervous system ad
 He proposed Hebbian learning that is based on this principle.
 The weight $w_{ij}$ from neuron $i$ to neuron $j$ changes based on the pre-synaptic activity $a_i$ of neuron $i$ and post-synaptic activity $a_j$ of neuron $j$\sidenote{the pre-synaptic and post-synaptic activity corresponds to the output of the activation function $f(\cdot)$ of a neuron in the previous resp. subsequent layer}
 
-\begin{equation}\eqlbl{hebb_1}
+\begin{align}\eqlbl{hebb_1}
 	\Delta w_{ij} = \eta a_i a_j
-\end{equation}
+\end{align}
 
 where \(\eta\) is the learning rate.
 Thus, the weights between frequently co-activated neurons increase called Hebbian plasticity.
@@ -369,24 +369,24 @@ Therefore, this formula is often extended based on the covariance of the activit
 The covariance is positive if two neurons fire often together and negative if they do not often fire together.
 The following equation changes the weight relative to the covariance:
 
-\begin{equation}\eqlbl{hebb_2}
+\begin{align}\eqlbl{hebb_2}
 	\Delta w_{ij} = \eta (a_i - \psi_i) \cdot (a_j - \psi_j)
-\end{equation}
+\end{align}
 
 where \(\psi_i\) and \(\psi_j\) are estimates of the expected pre- and post-synaptic activity\sidenote{the expected activity can, for example, be estimated through a moving average function}.
 However, the formulation above lacks boundaries, i.e. the weights could grow to infinite.
 A simple solution is to enforce hard boundaries \(w_{min} \leq w_{ij} \leq w_{max}\).
 An alternative to enforce boundaries is to normalize the length of the weight vector \sidecite{Oja_1982}.
-\begin{equation}\eqlbl{hebb_3}
+\begin{align}\eqlbl{hebb_3}
 	\Delta w_{ij} = \eta (a_i a_j - \alpha r^2_j w_{ij})
-\end{equation}
+\end{align}
 
 where $\alpha r^2_j w_{ij}$ is the regularization term, and the parameter \(\alpha\) is a parameter that determines the size of the norm of the weight vector.
 By using this regularization term, the weight vector $\boldsymbol{w}$ convergences to
 
-\begin{equation}\eqlbl{hebb_31}
+\begin{align}\eqlbl{hebb_31}
 	||\boldsymbol{w}||^2 = \frac{1}{\alpha}
-\end{equation}
+\end{align}
 
 Other measures also exist that limit the size of the vector $\boldsymbol{w}$, for example, by using rate-based threshold adaption \sidecite{Bienenstock_Cooper_Munro_1982, Intrator_Cooper_1992}. Rate-based threshold adaption uses a sliding threshold for long-term potentiation (LTP) or long-term depression (LTD) induction.
 When a pre-synaptic neuron fires and the post-synaptic neuron is in a lower activity state than the sliding threshold, it undergoes an LTD (i.e. the connection is weakened); otherwise, an LTP is applied, and the connection is strengthened.   
@@ -427,15 +427,15 @@ This algorithm compares a given sample with the previously seen training data wi
 Memory networks \sidecite{Weston_Chopra_Bordes_2015} implement an auto-associative memory with the deep learning framework.
 Such memory networks convert an input \(\boldsymbol{x}\) to an internal feature representation \(E(\boldsymbol{x})\). Afterwards, the memory $\boldsymbol{M}$ is updated by a memory-update function $G(\cdot)$ given the internal feature representation of the input \(\boldsymbol{x}\).
 %
-\begin{equation}\eqlbl{hf_0}
+\begin{align}\eqlbl{hf_0}
 	\boldsymbol{M}=G(\boldsymbol{M}, E(\boldsymbol{x}))
-\end{equation}
+\end{align}
 %
 Finally, the output $\boldsymbol{\hat{y}}$ is calculated with an output function $O(\cdot)$ based on the updated memory and the latent representation of \(\boldsymbol{x}\):
 %
-\begin{equation}\eqlbl{hf_00}
+\begin{align}\eqlbl{hf_00}
 	\boldsymbol{\hat{y}}o=O(\boldsymbol{M}, E(\boldsymbol{x}))
-\end{equation}
+\end{align}
 %
 This process is applied during the training and inference phase.
 The only difference is that the parameters for the functions \(E(\cdot)\), \(G(\cdot)\), and \(O(\cdot)\) are only updated during training.
@@ -446,16 +446,16 @@ A Hopfield network in its original form works only with binary units.
 For consistency, these networks are called binary Hopfield networks in the following.
 The output of a neuron in a binary Hopfield network depends on the output of the other neurons within the network:
 
-\begin{equation}\eqlbl{hf_1}
+\begin{align}\eqlbl{hf_1}
 	a_i = \sum_{i \neq j} w_{ij} y_j + b
-\end{equation}
+\end{align}
 
-\begin{equation}\eqlbl{hf_2}
+\begin{align}\eqlbl{hf_2}
 	y_i = \begin{cases}
       		1, & \text{if } a_i > 0 \\
       		-1, & \text{otherwise}
     	\end{cases}
-\end{equation}
+\end{align}
 
 
 Hopfield networks have their own dynamics, and the output evolves over time.
@@ -464,15 +464,15 @@ A flipping output influences all other neurons and may encourage them to flip as
 Since the signals are either positive or negative (i.e. binary), The term \(y_i \cdot a_i\) is negative if \(y_i\) is not equal to \(a_i\), otherwise, it is positive.
 Since the neuron flips if the term \(y_i \cdot a_i\) is negative or stays the same if this term is positive, the change of this term can only be positive:
 
-\begin{equation}\eqlbl{hf_3}
+\begin{align}\eqlbl{hf_3}
 	\Delta \left( y_i \cdot a_i \right) \geq 0
-\end{equation}
+\end{align}
 
 The negative sum of the term $y_i \cdot a_i$ for the entire network is called the energy function $I(\boldsymbol{y})$\sidenote{typically, the energy function is called $E(\cdot)$ and not $I(\cdot)$; however, $E(\cdot)$ is already used as encoder function in this thesis and therefore $I(\cdot)$ is used as energy function.} of the network:
 
-\begin{equation}\eqlbl{hf_4}
+\begin{align}\eqlbl{hf_4}
 	I(\boldsymbol{y}) = -\sum_{i} y_i \left( \sum_{j>i} w_{ji} y_j + b \right)
-\end{equation}
+\end{align}
 
 As shown in \eqref{hf_3}, the network energy function \(I(\boldsymbol{y})\) of the network can only decrease.
 Moreover, the energy function has a lower bound, and thus the network reaches a stable state after a finite number of iterations. 
@@ -487,9 +487,9 @@ Hebbian learning (c.f. Section \secref*{hebbian}) can be used to \emph{store} sp
 To store a pattern, the weights \(\boldsymbol{w}\) must be chosen in a way so that $P$ desired patterns \((\boldsymbol{y}^1, ..., \boldsymbol{y}^P)\) are local minima of the energy function.
 By combining Hebbian learning with some smart mathematical transformations, it can be shown that the weights can be directly learned with only one iteration over the $P$ training patterns\sidenote{for the derivation of this equation refer to \citep{Hopfield_1982}}:
 
-\begin{equation}\eqlbl{hf_5}
+\begin{align}\eqlbl{hf_5}
 	\boldsymbol{w} = \frac{1}{p} \sum_{k=1}^{P} \boldsymbol{y}^k \times (\boldsymbol{y}^k)^T - \boldsymbol{I}
-\end{equation}
+\end{align}
 
 where \(\boldsymbol{I}\) is the identity matrix.
 Later, the weight update of the binary Hopfield network was extended so that the network can either learn patterns during an awake cycle or forget patterns during a sleep cycle \sidecite{Hopfield1983}.
