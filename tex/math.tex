@@ -12,9 +12,9 @@ Depending on the context, a variable can be a scalar value, a vector, or a matri
   	Bold, upper case & $\boldsymbol{A}$ & A matrix\\
   	Curved brackets with a point & $a(\cdot)$ & A function, where $(\cdot)$ is a placeholder for a variable\\
   	Rectangular brackets    & $a[t]$ & Depends on context, either variable $a$ at time $t$\\
-							& $\boldsymbol{x}[c]$ & or variable $\boldsymbol{x}$ is from class $c$\\
-  	Superscript rectangular brackets & $a^{[l]}$ & $l$ is the index of the layer, e.g. $\boldsymbol{W}^{[l]}$ is the weight matrix of layer $l$\\
-  	Superscript curved brackets & $a^{(i)}$ & $i$ is the index of the sample, e.g. $\boldsymbol{x}^{(i)}$ is the$i$-th sample of a data set\\
+							& $\boldsymbol{x}[c]$ & or vector $\boldsymbol{x}$ is from class $c$\\
+  	Superscript rectangular brackets & $a^{[l]}$ & Layer index: $l$ is the index of the layer, e.g. $\boldsymbol{W}^{[l]}$ is the weight matrix of layer $l$\\
+  	Superscript curved brackets & $a^{(i)}$ & Sample index: $i$ is the index of the sample, e.g. $\boldsymbol{x}^{(i)}$ is the $i$-th sample of a data set\\
 \end{tabular}
 
 
@@ -27,17 +27,17 @@ Depending on the context, a variable can be a scalar value, a vector, or a matri
 	\hline
 	$\beta$ & The weight factor of the Kullback-Leibler term in the loss of a variational autoencoder\\
 	$\lambda$ & The weight factor for loss terms\\
-	$\eta$ & The learning rate of an optimization algorithm\\
-	$\rho$ & The desired activation probability\\
+	$\eta$ & The learning rate of an optimisation algorithm\\
+	$\rho$ & The desired activation probability of neurons\\
 	$\hat{\rho}_i$ & The activation probability of a neuron $i$\\
 	$\psi$ & An estimate of the synaptic activity, used for Hebbian learning (i.e. an estimate of $a$)\\
 	$\theta$ & A threshold value that was used instead of the bias $b$ in early versions of neural networks or as goodness threshold in the forward-forward network\\
-	$a$ & The output of an activation function of a single neuron\\
-	$\boldsymbol{a}$ & The output of an activation function in an intermediate layer of a multi-layer network, the output of the model is typically denoted as $\boldsymbol{\hat{y}}$\\
-	$b$ & The bias of a single neuron\\
+	$a_i$ & The output of an activation function of a single neuron\\
+	$\boldsymbol{a}$ & The output of an intermediate layer of a multi-layer network, the output of the last layer is typically denoted as $\boldsymbol{\hat{y}}$\\
+	$b_i$ & The bias of a single neuron\\
 	$\boldsymbol{b}$ & The bias of a network layer\\
 	$C$ & The set of classes of a classification task\\
-	$\boldsymbol{h}$ & The latent representations of a network that are typically used in a subsequent downstream task\\  % OK
+	$\boldsymbol{h}$ & The latent representations of a network that are typically used in a subsequent downstream task (specific instance of $\boldsymbol{a}$)\\
 	$k$ & The number of neurons within a layer\\
 	$L$ & The number of layers of a network\\
 	$l$ & The index of a layer, e.g. $\boldsymbol{W}^{[l]}$ is the weight matrix of layer $l$\\
@@ -56,9 +56,9 @@ Depending on the context, a variable can be a scalar value, a vector, or a matri
 	$\boldsymbol{X} = \boldsymbol{x}^{(1)}, ..., \boldsymbol{x}^{(m)}$ & A dataset with $m$ samples\\
 	$\boldsymbol{x} = (x_1, ..., x_n)$ & An input sample that is fed into a model or a network layer, typically a vector of length $n$\\
 	$\boldsymbol{y}$ & The expected output of a model or a network layer (i.e. the ground truth), typically a vector ($\boldsymbol{y}$) for a multi-class classification task or a scalar value ($y$) for a regression or single-class classification task\\
-	$\boldsymbol{\hat{y}}$ & The actual output of a model or a network layer (i.e. the prediction), typically a vector ($\boldsymbol{\hat{y}}$) for a multi-class classification task or a scalar value ($\hat{y}$) for a regression or single-class classification task (in a multi-layer network, the output of an intermediate layer is typically denoted as $\boldsymbol{a}$)\\
-	$z$ & The output of the aggregation function $g(\cdot)$ for a single neuron\\
-	$\boldsymbol{z}$ & The output of the aggregation function $g(\cdot)$ for a network layer\\
+	$\boldsymbol{\hat{y}}$ & The actual output of a model or a network layer (i.e. the prediction), typically a vector ($\boldsymbol{\hat{y}}$) for a multi-class classification task or a scalar value ($\hat{y}$) for a regression or single-class classification task\\
+	$z$ & The output of the aggregation function $g(\cdot)$ of a single neuron\\
+	$\boldsymbol{z}$ & The output of the aggregation functions $g_1(\cdot), ..., g_n(\cdot)$ of a network layer\\
 \end{tabular}
 
 

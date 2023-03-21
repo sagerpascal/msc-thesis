@@ -1,14 +1,15 @@
 %% intro.tex
 Humanity has always tried to simplify its life through technological progress.
-The computer has shaped progress in every field imaginable in the last hundred years. 
+For example, the computer has influenced and changed every field imaginable in the last decades. 
 In fact, it has been so successful that it has spawned its own scientific discipline, computer science.
-Nowadays, it is impossible to imagine life without computers: almost every household and company owns at least one.
+Nowadays, it is impossible to imagine life without computers: Almost every household and company owns at least one.
 Computers facilitate various tasks, from communication to the acquisition of knowledge.
 For all these tasks, software developers have created appropriate programs.
 Software development is the process of writing a script with a programming language to specify how the computer should behave for a given input.
 Simply put: A software program tells the computer what to do if the user enters a command.
 Writing software can be done easily if the tasks are clearly defined and can be described precisely.
-However, there exist tasks that are almost impossible to program, such as writing a script that detects cats in images because we cannot describe to a computer how a cat looks precisely\sidenote{at least not on a pixel-level basis so that we can compare a given image with our description}.
+However, there exist tasks that are almost impossible to program, such as writing a script that detects cats in images.
+The problem is that we cannot describe to a computer how a cat looks precisely\sidenote{at least not on a pixel-level basis so that one can compare a given image with a precise description}.
 
 Therefore, scientists came up with the idea to not just program such tasks but to let the computer learn them.
 Machine learning (ML) algorithms can learn and adapt without following explicit instructions such as program code.
@@ -18,22 +19,22 @@ For example, we use it for machine translation, transport and logistics organisa
 A sub-branch of machine learning is deep learning (DL) which achieved awe-inspiring results in the last decade and is considered \emph{the} state-of-the-art technology for many of the aforementioned tasks.
 
 Even though this technology works very well for many tasks, such models have some crucial flaws by definition (c.f. \secref{limitationsDL}), which cannot be resolved in the current DL framework.
-One of the godfathers of deep learning is Turing Award\sidenote{the Turing Award is recognized as the highest academic award in computer science and sometimes also called the ``Nobel Prize of Computing''} winner Geoffrey Hinton. 
+One of the godfathers of deep learning is Turing Award\sidenote{the Turing Award is recognised as the highest academic award in computer science and sometimes also called the ``Nobel Prize of Computing''} winner Geoffrey Hinton. 
 Especially his contribution to learning with backpropagation of error (c.f. \secref{ann}) has created the foundation for modern deep learning systems.
 More than 30 years later, Hinton says he is ``deeply suspicious'' about end-to-end backpropagation of error. In his opinion, we have to ``throw it all away and start again'' to improve current systems fundamentally \sidecite{axios_hinton}.
 This seems rather extreme considering what DL systems have achieved.
-However, it also shows that the current learning algorithm of such systems has serious flaws.
+However, it also shows that the learning algorithm of such systems has serious flaws.
 
 Some of the most critical limitations of deep learning systems are listed in \secref{limitationsDL}.
 This thesis addresses these problems by exploring different architectures inspired by findings from neuroscience\sidenote{the field of neuroscience studies how the human nervous system and especially the brain works}.
-The inspiration is drawn from neuroscience, as the human brain does not have these problems. Thus, incorporating findings from neuroscience into the deep learning framework might help overcome some of the current limitations.
+The inspiration is drawn from neuroscience, as the human brain is a learning system that does not have these problems. Thus, incorporating findings from neuroscience into the deep learning framework might help overcome some of the current limitations.
 In this thesis, the ``Theory of Natural Intelligence'' by von der Malsburg et al. \sidecite{von_der_Malsburg_Stadelmann_Grewe_2022} in particular is used as inspirational source.
-The aforementioned theory focuses on the visual processing in the human brain, and consequently, deep learning architectures for image processing are examined.
+The aforementioned theory focuses on the visual processing in the human brain, and consequently, deep learning architectures for image processing are examined in this thesis.
 Thereby, the main focus of this thesis is on \emph{finding new principles} of deep learning architectures rather than on achieving state-of-the-art performance in terms of accuracy or f-score on existing benchmarking datasets.
 
 The thesis differs from neurocomputing\sidenote{neurocomputing is a sub-field of neuroscience that deals with the implementation of learning algorithms with a high degree of biological plausibility} in the sense that the architectures investigated are still closely related to the DL framework and, for example, do not use time-dynamic signals. 
 For the completeness of this thesis, an overview of neurocomputing is given in \secref{neurocomputing}.
-However, since these neurocomputing algorithms have not (yet) become established in practical applications, they are not investigated in this thesis.
+However, since these neurocomputing algorithms have not (yet) become established in practical applications, they are not investigated further.
 Thus, the thesis is strongly oriented along the field of deep learning and focuses on incorporating neuroscience findings in the deep learning framework, while natural plausibility is considered less important.
 
 
@@ -79,18 +80,21 @@ Thus, the thesis is strongly oriented along the field of deep learning and focus
 \section{Contribution}
 This thesis makes the following contributions:
 \begin{itemize}
-	\item First, the basics of deep learning and neurocomputing are described in detail. Together with the related work, this provides a survey of the most important work that deals with improving learning generally.
-	\item Second, promising concepts from the neuroscience literature that may be necessary for more intelligent systems are identified, and suggestions are made on integrating these concepts into modern DL frameworks.
+	\item First, the basics of deep learning and neurocomputing are described in detail. Together with the related work, this provides a survey of the most important research dealing with alternative learning algorithms.
+	\item Second, promising concepts from the neuroscience literature that may help to build more intelligent systems are identified, and suggestions are made on integrating these concepts into modern DL frameworks.
 	\item Third, two concrete DL architectures that use such neuroscience-inspired concepts are presented, and their strengths and weaknesses are analysed in detail.
-	\item Fourth, this work provides an intuition of which concepts currently little used in DL settings seem promising and recommends future research directions.
+	\item Fourth, this work provides an intuition of which concepts currently little used in DL settings seem promising and recommends future research directions towards more general artificial intelligence.
 \end{itemize}
 
 
 \section{Organisation of Thesis}\seclbl{org_thesis}
 The remainder of the thesis is organised as follows: In \chref{fundamentals}, the fundamentals of deep learning and neurocomputing are explained in detail.
-Experts may skip this chapter; especially the second section on neurocomputing can optionally be omitted, as it is not fundamental for understanding this thesis, but only intended for interested readers or those who want to get a better overview of the field.
-\chref{rel_work} introduces the related work. Next, \chref{neuro_concepts} identifies promising findings from neuroscience that might help to improve current deep learning systems. Furthermore, it is proposed how these neuroscientific concepts could be implemented in a deep learning setting.
-In \chref{vertical_self_org} and \chref{horizontal_self_org}, two different architectures incorporating these concepts are presented. Finally, in \chref{future_work}, future work is described, and some insights and intuitions of the author are given about which neuroscience concepts seem promising and which do not, and what the next steps for developing more intelligent systems could be.
+Experts may skip this chapter; especially the second section on neurocomputing can be omitted, as it is not fundamental for understanding this thesis but only intended for interested readers or those who want to get a better overview of the field.
+\chref{rel_work} introduces the related work. Next, \chref{neuro_concepts} identifies promising findings from neuroscience that might help to improve current deep learning systems. Furthermore, it proposes how these neuroscientific concepts could be implemented in a deep learning setting.
+In \chref{vertical_self_org} and \chref*{horizontal_self_org}, two different architectures incorporating these concepts are presented:
+\chref{vertical_self_org} describes a network based on vertical self-organisation. The proposed model trains each layer in parallel using proxy objective functions and can still extract hierarchical features.
+The model described in \chref{horizontal_self_org} uses horizontal self-organisation by dividing the data into patches and analysing them on independent but communicating sub-models.
+Finally, in \chref{future_work}, future work is described, and some insights and intuitions of the author are given about which neuroscience concepts seem promising and which do not, and what the next steps for developing more intelligent systems could be.
 
 
 
