@@ -518,7 +518,7 @@ The sum of the dot product between the activation of a sample $\boldsymbol{h}^{(
 Minimising $\mathcal{L}_{d}$ leads to diverse activations in the bottleneck layer. 
 The overall loss can be defined as the sum of these three loss components, with $\lambda_s$ and $\lambda_d$ being hyperparameters that control the influence of the diversity and sparsity loss.
 
-\begin{align}\eqlbl{ae_kldl2}
+\begin{align}\eqlbl{ae_kldl3}
 		L = L_{\text{rec}} + \lambda_s \cdot L_{s} + \lambda_d \cdot L_{d}
 \end{align}
 
@@ -529,7 +529,7 @@ These vectors are visualised and investigated for net fragments.
 \subsection{Results}\seclbl{pre_study_ae_results}
 The activations of the autoencoders trained with reconstruction loss only and without diversity or sparsity constraint (i.e. $\lambda_s = 0$ and $\lambda_d = 0$) look very similar to those of the classification network; about half of the neurons are always active regardless of the object depicted in the image, and the other half of neurons are always inactive. Thus, this version of the autoencoder has the same problem as the classification networks. Adding a sparsity constraint (i.e. $\lambda_s = 0.02$ and $\lambda_d = 0$) improves this issue slightly. The activations become sparse, but the same neurons are always active independent of the objects in the image. Only in a few cases can a set of neurons be identified that represents specific objects or features.
 
-However, if all three loss components are used, the activations look much better. In this case, specific neuron combinations represent object-dependent features and are only active for specific objects. There are no more neurons that are constantly active. It is even possible to infer image labels based on a binary activity state (i.e. which neuron is active or inactive) without knowing the strength of the activation, even though labels are not used during training. Thus, an autoencoder with additional sparsity and diversity constraint can represent net fragments to some extent\sidenote{except that constraint 1, which says that net fragments span several layers by design, is violated (c.f. \secref{net_fragments})}.
+However, if all three loss components are used, the activations look much better. In this case, specific neuron combinations represent object-dependent features and are only active for specific objects. There are no more neurons that are constantly active. It is even possible to infer image labels based on a binary activity state (i.e. which neuron is active or inactive) without knowing the strength of the activation, even though labels are not used during training. Thus, an autoencoder with additional sparsity and diversity constraint can represent net fragments to some extent\sidenote{except that constraint 1, which says that net fragments span several layers by design, is violated (c.f. \secref{neuro_concepts_net_fragments})}.
 
 
 \begin{figure}[h]
