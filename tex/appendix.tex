@@ -58,31 +58,31 @@
 \pagebreak
 \chapter{Experiments Hebbian Learning}\chlbl{exp_hebb_learning}
 Hebbian learning is the most plausible learning algorithm from a biological point of view (c.f. \secref{hebbian}).
-Because of this high plausibility, the effectiveness of Hebbian learning for extracting image representations was investigated in many preliminary experiments.
-It was observed that Hebbian learning sometimes works well for tiny networks but does not scale well for larger networks or more complex datasets.
-Of course, it cannot be concluded from these experiments that Hebbian Learning cannot be used to learn networks for extracting good representation from visual scenes.
-However, it was found that it is not trivial and that just applying the Hebbian learning rule is insufficient, especially if the network has a structure of modern Deep Learning architectures with many parameters.
+Because of the high plausibility and the self-organising property, the effectiveness of Hebbian learning for extracting image representations was investigated in multiple preliminary experiments.
+In this thesis, it was observed that Hebbian learning works well for tiny networks but does not scale to larger networks or more complex datasets.
+Of course, it cannot be concluded from these preliminary experiments that Hebbian learning cannot be used to train networks for extracting image representations on a larger scale.
+However, it was found that it is not trivial and that applying the Hebbian learning rule on modern architectures is not sufficient to obtain good feature extractors.
 
-When the classical Hebbian learning rule (as described in \eqref{hebb_1}) is used, the weights in the network become symmetric.
+When the classical Hebbian learning rule as described in \eqref{hebb_1} is used, the weights in the network become symmetric.
 As a result, the model does not learn different features, and the image representations are very poor.
 This symmetry can be broken using the ABCD-Hebbian learning rule \sidecite{Niv_Joel_Meilijson_Ruppin_2001}.
 The ABCD learning rule calculates the weight update \(\Delta w_{ij}\) from neuron \(i\) to neuron \(j\) based on the pre-synaptic activity \(a_i\) of neuron \(i\) and post-synaptic activity \(a_j\) of neuron \(j\) as follows:
 
 \begin{align}\eqlbl{hebb_abcd}
-	\Delta w_{ij} = \eta_w \cdot (A_wr_ir_j+B_wr_i+C_wr_j+D_w)
+	\Delta w_{ij} = \eta_{w_{ij}} \cdot (A_{w_{ij}} a_ia_j + B_{w_{ij}} a_i + C_{w_{ij}} a_j + D_{w_{ij}})
 \end{align}
 
-where \(\eta_w\) is a weight-specific learning rate, and \(A_w\) is a correlation coefficient, \(B_w\) is a presynaptic coefficient, \(C_w\) is a postsynaptic coefficient, and \(D_w\) is a bias coefficient.
-The bias coefficient \(D_w\) can be interpreted as an individual inhibitory or excitatory bias of each connection in the network.
+where \(\eta_{w_{ij}}\) is a weight-specific learning rate, \(A_{w_{ij}}\) is a correlation coefficient, \(B_{w_{ij}}\) is a presynaptic coefficient, \(C_{w_{ij}}\) is a postsynaptic coefficient, and \(D_{w_{ij}}\) is a bias coefficient.
+The bias coefficient \(D_{w_{ij}}\) can be interpreted as an individual inhibitory or excitatory bias of each connection in the network.
 As proposed by Najarro and Risi \sidecite{NEURIPS2020_ee23e7ad}, the coefficients are learnt through an evolution strategy \sidecite{Salimans_Ho_Chen_Sidor_Sutskever_2017}.
 The symmetry is broken by applying the ABCD learning rule, and the image representations improve.
 However, image processing networks usually consist of many parameters and using an evolutionary strategy to find them does not scale well.
-Thus, the author's impression is that pure Hebbian learning is only of limited use for learning image representations.
+Thus, the author's impression is that current Hebbian learning rules are only of limited use for learning deep learning-based image extraction networks.
 
 
 \subsection{Hebbian Pruning}
 Hebbian learning has not led to good image representations.
-However, it was found that Hebbian Learning might be promising to prune models trained with end-to-end backpropagation of error:
+However, it was found that Hebbian learning might be promising to prune models trained with end-to-end backpropagation of error:
 In the following, Hebbian learning is used to push weights between neurons towards zero or to set them exactly to zero.
 
 Therefore, a neural network consisting of two convolutional layers, followed by a max-pooling layer, and three linear layers is used.
@@ -205,18 +205,21 @@ The network is visualized in \figref{hebb_pruning}.
 \end{figure}
 
 The model is trained to classify digits with backpropagation of error on the MNIST dataset \cite{Lecun_Bottou_Bengio_Haffner_1998}.
-Adam \sidecite{Kingma_Ba_2017} is used as optimisation algorithm to minimise the negative log-likelihood (NLL) loss.
+Adam \sidecite{Kingma2015AdamAM} is used as optimisation algorithm to minimise the negative log-likelihood (NLL) loss.
 The mini-batch size is \(32\) and the learning rate is \(5\cdot 10^{-4}\).
 When the loss reaches a plateau, the learning rate is reduced to \(1\cdot 10^{-4}\).
 
 After the model is trained, the first two fully connected layers within the network are pruned with Hebbian learning:
 The \emph{first} Hebbian-based method proposed pushes the weights between neuron \(i\) and neuron \(j\) towards \(0\) if \(i\) and \(j\) have a low correlation within a mini-batch.
 Therefore, a mini-batch is sampled, and the correlation between all neurons is calculated for each sample.
-if the correlation is below \(0.02\) for at least \(20\%\) of the samples (i.e. \(7\) samples or more for a mini-batch size of \(32\)), the weight is reduced with:
+if the correlation is below \(0.02\) for at least \(20\%\) of the samples (i.e. \(7\) samples or more for a mini-batch size of \(32\)), the weight is reduced:
 \begin{align}\eqlbl{hebb_towards_0}
 	\Delta w_{ij} = - \eta_H \cdot w_{ij}
 \end{align}
-
+\begin{align}\eqlbl{hebb_towards_00}
+	w_{ij} := w_{ij} + \Delta w_{ij}
+\end{align}
+%
 where \(\eta_H\) is the Hebbian learning rate set to \(1\cdot 10^{-5}\).
 
 The \emph{second} Hebbian-based method proposed pushes some weights exactly to \(0\) while all other weights remain the same.
@@ -253,10 +256,17 @@ The \emph{first} Hebbian-based method can further improve the results even after
     \tablbl{nll_hebb_pruning}
 \end{table}
 
-The NLL loss on the MNIST test dataset decreases from \(0.05314\) to \(0.03386\), while the loss on the MNIST-C test dataset decreases from \(0.6013\) to \(0.4766\) after applying the \emph{first} Hebbian based method.
+The NLL loss on the MNIST test dataset decreases from \(0.05314\) to \(0.03386\), while the loss on the MNIST-C test dataset decreases from \(0.6013\) to \(0.4766\).
 Furthermore, the accuracy increases roughly by $1.2\%$ on MNIST-C, which is remarkable, considering that the model has been trained with gradient descent until convergence and only the weights are reduced after training (without further parameter updates).
-It also has to be considered that this is only a preliminary experiment, and this method might be further improved.
+It also has to be considered that this is only a preliminary experiment, and this method most likely can be further improved.
 Thus, this experiment indicates that Hebbian could be used as a post-training step to improve robustness by reducing the model's weights.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.79\textwidth]{loss_hebb_pruning}
+    \caption[NLL loss of the Hebbian pruning network]{The NLL loss of the \emph{second} Hebbian-based pruning method compared to removing random weights. The y-axis shows the loss, while the x-axis shows the ratio of weights kept. }
+    \figlbl{hebb_prune}
+\end{figure}
 
 The \emph{second} Hebbian-based method sets weights between neurons with a low correlation to \(0\).
 The network trained with back-propagation has an accuracy of \(98.94\%\) on MNIST.
@@ -265,22 +275,16 @@ Setting weights to \(0\) can make the network smaller and more efficient \sideci
 Furthermore, it leads to sparse representations that can improve robustness.
 \figref{hebb_prune} visualizes the loss of the \emph{second} Hebbian-based method for different ratios of kept weights.
 Furthermore, the correlation-based method is compared to randomly setting the same fraction of weights to \(0\).
-
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.99\textwidth]{loss_hebb_pruning}
-    \caption[NLL loss of the Hebbian pruning network]{The NLL loss of the \emph{second} Hebbian-based pruning method compared to removing random weights. The y-axis shows the loss, while the x-axis shows the ratio of weights kept. }
-    \figlbl{hebb_prune}
-\end{figure}
-
 It can be observed that the performance is better when weights between neurons with low correlation are set to \(0\) than if random weights are set to \(0\).
 Thus, Hebbian learning might be promising the reduce the number of parameters within a network.
+
+
 
 
 \pagebreak
 \chapter{Net Fragments}\chlbl{net_fragments}
 This chapter examines how representations of typical deep learning architectures look like.
-Especially net fragments are of interest, i.e. (groups of) neurons representing particular objects' features.
+Especially net fragments are of interest, i.e. (groups of) neurons representing an object's features.
 Net fragments are discussed in \secref{neuro_concepts_net_fragments}.
 There, it is described that the interpretation of net fragments in this thesis relies on two principles:
 
@@ -290,19 +294,19 @@ There, it is described that the interpretation of net fragments in this thesis r
 \end{itemize}
 
 
-Most deep learning architectures violate the first principle as the latent representations are read from a single layer and subsequently used for a downstream task.
+Most deep learning architectures violate the first principle as the latent representations are extracted from a single layer and subsequently are used for a downstream task.
 Since deep learning architectures violate this first principle by design, this chapter focuses mainly on the second principle. Specifically, it investigates whether specific neuron groups can be assigned to specific features (i.e. represent net fragments). 
 If net fragments are contained in the models, specific features would be expected to trigger the activation of a group of neurons when they are present, and the same neurons would be inactive when this feature is not present. Thus, different neurons should be active for different objects.
-Thus, net fragments improve interpretability and lead to sparse activations\sidenote{since each small only contains a (small) sub-set of the learned features, only a (small) sub-set of neurons should be active}, which could increase robustness.
+There, net fragments improve interpretability and lead to sparse and diverse activations\sidenote{since each object only contains a (small) subset of the learned features, only a (small) subset of neurons should be active}, which could increase robustness.
 However, sparsity and diversity are not necessary to achieve higher classification accuracy.
 
-Deep Learning architectures usually consist of several layers with millions of neurons, leading to millions of activations \cite{Szegedy_Liu_Jia_Sermanet_Reed_Anguelov_Erhan_Vanhoucke_Rabinovich_2014, He_Zhang_Ren_Sun_2016, Ronneberger_Fischer_Brox_2015, He_Gkioxari_Dollar_Girshick_2017, Liu_Anguelov_Erhan_Szegedy_Reed_Fu_Berg_2016, Redmon_Divvala_Girshick_Farhadi_2016}.
-Thus, the input data is processed in a complex way, making the analysis of activations difficult.
+Deep learning architectures usually consist of several layers with millions of neurons, leading to millions of activations \cite{Szegedy_Liu_Jia_Sermanet_Reed_Anguelov_Erhan_Vanhoucke_Rabinovich_2014, He_Zhang_Ren_Sun_2016, Ronneberger_Fischer_Brox_2015, He_Gkioxari_Dollar_Girshick_2017, Liu_Anguelov_Erhan_Szegedy_Reed_Fu_Berg_2016, Redmon_Divvala_Girshick_Farhadi_2016}.
+The input data is processed in a complex way, making the analysis of activations difficult.
 To simplify the analysis of network activations, a novel, straightforward classification dataset is proposed;
 The dataset consists of $10$ images as shown in \figref{pre_study_dataset}.
 Each image is $9\times9$ pixels and depicts a number between $0$ and $9$.
 The images have only one channel and contain binary values (i.e. pixels are either set to $0$ or $1$).
-Tiny networks are sufficient to analyze these images, and this dataset thus leads to fewer network activations, simplifying the search for net fragments.
+Tiny networks are sufficient to analyse these images, and this dataset thus leads to fewer network activations, simplifying the search for net fragments.
 
 \begin{figure}[h]
     \centering
@@ -312,40 +316,9 @@ Tiny networks are sufficient to analyze these images, and this dataset thus lead
 \end{figure}
 
 Even in this small dataset, various features and, consequently, many net fragments exist.
-In the following, an example is given so that readers understand how net fragments are interpreted in this thesis.
-A very intuitive way for humans to construct features on this dataset is to interpret each line as a feature.
-For example, the $10$ different digits in this dataset could be composed of $9$ basic lines.
-Thus, a low-level net fragment could represent a basic line and be combined to higher-level net fragments like digits.
-\figref{pre_study_components} visualises such an intuitive composition (basic lines on the left, digits on the right).
-
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.99\textwidth]{pre_study_components}
-    \caption[Line types in the straight line digits dataset]{A visualisation of all the lines (left) needed to compose the digits in the dataset (right). The coloured lines in-between illustrate the relationship between the lines and the digits.}
-    \figlbl{pre_study_components}
-\end{figure}
-
-Thereby, each low-level fragment can be part of one or multiple digits.
-The composition can either take place across one or multiple layers.
-The visualisation in \figref{pre_study_components} can be interpreted as a composition across one layer, i.e. the low-level fragments are combined to high-level fragments within one step.
-An exemplary composition of net fragments of the number $9$ across $4$ subsequent layers is shown in \figref{pre_study_composition}.
-This example demonstrates that a fragment representing a digit can be composed of other fragments that also represent digits.
-
-
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.99\textwidth]{pre_study_composition}
-    \caption[Composition of net fragment]{A sample composition of the net fragment that could represent the digit $9$.}
-    \figlbl{pre_study_composition}
-\end{figure}
-
-However, this illustrative example must be understood as an intuitive way of how humans would build net fragments.
-Learned net fragments do not necessarily have to be a composition of lines but can be a composition of multiple pixels without semantics.
-It can be expected that neural networks find features that look totally different from the above examples.
-
+It is unclear which features are learned by the network.
 Regardless of what these net fragments represent, the network should have specific characteristics;
 If a neuron or a group of neurons are part of a net fragment representing a feature in the input, then these neuron(s) should be strongly active if the feature is present and not or only very weakly active if the feature is not present.
-Therefore, activations maps should be sparse, and net fragments should only be active for digits with specific characteristics.
 Thus, different neurons should be active depending on the digit.
 
 Digits with common characteristics should have some overlapping network activities;
@@ -354,29 +327,14 @@ Therefore, these digits should have some common network activations.
 The digit $1$, on the other hand, has nothing in common with $4$; thus, these digits should have no overlapping activations.
 In the following, networks are trained, and their activations are examined for such properties.
 
-Two types of models are trained on this dataset, namely a classification network (supervised) and an autoencoder network (unsupervised).
-The goal of the classification task is to predict the number (labels $0-9$) that is shown in the image (c.f. \secref{train_cnns}).
-This task is neither for humans nor deep learning architectures challenging.
-Usually, the last layer of an image classification architecture has precisely as many neurons as there are classes to predict.
-Each neuron corresponds to a class, and the neuron with the highest activity (i.e. the most active neuron) is eventually used to predict the image-level label.
-Such architectures thus have the design constraint that the last layer of neurons must represent distinct classes.
-Therefore, each neuron in the last layer can be interpreted as a representation of a class object.
-Since the last layer of a classification network represents entire classes, such architectures are well suited to investigate whether the preceding layers represent object features (i.e. net fragments) composed by the last layer.
-
-A classification network relies on labels.
-Contrarily, an autoencoder works unsupervised and reconstructs the input data from a lower dimensional embedding space (c.f. section \secref*{visual_rep_learning}).
-Thus, the autoencoder generates representations that contain not only the class information but the entire image information.
-Consequently, the embedding activations of autoencoders are also examined in the embedding space.
-In addition, the autoencoder allows constraining the embedding space so that net fragments are more strongly encouraged.
-
+Two types of models are trained on this dataset and examined for net fragments:
+First, classification networks are used to investigate whether different architectures are more likely to contain net fragments than others.
+Second, autoencoders are used to investigate whether adding constraints to the loss function can encourage net fragments.
 
 \section{Classification}\seclbl{pre_study_classification}
 
 \subsection{Methods}\seclbl{pre_study_classification_methods}
 Different architectures are trained to investigate the emergence of net fragments in classification networks.
-The model's parameters are optimised by minimising the cross-entropy loss with the Adam optimiser \sidecite{Kingma2015AdamAM} so that the models learn to predict the corresponding class of the images shown in \figref{pre_study_dataset}.
-The learning rate is $5 \cdot 10^{-4}$, the mini-batch size is $32$ samples, and the model is trained for $10$ epochs.
-
 The models used have different feature extractors consisting of either convolutional (conv.) layers (models no. $1$-$8$, no. $11$) or fully connected (FC) layers (models no. $10$) as shown in \tabref{pre_study_models}.
 Model no. $9$ has no feature extractor as the input images are so simple that they can be considered as features by themself. Model no. $10$ uses an FC layer as a feature extractor, and model no. $11$ has a Conv. layer with two hand-crafted kernels to extract horizontal and vertical lines as a feature extractor.
 After the feature extractor, all models have a similar ``head'' consisting of $2$ fully connected layers.
@@ -420,24 +378,25 @@ The ``head'' is identical for all models and consists of a sequence of the follo
     \tablbl{pre_study_models}
 \end{table}
 
+The models' parameters are optimised by minimising the cross-entropy loss with the Adam optimiser \sidecite{Kingma2015AdamAM} so that the models learn to predict the label of the images shown in \figref{pre_study_dataset}.
+The learning rate is $5 \cdot 10^{-4}$, the mini-batch size is $32$ samples, and the model is trained for $10$ epochs.
 After each epoch, the model's weights and activations of each layer are stored.
 These vectors are visualised and investigated for net fragments.
 
-Furthermore, a fully trained model's most relevant input features are analysed.
-This analysis is done by freezing the model's parameters so they cannot change.
-Instead, an empty image is fed into the network and updated with backpropagation of error to maximise the probability for a given class.
-This leads to an input image with the highest probability to be predicted by the model as a specific class (e.g. generate the image with the highest probability to be predicted as digit $3$ by the model).
+%Furthermore, the trained models' most relevant input features are analysed.
+%This analysis is done by freezing the models' parameters so that they cannot change.
+%Instead, an empty image is fed into the network and updated with backpropagation of error to maximise the probability for a given class.
+%This leads to the input image with the highest probability to be predicted by the model as a specific class.
 
 
 \subsection{Results}\seclbl{pre_study_classification_results}
 All the models learn to classify these digits perfectly within a few epochs.
 Interestingly, not only the accuracy reaches $100\%$, but some models also achieve a cross-entropy loss of $0.0$, meaning that they can find a global minimum.
-However, the goal is not to achieve high accuracy but to exhibit net fragments.
+However, the goal is not to achieve high accuracy but to identify net fragments.
 It is not feasible to visualise all activations of all layers in this thesis.
 Therefore, only the activations of the second last FC layer (i.e. the first FC layer of the ``head'') after the ReLU function are shown.
-Since the last layer contains the net fragments that depict classes, this is the layer with the highest-level fragments.
-Furthermore, it is the only layer that has a global view on the input, i.e. can access all the features extracted by the encoder\sidenote{convolutional layers only consider a local neighbourhood by sliding a kernel over the input (c.f. \secref{cnns})} (except for the encoder consisting of FC layers only).
-Some higher-level net fragments should be visible in this layer, which are subsequently composed in the last layer to net fragments corresponding to classes.
+This layer contains high-level net fragments that are simple to interpret\sidenote{the last layer cannot be used as it consists of $10$ neurons representing the $10$ classes}.
+%Some higher-level net fragments should be visible in this layer, which are subsequently composed in the last layer to net fragments corresponding to classes.
 %Interested readers who want to investigate the activations from all layers and the network weights by themselves can view an interactive visualisation at \url{http://160.85.252.38:8501}.
 
 \figref{pre_study_activations} shows the activations of the first fully connected layer in the ``head'' of the different models.
@@ -445,16 +404,16 @@ The FC layer has $12$ neurons whose activation is indicated along the vertical a
 For example, the circle in the top left corner indicates the activation of the first neuron for class $0$, the circle in the top right corner the activation of the first neuron for class $9$, and the circle in the bottom left corner the activation of the last neuron for class $0$.
 Blue circles show activations that are precisely $0$, red circles are low activations $>0$, and green circles represent strong activations\sidenote{activations $<0$ do not exist because they are set to exactly $0$ by the ReLU function}.
 
-It can be seen in the visualisation that none of the models utilises all $12$ neurons, and certain neurons are always inactive regardless of the class.
+It can be observed that none of the models utilises all $12$ neurons, and certain neurons are always inactive regardless of the class.
 Also, no obvious net fragments can be identified;
-Most neurons are always similarly strongly active regardless of the class.
+most neurons are always similarly strongly active regardless of the class.
 If net fragments are formed, however, the neurons of a fragment would have to be strongly active in the presence of certain features and weakly active otherwise.
 Such behaviour is not observable in these activations.
 
-Furthermore, some digits are very similar and differ in only two pixels.
+Furthermore, some images are very similar and differ in only two pixels.
 Some examples are the digit pairs $5$ and $6$, $8$ and $9$, $0$ and $8$, or $3$ and $9$.
-However, when the activations of the corresponding classes are compared, it is evident that almost always all activations change a little bit, and not one neuron is turned on or off, depending on the presence of these two pixels.
-
+However, when the activations of the corresponding classes are compared, it is evident that almost always all activations change a little bit, and not one neuron is turned on or off, depending on the presence of these two pixels. 
+This supports the assumption that typical deep learning architectures do not contain brain-like net fragments.
 
 \begin{figure}[h]
     \centering
@@ -466,31 +425,28 @@ However, when the activations of the corresponding classes are compared, it is e
 %It can also be observed that roughly the same neurons are always active.
 %For different classes, however, these neurons do not switch on or off, but the strength of the activity changes.
 
-\figref{pre_study_inputs_max} visualises the input that maximises the probability for each class.
-It is obvious that all models focus on the wrong features, and it can be assumed that these networks would not be robust to slight perturbations in the input.
-This also indicates that net fragments are not present in current deep learning models (or at least not to the desirable extent);
-if a class-level net fragment is composed of several lower-level net fragments, then some of these lower-level net fragments have to be active.
-Since these lower-level net fragments represent specific input features, corresponding pixel constellations should be visible in this visualisation.
-However, since these rather random-looking pixel combinations maximise the probability of predicting a specific class, this suggests that pixel combinations are not composed into hierarchically more complex net fragments.
+%\figref{pre_study_inputs_max} visualises the input that maximises the probability for each class.
+%It is obvious that all models focus on the wrong features, and it can be assumed that these networks would not be robust to slight perturbations in the input.
+%This also indicates that net fragments are not present in current deep learning models (or at least not to the desirable extent);
+%if an object is composed of several lower-level net fragments, then some of these lower-level net fragments have to be active.
+%Since these lower-level net fragments represent specific input features, corresponding pixel constellations should be visible in \figref{pre_study_inputs_max}.
+%However, since the pixel combinations that maximise the probability of predicting a specific class look rather random, this suggests that pixel combinations are not composed into hierarchically more complex net fragments.
 
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.99\textwidth]{pre_study_inputs_max}
-    \caption[Inputs that maximize the class output probability]{The inputs that maximize the probability that the different models predict a specific class. For example, the image in the top left corner maximizes the probability that model number $1$ predicts that this is class $0$ (digit $0$).}
-    \figlbl{pre_study_inputs_max}
-\end{figure}
+%\begin{figure}[h]
+%    \centering
+%    \includegraphics[width=0.99\textwidth]{pre_study_inputs_max}
+%    \caption[Inputs that maximize the class output probability]{The inputs that maximize the probability that the different models predict a specific class. For example, the image in the top left corner maximizes the probability that model number $1$ predicts that this is class $0$ (digit $0$).}
+%    \figlbl{pre_study_inputs_max}
+%\end{figure}
 
 
 
 \section{Autoencoders}\seclbl{pre_study_ae}
 
 \subsection{Methods}\seclbl{pre_study_ae_methods}
-Similar to the experiments with classification networks, different autoencoders are also investigated.
-Autoencoders differ not only in the design of the network (i.e. number and type of layers) but also in the constraints applied in the bottleneck layer (c.f. \secref{visual_rep_learning_ae}).
-The focus is less on testing many different architectures but rather on incorporating different constraints that might encourage net fragments.
-Incorporating constraints into an autoencoder can be done easily by adding a loss function that regulates the activations in the bottleneck layer.
-On the other hand, it is not obvious how such constraints should be added to a classification network that is trained end-to-end.
-The two autoencoder architectures used are shown in \tabref{pre_study_ae_models}.
+Similar to the experiments with classification networks, different autoencoders are investigated.
+Thereby, it is investigated if constraints in the loss function can encourage net fragments.
+The analysed autoencoder architectures used are shown in \tabref{pre_study_ae_models}.
 
 
 \begin{table}[h]
@@ -512,10 +468,10 @@ The two autoencoder architectures used are shown in \tabref{pre_study_ae_models}
     \tablbl{pre_study_ae_models}
 \end{table}
 
-The autoencoder's parameters are optimised by minimising a reconstruction loss (i.e. a distance measurement between the input and the reconstructed output) with the Adam optimiser \sidecite{Kingma2015AdamAM} so that the output looks similar to the input even though a bottleneck-layer reduces the network's capacity in the middle.
+The autoencoder's parameters are optimised by minimising a reconstruction loss (i.e. a distance measurement between the input and the reconstructed output) with the Adam optimiser \sidecite{Kingma2015AdamAM} so that the output looks similar to the input even though a bottleneck-layer reduces the network's capacity between encoder and decoder.
 The learning rate is $5 \cdot 10^{-4}$, the mini-batch size is $32$ samples, and the model is trained for $10$ epochs.
 
-The reconstruction loss $\mathcal{L}_{\text{rec}}$ used for the different experiments is either the L1 distance (mean absolute error) or the L2 distance (mean square error). For example, if $\boldsymbol{x}$ is the input data with $n$ pixels and $\hat{\boldsymbol{x}}$ is the reconstructed data, then the reconstruction loss can be written as follows:
+The reconstruction loss $\mathcal{L}_{\text{rec}}$ used for the different experiments is either the L1 distance (mean absolute error) or the L2 distance (mean square error). If $\boldsymbol{x}$ is the input data with $n$ pixels and $\hat{\boldsymbol{x}}$ is the reconstructed data, then the reconstruction loss can be written as follows:
 
 
 \begin{align}\eqlbl{ae_recon}
@@ -526,43 +482,40 @@ The reconstruction loss $\mathcal{L}_{\text{rec}}$ used for the different experi
 \end{align}
 
 % https://debuggercafe.com/sparse-autoencoders-using-kl-divergence-with-pytorch/
-Since specific neurons of a net fragment represent certain features, they should only be active if the feature is present.
-Good features only occur as part of a few objects and not in all of them: Thus, the neurons representing this feature should be sporadically active. Therefore, the activations should be sparse and diverse.
+As described above, activations containing net fragments should be sparse and diverse.
 Therefore, a sparsity and a diversity loss are added to the reconstruction loss to encourage net fragments.
 This combination of sparsity and diversity is also in line with the ideas of LeCun to obtain autonomous machine intelligence \sidecite{LeCun_AMI}.
-
-
 For the sparsity loss $\mathcal{L}_{s}$, the kullback-leibler (KL) divergence is used \sidecite{10-5555-3042573-3042641}.
-The hidden representations $\boldsymbol{h}$ in the bottleneck layer with length $n_h$ (i.e. $n_h$ neurons in the bottleneck layer) are defined as $\boldsymbol{h} = h_1, ..., h_{n_h}$.
-Furthermore, the average activation probability of a neuron $h_j$ over the input data $\boldsymbol{x}$ can be calculated as
+The hidden representations in the bottleneck are denoted as $\boldsymbol{h} = h_1, ..., h_{n_h}$.
+Furthermore, the average activation probability of a neuron $h_j$ over $m$ input samples can be calculated as
 
 \begin{align}\eqlbl{ae_kldd}
-		\hat{\rho}_j = \frac{1}{n} \sum^n_{i=1} \left( \frac{1}{1+e^{-h_j}} \right)
+		\hat{\rho}_j = \frac{1}{m} \sum^m_{i=1} \left( \frac{1}{1+e^{-h_j}} \right)
 \end{align}
 
-where $\left( \frac{1}{1+e^{-h_j}} \right)$ is the sigmoid function that squeezes the activation in the range between $0$ and $1$. Furthermore, $\rho=0.05$ is a sparsity parameter that can be interpreted as a target activation probability of each neuron. If the kullback-leibler divergence between all $\hat{\rho}_j$ and $\rho$ is minimised, then an average activation probability per neuron in the hidden layer of $\rho$ is enforced. The corresponding Kullback-Leibler divergence for each $\hat{\rho}_j$ is defined as:
+where $\left( \frac{1}{1+e^{-h_j}} \right)$ is the sigmoid function that squeezes the activation in the range between $0$ and $1$. Furthermore, $\rho=0.05$ is a sparsity parameter that defines a target activation probability of each neuron. If the kullback-leibler divergence between all $\hat{\rho}_j$ and $\rho$ is minimised, an average activation probability of $\rho$ is enforced for each neuron in the hidden layer. The KL divergence is defined as:
 
 \begin{align}\eqlbl{ae_kld}
 		KL(\rho || \hat{\rho}_j) = \rho \cdot \log \frac{\rho}{\hat{\rho}_j} + (1-\rho) \cdot \log \frac{1-\rho}{1-\hat{\rho}_j}
 \end{align}
 
-The sparsity loss $\mathcal{L}_{s}$ is the sum of the Kullback-Leibler divergence between all $\hat{\rho}_j$ and $\rho$ and thus enforces that on average only $5\%$ of the hidden representations $\boldsymbol{h}$ are active:
+The sparsity loss $\mathcal{L}_{s}$ is the sum of the KL divergence between all $\hat{\rho}_j$ and $\rho$ and thus enforces that on average only $5\%$ of the hidden representations $\boldsymbol{h}$ are active:
 
 \begin{align}\eqlbl{ae_kldl}
-		L\mathcal{L}{s}(\rho, \hat{\rho}) = \sum_{j=1}^{n_h} KL(\rho || \hat{\rho}_j)
+		\mathcal{L}_{s}(\rho, \hat{\rho}) = \sum_{j=1}^{n_h} KL(\rho || \hat{\rho}_j)
 \end{align}
 
 Thus, this constraint ensures that the activations are sparse, consistent with the net fragments concept.
 Another property of net fragments is that the activations should be diverse.
 Therefore, a novel diversity loss $\mathcal{L}_{d}$ is proposed.
-This loss is based on the fact that the activations in the bottleneck layer $(\boldsymbol{h}$ should be as different as possible for all samples of a mini-batch $(\boldsymbol{x}^{(1)}, ..., \boldsymbol{x}^{(m)})$.
+This loss is based on the fact that the activations $\boldsymbol{h}$ in the bottleneck layer should be as different as possible for all samples of a mini-batch $(\boldsymbol{x}^{(1)}, ..., \boldsymbol{x}^{(m)})$.
 The sum of the dot product between the activation of a sample $\boldsymbol{h}^{(i)}$ and all other samples $\boldsymbol{h}^{(j)}$, for $i \neq j$ is small if the samples within a batch have a high diversity. Therefore, the diversity loss can be defined as:
 
 \begin{align}\eqlbl{ae_kldl2}
-		L_{d}(\boldsymbol{z}) = \frac{1}{n} \sum_{i=1}^n\sum_{j=1}^{n_h} \boldsymbol{z}^{(i)} \cdot \boldsymbol{z}^{(j)}, \text{ if } i\neq j
+		L\mathcal{L}_{d}(\boldsymbol{z}) = \frac{1}{n} \sum_{i=1}^n\sum_{j=1}^{n_h} \boldsymbol{h}^{(i)} \cdot \boldsymbol{h}^{(j)}, \text{ if } i\neq j
 \end{align}
 
-Minimising $\mathcal{L}_{d}$ results in the bottleneck layer activations not only being sparse but also diverse. 
+Minimising $\mathcal{L}_{d}$ leads to diverse activations in the bottleneck layer. 
 The overall loss can be defined as the sum of these three loss components, with $\lambda_s$ and $\lambda_d$ being hyperparameters that control the influence of the diversity and sparsity loss.
 
 \begin{align}\eqlbl{ae_kldl2}
@@ -570,7 +523,6 @@ The overall loss can be defined as the sum of these three loss components, with 
 \end{align}
 
 In the experiments, these hyperparameters were set to $\lambda_s = 0.02$ and $\lambda_d = 0.02$, respectively $\lambda_s = 0$ and $\lambda_d = 0$ if the sparsity and diversity loss should not be used.
-
 Similar to the analysis of classification architectures, the model's activations of each layer are stored after every epoch.
 These vectors are visualised and investigated for net fragments.
 
@@ -587,10 +539,10 @@ However, if all three loss components are used, the activations look much better
     \figlbl{pre_study_ae1}
 \end{figure}
 
-This can be observed in \figref{pre_study_ae1} that shows the activations of the ``model 1''.
+\figref{pre_study_ae1} shows the activations of the ``model 1''.
 On the left are the activations without constraint, in the middle are the activations with sparsity constraint and on the right are the activations with sparsity and diversity constraints.
 For each of these three loss functions, the activations in the bottleneck layer are shown per class (activations along the vertical axis and classes along the horizontal axis).
-It is visible how adding the sparsity and diversity constraints gives more meaning to the individual neurons. While without both constraints, the same neurons are always active independent of the class, the activations are significantly more varied when both constraints are used.
+It is observable that adding sparsity and diversity constraints gives more meaning to the individual neurons: While the same neurons are always active  without both constraints, the activations are significantly more varied between the classes when both constraints are used.
 This becomes even more obvious when the activations of the bigger autoencoder ``model 2'' are investigated (c.f. \figref{pre_study_ae2} (a)).
 
 \begin{figure}[h]
@@ -602,8 +554,8 @@ This becomes even more obvious when the activations of the bigger autoencoder ``
 
 It is also examined what features the various neurons in the bottleneck layer represent.
 This is done by manually creating a bottleneck activation $\boldsymbol{h} = h_1, ..., h_{n_h}$ and feeding it through the decoder.
-To examine which feature the $i$-th neuron represents, $z_i=1$ is set and $z_{j}=0$, for $i \neq j$.
-Figure \figref*{pre_study_ae2} (b) shows which feature the $18$-th neuron represents. Together with the $33$-th neuron, this neuron represents the number 5 and the $36$-th neuron, the number 9.
+To examine which feature the $i$-th neuron represents, $h_i$ is set equal $1$ and all other neurons are set equal $0$.
+\figref{pre_study_ae2} (b) shows which feature the $18$-th neuron represents. Together with the $33$-th neuron, this neuron represents the number 5 and the $36$-th neuron, the number 9.
 Thus, it is a feature (i.e. a net fragment) that assembles with other features to represent an object.
 
 \section{Conclusion}\seclbl{pre_study_conclusion}
@@ -611,14 +563,14 @@ Different architectures have been trained with different targets on a very simpl
 The network activations are tracked during training and analysed for net fragments.
 Typical vision architectures are sequential and build up a composition of features (i.e. net fragments) over several layers.
 Usually, the embeddings of a pre-defined layer are used for downstream tasks such as classification.
-Autoencoders typically use the bottleneck layer, a classification networks typically have a classification head (i.e. a FC layer with a Softmax activation) after the last model layer and thus extract these embeddings from the last model layer.
-Thus, embeddings are extracted from one layer.
+Autoencoders typically use the bottleneck layer, a classification networks typically have a classification head (i.e. a FC layer with a Softmax activation) after the last encoder layer and thus extract these embeddings from the last model layer.
+Therefore, embeddings are extracted from one layer.
 Net fragments, on the other hand, span over multiple layers\sidenote{net fragments can be thought of as the ``path'' of features through a network} and hence this principle is violated.
 
 Furthermore, net fragments are strongly activated when the corresponding feature they represent is present in the input and are weakly active or not active at all when it is not present.
-Typical deep learning networks have neurons that are never active, while the active neurons usually remain active regardless of the class of the input data and only change their activity slightly.
+Typical deep learning networks have neurons that are never active, while the active neurons usually remain active regardless of the input data and only change their activity strength.
 Thus, the information about different features is not distributed on different neurons but transported as activation strength of neurons through the network.
 Therefore, deep learning architectures do not comprise brain-like net fragments by default.
 
-However, adding a sparsity and diversity constraint was found to alleviate this issue.
-Adding such constraints to the loss function encourages neurons to represent specific features typical for some objects.
+However, adding a sparsity and diversity constraint alleviate this issue:
+Adding such constraints to the loss function encourages neurons to represent specific features typical for a subset of the objects.
