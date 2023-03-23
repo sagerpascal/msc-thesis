@@ -2,7 +2,7 @@
 A large part of the contribution of this thesis consists of identifying relevant findings from neuroscience and adapting them to a deep learning setting.
 The identified concepts and the link between the two disciplines are described in this chapter.
 This chapter presents only one possible interpretation for implementing neuroscientific concepts in the context of deep learning; alternative interpretations might also be promising.
-Concrete implementations of the concepts presented in this chapter can be found in \chref{vertical_self_org} and \chref{horizontal_self_org}.
+Concrete implementations of the concepts presented in this chapter can be found in \chref{horizontal_self_org} and \chref{vertical_self_org}.
 
 The following is discussed in this chapter:
 \secref{neuro_concepts_discrepancy} describes the discrepancy between biological learning and deep learning and points out why it is hard to adapt the biological concept to algorithms. Next, \secref{neuro_concepts_self_org} self-organisation is presented as one of the fundamental concepts for natural intelligence and a possible implementation is proposed. Afterwards, net fragments are discussed in \secref{neuro_concepts_net_fragments}. Next, \secref{neuro_concepts_lateral_connections} proposes a method of how lateral connections can be interpreted in a deep learning setting. Finally, \secref{neuro_concepts_others} points out other promising principles that are not implemented in the course of this thesis but might be helpful in future work.
@@ -138,11 +138,6 @@ They are not necessary, for example,  to obtain better classification performanc
 An alternative that leads to robust and meaningful activations as well is to model the net fragments as a probability distribution.
 For example, variational autoencoders (c.f. \secref{visual_rep_learning}) model their latent space as a multivariate Gaussian distribution.
 
-%Especially for models based on horizontal self-organisation, it seems important to impose these constraints on all layers.
-%For models with vertical self-organisation, on the other hand, these constraints do not need to be applied to all layers, as long as there are enough models that can only see very small input patches. In this case, a sub-model can only recognise a very spatially-limited feature, which corresponds to a low-level feature. In order to recognise higher-level features or whole objects, interaction with neighbouring sub-models is necessary.
-%Thus, net fragments are composed over several sub-models.
-%In this case, it is sufficient to impose the constraints to the function that composes the the representation of the sub-models to higher-level net fragments or to objects.
-
 
 \subsection{Sparsity}\seclbl{neuro_concepts_sparsity}
 Sparistiy is an important principle in biological networks.
@@ -199,11 +194,12 @@ Lateral connections allow each layer to preserve the activation map $\boldsymbol
 	If the same input is present for several time steps in a slightly augmented version, the layers can keep or correct their previous activation maps (lateral support).
 \end{implementation}
 
-With vertical self-organisation, the lateral connections can be implemented as recurrent connections within layers and as connections between the sub-models.
+With horizontal self-organisation, the lateral connections can be implemented as recurrent connections.
+However, for vertical self-organisation, the lateral connections are interpreted differently:
 In this case, each sub-model extracts a distinct low-level feature.
 Based on this feature, a guess can be made as to which higher-level feature or object the extracted feature belongs to.
 This guess can be supported or rejected through communication with neighbouring sub-models.
-Thus, the lateral connections can be used as a ``support channel'' or ``communication channel'' between sub-models. 
+Thus, the lateral connections can be seen as a ``support channel'' or ``communication channel'' between sub-models. 
 
 \begin{implementation}
 	In the case of vertical self-organisation, a lateral connection can be implemented as a connection between sub-models to vote for which high-level feature or object is represented in the image. Either the prediction of a model can be supported by neighbouring models or rejected.

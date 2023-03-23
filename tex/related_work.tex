@@ -175,10 +175,10 @@ Currently, this seems to be one of the limiting factors why such SNNs cannot mat
 Self-organisation is, according to von der Malsburg et al. \sidecite{von_der_Malsburg_Stadelmann_Grewe_2022}, one of the fundamental principles for natural intelligence.
 Therefore, this concept of local optimisation and interaction plays an essential role in this thesis.
 Specifically, two types of self-organisation are proposed in this thesis;
-Vertical self-organisation described in \chref{vertical_self_org} is based on layer-wise learning. In this approach, the layers of a neural network are considered separate units and are updated independently.
+Horizontal self-organisation described in \chref{horizontal_self_org} is based on layer-wise learning. In this approach, the layers of a neural network are considered separate units and are updated independently.
 The communication between these units takes place by feeding data sequentially through the layers.
-The second type of self-organisation proposed in this thesis is horizontal self-organisation. With this approach, data is divided into patches and analysed by independent networks. Thus, small networks form self-organising units and communicate with each other by adding the output of one network to the input of another network.
-Horizontal self-organisation is described in \chref{horizontal_self_org}.
+The second type of self-organisation proposed in this thesis is vertical self-organisation. With this approach, data is divided into patches and analysed by independent networks. Thus, small networks form self-organising units and communicate with each other by adding the output of one network to the input of another network.
+Vertical self-organisation is described in \chref{vertical_self_org}.
 
 
 \section{Learning Algorithms}\seclbl{alt_train_algo}
@@ -329,8 +329,9 @@ Therefore, such methods usually scale to specific use cases only.
 End-to-end backpropagation is incompatible with local self-organisation, which is one of the fundamental concepts of natural intelligence according to von der Malsburg et al. \sidecite{von_der_Malsburg_Stadelmann_Grewe_2022}.
 With end-to-end backpropagation, systems are trained as a single unit and consequently have no independent local units to organise themselves.
 Therefore, alternative learning algorithms are very relevant to this thesis.
-The approach based on vertical self-organisation uses proxy objective functions to train the layer locally as independent units (c.f. \chref{vertical_self_org}).
+The approach based on horizontal self-organisation uses proxy objective functions to train the layer locally as independent units (c.f. \chref{horizontal_self_org}).
 Proxy objective functions are used in this thesis as this method is the only known alternative to backpropagation of error that scales well to large neural networks and large datasets \sidecite{Bartunov_Santoro_Richards_Marris_Hinton_Lillicrap_2018, Duan_Principe_2022}.
+
 
 \section{Representation Learning}\seclbl{visual_rep_learning}
 
@@ -379,8 +380,8 @@ For example, \sideciteay{khosla2020supervised} use labels in a contrastive setti
 
 \subsection{Relevance}
 In this thesis, image representations are learned with two different principles;
-vertical self-organisation uses contrastive learning by forcing samples from the same class to have similar representations and samples from different classes to have high diversity.
-Horizontal self-organisation uses independently trained variational autoencoders to obtain good representations of input patches.
+horizontal self-organisation uses contrastive learning by forcing samples from the same class to have similar representations and samples from different classes to have high diversity.
+Vertical self-organisation uses independently trained variational autoencoders to obtain good representations of input patches.
 Thus, image representations are learned with the aforementioned methods.
 
 

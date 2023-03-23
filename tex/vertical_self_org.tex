@@ -1,118 +1,83 @@
 %% vertical_self_org.tex
-In this thesis, two different concepts of self-organisation are implemented.
 This chapter presents a method based on vertical self-organisation (c.f. \secref{neuro_concepts_self_org}).
-Vertical self-organisation is based on training small units within a network independent from each other.
-The first section presents the methodology (i.e. how vertical self-organisation was implemented), and the second section evaluates the obtained results.
-
+The idea of vertical self-organisation is that the input is analysed by several smaller models instead of one big model.
+This means that each network sees only a patch of the input data and cannot decide on its own what is represented in the input image but must agree on a representation with neighbouring models.
+It is essential that each model is independent of the other models and that the parameters are not shared between them. Otherwise, the architecture would be comparable to vision transformer \sidecite{Dosovitskiy_Beyer_Kolesnikov_Weissenborn_Zhai_Unterthiner_Dehghani_Minderer_Heigold_Gelly_2021} and the input patches would no longer be analysed independently. Thus, the model would not be self-organising anymore. In the following, the methodology (i.e. how vertical self-organisation is implemented) is presented, and the obtained results are discussed in detail.
 
 \section{Methods}\seclbl{vertical_self_org_methods}
-The first choice for networks based on vertical self-organisation is what the independent units are, i.e. which network parameters are trained independently.
-In this thesis, a single layer is used as a self-contained unit. One layer is a small unit (e.g. compared to a model part that contains many layers) but can still be trained efficiently.
-Smaller units would be neurons or parts of a layer, but training them separately would be very inefficient since the efficiency of matrix operations on GPUs could no longer be fully exploited\sidenote{the layer output can be efficiently calculated by single matrix multiplication and addition, i.e. $\boldsymbol{z} = \boldsymbol{w} \cdot \boldsymbol{x} + \boldsymbol{b}$ (c.f. \secref{ann})}.
+A crucial design decision for vertical self-organisation is the architecture of the models.
+In this thesis are variational autoencoders \sidecite{Kingma_Welling_2014} (c.f. \secref{visual_rep_learning}) used to process patches of the input image as they have a continuous latent space and are thus more robust and better interpretable (c.f. \secref{neuro_concepts_net_fragments}).
 
-Each layer optimises a proxy objective function.
-Proxy objective functions are used because this type of local optimisation allows excellent performance even on larger datasets, in contrast to other local learning algorithms such as target propagation, synthetic gradients or feedback alignment (c.f. \secref{alt_train_algo}). 
- \figref{vertical_gradient_flow} visualises the updates based on a proxy objective function.
-An objective function is calculated for each layer, and the optimisation algorithm only updates the parameters within this layer.
-Thus, the gradients do not flow back to preceding layers.
+Typical autoencoders fed an input image $\boldsymbol{x}$ through an encoder to map the input data to a latent space and through a decoder to recreate the image $\boldsymbol{\hat{x}}$. Thereby, the latent space is limited in size, forcing the model to compress the image with the encoder and to de-compress the image using the decoder (c.f. \secref{visual_rep_learning_ae}).
 
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.99\textwidth]{vertical_gradient_flow}
-    \caption[The flow of gradients within the network based on vertical self-organisation]{The flow of gradients within the network based on vertical self-organisation: The data is fed from layer to layer during the forward pass. The layers are trained independently, and the gradients do not flow from one layer to the previous one.}
-    \figlbl{vertical_gradient_flow}
-\end{figure}
+A variational autoencoder models the latent space as a multivariate Gaussian distribution. The input image $\boldsymbol{x}$ is also fed through an encoder, and a latent representation $\boldsymbol{h}$ is obtained. Afterwards, $\boldsymbol{h}$ is fed through two independent parallel fully connected layers to obtain the $\boldsymbol{\mu}$ and $\boldsymbol{\sigma}$ vectors of the multivariate Gaussian distribution. Afterwards, the re-parametrisation trick is used to sample a variable $\boldsymbol{z}'$ from this distribution:
 
-A combination of diversity and sparsity constraints is used as a loss function, which leads to representations that are easy to interpret, suitable for net fragments (c.f. \secref{neuro_concepts_net_fragments}), and also increases robustness (c.f. \secref{neuro_concepts_sparsity}).
-Identical to the preliminary experiments in appendix \chref{net_fragments}, the sparsity is achieved by using the kullback-leibler (KL) divergence \sidecite{10-5555-3042573-3042641}.
-The model consists of several linear layers $l$ with a ReLU activation function (c.f. \eqref{act_functions}).
-
-A layer consists of $n^{[l]}$ neurons and the activations $\boldsymbol{a}^{[l]}$ of a linear layer $l$ are calculated for a given input $\boldsymbol{a}^{[l-1]}$ as
-
-\begin{align}\eqlbl{vso_1}
-		\boldsymbol{a}^{[l]} = a^{[l]}_1, ..., a^{[l]}_n = \boldsymbol{W}^{[l]} \cdot \boldsymbol{a}^{([l-1]} + \boldsymbol{b}^{[l]}
+\begin{align}\eqlbl{hso_1}
+	\boldsymbol{z}' \sim \mathcal{N}(\boldsymbol{\mu},\,\boldsymbol{\sigma}^{2} \cdot \epsilon)
 \end{align}
 
-whereby $\boldsymbol{W}^{[l]}$ is the weight and $\boldsymbol{b}^{[l]}$ the bias of layer $l$.
-The activation probability can be calculated for each neuron. If a mini-batch contains $m$ samples, the activation probability $\hat{\rho}^{[l]}_i$ of a neuron $a^{([l]}_i$ can be calculated as:
+$\epsilon$ is a random variable sampled from  $\mathcal{N}(0, 1)$ and determines the magnitude of the variance. The sampled latent representation is then fed through the decoder, and the image $\hat{\boldsymbol{x}}$ is recreated. The model is trained to minimise a distance measure between the input image $\boldsymbol{x}$ and the reconstructed image $\hat{\boldsymbol{x}}$. In this thesis, the mean square error is used. For $m$ images $\boldsymbol{X} = \boldsymbol{x}^{(1)}, ..., \boldsymbol{x}^{(m)}$, the loss is defined as
 
-\begin{align}\eqlbl{vso_2}
-		\hat{\rho}^{[l]}_i= \frac{1}{n} \sum^n_{i=1} \left( \frac{1}{1+e^{-a^{([l]}_i}} \right)
+\begin{align}\eqlbl{hso_2}
+	\mathcal{L}_{\text{rec}} = \frac{1}{m} \sum_{i=1}^{m} (\boldsymbol{x}^{(i)} - \boldsymbol{\hat{x}}^{(i)})^2
 \end{align}
 
-where $\left( \frac{1}{1+e^{-a^{([l]}_i}} \right)$ is the sigmoid function that squeezes the activation in the range between $0$ and $1$.
-With the KL divergence, the divergence of the current activation probability $\hat{\rho}^{[l]}_i$ and a desired activation probability $\rho=0.05$ can be calculated:
+However, the latent space does not form a multivariate Gaussian distribution based on this reconstruction loss and the network architecture. A second loss constraint is necessary to obtain a probability distribution in the latent space: Let $P(\boldsymbol{X})$ be the probability distribution of the data $\boldsymbol{X}$, $P(\boldsymbol{h})$ the probability distribution of the latent variable $\boldsymbol{h}$ and $P(\boldsymbol{X}|\boldsymbol{h})$ the conditional probability of generating $\boldsymbol{X}$ for a given $\boldsymbol{h}$. The objective of the encoder is to infer $P(\boldsymbol{h})$ from $P(\boldsymbol{h}|\boldsymbol{X})$ which is the probability distribution that maps $\boldsymbol{X}$ into latent space. Simply put: the goal is to know the latent variable $\boldsymbol{h}$ of the input data $\boldsymbol{X}$.
+However, $P(\boldsymbol{h}|\boldsymbol{X})$ is unknown and we have to estimate it from a simpler distribution $Q(\boldsymbol{h}|\boldsymbol{X})$. This simpler distribution $Q(\boldsymbol{h}|\boldsymbol{X})$ is learned by the encoder and should be as close as possible to the real distribution $P(\boldsymbol{h}|\boldsymbol{X})$. This is accomplished by minimising the KL divergence\sidenote{the Kullback-Leibler (KL) divergence can ``measure'' the difference between two probability distributions} between these two probability distributions.
 
-\begin{align}\eqlbl{vso_3}
-		KL(\rho || \hat{\rho}^{[l]}_i) = \rho \cdot \log \frac{\rho}{\hat{\rho}^{[l]}_i} + (1-\rho) \cdot \log \frac{1-\rho}{1-\hat{\rho}^{[l]}_i}
+\begin{align}\eqlbl{hso_3}
+	KL \left[ Q(\boldsymbol{h}|\boldsymbol{X}) || P(\boldsymbol{h}|\boldsymbol{X}) \right] = E \left[ \log Q(\boldsymbol{h}|\boldsymbol{X}) - \log P(\boldsymbol{h}|\boldsymbol{X}) \right]
 \end{align}
 
-The sparsity loss $\mathcal{L}^{[l]}_{s}$ of layer $l$ is the sum of the divergence between all $\hat{\rho}^{[l]}_i$ and $\rho$:
-
-\begin{align}\eqlbl{vso_4}
-		\mathcal{L}^{[l]}_{s}(\rho, \hat{\rho}^{[l]}) = \sum_{i=1}^{m} KL(\rho || \hat{\rho}^{[l]}_i)
+In the case of two Gaussian distributions, the KL divergence is defined as:
+\begin{align}\eqlbl{hso_4}
+	KL\left[ \mathcal{N}_Q(\boldsymbol{\mu}_Q, \boldsymbol{\sigma}_Q)||\mathcal{N}_P(\boldsymbol{\mu}_P, \boldsymbol{\sigma}_P) \right] = \log \frac{\boldsymbol{\sigma}_P}{\boldsymbol{\sigma}_Q} + \frac{\boldsymbol{\sigma}_Q^2 + (\boldsymbol{\mu}_Q-\boldsymbol{\mu}_P)^2}{2\boldsymbol{\sigma}_P^2} - \frac{1}{2}
 \end{align}
 
 
-The second constraint is a diversity constraint. The goal is that the activations of \emph{different} objects are diverse. For this purpose, the activations $\boldsymbol{a}^{[l]}$ are made as identical as possible (i.e. pushed together in feature space) if they stem from the same class and as different as possible if they stem from different classes.
-The cosine similarity is used to calculate the similarity between the activations $\boldsymbol{a}^{[l](i)}$ and $\boldsymbol{a}^{[l](j)}$ of two samples $\boldsymbol{x}^{(i)}$ and $\boldsymbol{x}^{(j)}$:
+If the target distribution $P(\boldsymbol{h}|\boldsymbol{X})$ is a multivariate Gaussian distribution with $\boldsymbol{\mu}_P = 0$ and $\boldsymbol{\sigma}_P=1$ (i.e. $\mathcal{N}(0, 1)$) and the encoder predicts $\boldsymbol{\mu}_Q$ and $\boldsymbol{\sigma}_Q$ to model $Q(\boldsymbol{h}|\boldsymbol{X})$ as $\mathcal{N}(\boldsymbol{\mu}_Q, \boldsymbol{\sigma}_Q)$, then the KL divergence simplifies to
 
-\begin{align}\eqlbl{vso_5}
-		\text{cos}\left( \boldsymbol{a}^{[l](i)}, \boldsymbol{a}^{[l](j)} \right) = \frac{\boldsymbol{a}^{[l](i)} \cdot \boldsymbol{a}^{[l](j)}}{\max \left( ||\boldsymbol{a}^{[l](i)}||_2, ||\boldsymbol{a}^{[l](j)}||_2 \right)}
-\end{align}
 
-The information of image labels $y^{(i)} \in C$ is needed to push representations of identical objects together or to push representations of different objects apart.
-The diversity loss $\mathcal{L}^{[l]}_d$ minimises the similarity $\text{cos} \left(\boldsymbol{a}^{[l](i)}, \boldsymbol{a}^{[l](j)} \right)$ if the activations stem from different classes (i.e. $y^{(i)} \neq y^{(j)}$), or maximises the similarity if they stem from the same class (i.e. $y^{(i)} = y^{(j)}$).
-
-\begin{align}\eqlbl{vso_6}
-		\mathcal{L}^{[l]}_{d} \left(\boldsymbol{a}^{[l]} \right) = \frac{1}{n^2} \sum_{i=1}^{n} \sum_{j=1}^{n} k \cdot \text{cos} \left( \boldsymbol{a}^{[l](i)}, \boldsymbol{a}^{[l](j)} \right) \text{ if } i \neq j
-\end{align}
-
-whereby $k$ changes the sign depending on the class:
-
-\begin{align}\eqlbl{vso_7}
-		k = \begin{cases}
-      		+1, & \text{if}\ y_i \neq y_j \\
-      		-1, & \text{otherwise}
-    	\end{cases}
-\end{align}
-
-However, the loss was found to be more stable if the similarity is not calculated between two activations but between one activation and the average activation of a class. The average activation $\overline{a[c]}$ of a class $c$ can be calculated over $n_c$ samples as:
-
-\begin{align}\eqlbl{vso_8}
-		\overline{a[c]^{[l]}} = \frac{1}{n_c} \sum_{i=1}^{n_c} a^{[l]}_i \text{, for } y_i = c
-\end{align}
-
-Thus, the loss becomes
-\begin{align}\eqlbl{vso_80}
-		\mathcal{L}^{[l]}_{d} \left(\boldsymbol{a}^{[l]} \right) = \frac{1}{n\cdot n_c} \sum_{i=1}^{n} \sum_{c \in C} k \cdot \text{cos} \left( \boldsymbol{a}^{[l](i)}, \overline{\boldsymbol{a}[c]}^{[l]} \right)
-\end{align}
-
-Another problem of this loss is that if all activations are identical, then $\text{cos} \left(\boldsymbol{a}^{[l](i)}, \overline{\boldsymbol{a}[c]}^{[l]} \right) = 1$, and the loss becomes $\mathcal{L}^{[l]}_{d}=0$, since the similarities of the same and different classes neutralise each other.
-Therefore, a margin between the similarities is enforced, as done for the triplet-margin-loss  \sidecite{Balntas_Riba_Ponsa_Mikolajczyk_2016}.
-
-\begin{align}\eqlbl{vso_9}
+\begin{align}\eqlbl{hso_5}
 \begin{split}
-		\mathcal{L}^{[l]}_{d}(\boldsymbol{a}^{[l]}) = \frac{1}{n} \sum_{i=1}^{n} \max \biggl[ & \text{cos}(\boldsymbol{a}^{[l](i)}, \overline{a[v]^{[l]}}) \\
-		& - \text{cos}(\boldsymbol{a}^{[l](i)}, \overline{a[y^{(i)}]^{[l]}}) + \text{margin}, 1 \biggr]
+		\mathcal{L}_{KLD} = KL \left[ \mathcal{N}_Q(\boldsymbol{\mu}_Q, \boldsymbol{\sigma}_Q)||\mathcal{N}(0, 1) \right] & = -\log \boldsymbol{\sigma}_Q + \frac{\boldsymbol{\sigma}_Q^2 \boldsymbol{\mu}_Q^2}{2} - \frac{1}{2} \\
+		 & = \frac{1}{2} \left( \boldsymbol{\sigma}_Q^2 \boldsymbol{\mu}_Q^2 - 1 - 2\log \boldsymbol{\sigma}_Q \right)
 \end{split}
 \end{align}
 
-where $v$ is a random class drawn from the set $v ~ \{C \\ y_i\}$ and $\text{margin}$ is a hpyer-parameter that was set to $1$.
-Thus, the triplet-margin-loss is calculated but the cosine-similarity replaces the $L2$-norm as distance measure and the positive, resp. negative anchor is replaced with the average class activation from the same resp. from a randomly selected different class.
+Interested readers may find a formal proof of the formulas above and a more detailed derivation in the original paper \cite{Kingma_Welling_2014}.
+Thus, the loss for the variational autoencoder is defined as:
 
-The loss used is the sum of sparsity loss and diversity loss, with the diversity loss weighted by $\lambda=0.1$:
-\begin{align}\eqlbl{vso_10}
-		\mathcal{L}^{[l]} =\mathcal{L}^{[l]}_{s}(\rho, \hat{\rho}^{[l]}) 
- + \lambda \cdot \mathcal{L}^{[l]}_{d}(\boldsymbol{a}^{[l]})
+
+\begin{align}\eqlbl{hso_6}
+\begin{split}
+		\mathcal{L}_{\text{VAE}} & = \mathcal{L}_{\text{rec}} + \beta \cdot KL \left[ \mathcal{N}_Q(\boldsymbol{\mu}_Q, \boldsymbol{\sigma}_Q)||\mathcal{N}(0, 1) \right] \\
+		  & = \underbrace{\frac{1}{n} \sum_{i=1}^{n} (\boldsymbol{x}_i - \boldsymbol{\hat{x}}_i)^2}_{\text{reconstruction loss}} + \lambda \cdot \overbrace{\frac{1}{2} (\boldsymbol{\sigma}_Q^2 \boldsymbol{\mu}_Q^2 - 1 - 2\log \boldsymbol{\sigma}_Q)}^{\text{KL divergence}}
+\end{split}
 \end{align}
 
+where $\beta$ is a weight factor of the KL divergence. Training a variational autoencoder with this loss function can lead to excellent image reconstruction.
+In the case of vertical self-organisation, however, a well-formed latent space is of more interest than an outstanding image reconstruction: The goal is to obtain good image representations, and thus the goal is to have a well-formed latent space and not perfect reconstruction.
+Variational autoencoders have the notorious problem that the KL divergence term becomes vanishingly small during training \sidecite{bowman2016generating}. This issue is known as the KL vanishing problem.
+This problem can be alleviated by applying annealing schedules to the KL term (i.e., changing $\beta$ over time).
+In this thesis, monotonic annealing is used as proposed by \sideciteay{bowman2016generating}.
+However, for a slight increase in computational costs, cyclic annealing strategies might lead to even better results \sidecite{Fu_Li_Liu_Gao_Celikyilmaz_Carin_2019}.
+The disadvantage is that training with cyclic annealing takes longer, which outweighs the advantage of only minimally better latent representation.
+These annealing strategies are shown in Figure \figref{beta_annealing}. When $\beta$ is small, the model is forced to focus on reconstructing the input rather than minimising the KL loss.
+When $\beta$ is increased, the model gradually improves the shape of the data distribution in the latent space.
 
-One problem with proxy objective functions is that this type of training often requires layer-wise training. First, layer $1$ is trained until convergence, then the weights are frozen, then layer $2$ is trained and so on.
-Such sequential training is inefficient because it requires more forward passes than if the model is trained with end-to-end backpropagation.
-It was found that this loss function allows to train all layers simultaneously. With a forward pass, all activations are calculated, followed by a layer-wise backward pass where the gradients from one layer do not propagate back into the previous layer.
-Since the gradients are only needed locally, no large graph of gradients has to be calculated, which reduces the memory utilisation on GPUs and allows larger mini-batch sizes. In addition, this type of architecture is straightforward to parallelise since each layer (i.e. each independently trained unit) or a group of layers can be trained on a different GPU:
-In contrast to end-to-end backpropagation of error architectures, the gradients only flow backwards locally on a GPU and do not have to be passed on to other GPUs.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\textwidth]{beta_annealing}
+    \caption[Annealing strategy of the KL weight term of variational autoencoders]{Two annealing strategies for the $\beta$ term that weights the KL divergence in the loss function of variational autoencoders. The upper graph shows a monotonic increase of $\beta$, and the lower graph a cyclical annealing strategy. The picture is from \cite{Fu_Li_Liu_Gao_Celikyilmaz_Carin_2019}.}
+    \figlbl{beta_annealing}
+\end{figure}
+
+In this thesis, $4$ variational autoencoders are used. Each VAE consists of an encoder, two fully-connected layers to calculate $\boldsymbol{\mu}$ and $\boldsymbol{\sigma}$, and a decoder.
+The encoder consists of $3$  convolutional layers with $32$, $64$, and $128$ channels. Each convolutional layer has a stride of $2$, halving the input size in each layer.
+The decoder has the inverse structure of the encoder, i.e. $3$ transposed convolutional layers with $128$, $64$, and $32$ channels.
+The fully connected layer for predicting $\boldsymbol{\mu}$ and $\boldsymbol{\sigma}$ have $32$ neurons.
+The network architecture is shown in \figref{vertical_org_arch1}.
 
 \begin{figure}[h]
     \centering
@@ -128,64 +93,61 @@ In contrast to end-to-end backpropagation of error architectures, the gradients 
 
 \pic[shift={(3,0,0)}] at (input) 
     {Box={
+        name=conv1,
+        caption=Conv + ReLU,
+        xlabel={{1, }},
+        zlabel=32,
+        fill=\ConvColor,
+        height=20,
+        width=2,
+        depth=20
+        }
+    };
+
+
+\draw [connection]  (input) ++(0,0,0)    -- node {\midarrow} (conv1-west);
+
+
+\pic[shift={(2,0,0)}] at (conv1-east) 
+    {Box={
+        name=conv2,
+        caption=Conv + ReLU,
+        xlabel={{32, }},
+        zlabel=64,
+        fill=\ConvColor,
+        height=12,
+        width=4,
+        depth=12
+        }
+    };
+
+
+\draw [connection]  (conv1-east)    -- node {\midarrow} (conv2-west);
+
+
+\pic[shift={(2,0,0)}] at (conv2-east) 
+    {Box={
+        name=conv3,
+        caption=Conv + ReLU,
+        xlabel={{64, }},
+        zlabel=128,
+        fill=\ConvColor,
+        height=6,
+        width=6,
+        depth=6
+        }
+    };
+
+
+\draw [connection]  (conv2-east)    -- node {\midarrow} (conv3-west);
+
+
+\pic[shift={(2,2,0)}] at (conv3-east) 
+    {Box={
         name=fcn1,
         caption=FC + ReLU,
         xlabel={{" ","dummy"}},
-        zlabel=512,
-        fill=\SoftmaxColor,
-        opacity=0.8,
-        height=3,
-        width=3,
-        depth=52
-        }
-    };
-
-
-\draw [connection]  (input) ++(0,0,0)    -- node {\midarrow} (fcn1-west);
-
-
-\pic[shift={(2,0,0)}] at (fcn1-east) 
-    {Box={
-        name=fcn2,
-        caption=FC + ReLU,
-        xlabel={{" ","dummy"}},
-        zlabel=256,
-        fill=\SoftmaxColor,
-        opacity=0.8,
-        height=3,
-        width=3,
-        depth=25
-        }
-    };
-
-
-\draw [connection]  (fcn1-east)    -- node {\midarrow} (fcn2-west);
-
-
-\pic[shift={(2,0,0)}] at (fcn2-east) 
-    {Box={
-        name=fcn3,
-        caption=FC + ReLU,
-        xlabel={{" ","dummy"}},
-        zlabel=128,
-        fill=\SoftmaxColor,
-        opacity=0.8,
-        height=3,
-        width=3,
-        depth=13
-        }
-    };
-
-
-\draw [connection]  (fcn2-east)    -- node {\midarrow} (fcn3-west);
-
-
-\pic[shift={(2,0,0)}] at (fcn3-east) 
-    {Box={
-        name=fcn4,
-        caption=FC + ReLU,
-        xlabel={{" ","dummy"}},
-        zlabel=64,
+        zlabel=32,
         fill=\SoftmaxColor,
         opacity=0.8,
         height=3,
@@ -195,93 +157,109 @@ In contrast to end-to-end backpropagation of error architectures, the gradients 
     };
 
 
-\draw [connection]  (fcn3-east)    -- node {\midarrow} (fcn4-west);
+\pic[shift={(2,-2,0)}] at (conv3-east) 
+    {Box={
+        name=fcn2,
+        caption=FC + ReLU,
+        xlabel={{" ","dummy"}},
+        zlabel=32,
+        fill=\SoftmaxColor,
+        opacity=0.8,
+        height=3,
+        width=3,
+        depth=6
+        }
+    };
+
+
+\draw [connection]  (conv3-east)    -- node {\midarrow} (fcn1-west);
+
+
+\draw [connection]  (conv3-east)    -- node {\midarrow} (fcn2-west);
+
+
+\pic[shift={(2,-2,0)}] at (fcn1-east) 
+    {Box={
+        name=conv4,
+        caption=Conv + ReLU,
+        xlabel={{128, }},
+        zlabel=64,
+        fill=\ConvColor,
+        height=6,
+        width=6,
+        depth=6
+        }
+    };
+
+
+\draw [connection]  (fcn1-east)    -- node {\midarrow} (conv4-west);
+
+
+\draw [connection]  (fcn2-east)    -- node {\midarrow} (conv4-west);
+
+
+\pic[shift={(2,0,0)}] at (conv4-east) 
+    {Box={
+        name=conv5,
+        caption=Conv + ReLU,
+        xlabel={{64, }},
+        zlabel=32,
+        fill=\ConvColor,
+        height=12,
+        width=4,
+        depth=12
+        }
+    };
+
+
+\draw [connection]  (conv4-east)    -- node {\midarrow} (conv5-west);
+
+
+\pic[shift={(2,0,0)}] at (conv5-east) 
+    {Box={
+        name=conv6,
+        caption=Conv + ReLU,
+        xlabel={{32, }},
+        zlabel=1,
+        fill=\ConvColor,
+        height=20,
+        width=2,
+        depth=20
+        }
+    };
+
+
+\draw [connection]  (conv5-east)    -- node {\midarrow} (conv6-west);
+
+
+\node[canvas is zy plane at x=3] (output) at (conv6-east) {\includegraphics[width=8cm,height=8cm]{imgs/mnist.jpeg}};
+
+
+\draw [connection]  (conv6-east)     -- node {\midarrow} ($(output) + (0.5,0,0)$);
 
 
 \end{tikzpicture}
 }
-    \caption[Architecture of the fully connected model with vertical self-organisation]{The network architecture of the fully connected model for vertical self-organisation with fully connected layers.}
+    \caption[Architecture of the VAEs]{Architecture of the variational autoencoders used for vertical self-organisation.}
     \figlbl{vertical_org_arch1}
 \end{figure}
 
-The model used consists of $4$ fully connected layers with ReLU activation. The first layer has $512$ neurons, the second $256$ neurons, the third $128$ neurons and the fourth $64$ neurons. The model is illustrated in Figure \figref{vertical_org_arch1}. Each layer is trained separately by minimising the loss of equation \eqref{vso_10} with the Adam optimizer\sidecite{Kingma2015AdamAM} and a learning rate of $\eta = 1 \cdot 10^{-3}$. The mini-batch size is $60,000$. 
-
-\subsection{Extraction of Representations}\seclbl{vertical_self_org_representations}
-In accordance with net fragments as in \secref{neuro_concepts_net_fragments}, the representations are not extracted at a specific point in the network (i.e. a pre-defined layer), but all representations from all layers are taken into account to fulfil a task.
-In the following, this is demonstrated based on a classification task, but other tasks are also conceivable in the future.
-After training, the average activation $\overline{\boldsymbol{a}[c]}^{[l]}
-$ for each class $c \in C$ and layer $l$ is determined, as done in Equation \eqref{vso_8}.
-These averages from the training set represent prototypes of each class in each layer and can be considered a reference representation per class. Thus, the representations needed for this task are computed \emph{after} training and are not part of the training as, for example, in the case of a classification loss based on cross-entropy.
-When a new sample $\boldsymbol{x}^{(i)}$ is classified, the cosine similarity between the activations $\boldsymbol{a}^{[l](i)}$ of this sample and the class prototypes $\overline{\boldsymbol{a}[c]}^{[l]}$ is calculated in each layer.
-
-\begin{align}\eqlbl{vso_11}
-		\text{cos}[c]^{[l](i)} = \text{cos} \left( \boldsymbol{a}^{[l](i)}, \overline{\boldsymbol{a}[c]}^{[l]} \right) = \frac{\boldsymbol{a}^{[l](i)} \cdot \overline{\boldsymbol{a}[c]}^{[l]}}{\max \left( ||\boldsymbol{a}^{[l](i)}||_2, ||\overline{\boldsymbol{a}[c]}^{[l]}||_2 \right)} \text{, for } c \in C
-\end{align}
-
-Thus, the cosine similarity $\text{cos}[c]^{[l](i)}$ for each class $c \in C$ and each of the layers $l \in {1, ..., 4}$ is calculated. Afterwards, the class $c$ with the highest average cosine similarity between the sample activations $\boldsymbol{a}^{[l](i)}$ and the class prototypes $\overline{\boldsymbol{a}[c]}^{[l]} 
-$ is used as prediction.
-
-\begin{align}\eqlbl{vso_12}
-		\argmax_{c \in C} \frac{1}{4} \sum_{l=1}^{4} \text{cos}[c]^{[l](i)}
-\end{align}
-
-This results in a weighted voting; if a layer is certain that the sample belongs to a specific class, the sample has a high cosine similarity with one class prototype and a low similarity with all other class prototypes. Accordingly, this layer influences the prediction more than a layer that cannot assign the sample to one class and calculates a similarly high cosine similarity between the sample and all prototypes.
-
-\subsection{Lateral Connections}
-As described in \secref{neuro_concepts_lateral_connections}, lateral connections in the human brain serve neurons to support each other.
-There, it is also described that lateral connections can be implemented as recurrent connections.
-There are several ways to implement recurrent connections. A straightforward possibility is to concatenate the layer input $\boldsymbol{a}^{[l-1]}[t]$ at time $t$ with the layer output $\boldsymbol{a}^{[l]}[t-1]$  at time $t-1$. This is visualised in \figref{lateral_concat}. Of course, $\boldsymbol{a}^{[l]}[t-1]$ is undefined at $t=0$. In this case, $\boldsymbol{a}^{[l]}[t-1]$ is initialized with zeros.
-
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.99\textwidth]{lateral_concat}
-    \caption[Lateral connections by concatenating the layer's output with the layer's input]{The lateral connections can be implemented by concatenating the layer's output at the previous time-step with the layer's input at the current time-step.}
-    \figlbl{lateral_concat}
-\end{figure}
+Each VAE is trained independently to minimise the loss function as described in \eqref{hso_6}.
+Adam \sidecite{Kingma2015AdamAM} is used as an optimisation algorithm with a learning rate of $1\cdot 10^{-3}$, and the mini-batch size is $32$.
 
 
-A second option is to use a second weight matrix, as it is usually done in recurrent layers. Therefore, the equation \eqref{vso_1} is extended as follows:
-
-\begin{align}\eqlbl{vso_13}
-		\boldsymbol{a}^{[l]}[t] =  \boldsymbol{W}_x^{[l]} \cdot \boldsymbol{a}^{[l-1]}[t] + \boldsymbol{b}^{[l]} + \overbrace{\boldsymbol{W}_h^{[l]} \cdot \boldsymbol{a}^{[l]}[t-1] }^{\text{lateral connection}}
-\end{align}
-
-whereby $\boldsymbol{W}_x^{[l]}$ is the weight multiplied with the layer input and $\boldsymbol{W}_h^{[l]}$ the weight multiplied with the previous layer output. In both cases, the layer receives information about the activations at the previous time step.
-However, this only seems helpful if the model input is not static. Therefore, the model input is available over several time steps and is augmented after each step. Thus, the model receives different views of the same image and can adjust its activations from the previous time step if necessary. The following image augmentation techniques are applied, each with a probability of $p=0.8$:
-
-\begin{itemize}
-	\item \textbf{Color Jitter}: Randomly change brightness, contrast, and saturation of the image.
-	\item \textbf{Gaussian Blur}: Blur the image with randomly chosen Gaussian blur.
-	\item \textbf{Random Rotation}: Randomly rotate the image with an angle in the range $[-15°, ..., 15°]$
-	\item \textbf{Adjust Sharpness}: Randomly adjust the sharpness of the image.
-\end{itemize}
-
-\figref{mnist_augmented} visualises how this augmentation affects samples of the MNIST dataset \cite{Lecun_Bottou_Bengio_Haffner_1998}. The original image is shown on the left, and $9$ augmented versions of it are shown on the right. This allows the model to perceive the same image from different views.
-
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.99\textwidth]{mnist_augmented}
-    \caption[Data augmentation applied on $10$ samples of the MNIST dataset]{Data augmentation applied on $10$ samples of the MNIST dataset. The original samples from the dataset are shown on the left, and $9$ augmented versions of the same samples are shown on the right.}
-    \figlbl{mnist_augmented}
-\end{figure}
+\subsection{Predicting bigger Patches}\seclbl{vertical_self_org_methods_bigger_patches}
+Applying monotonic annealing to the KL divergence weight term $\beta$ is the first measure to improve the latent space distribution.
+Another measure is to predict bigger patches.
+The VAEs have a very limited field of view and cannot distinguish some of the digits on their own (c.f. \secref{vertical_self_org_methods_communication}).
+However, by predicting bigger patches, the VAEs can be encouraged to distinguish similar-looking patches better.
+For example, the patches for the digits $4$, $5$, and $6$ look very similar for the first VAE that receives the patch extracted from the top left corner of the samples (c.f. \figref{average_sample}).
+Since the target prediction of these two digits is similar, they are located closely together in the latent space.
+When a VAE predicts bigger patches or the entire image, the target predictions of the digits $4$, $5$, and $6$ become different. Thus, while similar latent representations are sufficient to predict only a patch of these digits, predicting larger patches or the whole picture requires more separated latent representations.
+Thus, predicting bigger patches helps push apart latent representations of objects with a high patch-wise similarity but a low image-wise similarity.
 
 
-Recurrent connections, which in this context represent lateral connections, are typically used to process sequential data or text. In this case, the data is collected cumulatively before an output is generated. For example, in text processing, all word tokens of a sentence are typically read before the model classifies a sentence. This is necessary because all information is required, and classification cannot be done on the basis of a single token. Such models are typically trained with backpropagation through time (BTT). Thereby, the gradients flow backwards over several time steps. This leads to well-known problems such as vanishing and exploding gradients.
-
-In this thesis, BTT is not used, which means that a prediction is made after each time step, but the prediction potentially improves with more time steps. This leads to desirable properties: (i) Problems with vanishing or exploding gradients do not exist, regardless of how many time steps the model requires. (ii) After each time step, representations can be extracted according to \secref{vertical_self_org_representations}. If an object representation can be assigned to one class label with a high probability, the sequential processing of different image views can be aborted. If this is not the case, further time steps can be carried out until the model has sufficiently high confidence in its prediction. Thus, the number of time steps can be sample-dependent.
-
-
-% Idee: Mehr Robustheit indem z.b. in einem timestep noise als Input genutzt wird oder bei 1 von 10 timesteps (ausser in den ersten 2) das Bild zufälligerweise vertauscht wird. -> Lateral connections should help
-
-\subsection{Hierarchical Features}\seclbl{vertical_self_org_hierarchical_features}
-A criticism of the proposed model is that it does not learn hierarchical features, even though hierarchical features are one of the main reasons for the excellent performance of deep learning systems. The diversity loss (c.f. \eqref{vso_9})  enforces in each layer that the latent representations of objects of the same class are similar and that the representations of different classes are different. This violates the concept of hierarchical features; the first layers should learn general features that are helpful for all classes but cannot necessarily be assigned to a specific class. Only later layers build class representations that are specific to a class. In the current setting, however, already the first layers generate class-specific representations.
-
-In the following, three possible measures are described to counteract this problem: (i) The fully connected layers are replaced by convolutional layers so that the first layers have a smaller field of view and can only recognise local features. (ii) An adapted version of the diversity loss enforces a separation of features by class only in the last layers. (iii) While specific information in the form of the input image flows into the network from one side, general information in the form of class labels is fed into the network from the other side, and these two types of information are fused. Thus, the training process enforces a hierarchy by fusing specific and general information over multiple layers.
-These three measures can be applied either individually or in combination with each other.
-
-
-\subsubsection{Convolutional Architecture}
-In a CNN, the field of view in the first layers is restricted by design but becomes larger in subsequent layers. Consequently, using a CNN architecture instead of a model based on fully connected layers alleviates the problem of non-hierarchical features.
+In this thesis, an additional layer is used in the decoder to predict larger patches. In fact, the last layer with $32$ channels and a stride of $2$ is used twice so that the decoder has $4$ transposed convolutional layers with $128$, $64$, $32$, and $32$ channels. Thus, the output size of the decoder is doubled. This architecture is shown in Figure \figref{vertical_org_arch2}.
 
 
 \begin{figure}[h]
@@ -301,11 +279,11 @@ In a CNN, the field of view in the first layers is restricted by design but beco
         name=conv1,
         caption=Conv + ReLU,
         xlabel={{1, }},
-        zlabel=16,
+        zlabel=32,
         fill=\ConvColor,
-        height=16,
+        height=20,
         width=2,
-        depth=16
+        depth=20
         }
     };
 
@@ -313,138 +291,437 @@ In a CNN, the field of view in the first layers is restricted by design but beco
 \draw [connection]  (input) ++(0,0,0)    -- node {\midarrow} (conv1-west);
 
 
-\pic[shift={ (0,0,0) }] at (conv1-east) 
-    {Box={
-        name=pool1,
-        caption= ,
-        fill=\PoolColor,
-        opacity=0.5,
-        height=8,
-        width=1,
-        depth=8
-        }
-    };
-
-
-\pic[shift={(2,0,0)}] at (pool1-east) 
+\pic[shift={(2,0,0)}] at (conv1-east) 
     {Box={
         name=conv2,
-        caption=Conv + ReLU,
-        xlabel={{16, }},
-        zlabel=32,
-        fill=\ConvColor,
-        height=8,
-        width=4,
-        depth=8
-        }
-    };
-
-
-\draw [connection]  (pool1-east)    -- node {\midarrow} (conv2-west);
-
-
-\pic[shift={ (0,0,0) }] at (conv2-east) 
-    {Box={
-        name=pool2,
-        caption= ,
-        fill=\PoolColor,
-        opacity=0.5,
-        height=4,
-        width=1,
-        depth=4
-        }
-    };
-
-
-\pic[shift={(2,0,0)}] at (pool2-east) 
-    {Box={
-        name=conv3,
         caption=Conv + ReLU,
         xlabel={{32, }},
         zlabel=64,
         fill=\ConvColor,
-        height=4,
-        width=6,
-        depth=4
+        height=12,
+        width=4,
+        depth=12
         }
     };
 
 
-\draw [connection]  (pool2-east)    -- node {\midarrow} (conv3-west);
+\draw [connection]  (conv1-east)    -- node {\midarrow} (conv2-west);
+
+
+\pic[shift={(2,0,0)}] at (conv2-east) 
+    {Box={
+        name=conv3,
+        caption=Conv + ReLU,
+        xlabel={{64, }},
+        zlabel=128,
+        fill=\ConvColor,
+        height=6,
+        width=6,
+        depth=6
+        }
+    };
+
+
+\draw [connection]  (conv2-east)    -- node {\midarrow} (conv3-west);
+
+
+\pic[shift={(2,2,0)}] at (conv3-east) 
+    {Box={
+        name=fcn1,
+        caption=FC + ReLU,
+        xlabel={{" ","dummy"}},
+        zlabel=32,
+        fill=\SoftmaxColor,
+        opacity=0.8,
+        height=3,
+        width=3,
+        depth=6
+        }
+    };
+
+
+\pic[shift={(2,-2,0)}] at (conv3-east) 
+    {Box={
+        name=fcn2,
+        caption=FC + ReLU,
+        xlabel={{" ","dummy"}},
+        zlabel=32,
+        fill=\SoftmaxColor,
+        opacity=0.8,
+        height=3,
+        width=3,
+        depth=6
+        }
+    };
+
+
+\draw [connection]  (conv3-east)    -- node {\midarrow} (fcn1-west);
+
+
+\draw [connection]  (conv3-east)    -- node {\midarrow} (fcn2-west);
+
+
+\pic[shift={(2,-2,0)}] at (fcn1-east) 
+    {Box={
+        name=conv4,
+        caption=Conv + ReLU,
+        xlabel={{128, }},
+        zlabel=64,
+        fill=\ConvColor,
+        height=6,
+        width=6,
+        depth=6
+        }
+    };
+
+
+\draw [connection]  (fcn1-east)    -- node {\midarrow} (conv4-west);
+
+
+\draw [connection]  (fcn2-east)    -- node {\midarrow} (conv4-west);
+
+
+\pic[shift={(2,0,0)}] at (conv4-east) 
+    {Box={
+        name=conv5,
+        caption=Conv + ReLU,
+        xlabel={{64, }},
+        zlabel=32,
+        fill=\ConvColor,
+        height=12,
+        width=4,
+        depth=12
+        }
+    };
+
+
+\draw [connection]  (conv4-east)    -- node {\midarrow} (conv5-west);
+
+
+\pic[shift={(2,0,0)}] at (conv5-east) 
+    {Box={
+        name=conv6,
+        caption=Conv + ReLU,
+        xlabel={{32, }},
+        zlabel=32,
+        fill=\ConvColor,
+        height=20,
+        width=2,
+        depth=20
+        }
+    };
+
+
+\draw [connection]  (conv5-east)    -- node {\midarrow} (conv6-west);
+
+
+\pic[shift={(2,0,0)}] at (conv6-east) 
+    {Box={
+        name=conv7,
+        caption=Conv + ReLU,
+        xlabel={{32, }},
+        zlabel=1,
+        fill=\ConvColor,
+        height=20,
+        width=2,
+        depth=20
+        }
+    };
+
+
+\draw [connection]  (conv6-east)    -- node {\midarrow} (conv7-west);
+
+
+\node[canvas is zy plane at x=3] (output) at (conv7-east) {\includegraphics[width=8cm,height=8cm]{imgs/mnist.jpeg}};
+
+
+\draw [connection]  (conv6-east)     -- node {\midarrow} ($(output) + (0.5,0,0)$);
 
 
 \end{tikzpicture}
 }
-    \caption[Architecture of the CNN for vertical self-organisation]{The network architecture of the CNN for vertical self-organisation with fully connected layers.}
+    \caption[Architecture of the VAEs with bigger field-of-view up-sampling]{Architecture of the variational autoencoders used for vertical self-organisation with bigger field-of-view up-sampling.}
     \figlbl{vertical_org_arch2}
 \end{figure}
 
-The CNN architecture used in this thesis is shown in \figref{vertical_org_arch2}.
-Three convolutional layers with ReLU activation functions and with $16$, $32$, and $64$ channels are used, and max-pooling layers are applied between each convolutional layer. For training, the same hyperparameters and loss functions are used as for the model with fully connected layers.
+When using $4$ VAEs, the input is divided into $4$ patches. If the decoder makes the output twice as large as the input by up-sampling,  the entire image is predicted by each of the VAEs. This process is visualised in \figref{bigger_patches}.
 
-\subsubsection{Hierarchical Diversity Loss}
-A second measure to obtain hierarchical features is to adapt the diversity constraint of the loss function. The current version forces the latent representations of objects of the same class to be similar and those of different classes to be different. This is useful in the last layers, where high-level features (i.e. high-level net fragments) or object representations should be detected and separated from each other. In the first layers, on the other hand, the separation should not depend on the class label. Nevertheless, the activations should also be diverse if low-level features are detected (c.f. Section \secref{neuro_concepts_net_fragments}).
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.99\textwidth]{bigger_patches}
+    \caption[Reconstruction of bigger output than input patches]{Four models receive a quarter of the image as input patch to predict the entire image.}
+    \figlbl{bigger_patches}
+\end{figure}
 
-Therefore, the sparsity constraint is split into two parts: One part ensures that the activations within a (large) mini-batch are diverse and thus enforces that different features are captured and represented by different neurons. The second part ensures, as before, that the activations are diverse for different classes. Thus, one part of the constraint ensures \emph{diversity within the mini-batch} and the other part ensures \emph{diversity between different classes}.
 
-These two parts are weighted linearly from the first to the last layer. Since the first layer should have a high diversity within the mini-batch, it has a high weight on the first part of the diversity constraint and a low weight on the second part. The last layer has an inverse weighting and pays more attention to the diversity constraint's second part than the first part.
 
-The first part of the diversity constraints ensures diversity within a mini-batch. This is achieved by ensuring that each neuron within a mini-batch should be active. 
+\subsection{Communication}\seclbl{vertical_self_org_methods_communication}
+The VAEs receive patches of the input image and thus have a limited field of view on the image.
+Figure \figref{average_sample} visualises the patches that are fed into the VAEs when the MNIST dataset \cite{Lecun_Bottou_Bengio_Haffner_1998} is used.
+The first row shows the average of all images of the same class. Thus, these images are very representative for the dataset.
+However, none of the models receives the entire image as input. Instead, the patches shown in the 2nd to the 5th row are fed into the VAEs.
+The patches, which only depict a quarter of the image, look rather similar for some classes. For example, the top-left patches of the classes $0$ and $9$, as well as the classes $4$, $5$, and $6$, look very similar.
+Thus, these classes are not separable by \emph{one} single VAE on its own.
+Therefore, communication with neighbouring models is necessary to agree on an image representation.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.99\textwidth]{average_sample}
+    caption[Average sample of the MNIST dataset per class]{The average of all samples in the MNIST dataset for each class. The first row shows the average of all samples, and the 2nd to 5th row is the average per patch fed into the models.}
+    \figlbl{average_sample}
+\end{figure}
+
+
+This concept links well to the biological model: A single VAE can be seen as a neuron or a group of neurons. Initially, the VAEs have many suggestions to which classes the received patch could belong. However, through communication with neighbouring VAEs, suggestions are constantly ruled out because neighbouring VAEs do not support them. Thus, out of many suggestions, only the most valid ones are retained, resulting in an image representation. The biological model behaves similarly: At first, many neurons are active because they are excited by the captured image. However, this strong activation quickly becomes sparse as only the neurons supporting each other remain active. This process leads to the emergence of higher-level features (i.e. net fragments) that are representative of the captured input \sidecite{Malsburg_1987}.
+
+One of the biggest strengths of autoencoders is that they do not rely on labels but can be trained in an unsupervised manner. To keep this strength, also communication should not rely on labels. Therefore, different types of communication are proposed that work without labels: communication based on latent representations, communication based on reconstructed images, and communication via a dedicated communication channel.
+
+All these types of communication take place over two or more time steps. First, image patches are reconstructed by all VAEs. As a result, each VAE generates information in latent space. Then, this information can be communicated to the neighbouring VAEs. Thus, in a second time-step, the VAEs have more information available: their prediction is based on the reconstructed image patch and information from neighbouring VAEs. This additional information allows them to improve their prediction. The process can be repeated over a fixed number of time steps or until the network reaches an attractor state (i.e. the latent representations no longer change). In the following, different types of communication are proposed.
+
+
+\subsubsection{Model Heads}
+Each VAE learns the mapping from a patch to a latent space with Gaussian distribution, i.e. obtains a $\boldsymbol{mu}$ and $\boldsymbol{sigma}$ for each sample that is used to predict a reconstructed version of the input.
+The arrangement of the representations within the latent space is not predetermined by an external system but is fself-organised. A consequence of independent systems is that $\boldsymbol{mu}$ and $\boldsymbol{sigma}$ have different meanings in the latent spaces of different VAEs. Thus, one VAE cannot interpret the Gaussian parameters of another VAE.
+
+In this thesis, it is proposed to learn a linear transformation to map the Gaussian parameters of one VAE to the Gaussian parameters of another VAE. The mapping from $\boldsymbol{mu}_1$ to $\boldsymbol{mu}_2$, respectively from $\boldsymbol{sigma}_1$ to $\boldsymbol{sigma}_2$ is done by the simple transformation
+
+\begin{align}\eqlbl{hso_7}
+	\boldsymbol{\hat{\mu}}_2 = \boldsymbol{w}_{m12} \cdot \boldsymbol{\mu}_1
+\end{align}
+
+resp.
+
+\begin{align}\eqlbl{hso_8}
+	\boldsymbol{\hat{\sigma}}_2 = \boldsymbol{w}_{s12} \cdot \boldsymbol{\sigma}_1
+\end{align}
+
+The weights $\boldsymbol{w}_{mij}$ and $\boldsymbol{w}_{sij}$ between VAE $i$ and VAE $j$ are learned by minimising the mean square error with gradient descent between the predicted and true Gaussian parameters, i.e. between $\boldsymbol{\mu}_j$ and $\boldsymbol{\hat{\mu}}_j$, resp. $\boldsymbol{\sigma}_j$ and $\boldsymbol{\hat{\sigma}}_j$. This process is illustrated for VAE 1 in \figref{hso_head}: First, the Gaussian parameters of each model must be predicted for the same sample. Afterwards, the Gaussian parameters of one model can be used to predict the Gaussian parameters of the other models with a linear transformation.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.99\textwidth]{hso_head}
+    \caption[Prediction of Gaussian parameters of other VAEs]{Visualisation of how the first VAE can predict the Gaussian parameters of the other VAEs.}
+    \figlbl{hso_head}
+\end{figure}
+
+If each VAE predicts the Gaussian parameters of the other VAEs, then these predictions can be communicated, and each VAE receives further suggestions from neighbouring VAEs. Thus, each VAE has its own calculated Gaussian parameters and suggestions from neighbours about what its Gaussian parameters might be. This allows a VAE to correct its prediction. Each VAE receives additional information because the suggestions made by neighbouring VAEs are based on a different patch. For example, the VAE that sees only one patch from the top left of the image cannot distinguish the digits $5$ and $6$. On the other hand, the VAE that sees the patch at the bottom left can distinguish these digits. Thus, the VAE at the bottom left can help the VAE at the top left to choose a better latent representation.
 
 TODO: At the moment, various experiments are still ongoing to find out how this can be implemented (therefore, not yet explained in more detail).
 
 
-\subsubsection{Two-Way Information Flow}
-Hinton \sidecite{ff_algo} introduced with the forward-forward (FF) algorithm (c.f. Section \secref{alt_train_algo}) a promising idea for models based on proxy objective functions: 
-The image is fed into the input layer of the network, and the corresponding label is fed into the output layer of the network. The image remains static for several time steps, and the network is trained to push the layer's activations above a certain threshold. In a second stage, the image is fed into the network with the wrong label and the network is trained to push the activations below a certain threshold. He found that a feature hierarchy is created when low-level features (i.e. images) are fed into the network from one end and high-level features (i.e. class labels) are fed into the network from the other end. However, this approach has one major disadvantage: During inference, each possible sample-label combination has to be fed into the model, and the label that caused the highest neural activity is used as the model's prediction.
+\subsubsection{Reconstructed Images}
+As described in \secref{vertical_self_org_methods_bigger_patches}, the prediction of larger patches helps to arrange the latent space better. However, the prediction of larger patches can also be used for communication with neighbouring VAEs: Instead of extracting representations from the latent space and transmitting them to neighbouring VAEs as described in the last section, the reconstructed image can also be exchanged. This is done by predicting a part of the image in a first time-step and by adding this prediction to an additional input channel of another VAE in the next time-step. Various data can be forwarded to other VAEs:
 
-In this thesis, this is implemented in a different way, which does not have this disadvantage. Identical to the FF algorithm, the image is fed into the network's input layer for multiple time steps. Conversely, the label is not fed directly into the output layer but is made available to the last layer within the loss function. Each layer maximises the mutual information (MI) between its activations and the activations of the previous and subsequent layers. Thus, the first layer maximises the MI between the input image and its activations, the last layer maximises the MI between its activations and a label vector. This creates a feature pyramid in which a smooth transition from concrete samples to abstract class labels is learned. During inference, the last layer directly predicts latent representations that can be assigned to a class.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.80\textwidth]{recon_patch_forw}
+    \caption[Communication between VAEs by forwarding reconstructed patch]{Communication between VAEs by forwarding reconstructed patch, example based on the first VAE: The first VAE predicts the image and forwards the reconstructed patch (the same patch that was fed into the model) to the other VAEs.}
+    \figlbl{recon_patch_forw}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.80\textwidth]{neighbouring_patch_forw}
+    \caption[Communication between VAEs by forwarding prediction of neighbouring patches]{Communication between VAEs by forwarding prediction of neighbouring patches, example based on the first VAE: The first VAE predicts the image and forwards a prediction of how the neighbourhood could look like to the other VAEs. Thus, each other VAE receives a patch and a prediction of the first VAE how this patch could look as input.}
+    \figlbl{neighbouring_patch_forw}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.80\textwidth]{recon_img_forw}
+    \caption[Communication between VAEs by forwarding prediction of the entire image]{Communication between VAEs by forwarding prediction of the entire image, example based on the first VAE: The first VAE predicts the image and forwards the prediction of the image to the other VAEs.}
+    \figlbl{recon_img_forw}
+\end{figure}
+
+
+
+\begin{description}
+	\item [Reconstructed Patch] Each VAE reconstructs its input patch and optionally a part of the neighbourhood. It tells the other VAEs how the reconstructed version of its input patch looks. Information about the optionally reconstructed neighbourhood is not communicated to other VAEs. Thus, a reconstructed version of the input is sent to other VAEs and added as a new channel to their input. This process is visualised for the first VAE in \figref{recon_patch_forw}. The problem with this approach is that during the first time-step, all VAEs communicate their reconstructed patch to the neighbouring VAEs. As a result, in the second time-step, each VAE receives information about the entire image and thus has access to global instead of only local image information\sidenote{even with a huge number of VAEs and communication restricted to the local neighbourhood, information about the entire image propagates to all VAEs over time, provided enough time-steps are executed}.  
+	\item [Neighbouring Patch] Instead of communicating the reconstructed input patch to the neighbours, a prediction can be made of what the input patch of the neighbour looks like, and this prediction can be communicated. This has the advantage that each VAE receives different versions of the same patch as input and thus has no global image information. This process for the first VAE is visualised in \figref{neighbouring_patch_forw}. Intuitively, this can solve the following problem: If a VAE cannot decide which digit to predict, neighbouring VAEs can help it by predicting its input patch in a form that is more similar to one of the digits and thus support the VAE by making its decision. 
+	\item[Entire image] The simplest version is when each VAE predicts the entire image and communicates this to all other VAEs. In the first time-step, only local information is available. In the second time-step, various predictions of how the image could look are additionally provided. Each VAE can then correct its prediction based on these predictions of the other VAEs. This process is represented in \figref{recon_img_forw}. Identical to ``reconstructed patches'', global image information is made available to each VAE. This problem can be alleviated if each VAE $i$ that receives the input patch $\boldsymbol{p}_i \subset
+ \boldsymbol{x}$, masks out $\boldsymbol{p}_i$ in its predictions, i.e. only communicates $\boldsymbol{c}_i \subset \boldsymbol{\hat{x}}$ where $\boldsymbol{p}_i \nsubseteq \boldsymbol{c}_i$. Otherwise, an input patch of a VAE is fed through the encoder, and the decoder's prediction is communicated to the other VAEs. Then implicitly reconstructed data, not just neighbourhood predictions, are forwarded to other VAEs as input. 
+\end{description}
+
+
+
+
+
+
+
+
+
+
+
+
+\subsubsection{Communication Channel}
+Another way to communicate is through a dedicated communication channel. For this purpose, each VAE has not only $1$ input and $1$ output channel but $4$ input and output channels. The input patch is fed into the first channel, and a reconstructed version is predicted in the first output channel. Thus, the first channels correspond to a classic VAE, and the loss function remains identical.
+The remaining three channels are for communication: Each VAE generates a separate communication output for its three neighbouring VAEs. Thus, each VAE receives an input patch to reconstruct and communication data. These four input matrices are stacked and fed into the encoder. For example, the first VAE receives a given patch on the input channel $1$ and communication data from the 2nd, 3rd, and 4th VAE on the input channels $2$-$4$. Based on this information, it outputs a patch reconstruction on the output channel $1$ and communication data that is sent to the 2nd, 3rd, and 4th VAE on the output channels $2$-$4$. Thus, there is a dedicated two-way communication channel between each neighbouring VAE. This is shown in \figref{vae_comm_channel}.
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.99\textwidth]{mi_loss}
-    \caption[Vertical self-organisation with mutual information loss]{Vertical self-organisation with mutual information loss: Each layer maximises the mutual information (MI) between its activations and the activations of the previous and subsequent layers. The first layer maximises the MI between its activations and the input image (instead of the previous layer), and the last layer maximises the MI between its activations and the image label (instead of the subsequent layer).}
-    \figlbl{mi_loss}
+    \includegraphics[width=0.89\textwidth]{vae_comm_channel}
+    \caption[Communication between VAEs with a dedicated communication channel]{Each VAE has one output channel to receive and reconstruct a given image patch. The other input and output channels are used for communication: Each VAE has for each other VAE a separate output channel to send messages and an additional input channel to receive messages.}
+    \figlbl{vae_comm_channel}
 \end{figure}
 
-This process is visualised in Figure \figref{mi_loss}. 
+The loss function remains the same for the first output channel since the goal is still the same, i.e. to reconstruct the output as well as possible and to have a well-shaped latent space. The only difference is that model can now access four input channels instead of one. However, the communication channels must be trained in order for them to be helpful for input reconstruction. Therefore, an additional loss term is applied to the $3$ output communication channels. Thereby, the idea is to optimise the output of these communication channels so that the other VAEs can better reconstruct their patch.
+
+Let $V = {V_1, ..., V_n}$ be the set of $n$ VAEs. Each VAE has $n$ output channels, one channel for the reconstructed image and $n-1$ channels for communication. Furthermore, each VAE $V_i$ has a loss $\mathcal{L}_{\text{VAE}_i}$ based on the reconstruction goodness and the shape of the latent space (c.f. \eqref{hso_6}). The $3$ communication channels of VAE $i$ can influence the loss $\mathcal{L}_{VAE_j}$ of VAE $j$ (i.e. help to improve the loss by providing better information). How helpful the communication channels are can therefore be determined by the average loss of the other VAEs.
+
+\begin{align}\eqlbl{hso_9}
+	\mathcal{L}_{c_i} = \frac{1}{n-1} \sum_{n}^{j=1} \mathcal{L}_{\text{VAE}_j} \text{, if } i \neq j
+\end{align}
+
+Thus, the loss of a VAE with a communication channel is
+
+\begin{align}\eqlbl{hso_10}
+		\mathcal{L}_{{\text{VAE}_C}_i} = \mathcal{L}_{\text{VAE}_i} + \beta \cdot \mathcal{L}_{\text{KLD}_i} + \beta_2 \cdot \mathcal{L}_{c_i}
+\end{align}
+
+where $\beta_2$ is a weight factor for the communication channel. Thus, each model optimises its own reconstruction error, the shape of the latent space, and tries to improve the latent space and reconstruction error of other VAEs.
 
 
-TODO: Currently, various experiments are ongoing to find out how this can be implemented (therefore, yet to be explained in more detail).
+TODO: This still needs to be implemented (therefore, not explained in more detail).
+
+\subsection{Class Prediction}
+The VAEs are examined to determine whether they are suitable for predicting the class label. First, all VAEs are trained until they can reliably reconstruct images and the latent space is well formed.
+After training, the average value of $\boldsymbol{\mu}$ is determined for each class $c \in C$ from the training set and each VAE. This average value is called $\boldsymbol{\mu}_{\text{avg}_c}$ and is defined for $n_c$ samples of the class $c$ as
+
+\begin{align}\eqlbl{hso_12}
+		\boldsymbol{\mu}_{\text{avg}_{vc}} = \frac{1}{n_c} \sum_{i=1}^{n_c} \boldsymbol{\mu}_i
+\end{align}
+
+This average value can be considered the ``cluster centre'' of a class in latent space. In addition, $\boldsymbol{\mu}_{\text{avg}_{vc}}$ is a world model of a class. A given sample is matched against these world models per class to make a prediction. As with horizontal self-organisation, the cosine similarity between a sample and the class prototypes is used to determine their similarity. To predict a sample $s$, it is fed through the encoder to obtain $\boldsymbol{\mu}_{vs}$ is determined. Then, this sample is compared with all class prototpyes by computing the cosine similarity: 
+
+\begin{align}\eqlbl{hso_13}
+		\text{cos}_{vsc} = \text{cos}(\boldsymbol{\mu}_{vs}, \boldsymbol{\mu}_{\text{avg}_{vc}}) = \frac{\boldsymbol{\mu}_vs \cdot \boldsymbol{\mu}_{\text{avg}_{vc}}}{\max(||\boldsymbol{\mu}_{vs}||_2, ||\boldsymbol{\mu}_{\text{avg}_{vc}}||_2)}
+\end{align}
+
+Thus, the cosine similarity $\text{cos}_{vsc}$ is calculated for each VAE $v$ between the class prototypes $c$ and the sample $s$.
+Afterwards, the class $c$ with the highest average cosine similarity between the sample activations $\boldsymbol{\mu}_{vs}$ and the class prototype $\boldsymbol{\mu}_{\text{avg}_{vc}}$ over all VAEs $v$ is used as the prediction.
+
+\begin{align}\eqlbl{hso_14}
+		\argmax_{c \in C} \frac{1}{4} \sum_{v=1}^{4} \text{cos}_{vsc}
+\end{align}
+
+Similar to horizontal self-organisation, VAEs with higher confidence have a higher cosine similarity between a class prototype and a specific class and thus have more influence on the class prediction than if the confidence is lower and the cosine similarity between the sample and all class prototypes is similarly large.
+
+TODO: This has to be improved by also considering the standard deviation
 
 
-%\subsection{Efficient Parallel Training}
-%Idee: Nachfolgelayer einbeziehen in Loss -> Nachfolgelayer ist gefroren, Output muss aber möglichst gut sein (sollte Performance nicht verschlechtern von Nachfolgelayer) + eigene Performance verbessern
+TODO: Another improvement is to use multiple prototypes per class as digits may be written differently (depending on the person) and thus look different
 
 
-\section{Results}\seclbl{vertical_self_org_methods_results}
-The results obtained by this model are presented below. It is important to note that these models aim not to achieve the best possible results in terms of classification accuracy on a benchmark. In large-scale comparisons, it has often been found that end-to-end backpropagation of error is far superior to other methods, especially in image classification \sidecite{Bartunov_Santoro_Richards_Marris_Hinton_Lillicrap_2018}. Instead, the aim here is to examine interesting concepts that are more biologically plausible and can inspire future work.
-
-\subsection{Dataset}\seclbl{vertical_self_org_methods_dataset}
-The model was trained and evaluated on the MNIST \cite{Lecun_Bottou_Bengio_Haffner_1998} dataset. It is a dataset of handwritten digits with $60'000$ training samples and $10'000$ test samples.
-In this thesis, the predefined training and test split is used.
-The samples are images of a digit with the resolution $28 \times 28$ pixel in grayscale, i.e. has one colour channel.
-
-In addition, the models are evaluated on MNIST-C \sidecite{Mu_Gilmer_2019}, a corrupted MNIST benchmark for testing the out-of-distribution robustness of image classification models. This dataset consists of the MNIST data with $15$ types of corruptions applied to the samples.
-
-\subsection{Baseline Model}
-The base model consists of $4$ fully connected layers with $512$, $256$, $128$ and $64$ neurons as shown in \figref{vertical_org_arch1}.
-No lateral connections or communication across multiple time steps are used for the baseline. In addition, the measures described in \secref{vertical_self_org_hierarchical_features} are not used.
-This model achieves an accuracy on MNIST of $93.7\%$. This accuracy is remarkably good considering that the model has never been explicitly trained for classification with, for example, a cross-entropy loss.
-Furthermore, the model is trained extremely fast because these local updates are suitable for batch-gradient descent and not only mini-batch gradient descent.
-Each layer also has a different accuracy, typically in the range of $90.1\% - 92.9\%$. However, due to the implicit voting using the sum over the cosine similarities, the prediction of the entire model is better than that of a single layer.
+\subsubsection{VQ-VAE}
+In the case of classification, the latent space has to be shaped in a way that allows to assign a latent representation to a class.
+This can be simplified if the encoder maps the input image to a discrete variable in the latent space.
+Vector quantised variational autoencoders (VQ-VAE) \sidecite{NIPS2017_7a98af17} model such a discrete latent space by using vector quantisation (VQ).
+Vector quantisation is a method that maps multi-dimensional vectors to a finite set of ``code''-vectors.
+Thus, an image is fed into the encoder to obtain the encoder output $\boldsymbol{h}_e$.
+Afterwards, a nearest neighbour lookup is made to find the code vector most similar to $\boldsymbol{h}_e$.
+The code-vector, also called the quantised vector $\boldsymbol{h}_q$, is fed into the decoder to reconstruct the image.
 
 
-\subsection{Lateral Connections}
-TODO: How do lateral connections improve the result?
+TODO: This still needs to be implemented (therefore, not explained in more detail).
 
 
-\subsection{Hierarchical Features}
-TODO: How do hierarchical features improve the result?
+\section{Results}\seclbl{vertical_self_org_results}
+As for horizontal self-organisation (.c.f \secref{horizontal_self_org_methods_dataset}), the MNIST \cite{Lecun_Bottou_Bengio_Haffner_1998} and MNIST-C \cite{Mu_Gilmer_2019} datasets are used to evaluate the models. 
+
+Different models are trained to evaluate this architecture. A single VAE is used as the baseline (i), which receives the entire image as input and reconstructs it. This VAE is obviously trained without time steps and communication. Vertical self-organisation is done using $4$ VAEs ($2\times 2$) in different settings: Four independent VAEs are trained (without time steps and communication), each VAE receives a non-overlapping image patch as input and either reconstructs the received patch (ii) or predicts the entire image (iii). Furthermore, different types of communication are added: First, the VAEs forward the reconstructed \emph{input patch} to the other VAEs (according to \figref{recon_patch_forw}). This communication takes place over $4$ time steps, and the VAEs are trained by either reconstructing the input patch (iv) or predicting the entire image\sidenote{but despite the prediction of the entire image, only the prediction of the reconstructed patch is communicated to the other VAEs.} (v). Second, each VAE predicts the whole image and forwards the predicted \emph{input patch of the neighbour} to the other VAEs over $4$ time steps  (vi) (c.f. \figref{neighbouring_patch_forw}). Third, the VAEs are used to predict the whole image over one time step, and the \emph{predicted image} is forwarded to the other VAEs (e.g. \figref{recon_img_forw}) (vii). \tabref{hso_models} gives an overview of the models described.
+
+
+\begin{table}[h] 
+    \centering
+	 \begin{tabular}{l l l l l}
+    	\textbf{No.} & \textbf{$n$ VAEs} & \textbf{Reconstruction} & \textbf{Communication} & \textbf{Time-Steps}\\
+        \hline
+		i & 1 & Image & -  & -\\
+		ii & 4 & Patch & -  & -\\
+		iii & 4 & Image & - & -\\
+		iv & 4 & Patch & Input Patch & $4$\\ %p_diff
+		v & 4 & Image & Input Patch & $4$\\  %p_diff
+		vi & 4 & Image & Neighbouring Patch & $4$\\ %p_same
+		vii & 4 & Image & Image & $1$\\
+    \end{tabular}
+    \caption[Different models to evaluate vertical self-organisation]{Different models for evaluating vertical self-organisation: The first column shows a number used as a reference id in this thesis. The second column shows the number of VAEs used, the third column whether the input field or the whole image is reconstructed, the fourth column what is communicated to the neighbouring VAEs, and the fifth column over how many time steps the communication takes place.}
+    \tablbl{hso_models}
+\end{table}
+
+The number of time steps is a design decision: obviously, the models without communication do not need time steps. In the case where each VAE predicts the entire image and forwards it to the other VAEs, only one time step is used. This means that the entire image is predicted once and then forwarded to the other VAEs. It has been observed that one time step is sufficient and that the predictions do not change in further time steps. This could be due to the fact that all relevant information is already transmitted within one time step when the entire image is sent, and no further communication cycles are necessary. However, if only a patch of the image is forwarded to the other VAEs, the predictions may be updated over several time steps. This thesis uses $4$ time steps when the communication is based on patches. The predictions usually do not change after $4$ time steps, and thus, using $4$ time steps seems enough. When only patches are forwarded, the models contain much more dynamics: a VAE predicts something, communicates it to its neighbours and receives data from its neighbours. In a subsequent time step, the VAE has more information and can correct its prediction, which in turn can lead to a correction of a neighbour's prediction. Thus, the VAEs correct each other over several time steps. An example of four predicted samples is shown in \figref{hso_over_time}: The left side shows the initial prediction of the model (vi), and the right side the prediction of the same image after $4$ time steps. This visualisation indicates that the predictions are improved thanks to communication. The investigation of the reconstruction error confirms the efficiency of the communication: The initial prediction without communication has an average reconstruction error of $0.23$, and the prediction after $4$ time step has an error of $0.16$.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.79\textwidth]{hso_over_time}
+    \caption[Change of the model's prediction over time]{Four random predictions of the model (vi) over $4$ time-steps: The initial prediction is shown on the left and the prediction after $4$ communication cycles on the right.}
+    \figlbl{hso_over_time}
+\end{figure}
+
+Of particular interest is not how well the samples are reconstructed but how well the latent space is shaped. Visualising the $\boldsymbol{\mu}$ values is a simple way to investigate the latent space. Therefore, the $\boldsymbol{\mu}$ vectors with a length of $n=32$ are reduced to $2$ dimensions using t-SNE \sidecite{van2008visualizing} and visualised. Since $25$ VAEs are trained in this evaluation, visualising all t-SNE plots is infeasible. Instead, \figref{hso_tSNE} only shows the plot of the baseline, the plot of the model (ii) as an example of an architecture without communication, and the plot of the model (vi) as a representative example of an architecture with communication. 
+
+As expected, the latent space of model (i), which receives the entire image as input, is well organised, and the classes are distinguishable within the latent space. Model (ii) consists of $4$ VAEs without communication. Its latent space is less well organised: the classes are no longer clearly identifiable as clusters. However, it is interesting to note that each VAE can separate certain classes better than others because of the different patches it receives as input. Considering all $4$ VAEs, each class can be relatively well identified by at least one VAE, while no VAE can identify all classes. This indicates the benefit of communication between the VAEs.
+By applying the proposed measures (i.e. communication and predicting the whole image instead of reconstructing the input patch), the structure of the latent space for each VAE improves significantly: almost every VAE is able to separate the classes. This supports the usefulness of the proposed measures.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.99\textwidth]{hso_tSNE}
+    \caption[t-SNE plot of the $\boldsymbol{\mu}$ values of different models]{t-SNE plot of the $\boldsymbol{\mu}$ values of four different models: The first row shows the baseline model ($1$ VAE), the second row the model (ii) that consists of $4$ VAEs without communication, and the third row the model (vi) that uses $4$ VAEs with communication channels. Each point in the plot corresponds to a sample, the samples are coloured according to their class.}
+    \figlbl{hso_tSNE}
+\end{figure}
+
+
+Another way to evaluate the latent space is to measure its suitability for classification. The suitability for classification can be measured by applying a k-means clustering and then calculating the normalised mutual information (NMI) score between the cluster centres and the labels. This metric compares cluster assignments and labels by calculating their consistency: It measures how well a cluster can be assigned to a label. \tabref{hso_nmi} shows the NMI scores of the models.
+The NMI score is challenging to interpret as a number, and it is unclear what, for example, a score of $0.6$ means for model (i). However, a relative comparison of the scores is of much more interest. Model (i) is a single VAE that receives the entire image as input, not just a patch of it. Therefore, this model is assumed to have a well-formed latent space, and the value of $0.6$ is close to an upper bound for an excellent latent space.
+
+It is evident that the latent space is significantly better shaped when the whole image is predicted and not only the input patch is reconstructed. For example, models (ii) and (iii) as well as (iv) and (v) are the same models, but one of the models reconstructs the input patch and the other one predicts the entire image. The models that predict the whole image are significantly better: the NMI value increases on average from $0.36$ to $0.53$ (model (ii) $\rightarrow$ model (iii)) and from $0.37$ to $0.59$ (model (iv) $\rightarrow$ model (v)) respectively.
+
+A slight improvement through communication can also be observed. Model (iii) consists of $4$ VAEs without communication and predicts the whole picture. It achieves an NMI value of $0.53$. The models with communication are all better, reaching NMI values of $0.59$ (model (v)), $0.54$ (model (vi)) and $0.54$ (model (vii)). However, the improvement is not as significant as for the prediction of the whole image. This is probably due to the fact that the image patches are too large and more VAEs should be used. For example, model (iii) has a very high NMI score compared to the baseline, indicating that this model can classify the samples even though no communication is used, and therefore, the patches contain too much information. This makes communication less important, and adding communication does not significantly improve results.
+
+
+\begin{table}[h] 
+    \centering
+	 \begin{tabular}{l l l l}
+    	\textbf{No.} & \textbf{Avg. NMI} & \textbf{Min. NMI} & \textbf{Max. NMI}\\
+        \hline
+		i & $0.60$ & $0.60$ & $0.60$ \\
+		ii & $0.36$  & $0.29$ & $0.39$ \\
+		iii & $0.53$ & $0.49$ & $0.56$ \\
+		iv & $0.37$ & $0.33$ & $0.41$\\
+		v & $0.59$ & $0.58$ & $0.61$ \\
+		vi & $0.54$ & $0.49$ & $0.60$ \\
+		vii & $0.54$ & $0.49$ & $0.59$\\
+    \end{tabular}
+    \caption[NMI score of different architectures]{The NMI score between the $\boldsymbol{\mu}$ cluster centres and the ground-truth label. The clusters are calculated by using the k-means algorithm. Most models consist of several VAEs, therefore the average, minimum and maximum NMI values are reported for all VAEs per model.}
+    \tablbl{hso_nmi}
+\end{table}
+
+Finally, the proposed classification method is evaluated. For this purpose, the accuracy on the MNIST and MNIST-C datasets is determined for each model. The results are shown in \tabref{hso_accuracy}.
+For each VAE of a model, the cosine similarity according to \eqref{hso_13} between a sample and a class prototype is calculated. Thus, the accuracy can be calculated not only for the entire model (i.e. all $4$ VAEs together) but also for each VAE independently. \tabref{hso_accuracy} shows the average accuracy per VAE in the column ``Avg. VAEs''. Furthermore, by calculating the average cosine similarity, voting over all VAEs is performed. The accuracy of this voting is shown in the column ``Overall''. The voting works exceptionally well: for example, model (ii) has $4$ VAEs with an average accuracy of $62.4\%$ on the MNIST dataset. The best VAE has an accuracy of $66.1\%$, and the worst $59.7\%$. By voting, the overall accuracy increases to $81.7\%$, significantly better than the best VAE.
+
+On the MNIST dataset, the base model (i) is significantly outperformed by some models in terms of accuracy. However, robustness (measured on MNIST-C) is not significantly improved by using multiple VAEs. As with the evaluation of the NMI score, it can be observed that models that predict the entire image perform better than models that only reconstruct a patch of the image. Furthermore, the accuracy of the models without communication is generally very high, suggesting that the image patches are too large and more VAEs should be used.
 
 
 
+\begin{table}[h] 
+    \centering
+	 \begin{tabular}{l l l l l}
+	 	& \textbf{Avg. VAEs} & \textbf{Overall} & \textbf{Avg. VAEs} & \textbf{Overall}\\
+    	\textbf{No.} & \textbf{MNIST} & \textbf{MNIST} & \textbf{MNIST-C} & \textbf{MNIST-C}\\
+        \hline
+		i & - & $85.2\%$ & - & $63.4\%$ \\
+		ii & $62.4\%$ & $81.7\%$ & $42.3\%$ & $60.9\%$ \\
+		iii & $78.2\%$ & $89.9\%$ & $45.4\%$ & $64.9\%$ \\
+		iv & $63.8\%$ & $82.6\%$ & $41.8\%$ & $60.5\%$  \\
+		v & $86.1\%$ & $87.6\%$ & $62.4\%$ & $65.2\%$ \\
+		vi & $88.4\%$ & $91.1\%$ & $50.4\%$ & $59.2\%$ \\
+		vii & $78.5\%$ & $90.0\%$ & $46.8\%$ & $64.2\%$ \\
+    \end{tabular}
+    \caption[Accuracy of different architectures]{The accuracy of different models on the MNIST and MNIST-C dataset. The average accuracy per VAE and overall accuracy are reported for both datasets. The average per VAE is the average accuracy when each VAE makes a prediction on its own (i.e. choosing the highest cosine similarity per VAE according to \eqref{hso_13}). The overall accuracy is calculated by averaging the cosine similarity according to \eqref{hso_14}.}
+    \tablbl{hso_accuracy}
+\end{table}
 
+The accuracy was calculated by comparing a sample with \emph{one} prototype per class. However, using only one prototype is not enough. For example, when looking at the t-SNE plots in \figref{hso_tSNE}, the same class is divided into more than one cluster. The calculation of the NMI score also indicates that one prototype per class is insufficient: When more clusters are used for k-means clustering, the NMI scores become higher. This is also in line with the analysis of the data and the findings of horizontal self-organisation (c.f. \secref{future_vso}). Thus, the number of prototypes per class should be increased.
 
 
 
@@ -453,5 +730,5 @@ TODO: How do hierarchical features improve the result?
 %Sind alle Vektoren bold?
 
 % TODO: target function und objective function vereinheitlichen
-% TODO: net fragment or net fragment
+% TODO: net fragment or net fragment, dataset or dataset, time-step or time step
 
