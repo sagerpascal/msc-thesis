@@ -10,7 +10,7 @@ Afterwards, \secref{neuro_concepts_net_fragments} discusses net fragments. Next,
 
 
 \section{The Discrepancy}\seclbl{neuro_concepts_discrepancy}
-The human brain inspired deep learning, and consequently, many essential components of a deep learning model are named after their biological counterparts. Nevertheless, this linkage is misleading: both systems work fundamentally different, and transferring concepts from one field to the other is not straightforward. This confusion of terminology between deep learning concepts and insights from neuroscience hinders and, in some cases, prevents the development and implementation of novel concepts\sidenote{a lesson that probably has to be learnt by anyone researching along the ridge of these two fields}. 
+The human brain inspired deep learning, and consequently, many essential components of a deep learning model are named after their biological counterparts. Nevertheless, this linkage is misleading: both systems work fundamentally differently, and transferring concepts from one field to the other is not straightforward. This confusion of terminology between deep learning concepts and insights from neuroscience hinders and, in some cases, prevents the development and implementation of novel concepts\sidenote{a lesson that probably has to be learnt by anyone researching along the ridge of these two fields}. 
 
 In the biological context, neurons are the main component of the nervous system.
 A neuron is a well-defined cell consisting of components such as the cell body, dendrites, and an axon communicating with other neurons via synapses (c.f. \secref{neurons}).
@@ -18,7 +18,7 @@ Consequently, in the neuroscience context, it is clearly defined what a neuron i
 
 In the field of deep learning, this definition is much vaguer. It could even be argued that neural networks do not contain neurons: Deep learning systems model and optimise weight parameters. Admittedly, multiplying a weight matrix $\boldsymbol{W}$ with input data $\boldsymbol{x}$ and adding a bias $\boldsymbol{b}$, i.e. $\boldsymbol{W} \cdot \boldsymbol{x} + \boldsymbol{b}$, can be interpreted as the mathematical model of a neuron\sidenote{however, also in this case, weights and not neurons are modelled explicitly} (c.f. Section \secref{ann}).
 However, only the parameters $\boldsymbol{W}$ and $\boldsymbol{b}$ exist as actual parameters, while an artificial neuron is rather a mental construct.
-Furthermore, modern network architectures are typically not solely based on such fully-connected modelling pattern.
+Furthermore, modern network architectures are typically not solely based on such fully-connected modelling patterns.
 Modern deep learning architectures for computer vision are usually based on either convolutional operations (c.f. \secref{cnns}) or attention mechanisms \sidecite{Dosovitskiy_Beyer_Kolesnikov_Weissenborn_Zhai_Unterthiner_Dehghani_Minderer_Heigold_Gelly_2021}.
 The convolutional and pooling operations of CNNs cannot properly be explained with the simple model of artificial neurons\sidenote{for example, it is unclear how the pre-synaptic and post-synaptic activity is to be interpreted in the context of convolutional layers}.
 The same applies to the attention mechanism of vision transformers. Furthermore, both architectures use various other concepts that have been shown to improve results and computation efficiency, such as normalisation layers, etc.
@@ -27,7 +27,7 @@ As a result, findings from neuroscience are often based on the investigation of 
 Another fundamental difference is the interaction between the neurons. Biological neurons fire electrical impulses when they are sufficiently excited. The synaptic signals generated can be either excitatory or inhibitory. If the biological network is frozen at a certain point in time, it could be argued that a neuron's activity is binary (excited or not excited).
 The output of artificial neurons, on the other hand (or, more precisely, the result of the matrix operation, often referred to as a neuron), is a floating point number and thus can represent an infinite number of states. Furthermore, artificial neurons have no temporal dynamics, while biological neurons communicate with temporal patterns of spikes. Thus, a large part of the intelligence of biological networks lies in the timing of the spikes, which are not taken into account by artificial neural networks. These differences make it extremely difficult to link biological and artificial networks.
 
-Although biological and artificial neuronal networks are fundamentally different in many aspects, there are also many similarities, and biological findings can serve as a source of inspiration. However, this section points out that biological concepts are to be interpreted somewhat abstractly and cannot be implemented as an algorithm in the same form as in the human brain. Therefore, in the following sections, various concepts are discussed, and intuitions are given on how these concepts can be interpreted in a deep learning setting without time dynamics but with complex neuron states.
+Although biological and artificial neuronal networks are fundamentally different in many aspects, there are also many similarities and biological findings can serve as a source of inspiration. However, this section points out that biological concepts are to be interpreted somewhat abstractly and cannot be implemented as an algorithm in the same form as in the human brain. Therefore, in the following sections, various concepts are discussed, and intuitions are given on how these concepts can be interpreted in a deep learning setting without time dynamics but with complex neuron states.
 
 \section{Self-Organisation}\seclbl{neuro_concepts_self_org}
 It is known that large parts of the human brain are self-organising \sidecite{kelso1995dynamic}.
@@ -49,7 +49,7 @@ In fact, the plausibility of backpropagation of error for explaining how the bra
 The biologically most plausible learning algorithm is Hebbian learning (c.f. \secref{hebbian}) and its variants, such as contrastive Hebbian learning \sidecite{Movellan_1991}.
 However, Hebbian learning seems to be not well suited for learning good image representation if a network is trained from scratch. Instead, Hebbian learning might be promising for post-processing already retrieved representations (c.f. Appendix \chref*{exp_hebb_learning}).
 
-Besides Hebbian learning, many alternative and biologically more plausible algorithms have been proposed, such as the feedback alignment (FA) algorithm \sidecite{Lillicrap_Cownden_Tweed_Akerman_2016}, generalised recirculation \sidecite{O_Reilly_1996}, as well as target propagation (TP) \sidecite{Le__Cun_1986} (c.f. \secref{alt_train_algo}).
+Besides Hebbian learning, many biologically more plausible algorithms have been proposed, such as the feedback alignment (FA) algorithm \sidecite{Lillicrap_Cownden_Tweed_Akerman_2016}, generalised recirculation \sidecite{O_Reilly_1996}, as well as target propagation (TP) \sidecite{Le__Cun_1986} (c.f. \secref{alt_train_algo}).
 However, Bartunov et al. \sidecite{Bartunov_Santoro_Richards_Marris_Hinton_Lillicrap_2018} have demonstrated that these algorithms do not scale to large vision datasets such as ImageNet \cite{deng2009imagenet}, and only work for smaller datasets such as MNIST \cite{MNIST}, and CIFAR-10 \cite{cifar_10}.
 The only algorithms that scale well and rely on local updates only use proxy objective functions (c.f. Section \secref*{alt_train_algo}).
 Thus, the use of proxy objective functions\sidenote{proxy objective functions are loss functions that are only applied to local units of a system} seems promising; the weight updates are done in separate local units, yet the power of current deep learning training algorithms can be exploited. Thus, it allows to create complex systems that scale to large datasets while being based on local units interacting with each other.
@@ -60,7 +60,7 @@ Thus, the use of proxy objective functions\sidenote{proxy objective functions ar
 
 Another ambiguity is the definition of local units in a deep learning setting.
 One of the strengths of deep learning systems is that matrix multiplications allow to calculate the layer's outputs in one step.
-Calculating each neuron's activity separately, would be very inefficient.
+Calculating each neuron's activity separately would be very inefficient.
 Therefore, the smallest meaningful unit for local updates is a layer and not a single neuron.
 In this thesis, the layers of a network are optimised separately with proxy objective functions. Doing so makes the local units small but allows optimising them efficiently.
 If a neural network is visualised layer-wise from left to right, the self-organising units (i.e. the layers) line up horizontally. That is why layer-wise self-organisation is referred to as ``horizontal self-organisation'' in this thesis (c.f. \figref{horizontal_vertical_self_org}).
@@ -78,7 +78,7 @@ If a neural network is visualised layer-wise from left to right, the self-organi
 \end{figure}
  
 A second type of self-organisation is not to split the model into separate units but to split the data.
-The input data can be divided into smaller patches and be processed by independent units (i.e. models).
+The input data can be divided into smaller patches and processed by independent units (i.e. models).
 It is important that one model does not process the entire set of existing patches, as it is the case with the vision transformer \sidecite{Dosovitskiy_Beyer_Kolesnikov_Weissenborn_Zhai_Unterthiner_Dehghani_Minderer_Heigold_Gelly_2021}. If only one model is used, end-to-end backpropagation of error is applied to a single unit.
 However, if a graph of independent models processes the patches, each model can be considered a self-organising unit.
 In this thesis, this kind of self-organisation is called  ``vertical self-organisation'' (c.f.  \figref{horizontal_vertical_self_org}).
@@ -87,7 +87,7 @@ In this thesis, this kind of self-organisation is called  ``vertical self-organi
 	A second type of self-organising units are models that process a subset of the input data. In this thesis, this type of self-organisation is called vertical self-organisation.
 \end{implementation}
 
-Self-organisation is considered a key for natural intelligence and not compatible with end-to-end backpropagation of error. Therefore, self-organising units are built by either splitting the model into smaller units (horizontal self-organisation) or by splitting the data into patches (vertical self-organisation).
+Self-organisation is considered a key for natural intelligence and is not compatible with end-to-end backpropagation of error. Therefore, self-organising units are built by either splitting the model into smaller units (horizontal self-organisation) or by splitting the data into patches (vertical self-organisation).
 
 \section{Net Fragments}\seclbl{neuro_concepts_net_fragments}
 Another fundamental principle for intelligence, according to von der Malsburg et al. \sidecite{von_der_Malsburg_Stadelmann_Grewe_2022} is that neurons form net fragments (a.k.a. sub networks) that represent features of objects (c.f. \secref{natural_intelligence}).
@@ -105,7 +105,7 @@ Deep learning models are not based on time-dependent spikes of neurons.
 However, a time step could be interpreted as a forward step from one layer to the next within a network of layers.
 Thus, net fragments would be the activation of multiple layers.
 This interpretation is also in line with the compositional property of net fragments:
-Low-level features, that are detected within the first layers, activate higher-level features in subsequent layers.
+Low-level features that are detected within the first layers activate higher-level features in subsequent layers.
 An object, however, is not represented in the last layer of a neural network but through all activations within the network.
 Thus, representations of objects should not be extracted from a single but from multiple layers.
 Intuitively, this seems promising:
@@ -142,7 +142,7 @@ They are not necessary, for example,  to obtain better classification performanc
 An alternative that leads to robust and meaningful activations as well is to model the net fragments as a probability distribution.
 For example, variational autoencoders (c.f. \secref{visual_rep_learning}) model their latent space as a multivariate Gaussian distribution.
 
-In this thesis, object representations are extracted from multiple layers. Furthermore, the model's latent space is either constraint with sparsity and diversity functions or modelled as probability distribution.
+In this thesis, object representations are extracted from multiple layers. Furthermore, the model's latent space is either constrained with sparsity and diversity functions or modelled as a probability distribution.
 
 \subsection{Sparsity}\seclbl{neuro_concepts_sparsity}
 Sparistiy is an important principle in biological networks.
@@ -241,4 +241,3 @@ The agent can map the captured feedback signals to the object representations of
 
 Furthermore, the agent can learn to understand objects better by improving his internal object representations on his own. For example, suppose the agent examines an object, and his current internal object representation does not describe how the object looks from the side. In that case, the agent can rotate the object accordingly and complete or correct the representation. 
 Such a behaviour could be implemented within the agent, for example, by optimising an entropy-based loss so that the agent explores the data and tries to learn unknown things \sidecite{storck1995reinforcement, Klapper_Rybicka_Schraudolph_Schmidhuber_2001}.
-

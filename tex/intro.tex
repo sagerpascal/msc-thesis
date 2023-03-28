@@ -22,60 +22,20 @@ Even though this technology works very well for many tasks, such models have som
 One of the godfathers of deep learning is Turing Award\sidenote{the Turing Award is recognised as the highest academic award in computer science and sometimes also called the ``Nobel Prize of Computing''} winner Geoffrey Hinton. 
 Especially his contribution to learning with backpropagation of error (c.f. \secref{ann}) has created the foundation for modern deep learning systems.
 More than 30 years later, Hinton says he is ``deeply suspicious'' about end-to-end backpropagation of error. In his opinion, we have to ``throw it all away and start again'' to improve current systems fundamentally \sidecite{axios_hinton}.
-This seems rather extreme considering what DL systems have achieved.
+This seems rather extreme, considering what DL systems have achieved.
 However, it also shows that the learning algorithm of such systems has serious flaws.
 
 Some of the most critical limitations of deep learning systems are listed in \secref{limitationsDL}.
 This thesis addresses these problems by exploring different architectures inspired by findings from neuroscience\sidenote{the field of neuroscience studies how the human nervous system and especially the brain works}.
 The inspiration is drawn from neuroscience, as the human brain is a learning system that does not have these problems. Thus, incorporating findings from neuroscience into the deep learning framework might help overcome some of the current limitations.
 In this thesis, the ``Theory of Natural Intelligence'' by von der Malsburg et al. \sidecite{von_der_Malsburg_Stadelmann_Grewe_2022} in particular is used as inspirational source.
-The aforementioned theory focuses on the visual processing in the human brain, and consequently, deep learning architectures for image processing are examined in this thesis.
+The aforementioned theory focuses on visual processing in the human brain, and consequently, deep learning architectures for image processing are examined in this thesis.
 Thereby, the main focus of this thesis is on \emph{finding new principles} of deep learning architectures rather than on achieving state-of-the-art performance in terms of accuracy or f-score on existing benchmarking datasets.
 
 The thesis differs from neurocomputing\sidenote{neurocomputing is a sub-field of neuroscience that deals with the implementation of learning algorithms with a high degree of biological plausibility} in the sense that the architectures investigated are still closely related to the DL framework and, for example, do not use time-dynamic signals. 
 For the completeness of this thesis, an overview of neurocomputing is given in \secref{neurocomputing}.
 However, since these neurocomputing algorithms have not (yet) become established in practical applications, they are not investigated further.
 Thus, the thesis is strongly oriented along the field of deep learning and focuses on incorporating neuroscience findings in the deep learning framework, while natural plausibility is considered less important.
-
-
-%Mankind is often inspired by nature when it comes to developing novel systems.
-%The development of artificial intelligence (AI) and Deep Learning has been strongly influenced by, according to our perception, one of (if not the) most intelligent systems on planet Earth, the human brain.
-%The brain is studied by the scientific field of neuroscience\sidenote{there exist many additional (sub-)fields studying the brain such as cognitive science, cognitive psychology, neurology, and neuropsychology}.
-%From neuroscience or related fields come various insights on how the human nervous system and especially the brain works.
-%Much of this knowledge has been gained through observations and experiments on humans or other living creatures.
-%Often these findings are only what can be measured from the outside, the real core, the mechanism that causes intelligence, remains unknown.
-%
-%While Deep Learning is clearly inspired by the insights of Neuroscience, the two fields have little in common in their present form.
-%The implementation of neuroscientific findings has emerged as a subfield in its own right, called Neurocomputing (c.f. Section \secref{neurocomputing}).
-%In general, neurocomputing is closer related to the functionality of the human brain than Deep Learning.
-%Neurocomputing has produced many promising algorithms that can overcome some weaknesses faced by deep learning systems. 
-%Although neurocomputing has also achieved significant breakthroughs, most systems used in everyday life are still based on the principle of Deep Learning.
-
-
-%\section{Motivation}\seclbl{motivation}
-%One of the main challenges of today's AI systems is the processing of visual information.
-%Visual perception is fundamentally the task of finding a suitable interpretation of a given scene.
-%A scene typically consists of objects that interact with each other.
-%Identifying these objects and their relationship among each other is implemented by algorithms as a non-deterministic search problem, i.e. algorithms try to identify the object within a scene.
-%State-of-the-art algorithms for image processing are often based on deep learning.
-%Despite the fact that deep learning has achieved incredible performance on a variety of tasks such as object recognition it is still questionable whether the current methodology is enough to achieve real (or at least more advanced) intelligence (c.f. Section \secref*{limitationsDL}).
-%Algorithms from the field of neurocomputing (c.f. Section \secref*{neurocomputing}), which are more closely oriented to the findings from the field of neuroscience, can be considered as a complement to deep learning.
-%However, even tough algorithms from the field of neurocomputing have interesting properties, they usually do not perform as good as deep learning according to the evaluation metrics used and often work on specific or small data only.
-
-%Thus, various algorithms exist to solve the non-deterministic problem of finding an appropriate interpretation of a visual scene, but they have significant shortcomings.
-%Interestingly, the problem of generating a scene\sidenote{the opposite task than finding an interpretation of a scene} from a clear description is deterministic.
-%Computer graphics deals with the problem to generate images with the aid of computers.
-%Nowadays, such systems are able to render photorealistic images based on descriptions.
-%For example, video games are essentially programs that generate scenes consisting of multiple objects such as people, weapons, buildings, or vehicles based on program code.
-%For each of these objects, skeletons are usually pre-defined and during rendering transformed (i.e. their size, rotation, distortion and positioning are adjusted) as well as properly illuminated (raytracing).
-%This allows to generate an infinite number of scenes from a predefined set of skeletons and transformations.
-%Essential in this process seems the separation between objects and object transformation.
-%Therefore, incorporating these insights into current algorithms for the interpretation of visual scenes seems promising and could lead to significant improvements.
-%More precisely, identifying objects and their transformations separately in preception systems in order to recognise objects independently of their transformations could improve visual scene interpretation.
-
-
-%\section{Terminology}\seclbl{terminology}
-
 
 \section{Contribution}
 This thesis makes the following contributions:
@@ -95,6 +55,7 @@ In \chref{horizontal_self_org} and \chref*{vertical_self_org}, two different arc
 \chref{horizontal_self_org} describes a network based on horizontal self-organisation. The proposed model trains each layer in parallel using proxy objective functions and can still extract hierarchical features.
 The model described in \chref{vertical_self_org} uses vertical self-organisation by dividing the data into patches and analysing them on independent but communicating sub-models.
 Finally, in \chref{future_work}, future work is described, and some insights and intuitions of the author are given about which neuroscience concepts seem promising and which do not, and what the next steps for developing more intelligent systems could be.
+
 
 
 

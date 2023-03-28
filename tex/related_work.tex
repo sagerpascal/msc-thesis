@@ -92,11 +92,11 @@ In an iterative process based on local communication, the image fragments agree 
 NCAs can even be used to control reinforcement learning (RL) agents.
 Variengien et al. \sidecite{Variengien_Nichele_Glover_Pontes_Filho_2021} use the observations of the environment as cell states of the NCA. The following states predicted by the NCA are used as Q-value estimates of a deep Q-learning algorithm \sidecite{Mnih_Kavukcuoglu_Silver_Graves_Antonoglou_Wierstra_Riedmiller_2013}.
 
-Self-organisation can not only be used to generate structures, but also to optimise the weights of neural networks.
+Self-organisation can not only be used to generate structures but also to optimise the weights of neural networks.
 For example, self-organisation can be used to meta-learn (c.f. \secref{meta_learning}) a Hebbian learning rule that better adapts to changing conditions in the environment \sidecite{NEURIPS2020_ee23e7ad}:
 The weights of an RL agent's policy are reset in each episode, and a Hebbian-based learning rule is used to learn them from scratch.
 The Hebbian learning rule improves over episodes thanks to self-organisation, allowing the agent to learn more robust weights.
-The method ``evolve and merge`` \sidecite{Pedersen_Risi_2021} implements this principle by using the so called ``ABCD'' Hebbian learning rule which updates the weights as follows:
+The method ``evolve and merge`` \sidecite{Pedersen_Risi_2021} implements this principle by using the so-called ``ABCD'' Hebbian learning rule, which updates the weights as follows:
 \begin{align}\eqlbl{abcd_hebb_rule_risi}
 	\Delta w_{ij} = \alpha (A a_i a_j + B a_i + C a_j + D)
 \end{align}%
@@ -191,7 +191,7 @@ Training end-to-end does not allow controlling the loss function's effect on a h
 Finally, the loss landscapes are non-optimal, which might lead to slow convergence, or the optimisation process can get stuck in a local minimum  \sidecite{Ioffe_Szegedy_2015}.
 
 Hebbian learning (c.f. \secref{hebbian}), on the other hand, is widely accepted in the fields of neurocomputing, psychology, neurology, and neurobiology \sidecite{Widrow_Kim_Park_Perin_2019}.
-Hebbian learning works well, for example, for topographic mappings\sidenote{mapping input data to a discrete representation} \sidecite{Kohonen_1989, Grajski_Merzenich_1990}, neuroplasticity\sidenote{the networks ability to reorganise itself by forming new connections} \sidecite{Montague_Gally_Edelman_1991}, or recognising non-linear patterns \sidecite{Mel_1992}, but also has limitations \cite{Anderson_1998}.
+Hebbian learning works well, for example, for topographic mappings\sidenote{mapping input data to a discrete representation} \sidecite{Kohonen_1989, Grajski_Merzenich_1990}, neuroplasticity\sidenote{the network's ability to reorganise itself by forming new connections} \sidecite{Montague_Gally_Edelman_1991}, or recognising non-linear patterns \sidecite{Mel_1992}, but also has limitations \cite{Anderson_1998}.
 Hebb's learning rule is insufficient as a general rule for time-shifted signals as it requires (almost) synchronous stimuli \sidecite{Anderson_1998, 6302929}.
 However, many signals, such as motor control problems, are sequential and Hebbian learning has to be combined with additional memory mechanisms \sidecite{Grossberg_Schmajuk_1989}.
 
@@ -206,12 +206,12 @@ However, the aim is always the same: improving the separability of the hidden re
 Minimising the proxy objective function encourages a layer to improve the separability of its output representations, making the separability problem simpler for the subsequent layer.
 A simple way to measure the separability between hidden representation vectors is to use distance or similarity metrics \sidecite{Duan_Yu_Principe_2022, Duan_Yu_Chen_Principe_2020}.
 Instead of measuring the distance between hidden representations directly, an auxiliary neural network can be used to first map the hidden representations to another feature space before calculating their distance \sidecite{Wang_Ni_Song_Yang_Huang_2021}.
-This allows to reduce the dimensionality of the feature space before calculating the proxy objective function.
+This allows reducing the dimensionality of the feature space before calculating the proxy objective function.
 Reducing the dimensionality is especially helpful for layers with large output vectors, such as the activation maps of convolutional layers.
 
 
 An auxiliary network can also be used to classify the latent representations in each layer and to use this auxiliary network's accuracy to quantify data separability \sidecite{belilovsky2019greedy, Mostafa_Ramesh_Cauwenberghs_2018, Marquez_Hare_Niranjan_2018}.
-Nokland and Eidnes \sidecite{pmlr-v97-nokland19a} combine the two aforementioned approaches by using two auxiliary networks; one auxiliary network reduced the dimensionality and another auxiliary network quantifies similarity.
+Nokland and Eidnes \sidecite{pmlr-v97-nokland19a} combine the two aforementioned approaches by using two auxiliary networks; one auxiliary network reduces the dimensionality, and another auxiliary network quantifies similarity.
 
 A significant issue of models based on proxy objective functions is that they are usually trained layer-wise\sidenote{when layer $k$ is trained, the layers $1, ..., k-1$ are frozen, and the layers $k+1, ..., n$ are not updated}.
 The resulting computational inefficiency can be reduced with synchronous or asynchronous training.
@@ -237,7 +237,7 @@ Positive data consists of an input vector (e.g. an image) and the correct label,
 The goal is to have a high goodness in each layer for the positive data and a low goodness for the negative data.
 The only difference between positive and negative data is the label, and thus the FF algorithm only learns features that correlate with the label.
 During inference, the data is fed with each label through the network, and the one with the highest goodness is kept as the prediction.
-One major weakness is that one layer at a time is learned and later layers cannot influence what is learned in earlier layers.
+One major weakness is that one layer at a time is learned, and later layers cannot influence what is learned in earlier layers.
 This limitation can be overcome by treating the static input vector as a sequence (i.e. using the same input for multiple timesteps) and using a multi-layer recurrent network \sidecite{Hinton_2021}.
 The trick is to feed the input into the network from one side and the label into the network from the other side. A layer receives as input the activity vector of the previous layer and the activity vector of the subsequent layer at the previous timestep. By enforcing high goodness when the input and label match, information must flow in both directions. Thus, hierarchical features can be learned without a backward pass or layer-wise training.
 
@@ -339,13 +339,13 @@ Proxy objective functions are used in this thesis as this method is the only kno
 \emph{Autoencoders} are one of the most-used methods to learn visual representations in an unsupervised fashion.
 Autoencoders were introduced in 1985 \sidecite{rumelhart1985learning} and learn an encoder and decoder function \sidecite{pmlrv27baldi12a}.
 The encoder $E$ maps the input from a high-dimensional space to a lower-dimensional embedding space $E: \mathbb{R}^{n} \rightarrow \mathbb{R}^{e}$ and the decoder $D$ reverses this mapping $D: \mathbb{R}^{e} \rightarrow \mathbb{R}^{n}$.
-Typically, neural networks are used to learn the encoder and decoder function by minimizing a reconstruction loss between the encoder input and the decoder output \sidecite{Ranzato_Huang_Boureau_LeCun_2007}.
-However, regularisation is needed so that the functions $E$ and $D$ do not convergence to the identity operators.
+Typically, neural networks are used to learn the encoder and decoder function by minimising a reconstruction loss between the encoder input and the decoder output \sidecite{Ranzato_Huang_Boureau_LeCun_2007}.
+However, regularisation is needed so that the functions $E$ and $D$ do not converge to the identity operators.
 One of the simplest regularisation methods is to introduce a bottleneck, i.e., compress the representation with the encoder while still re-creating the original input as well as possible with the decoder.
 Thus, a bottleneck layer limits the number of neurons.
 An alternative (or a supplement) is to limit the number of active neurons by enforcing sparsity.
 Autoencoders with a sparsity constraint are also known as \emph{sparse autoencoders}.
-A sparsity constraint can be imposed with $L_1$ or $L_2$ regularization or with a kullback-leibler (KL) divergence\sidenote{the kullback-leibler divergence is a measure of how one probability distribution differs from another reference probability distribution} between average neuron activations and an ideal activation distribution \sidecite{10-5555-3042573-3042641}.
+A sparsity constraint can be imposed with $L_1$ or $L_2$ regularisation or with a kullback-leibler (KL) divergence\sidenote{the kullback-leibler divergence is a measure of how one probability distribution differs from another reference probability distribution} between average neuron activations and an ideal activation distribution \sidecite{10-5555-3042573-3042641}.
 Other popular versions of autoencoders are denoising autoencoders \sidecite{10-1145-1390156-1390294}, contractive autoencoders \sidecite{10-5555-3104482-3104587}, and variational autoencoders (VAE) \sidecite{Kingma_Welling_2014}.
 For \emph{denoising autoencoders}, the input is disrupted with noise (e.g. by adding Gaussian noise or removing some pixels by using dropout) before it is fed into the encoder.
 The goal of the decoder is to reconstruct the clean version of the input without the added noise.
@@ -353,7 +353,7 @@ By doing so, denoising autoencoders learn to create a more robust representation
 \emph{Contractive autoencoders}, on the other hand, try to make the feature extraction less sensitive to small perturbations.
 By adding the squared Jacobian norm to the reconstruction loss, the latent representations of the input tend to be more similar to each other.
 This diminishes latent representations that are unimportant for the reconstruction, and only essential variations between the inputs are kept.
-The encoder of \emph{variational autoencoders} map the input to a probabilistic distribution; instead of mapping the input to an latent vector, the input is mapped to a vector representing the mean $\boldsymbol{\mu}$ and another vector representing the standard deviation $\boldsymbol{\sigma}$ of a multivariate Gaussian distribution.
+The encoder of \emph{variational autoencoders} map the input to a probabilistic distribution; instead of mapping the input to a latent vector, the input is mapped to a vector representing the mean $\boldsymbol{\mu}$ and another vector representing the standard deviation $\boldsymbol{\sigma}$ of a multivariate Gaussian distribution.
 This is done by adding two fully connected layers after the encoder, one layer to predict $\boldsymbol{\mu}$ and the other layer to predict $\boldsymbol{\sigma}$.
 Afterwards, a variable is sampled from this distribution $z \sim \mathcal{N}(\boldsymbol{\mu},\, \boldsymbol{\sigma}^{2} \cdot \epsilon)$, where $\epsilon \sim \mathcal{N}(0,\,1)$ \sidenote{this process is also called the re-parameterisation trick} and fed into the decoder $D$.
 By doing so, the latent space becomes, by design, continuous and allows random sampling and data interpolation.
@@ -368,7 +368,7 @@ For example, some models use masking to learn visual representation;
 a part of the input image is removed, and the model predicts the missing part (image inpainting) \cite{Elharrouss_Almaadeed_Al-Maadeed_Akbari_2020}.
 This not only allows to generate part of images but also to learn visual representations of the image \sidecite{Pathak_Krahenbuhl_Donahue_Darrell_Efros_2016, he2022masked, shi2022adversarial}.
 Other approaches rotate images and predict the rotation angle to generate representations \sidecite{komodakis2018unsupervised, Zhai_Oliver_Kolesnikov_Beyer_2019}.
-Many further methods and a comprehensive overview is given by \sideciteay{chen2022semi}.
+Many further methods exist, and a comprehensive overview is given by \sideciteay{chen2022semi}.
 
 Another popular self-supervised learning paradigm is \emph{contrastive learning}.
 The idea of contrastive learning is that similar images should yield similar representations.
@@ -440,7 +440,7 @@ When the inner base learning algorithm includes non-differentiable steps \sideci
 However, using RL to alleviate the differentiability requirement is usually computationally very costly.
 Besides gradient descent and RL, evolutionary algorithms can be used for learning the outer meta-learning function \cite{schmidhuber-1987, Stanley_Clune_Lehman_Miikkulainen_2019, Salimans_Ho_Chen_Sidor_Sutskever_2017}.
 These algorithms have no differentiability constraints, do not suffer from gradient degradation issues, are highly parallelisable, and can often avoid local minima better than gradient-based methods \sidecite{Salimans_Ho_Chen_Sidor_Sutskever_2017}.
-The downside of evolutionary algorithms is that large population size is required (especially if many parameters have to be learned), and the performance is generally inferior to gradient-based methods for large models.
+The downside of evolutionary algorithms is that a large population size is required (especially if many parameters have to be learned), and the performance is generally inferior to gradient-based methods for large models.
 
 \subsection{Meta-Objective}
 The third dimension of the meta-learning landscape is the \emph{meta-objective}.
@@ -468,7 +468,7 @@ Finally, the meta-optimisation can either be done offline (i.e. the inner and ou
 
 %TODO: Not sure if this chapter is still relevant.... -> move or delete?
 
-%Self-organisation in neural networks can be done based on the input data.
+% Self-organisation in neural networks can be done based on the input data.
 %If Hebbian learning is used\sidenote{``Cells that fire together wire together''}, cells are connected based on their correlation (i.e. cells with a high correlation are wired together).
 %One way to capture the correlation within CNNs are Gram matrices.
 %Gram matrices are essentially the dot-product between the channels of a feature map and can capture the style of given image.
@@ -489,7 +489,7 @@ Finally, the meta-optimisation can either be done offline (i.e. the inner and ou
 %Thereby, $k$ is a hyperparameter defining how many elements of the convolutional output $F$ are compared.
 %Gatys et al. \sidecite{7780634} applied this formula the first time to convolutional filters but did not fully explain why it works.
 %However, they found that the style is captured well in the correlation between convolutional maps.
-%Later, it was shown \sidecite{10555531720773172198} that matching the Gram matrices between two convolutional filters can be reformulated as minimizing the Maximum Mean Discrepancy (MMD) \sidecite{JMLRv13gretton12a} and thus that the style information is intrinsically represented by the distribution of activations in a CNN.
+%Later, it was shown \sidecite{10555531720773172198} that matching the Gram matrices between two convolutional filters can be reformulated as minimising the Maximum Mean Discrepancy (MMD) \sidecite{JMLRv13gretton12a} and thus that the style information is intrinsically represented by the distribution of activations in a CNN.
 
 %Intuitively, several filters together can describe the style of the image.
 %For example, if one filter reacts to vertical white and black lines and a second filter reacts to horizontal white and black lines and the input image has a checkerboard style, then these two filters have a high correlation, which is reflected in the Gram Matrix (c.f. Appendix \chref{image_style_transfer}).
@@ -531,3 +531,4 @@ Finally, the meta-optimisation can either be done offline (i.e. the inner and ou
 %Teney and Herbert \sidecite{Teney_Hebert_2016} split the filters of a CNN in orientation groups and constraint their weights.
 %Such models achieve rotation covariance\sidenote{rotation covariance means that applying a rotation to the input image results in a shift of the output across the features} and only need to learn a single canonical filter per orientation group.
 %This concept can also be applied to the rotation group in the final layers of a CNN to obtain invariance to global rotations \sidecite{Wu_Hu_Kong_2015}.
+

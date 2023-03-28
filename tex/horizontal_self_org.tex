@@ -14,7 +14,7 @@ Each layer optimises a proxy objective function.
 Proxy objective functions are used because this type of local optimisation allows self-organisation and excellent performance on larger datasets \sidecite{Bartunov_Santoro_Richards_Marris_Hinton_Lillicrap_2018, Duan_Principe_2022}, in contrast to other local learning algorithms such as target propagation, synthetic gradients or feedback alignment (c.f. \secref{alt_train_algo}). 
  \figref{horizontal_gradient_flow} visualises the updates based on a proxy objective function.
 An objective function is calculated for each layer, and the optimisation algorithm only updates the parameters within this layer.
-Thus, the gradients do not flow back to preceding layers.
+Thus, the gradients do not flow back to the preceding layers.
 
 \begin{figure}[h]
     \centering
@@ -46,7 +46,7 @@ With the KL divergence, the divergence of the actual activation probability $\ha
 		KL(\rho || \hat{\rho}^{[l]}_i) = \rho \cdot \log \frac{\rho}{\hat{\rho}^{[l]}_i} + (1-\rho) \cdot \log \frac{1-\rho}{1-\hat{\rho}^{[l]}_i}
 \end{align}
 
-The sparsity loss $\mathcal{L}^{[l]}_{s}$ of layer $l$ is the sum of the divergence between each neurons' activation probability $\hat{\rho}^{[l]}_i$ and the target activation probability $\rho$:
+The sparsity loss $\mathcal{L}^{[l]}_{s}$ of layer $l$ is the sum of the divergence between each neuron's activation probability $\hat{\rho}^{[l]}_i$ and the target activation probability $\rho$:
 
 \begin{align}\eqlbl{vso_4}
 		\mathcal{L}^{[l]}_{s} = \sum_{i=1}^{n} KL(\rho || \hat{\rho}^{[l]}_i)
@@ -79,7 +79,7 @@ whereby $k$ changes the sign depending on the class:
 
 However, this loss function has two significant drawbacks: First, comparing two samples can be unstable; if one sample is not representative of a class, the other sample may be pushed away from its cluster centre. Second, if the dataset has more than two classes, more negative samples ( $y^{(i)} \neq y^{(j)}$) than positive samples ($y^{(i)} = y^{(j)}$) are compared. With many classes, the optimisation algorithm focuses mainly on pushing negative samples apart and does not pay enough attention to pushing positive samples together. These problems are alleviated with two measures: Instead of comparing two samples, a sample is compared to the average activation of a class, which can be interpreted as the cluster centre of a class. Furthermore, each sample is once compared with the cluster centre from the same class and once with a cluster centre from another class. Thus, positive and negative samples are compared equally often.
 
-Lets denote {\footnotesize $\boldsymbol{a}^{[l]}_{C=\overline{c}}$} as the average activation of class $c$ in layer $l$. Thus, the goal is to push the activation of a sample {\footnotesize $\boldsymbol{a}^{[l](i)}$} closer to {\footnotesize $\boldsymbol{a}^{[l]}_{C=\overline{y}^{(i)}}$} and away from {\footnotesize $\boldsymbol{a}^{[l]}_{C=\overline{v}^{(i)}}$}, where $v^{(i)}$ is a random class samples drawn from {\footnotesize $ C \backslash \{y^{(i)} \}$}\sidenote{the set of all classes without $y^{(i)}$}. Such a loss could be implemented as
+Lets denote {\footnotesize $\boldsymbol{a}^{[l]}_{C=\overline{c}}$} as the average activation of class $c$ in layer $l$. Thus, the goal is to push the activation of a sample {\footnotesize $\boldsymbol{a}^{[l](i)}$} closer to {\footnotesize $\boldsymbol{a}^{[l]}_{C=\overline{y}^{(i)}}$} and away from {\footnotesize $\boldsymbol{a}^{[l]}_{C=\overline{v}^{(i)}}$}, where $v^{(i)}$ is a random class drawn from {\footnotesize $ C \backslash \{y^{(i)} \}$}\sidenote{the set of all classes without $y^{(i)}$}. Such a loss could be implemented as
 
 \begin{align}\eqlbl{vso_8}
 		\mathcal{L}^{[l]}_{d}  = \frac{1}{n} \sum_{i=1}^{n} \text{cos} \left(\boldsymbol{a}^{[l](i)}, \boldsymbol{a}^{[l]}_{C=\overline{v}^{(i)}} \right) - \text{cos} \left(\boldsymbol{a}^{[l](i)}, \boldsymbol{a}^{[l]}_{C=\overline{y}^{(i)}} \right)
@@ -105,7 +105,7 @@ The loss applied to each layer is the sum of sparsity loss and diversity loss, w
 
 One problem with proxy objective functions is that this type of training often requires layer-wise training. First, layer $1$ is trained until convergence, then the weights are frozen, then layer $2$ is trained and so on.
 Such sequential training is inefficient because it requires more forward passes than if the model is trained with end-to-end backpropagation.
-It was found that this loss function allows to train all layers simultaneously. With a forward pass, all activations are calculated, followed by a layer-wise backward pass where the gradients from one layer do not propagate back to previous layers.
+It was found that this loss function allows training all layers simultaneously. With a forward pass, all activations are calculated, followed by a layer-wise backward pass where the gradients from one layer do not propagate back to previous layers.
 Since the gradients are only needed locally, no large graph of gradients has to be calculated, which reduces the memory utilisation on GPUs and allows larger mini-batch sizes. In addition, this type of architecture is straightforward to parallelise since each layer (i.e. each independently trained unit) or a group of layers can be trained on a different GPU:
 
 \begin{figure}[h]
@@ -211,7 +211,7 @@ When a new sample $\boldsymbol{x}^{(i)}$ is classified, the cosine similarity be
 		\text{cos}^{[l](i)}_{C=c} = \text{cos} \left( \boldsymbol{a}^{[l](i)}, \boldsymbol{a}^{[l]}_{C=\overline{c}} \right) = \frac{\boldsymbol{a}^{[l](i)} \cdot \boldsymbol{a}^{[l]}_{C=\overline{c}}}{\max \left( ||\boldsymbol{a}^{[l](i)}||_2, ||\boldsymbol{a}^{[l]}_{C=\overline{c}}||_2 \right) }
 \end{align}
 
-Thus, the cosine similarity $\text{cos}^{[l](i)}_{C=c}$ for each class $c \in C$ and each of the layers $l \in \{1, ..., 4\}$ is calculated. Afterwards, the class $c$ with the highest average cosine similarity between  is used as prediction.
+Thus, the cosine similarity $\text{cos}^{[l](i)}_{C=c}$ for each class $c \in C$ and each of the layers $l \in \{1, ..., 4\}$ is calculated. Afterwards, the class $c$ with the highest average cosine similarity between is used as prediction.
 
 \begin{align}\eqlbl{vso_12}
 		\argmax_{c \in C} \frac{1}{4} \sum_{l=1}^{4} \text{cos}^{[l](i)}_{C=c}
@@ -242,7 +242,7 @@ whereby $\boldsymbol{W}_x^{[l]}$ is the weight multiplied with the layer input a
 However, this only seems helpful if the model input is not static. Therefore, the model input is available over several time steps and is augmented after each step. Thus, the model receives different views of the same image and can adjust its activations if necessary. The following image augmentation techniques are applied, each with a probability of $p=0.8$:
 
 \begin{itemize}
-	\item \textbf{Color Jitter}: Randomly change brightness, contrast, and saturation of the image.
+	\item \textbf{Color Jitter}: Randomly change the brightness, contrast, and saturation of the image.
 	\item \textbf{Gaussian Blur}: Blur the image with randomly chosen Gaussian blur.
 	\item \textbf{Random Rotation}: Randomly rotate the image with an angle in the range $[-15°, ..., 15°]$
 	\item \textbf{Adjust Sharpness}: Randomly adjust the sharpness of the image.
@@ -258,7 +258,7 @@ However, this only seems helpful if the model input is not static. Therefore, th
 \end{figure}
 
 
-Recurrent connections are typically used to process sequential data or text. Thereby, he data is usually first read token by token before an output is generated.\sidenote{for example, in text classification, all word tokens of a sentence are typically read before the model classifies a sentence. This is necessary because all information is required, and classification cannot be done on the basis of a single token.} Thus, such models depend on sequential timesteps and are typically trained with backpropagation through time (BTT). Thereby, the gradients flow backwards over several time steps. This leads to well-known problems such as vanishing and exploding gradients.
+Recurrent connections are typically used to process sequential data or text. Thereby, the data is usually first read token by token before an output is generated.\sidenote{for example, in text classification, all word tokens of a sentence are typically read before the model classifies a sentence. This is necessary because all information is required, and classification cannot be done on the basis of a single token.} Thus, such models depend on sequential timesteps and are typically trained with backpropagation through time (BTT). Thereby, the gradients flow backwards over several time steps. This leads to well-known problems such as vanishing and exploding gradients.
 
 In this thesis, BTT is not used, which means that a prediction is made after each time step, but the prediction potentially improves with more time steps. This leads to desirable properties: (i) Problems with vanishing or exploding gradients do not exist, regardless of how many time steps the model requires. (ii) After each time step, representations can be extracted according to \secref{horizontal_self_org_representations}. If an object representation can be assigned to one class label with a high probability, the sequential processing of different image views can be aborted. If this is not the case, further time steps can be carried out until the model has sufficiently high confidence in its prediction. Thus, the number of time steps can be sample-dependent.
 
@@ -372,14 +372,14 @@ In a CNN, the field of view in the first layers is restricted by design but beco
 \end{figure}
 
 The CNN architecture used in this thesis is shown in \figref{horizontal_org_arch2}.
-Three convolutional layers with ReLU activation functions and with $16$, $32$, and $64$ channels are used, and max-pooling layers are applied between each convolutional layer. For training, the same hyperparameters and loss functions are used as for the model with fully connected layers.
+Three convolutional layers with ReLU activation functions and with $16$, $32$, and $64$ channels are used, and max-pooling layers are applied between each convolutional layer. For training, the same hyperparameters and loss functions are used for the model with fully connected layers.
 
 
 \subsubsection{Two-Way Information Flow}
 Hinton \sidecite{ff_algo} introduced with the forward-forward (FF) algorithm (c.f. \secref{alt_train_algo}) a promising idea for models based on proxy objective functions: 
-The image is fed into the input layer of the network, and the corresponding label is fed into the output layer of the network. The image remains static for several time steps, and the network is trained to push the layer's activations above a certain threshold. In a second stage, the image is fed into the network with the wrong label and the network is trained to push the activations below a certain threshold. He found that a feature hierarchy is created when low-level features (i.e. images) are fed into the network from one end and high-level features (i.e. class labels) are fed into the network from the other end. However, this approach has one major disadvantage: During inference, each possible sample-label combination has to be fed into the model, and the label that caused the highest neural activity is used as the model's prediction.
+The image is fed into the input layer of the network, and the corresponding label is fed into the output layer of the network. The image remains static for several time steps, and the network is trained to push the layer's activations above a certain threshold. In the second stage, the image is fed into the network with the wrong label and the network is trained to push the activations below a certain threshold. He found that a feature hierarchy is created when low-level features (i.e. images) are fed into the network from one end and high-level features (i.e. class labels) are fed into the network from the other end. However, this approach has one major disadvantage: During inference, each possible sample-label combination has to be fed into the model, and the label that caused the highest neural activity is used as the model's prediction.
 
-In this thesis, this process is implemented in a different way, which does not have this disadvantage. Identical to the FF algorithm, the image is fed into the network's input layer for multiple time steps. Conversely, the label is not fed directly into the output layer but is made available to the last layer within the loss function. Each layer maximises the mutual information (MI) between its activations and the activations of the previous and subsequent layers. Thus, the first layer maximises the MI between the input image and its activations, the last layer maximises the MI between its activations and a label vector. This creates a feature pyramid in which a smooth transition from concrete samples to abstract class labels is learned. During inference, the last layer directly predicts latent representations that can be assigned to a class. This process is visualised in Figure \figref{mi_loss}. 
+In this thesis, this process is implemented in a different way, which does not have this disadvantage. Identical to the FF algorithm, the image is fed into the network's input layer for multiple time steps. Conversely, the label is not fed directly into the output layer but is made available to the last layer within the loss function. Each layer maximises the mutual information (MI) between its activations and the activations of the previous and subsequent layers. Thus, the first layer maximises the MI between the input image and its activations, and the last layer maximises the MI between its activations and a label vector. This creates a feature pyramid in which a smooth transition from concrete samples to abstract class labels is learned. During inference, the last layer directly predicts latent representations that can be assigned to a class. This process is visualised in Figure \figref{mi_loss}. 
 
 \begin{figure}[h]
     \centering
@@ -403,7 +403,7 @@ The results obtained by this model are presented in the following. It is importa
 
 \subsection{Dataset}\seclbl{horizontal_self_org_methods_dataset}
 The model is trained and evaluated on the MNIST \cite{Lecun_Bottou_Bengio_Haffner_1998} dataset. MNIST is a dataset of handwritten digits with $60'000$ training samples and $10'000$ test samples.
-In this thesis, the predefined training and test split is used.
+In this thesis, the pre-defined training and test split is used.
 The samples are images of a digit with the resolution $28 \times 28$ pixel in grayscale, i.e. has one colour channel.
 
 In addition, the models are evaluated on MNIST-C \sidecite{Mu_Gilmer_2019}, a corrupted MNIST benchmark for testing the out-of-distribution robustness of image classification models. This dataset consists of the MNIST data with $15$ types of corruptions applied to the samples.
@@ -435,4 +435,5 @@ TODO: How do hierarchical features improve the result?
 
 % TODO: target function und objective function vereinheitlichen
 % TODO: net fragment or net fragment
+
 

@@ -25,7 +25,7 @@ Biological neurons are electrically excitable by voltage changes across their me
 If the changes are significant enough within a short interval, the neuron generates a pulse called an action potential.
 This action potential travels through the axon and activates synaptic connections.
 Other neurons, connected through synapses, receive this signal.
-The synaptic signal can be excitatory \sidecite{Takagi_2000} or inhibitory \sidecite{Coombs_Eccles_Fatt_1955}, making the post-synaptic neuron more or less likely to fire an action potential itself.
+The synaptic signal can be excitatory \sidecite{Takagi_2000} or inhibitory \sidecite{Coombs_Eccles_Fatt_1955}, making the postsynaptic neuron more or less likely to fire an action potential itself.
 Biological neurons can be classified into sensory neurons, motor neurons, and interneurons.
 Sensory neurons respond to external stimuli such as light or sound and send signals to the spinal cord or the brain.
 Motor neurons receive brain and spinal cord signals to control muscles or organs.
@@ -88,7 +88,7 @@ However, ANNs consist not only of one neuron but combine multiple neurons in a n
 These neurons are organised in layers.
 In the simplest case, all neurons from one layer are connected with all neurons of the subsequent layer. This is called a fully connected (FC) layer.
 In a fully connected layer, the input $\boldsymbol{x}$ is fed into all neurons to obtain $\boldsymbol{\hat{y}}$.
-If the layer has $k$ neurons, the aggregation function is calculated for each neuron and the aggregated value becomes a vector $\boldsymbol{z} = (z_1, ..., z_k)$. The same applies to the output of the activation function $\boldsymbol{\hat{y}} = (\hat{y}_1, ..., \hat{y}_k)$ and the bias $\boldsymbol{b} = (b_1, ..., b_k)$. The weight vector, on the other hand, becomes a matrix $\boldsymbol{W} = (\boldsymbol{w}_1, ..., \boldsymbol{w}_k)$. For a fully connected layer, the aggregation and activation functions can be rewritten with matrix operations:
+If the layer has $k$ neurons, the aggregation function is calculated for each neuron, and the aggregated value becomes a vector $\boldsymbol{z} = (z_1, ..., z_k)$. The same applies to the output of the activation function $\boldsymbol{\hat{y}} = (\hat{y}_1, ..., \hat{y}_k)$ and the bias $\boldsymbol{b} = (b_1, ..., b_k)$. The weight vector, on the other hand, becomes a matrix $\boldsymbol{W} = (\boldsymbol{w}_1, ..., \boldsymbol{w}_k)$. For a fully connected layer, the aggregation and activation functions can be rewritten with matrix operations:
 %
 \begin{align}\eqlbl{nn3}%
 	\boldsymbol{z} = \boldsymbol{W} \cdot \boldsymbol{x} + \boldsymbol{b}
@@ -131,7 +131,7 @@ However, very complex mapping functions may need too many neurons in the hidden 
 Sequentially arranging multiple layers is much more efficient for approximating complex functions;
 a sequential arrangement allows learning a hierarchy of features by dividing the mapping function over several successive processing steps.
 
-In an multi-layer perceptron (MLP), the input \(\boldsymbol{x}\) is fed into the first layer, and each subsequent layer \(l\) uses the output of the previous layer \(l-1\) as input.
+In a multi-layer perceptron (MLP), the input \(\boldsymbol{x}\) is fed into the first layer, and each subsequent layer \(l\) uses the output of the previous layer \(l-1\) as input.
 For a network with \(L>1\) layers, we denote the layer index as superscript square brackets, i.e. $(\cdot)^{[l]}$.
 For example, the weights of layer $l$ are denoted as $\boldsymbol{W}^{[l]}$, the bias as \(\boldsymbol{b}^{[l]}\), the output of the aggregation function as \(\boldsymbol{z}^{[l]}\), and the output of the activation function as \(\boldsymbol{a}^{[l]}\)\sidenote{by convention, $\boldsymbol{\hat{y}}$ is used only as model output and not as layer output. Therefore, outputs of intermediate layers are denoted as $\boldsymbol{a}^{[l]}$ hereafter.}.
 The input in the first layer is the input data, i.e. $\boldsymbol{a}^{[0]} = \boldsymbol{x}$, and the output of the last layer is the model's prediction, i.e. $\boldsymbol{a}^{[L]} = \hat{\boldsymbol{y}}$. Thus, the mathematical model of an MLP is defined as
@@ -151,10 +151,10 @@ The training can take place in a supervised, semi-supervised, self-supervised (s
 In supervised learning, the output of the model $\boldsymbol{\hat{y}}$ is compared to a given target output $\boldsymbol{y}$.
 On the other hand, unsupervised learning tries to find patterns in the input data $\boldsymbol{x}$ and cluster the samples into meaningful groups without using pre-defined target labels. Typically, the target $\boldsymbol{y}$ is derived from the data automatically (e.g. predict a masked part of the data); since the model creates the target by itself, this approach is also called self-supervised.
 Semi-supervised learning is a hybrid approach of the aforementioned principles that combines a small amount of labelled data with a large amount of unlabelled data.
-Lastly, reinforcement learning algorithms aim to maximize the reward that they receive from an environment based on some action they executed.
+Lastly, reinforcement learning algorithms aim to maximise the reward that they receive from an environment based on some action they executed.
 
 These learning principles have in common that a loss function (also called objective function) $\mathcal{L}(\cdot)$ can be used to calculate the goodness of the model output $\boldsymbol{\hat{y}}$ compared to the target output ${\boldsymbol{y}}$. For example, the mean square error (MSE) can be used for regression problems or the negative log-likelihood for classification problems.
-The chosen loss function is minimized iteratively with stochastic gradient descent (SGD)\sidenote{there also exist other optimisation algorithms such as SGD with momentum, RMSprop, or Adam \citep{Kingma2015AdamAM}} until the network converges to a (local) minima.
+The chosen loss function is minimised iteratively with stochastic gradient descent (SGD)\sidenote{there also exist other optimisation algorithms such as SGD with momentum, RMSprop, or Adam \citep{Kingma2015AdamAM}} until the network converges to a (local) minima.
 The idea behind stochastic gradient descent is to make use of the fact that the negative gradient of the loss value points to the direction of the steepest descent (i.e. in the direction where the loss becomes smaller).
 Therefore, SGD updates the network parameters by taking a step of size $\eta$\sidenote{$\eta$ is a hyper-parameter and also referred to as learning rate} toward their negative gradient:
 %
@@ -180,7 +180,7 @@ The gradients of the weights can efficiently be calculated with an algorithm cal
 One of the most critical design decisions in creating ANNs is how the neurons are connected.
 So far, only the case where each neuron of one layer is connected to every neuron of the following layer (fully connected layer) has been described. 
 Besides such dense connections, there are several alternatives.
-Since this work deals with the processing of images, the most well-known image-processing architecture called convolutional neural network (CNN), is presented in the following. This architecture is also primarily used in this thesis. However, various alternative architectures exist for computer vision, such as the vision transformer (ViT) \sidecite{Dosovitskiy_Beyer_Kolesnikov_Weissenborn_Zhai_Unterthiner_Dehghani_Minderer_Heigold_Gelly_2021} or MLP mixer \sidecite{tolstikhin2021mlp}. However, describing these architectures would go beyond the scope of this introduction to deep learning.
+Since this work deals with the processing of images, the most well-known image-processing architecture, called convolutional neural network (CNN), is presented in the following. This architecture is also primarily used in this thesis. However, various alternative architectures exist for computer vision, such as the vision transformer (ViT) \sidecite{Dosovitskiy_Beyer_Kolesnikov_Weissenborn_Zhai_Unterthiner_Dehghani_Minderer_Heigold_Gelly_2021} or MLP mixer \sidecite{tolstikhin2021mlp}. However, describing these architectures would go beyond the scope of this introduction to deep learning.
 
 \subsection{Convolutional Networks}\seclbl{cnns}
 Convolutional neural networks (CNNs) are particularly useful for finding patterns in images but can also be used to analyse non-image data such as audio files or time series.
@@ -247,7 +247,7 @@ Especially autoencoders \sidecite{rumelhart1985learning} are explained in this s
 
 \section{Limitations}\seclbl{limitationsDL}
 The rise of deep learning over the past decade has only been possible because of significant technological advances in hardware.
-Moore's law \sidecite{Moore_2006} states that the number of transistors in a dense integrated circuit doubles about every two years and is one of the only known physical processes that follows an exponential curve.
+Moore's law \sidecite{Moore_2006} states that the number of transistors in a dense integrated circuit doubles about every two years and is one of the only known physical processes that follow an exponential curve.
 However, the exponential increase comes to an end since the size of transistors hit physical limitations \sidecite{Kumar_2015}.
 Nevertheless, not only has the hardware improved massively in recent years, but deep learning models consume more computing resources in general:
 An analysis by OpenAI shows that since 2012 the amount of computing used by AI models has increased exponentially with a doubling time of \(3.4\) months \sidecite{OpenAI_compute}.
@@ -260,27 +260,27 @@ A recent language model from Microsoft and NVIDIA called Megatron-Turing NLG 530
 Thus, the size of the language models has increased 563-fold within five years.
 Only a few institutions with massive resources can train such big models.
 In general, inference on low-budget hardware such as smartphones or embedded hardware becomes prohibitive with the growing size of deep networks.
-Even though there exist techniques to shrink the model size after training, such as quantization \sidecite{Wu_Judd_Zhang_Isaev_Micikevicius_2020}, model pruning \sidecite{Choudhary_Mishra_Goswami_Sarangapani_2020}, or model distillation \sidecite{Hinton_Vinyals_Dean_2015}, it is questionable if making models bigger is the best way to develop more intelligent systems.
+Even though there exist techniques to shrink the model size after training, such as quantisation \sidecite{Wu_Judd_Zhang_Isaev_Micikevicius_2020}, model pruning \sidecite{Choudhary_Mishra_Goswami_Sarangapani_2020}, or model distillation \sidecite{Hinton_Vinyals_Dean_2015}, it is questionable if making models bigger is the best way to develop more intelligent systems.
 
 Another major issue of deep learning systems is that they suffer from catastrophic forgetting.
 If a model is trained on a specific task and afterwards trained (or fine-tuned) on another task, the model suffers a "catastrophic" drop in performance over the first task.
-The reason for this effect is that during training on the second task, the model adjusts the parameters learned during the first task and therefore ``forgets'' the learned mapping functions.
+The reason for this effect is that during training on the second task, the model adjusts the parameters learned during the first task and, therefore, ``forgets'' the learned mapping functions.
 Mixing all datasets or learning all tasks in parallel in a multi-task setting \sidecite{Zhang_Yang_2021} does not seem feasible to achieve general intelligence as general intelligence might require training on many unrelated tasks. Therefore, models should not forget previously learned knowledge even if a new task is learned.
 Catastrophic forgetting is also caused by the fact that learning is mostly done offline\sidenote{offline in this context means that the model parameters are not adapted after training during inference time}.
 Online learning \sidecite{Sahoo_Pham_Lu_Hoi_2017} and lifelong learning \sidecite{Parisi_Kemker_Part_Kanan_Wermter_2019} are hot research topics.
 However, these methods still need to be established. Moreover, such models do not solve catastrophic forgetting but can only adapt better to changing conditions.
 
 Furthermore, some problems may not be solvable with the current principles of deep learning.
-First of all, it is questionable if deep learning models can achieve \emph{real} generalization\sidenote{generalization refers to the ability of the model to adapt appropriately to previously unseen data from the same distribution}.
-With enough data, DL can achieve generalization in the sense that the model can interpolate within the known data distribution.
+First of all, it is questionable if deep learning models can achieve \emph{real} generalization\sidenote{generalisation refers to the ability of the model to adapt appropriately to previously unseen data from the same distribution}.
+With enough data, DL can achieve generalisation in the sense that the model can interpolate within the known data distribution.
 However, deep learning models fail to extrapolate.
-For example, convolutional neural networks (CNNs) do not generalize to different viewpoints unless they are added to the training data \sidecite{Madan_Henry_Dozier_Ho_Bhandari_Sasaki_Durand_Pfister_Boix_2022}.
+For example, convolutional neural networks (CNNs) do not generalise to different viewpoints unless they are added to the training data \sidecite{Madan_Henry_Dozier_Ho_Bhandari_Sasaki_Durand_Pfister_Boix_2022}.
 
 Second, deep learning cannot learn abstract relationships in a few trials but requires many samples and is thus data-hungry.
 Gary Marcus \sidecite{Marcus_2018} showcased this problem with an example: He defines the new word ``schmister" as a sister over the age of 10 but under the age of 21. He found that humans can immediately infer whether they or their best friends have any ``schmister". However, modern DL systems lack a mechanism for learning abstractions through explicit, verbal definitions and require thousands or even more training samples\sidenote{some experiments by the author suggest that large language models might overcome this limitation and can learn such definitions in a one-shot manner. However, these models still lack understanding.}.
 
 Third, no DL model has been able to demonstrate causal reasoning generically.
-Deep learning models find correlations between input and output data, but not causation.
+Deep learning models find correlations between input and output data but not causation.
 Other AI approaches, such as hierarchical Bayesian computing or probabilistic graphical models are better at causal reasoning but do not work well for processing high-dimensional data.
 
 Lastly, deep learning models are, to some extent, too isolated since they have no embodiment and cannot interact with the world.
@@ -334,7 +334,7 @@ Neurocomputing is considered a subfield of neuroscience and focuses on implement
 Donald Hebb describes how the connections between cells in the nervous system adapt: ``When an axon of cell A is near enough to excite a cell B and repeatedly or persistently takes part in firing it, some growth process or metabolic change takes place in one or both cells such that A's efficiency, as one of the cells firing B, is increased'' \sidecite{Hebb_1949}. This statement is often simplified to the well-known phrase ``neurons that fire together wire together''.
 
 Hebbian learning is based on this principle:
-The weight $w_{ij}$ from neuron $i$ to neuron $j$ changes based on the pre-synaptic activity $a_i$ of neuron $i$ and post-synaptic activity $a_j$ of neuron $j$\sidenote{the pre-synaptic and post-synaptic activity corresponds to the output of the activation function $f(\cdot)$ of a neuron in the previous resp. subsequent layer}
+The weight $w_{ij}$ from neuron $i$ to neuron $j$ changes based on the presynaptic activity $a_i$ of neuron $i$ and postsynaptic activity $a_j$ of neuron $j$\sidenote{the presynaptic and postsynaptic activity corresponds to the output of the activation function $f(\cdot)$ of a neuron in the previous resp. subsequent layer}
 %
 \begin{align}\eqlbl{hebb_1}
 	\Delta w_{ij} = \eta a_i a_j
@@ -352,24 +352,24 @@ The following equation changes the weight relative to the covariance:
 	\Delta w_{ij} = \eta (a_i - \psi_i) \cdot (a_j - \psi_j)
 \end{align}
 %
-where \(\psi_i\) and \(\psi_j\) are estimates of the expected pre- and post-synaptic activity\sidenote{the expected activity can be estimated, for example, by calculating a moving average}.
+where \(\psi_i\) and \(\psi_j\) are estimates of the expected pre- and postsynaptic activity\sidenote{the expected activity can be estimated, for example, by calculating a moving average}.
 However, the formulation above lacks boundaries, i.e. the weights could grow to infinite.
 A simple solution is to enforce hard boundaries \(w_{min} \leq w_{ij} \leq w_{max}\).
-An alternative is to normalize the length of the weight vector \sidecite{Oja_1982}.
+An alternative is to normalise the length of the weight vector \sidecite{Oja_1982}.
 %
 \begin{align}\eqlbl{hebb_3}
 	\Delta w_{ij} = \eta \left( a_i a_j - \alpha \cdot a^2_j w_{ij} \right)
 \end{align}
 %
-where $\alpha \cdot a^2_j w_{ij}$ is the regularization term, and \(\alpha\) is a parameter that determines the size of the norm of the weight vector.
-By using this regularization term, the weight vector $\boldsymbol{w}$ convergences to
+where $\alpha \cdot a^2_j w_{ij}$ is the regularisation term, and \(\alpha\) is a parameter that determines the size of the norm of the weight vector.
+By using this regularisation term, the weight vector $\boldsymbol{w}$ convergences to
 %
 \begin{align}\eqlbl{hebb_31}
 	||\boldsymbol{w}||^2 = \frac{1}{\alpha}
 \end{align}
 %
 Another measure to limit the size of the vector $\boldsymbol{w}$ is to use rate-based threshold adaption \sidecite{Bienenstock_Cooper_Munro_1982, Intrator_Cooper_1992}. Rate-based threshold adaption uses a sliding threshold for long-term potentiation (LTP) or long-term depression (LTD) induction.
-When a pre-synaptic neuron fires and the post-synaptic neuron is in a lower activity state than the sliding threshold, it undergoes an LTD (i.e. the connection is weakened); otherwise, an LTP is applied, and the connection is strengthened.   
+When a presynaptic neuron fires and the postsynaptic neuron is in a lower activity state than the sliding threshold, it undergoes an LTD (i.e. the connection is weakened); otherwise, an LTP is applied, and the connection is strengthened.   
 
 By training a layer of multiple neurons with linear activation, the neurons converge to the first principle component of the input data \cite{Oja_1982}.
 As all neurons only learn the first principle component, a network of multiple layers in this setting seems useless. This implies that neurons within a network trained with Hebbian learning are rather uniform.
@@ -378,13 +378,13 @@ Thus, a mechanism to encourage differentiation between neurons is needed.
 Differentiation between neurons can be achieved with several methods.
 Two well-known approaches are the winner-take-all competition (i.e. only the neuron with the most similar activity is selected for learning)\sidenote{in practice is k-winner-take-all often preferred where k instead of one neuron learns} and a recurrent circuit that provides a competitive signal (i.e. the neurons compete with their neighbours to become active to learn).
 Another approach is to add a penalty to the learning rule.
-For example, anti-Hebbian learning is a method that adds a penalty for similarly active neurons and thus minimizes the linear dependency between neurons \sidecite{Vogels_Sprekeler_Zenke_Clopath_Gerstner_2011}.
-Others adapt the activation function of the neurons to enforce a specific activity distribution and to stabilize Hebbian learning in multilayer neural networks \sidecite{5178625, Teichmann}.
+For example, anti-Hebbian learning is a method that adds a penalty for similarly active neurons and thus minimises the linear dependency between neurons \sidecite{Vogels_Sprekeler_Zenke_Clopath_Gerstner_2011}.
+Others adapt the activation function of the neurons to enforce a specific activity distribution and to stabilise Hebbian learning in multi-layer neural networks \sidecite{5178625, Teichmann}.
 
 Similar to large parts of the brain, Hebbian learning is unsupervised and learns based on local information (i.e. neurons in close proximity).
 However, the brain is also largely recurrent and could guide neighbouring or preceding units.
 This assumption inspired supervised Hebbian learning.
-In supervised Hebbian learning, a subset of inputs which should evoke post-synaptic activity can be selected.
+In supervised Hebbian learning, a subset of inputs which should evoke postsynaptic activity can be selected.
 Supervised Hebbian learning can be extended to top-down and bottom-up learning \sidecite{Grossberg_1988}, which leads to a combination of supervised and unsupervised Hebbian learning.
 
 
@@ -515,8 +515,8 @@ Some neurons regularly fire if they receive an input current, while others slow 
 Modern models of spiking neurons can recreate this behaviour of biological neurons \sidecite{Paugam_Moisy}.
 
 The synaptic plasticity can be modelled with an adapted version of Hebbian learning (c.f. \secref{hebbian}).
-The spike-timing dependent (STDP) plasticity rule \sidecite{Bi_Poo_2001} distinguishes the firing behaviour of pre-synaptic and post-synaptic neurons.
-If the pre-synaptic neurons fire before the post-synaptic neuron, the connection is strengthened; otherwise, it is weakened.
+The spike-timing dependent (STDP) plasticity rule \sidecite{Bi_Poo_2001} distinguishes the firing behaviour of presynaptic and postsynaptic neurons.
+If the presynaptic neurons fire before the postsynaptic neuron, the connection is strengthened; otherwise, it is weakened.
 
 For a long time, SNN only worked for very shallow networks.
 In 2018, Kheradpisheh et al. \sidecite{KHERADPISHEH201856} proposed an SNN based on the idea of CNNs called a deep spiking convolutional network.
@@ -551,7 +551,7 @@ A good reservoir system distributes different inputs into different regions of t
     \figlbl{reservoir}
 \end{figure}
 %
-An ESN is a set of sparsely connected recurrent neurons as visualized in \figref{reservoir}.
+An ESN is a set of sparsely connected recurrent neurons as visualised in \figref{reservoir}.
 The reservoir consists of \(N\) nodes which are connected according to an Erdős–Rényi graph model\sidenote{the Erdős–Rényi model is a model for generating random graphs where all graphs based on a fixed set of vertices and edges are equally likely} \sidecite{erdos59a}.
 This graph model is represented by an adjacency matrix \(\boldsymbol{W}\) of size \(N \times N\).
 The time varying input signal \(\boldsymbol{x[t]}\) is mapped to a sub-set of \(N/M\) graph nodes by multiplying it with \(\boldsymbol{W}_{\text{in}} \in \mathbb{R}^{N\times M}\).
@@ -573,8 +573,3 @@ In general, reservoirs are universal approximators and can approximate any non-l
 In principle, the system should be capable of any computation if it has a high enough complexity \cite{Konkoli_2018}.
 Furthermore, reservoirs generalise better and faster than equivalent MLP.
 Current systems' main drawback is that they cannot deal well with high-dimensional input data such as images.
-
-
-
-
-
