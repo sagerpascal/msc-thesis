@@ -50,6 +50,35 @@ Thus, their work is considered to be \emph{the} inspiration for this thesis.
 However, this thesis is based on other concepts than the thesis by Lehmann \cite{lehmann} and therefore has little in common with his work.
 
 
+\subsection{3-Staged Model}
+A practical implementation of this theory is a $3$-staged model based on self-organising projection fibres.
+For a long time, this model was state-of-the-art for applications in automatic image analysis, for example, for face recognition \sidecite{XXXXXXXXXXXX}.
+However, this model has become less popular with the advent of deep neural networks, as deep networks exhibit excellent feature extraction capabilities that can be used for image analysis tasks.
+However, neural networks have weaknesses; for example, they are not transformation-invariant \sidecite{xxxxxxxxx}.
+The $3$-staged model, on the other hand, uses a different concept and has high robustness against transformations such as local stretching. So far, the $3$-staged model has not yet been combined with very deep networks, even though this could be a promising approach.
+
+% TODO copy stuff from future work that describes how this model works
+
+
+An implementation of the $3$-staged model is based on matching labelled subgraphs.
+Therefore, an image is typically interpreted as a graph of features. To build such a graph, features are extracted from the image using filters. These features are the labels of the graph and are linked to neighbouring features. Thus, the graph links embody the neighbourhood relationships between features in the image.
+The resulting graph represent the entire image. However, not all pixels usually belong to the same object, and therefore an object is represented by a subgraph.
+An idealised version of this object's subgraph can also be stored as a prototype in the stage S$2$.
+By matching the subgraphs of an image (perceived in S$1$) and these subgraph prototypes in S$2$, the organisation of projection fibres can be formulated as a subgraph matching problem.
+
+A simplistic version of this process is implemented by \sideciteay{Lades_Vorbruggen_Buhmann_Lange_vonderMalsburg_Wurtz_Konen_1993}. They use Gabor-type wavelets as features extracted from local pixel groups in the image. In a storage phase, sparse graphs of these features are formed and stored as model prototypes. In the recognition phase, the Gabor wavelets of the perceived image are matched with the previously stored graph prototypes. Therefore, a sparse graph of the image features is adaptively formed to best match a given prototype graph. The matching process is based on adjusting one-to-one links between vertices in the model and image graphs. A cost function controls the graph adaptation by favouring similarities and penalising metric deformations. This matching process between image features and stored models is repeated for each stored model prototype. Finally, the prototype with the lowest cost is selected as the recognised model. This process is straightforward, but the sequential matching of models is biologically not plausible and slow.
+
+
+
+
+
+
+
+
+
+
+
+
 
 \section{Self-Organisation}\seclbl{self_org_related}
 Self-organisation is the process by which systems consisting of many units spontaneously acquire their structure or function without interference from an external agent or system.
@@ -451,13 +480,6 @@ First, the inner base-learning episodes can either take few \sidecite{ravi2017op
 Second, the validation loss of the inner base-learning algorithm can either be calculated at the end of a learning episode to encourage a better \emph{final} performance of the base task or as the sum of the loss calculated after each update step to encourage \emph{faster} learning \cite{antoniou2018how}.
 Third, the goal of the meta-learning can either be to solve better any task drawn from a set of (often related) tasks (i.e. multi-task setting) \sidecite{10-5555-3305381-3305498, 10-5555-3294996-3295163, li2019feature}, or to solve one specific task better than when only the inner base learning algorithm is used (i.e. single task setting) \sidecite{10-5555-3305381-3305502}.
 Finally, the meta-optimisation can either be done offline (i.e. the inner and outer loop alternate) \sidecite{10-5555-3305381-3305498} or online (i.e. the meta-learning takes place within a base learning episode) \cite{li2019feature}.
-
-
-
-
-
-
-
 
 
 

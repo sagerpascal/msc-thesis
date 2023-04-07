@@ -2,37 +2,38 @@
 In this thesis, two different concepts of self-organisation are implemented.
 This chapter presents a method based on horizontal self-organisation.
 Horizontal self-organisation is based on training small units within a network independent from each other.
-The first section presents the methodology (i.e. how it is implemented), and the second section evaluates the obtained results.
+The first section presents the methodology (i.e. how it is implemented), and the second section evaluates the models and analyses the obtained results.
 
 
 \section{Methods}\seclbl{horizontal_self_org_methods}
 The first choice for networks based on horizontal self-organisation is what the independent units are, i.e. which group of network parameters are trained independently.
 In this thesis, a single layer is used as a self-contained unit. A layer is a small unit (e.g. compared to a model part that contains many layers) but can still be trained efficiently.
-Smaller units would be neurons or parts of a layer, but training them separately would be very inefficient since the efficiency of matrix operations on GPUs could no longer be fully exploited.
+Smaller units would be neurons or parts of a layer, but training them separately would be slow since the efficiency of matrix operations on GPUs could no longer be fully exploited.
 
 Each layer optimises a proxy objective function.
 Proxy objective functions are used because this type of local optimisation allows self-organisation and excellent performance on larger datasets \sidecite{Bartunov_Santoro_Richards_Marris_Hinton_Lillicrap_2018, Duan_Principe_2022}, in contrast to other local learning algorithms such as target propagation, synthetic gradients or feedback alignment (c.f. \secref{alt_train_algo}). 
- \figref{horizontal_gradient_flow} visualises the updates based on a proxy objective function.
+ \figref{horizontal_gradient_flow} visualises the updates based on proxy objective functions.
 An objective function is calculated for each layer, and the optimisation algorithm only updates the parameters within this layer.
 Thus, the gradients do not flow back to the preceding layers.
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.89\textwidth]{horizontal_gradient_flow}
-    \caption[The flow of gradients within the network based on horizontal self-organisation]{The flow of gradients within the network based on horizontal self-organisation: The data is fed from layer to layer during the forward pass. The layers are trained independently, and the gradients do not flow from one layer to the previous one.}
+    \caption[The flow of gradients within the network based on horizontal self-organisation]{The flow of gradients within the network based on horizontal self-organisation: The data is fed from layer to layer during the forward pass. The layers are trained independently, and the gradients do not flow backwards to the previous layers.}
     \figlbl{horizontal_gradient_flow}
 \end{figure}
 
 A combination of diversity and sparsity constraints is used as a loss function, which leads to representations that are easy to interpret, suitable for net fragments (c.f. \secref{neuro_concepts_net_fragments}), and also increases robustness (c.f. \secref{neuro_concepts_sparsity}).
 Identical to the preliminary experiments in Appendix \chref*{net_fragments}, the sparsity is achieved by using the kullback-leibler (KL) divergence \sidecite{10-5555-3042573-3042641}.
+
 The model consists of several linear layers $l$ with a ReLU activation function (c.f. \eqref{act_functions}).
 A layer $l$ consists of $n^{[l]}$ neurons and the activations $\boldsymbol{a}^{[l]}$ are calculated for a given input $\boldsymbol{a}^{[l-1]}$ as
 
 \begin{align}\eqlbl{vso_1}
-		\boldsymbol{a}^{[l]} = \boldsymbol{W}^{[l]} \cdot \boldsymbol{a}^{([l-1]} + \boldsymbol{b}^{[l]}
+		\boldsymbol{a}^{[l]} = f \left( \boldsymbol{W}^{[l]} \cdot \boldsymbol{a}^{([l-1]} + \boldsymbol{b}^{[l]} \right)
 \end{align}
 
-whereby $\boldsymbol{W}^{[l]}$ is the weight and $\boldsymbol{b}^{[l]}$ the bias of layer $l$.
+whereby $\boldsymbol{W}^{[l]}$ is the weight, $\boldsymbol{b}^{[l]}$ the bias of layer $l$, and $f(\cdot)$ is the activation function.
 If a mini-batch contains $m$ samples, the activation probability $\hat{\rho}^{[l]}_i$ of a neuron $a^{[l]}_i$ can be calculated as:
 
 \begin{align}\eqlbl{vso_2}
@@ -77,9 +78,9 @@ whereby $k$ changes the sign depending on the class:
 \end{align}
 
 
-However, this loss function has two significant drawbacks: First, comparing two samples can be unstable; if one sample is not representative of a class, the other sample may be pushed away from its cluster centre. Second, if the dataset has more than two classes, more negative samples ( $y^{(i)} \neq y^{(j)}$) than positive samples ($y^{(i)} = y^{(j)}$) are compared. With many classes, the optimisation algorithm focuses mainly on pushing negative samples apart and does not pay enough attention to pushing positive samples together. These problems are alleviated with two measures: Instead of comparing two samples, a sample is compared to the average activation of a class, which can be interpreted as the cluster centre of a class. Furthermore, each sample is once compared with the cluster centre from the same class and once with a cluster centre from another class. Thus, positive and negative samples are compared equally often.
+However, this loss function has two significant drawbacks: First, comparing two samples can be unstable; if one sample is not representative of a class, the other sample may be pushed away from its classes' cluster centre. Second, if the dataset has more than two classes, more negative samples ( $y^{(i)} \neq y^{(j)}$) than positive samples ($y^{(i)} = y^{(j)}$) are compared. With many classes, the optimisation algorithm focuses mainly on pushing negative samples apart and does not pay enough attention to pushing positive samples together. These problems are alleviated with two measures: Instead of comparing two samples, a sample is compared to the average activation of a class, which can be interpreted as the cluster centre of a class. Furthermore, each sample is once compared with the cluster centre from the same class and once with a cluster centre from another class. Thus, positive and negative samples are compared equally often.
 
-Lets denote {\footnotesize $\boldsymbol{a}^{[l]}_{C=\overline{c}}$} as the average activation of class $c$ in layer $l$. Thus, the goal is to push the activation of a sample {\footnotesize $\boldsymbol{a}^{[l](i)}$} closer to {\footnotesize $\boldsymbol{a}^{[l]}_{C=\overline{y}^{(i)}}$} and away from {\footnotesize $\boldsymbol{a}^{[l]}_{C=\overline{v}^{(i)}}$}, where $v^{(i)}$ is a random class drawn from {\footnotesize $ C \backslash \{y^{(i)} \}$}\sidenote{the set of all classes without $y^{(i)}$}. Such a loss could be implemented as
+Lets denote {\footnotesize $\boldsymbol{a}^{[l]}_{C=\overline{c}}$} as the average activation of class $c$ in layer $l$. Thus, the goal is to push the activation of a sample $\boldsymbol{a}^{[l](i)}$ closer to {\footnotesize $\boldsymbol{a}^{[l]}_{C=\overline{y}^{(i)}}$} and away from {\footnotesize $\boldsymbol{a}^{[l]}_{C=\overline{v}^{(i)}}$}, where $v^{(i)}$ is a random class drawn from $ C \backslash \{y^{(i)} \}$\sidenote{the set of all classes without $y^{(i)}$}. Such a loss could be implemented as
 
 \begin{align}\eqlbl{vso_8}
 		\mathcal{L}^{[l]}_{d}  = \frac{1}{n} \sum_{i=1}^{n} \text{cos} \left(\boldsymbol{a}^{[l](i)}, \boldsymbol{a}^{[l]}_{C=\overline{v}^{(i)}} \right) - \text{cos} \left(\boldsymbol{a}^{[l](i)}, \boldsymbol{a}^{[l]}_{C=\overline{y}^{(i)}} \right)
@@ -103,9 +104,9 @@ The loss applied to each layer is the sum of sparsity loss and diversity loss, w
 \end{align}
 
 
-One problem with proxy objective functions is that this type of training often requires layer-wise training. First, layer $1$ is trained until convergence, then the weights are frozen, then layer $2$ is trained and so on.
+One problem with proxy objective functions is that this type of training often requires layer-wise training. I.e. first layer $1$ is trained until convergence, then the weights are frozen, afterwards layer $2$ is trained and so on.
 Such sequential training is inefficient because it requires more forward passes than if the model is trained with end-to-end backpropagation.
-It was found that this loss function allows training all layers simultaneously. With a forward pass, all activations are calculated, followed by a layer-wise backward pass where the gradients from one layer do not propagate back to previous layers.
+It was found that the proposed loss function allows training all layers simultaneously. With a forward pass, all activations are calculated, followed by a layer-wise backward pass where the gradients from one layer do not propagate back to previous layers.
 Since the gradients are only needed locally, no large graph of gradients has to be calculated, which reduces the memory utilisation on GPUs and allows larger mini-batch sizes. In addition, this type of architecture is straightforward to parallelise since each layer (i.e. each independently trained unit) or a group of layers can be trained on a different GPU:
 
 \begin{figure}[h]
@@ -198,12 +199,12 @@ Since the gradients are only needed locally, no large graph of gradients has to 
     \figlbl{horizontal_org_arch1}
 \end{figure}
 
-The model used consists of $4$ fully connected layers with ReLU activation. The first layer has $512$ neurons, the second $256$ neurons, the third $128$ neurons and the fourth $64$ neurons. The model is illustrated in Figure \figref{horizontal_org_arch1}. Each layer is trained separately by minimising the loss  $\mathcal{L}^{[l]}$ (c.f. \eqref{vso_10}) with the Adam optimizer \sidecite{Kingma2015AdamAM} and a learning rate of $\eta = 1 \cdot 10^{-3}$. The mini-batch size is $60,000$. 
+The model used in this thesis consists of $4$ fully connected layers with ReLU activation. The first layer has $512$ neurons, the second $256$ neurons, the third $128$ neurons and the fourth $64$ neurons. The model is illustrated in \figref{horizontal_org_arch1}. Each layer is trained separately by minimising the loss  $\mathcal{L}^{[l]}$ (c.f. \eqref{vso_10}) with the Adam optimizer \sidecite{Kingma2015AdamAM} and a learning rate of $\eta = 1 \cdot 10^{-3}$. The mini-batch size is $60,000$. 
 
 \subsection{Extraction of Representations}\seclbl{horizontal_self_org_representations}
 In accordance with net fragments as defined in \secref{neuro_concepts_net_fragments}, the representations are not extracted at a specific point in the network (i.e. a pre-defined layer), but all representations from all layers are taken into account to fulfil a task.
 In the following, this is demonstrated based on a classification task, but other tasks are also conceivable in the future.
-After training, the average activation {\footnotesize $\boldsymbol{a}^{[l]}_{C=\overline{c}}$} for each class $c \in C$ and layer $l$ is determined.
+After training, the average activation {\footnotesize $\boldsymbol{a}^{[l]}_{C=\overline{c}}$} for each class $c \in C$ and layer $l$ is calculated.
 These averages from the training set represent prototypes of each class in each layer and can be considered a reference representation per class. Thus, the representations needed for this task are computed \emph{after} training and are not part of the training as, for example, in the case of a classification loss based on cross-entropy.
 When a new sample $\boldsymbol{x}^{(i)}$ is classified, the cosine similarity between the activations {\footnotesize $\boldsymbol{a}^{[l](i)}$} of this sample and the class prototypes {\footnotesize $\boldsymbol{a}^{[l]}_{C=\overline{c}}$} is calculated in each layer.
 %
@@ -211,7 +212,7 @@ When a new sample $\boldsymbol{x}^{(i)}$ is classified, the cosine similarity be
 		\text{cos}^{[l](i)}_{C=c} = \text{cos} \left( \boldsymbol{a}^{[l](i)}, \boldsymbol{a}^{[l]}_{C=\overline{c}} \right) = \frac{\boldsymbol{a}^{[l](i)} \cdot \boldsymbol{a}^{[l]}_{C=\overline{c}}}{\max \left( ||\boldsymbol{a}^{[l](i)}||_2, ||\boldsymbol{a}^{[l]}_{C=\overline{c}}||_2 \right) }
 \end{align}
 
-Thus, the cosine similarity $\text{cos}^{[l](i)}_{C=c}$ for each class $c \in C$ and each of the layers $l \in \{1, ..., 4\}$ is calculated. Afterwards, the class $c$ with the highest average cosine similarity between is used as prediction.
+Thus, the cosine similarity $\text{cos}^{[l](i)}_{C=c}$ for each class $c \in C$ and each of the layers $l \in \{1, ..., 4\}$ is calculated. Afterwards, the class $c$ with the highest average cosine similarity across all layers is used as prediction.
 
 \begin{align}\eqlbl{vso_12}
 		\argmax_{c \in C} \frac{1}{4} \sum_{l=1}^{4} \text{cos}^{[l](i)}_{C=c}
@@ -219,10 +220,9 @@ Thus, the cosine similarity $\text{cos}^{[l](i)}_{C=c}$ for each class $c \in C$
 
 This results in a weighted voting; if a layer is certain that the sample belongs to a specific class, the sample has a high cosine similarity with one class prototype and a low similarity with all other class prototypes. Accordingly, this layer influences the prediction more than a layer that cannot assign the sample to one class and calculates a similarly high cosine similarity between the sample and all prototypes.
 
-\subsection{Lateral Connections}
-As described in \secref{neuro_concepts_lateral_connections}, lateral connections in the human brain serve neurons to support each other.
-There, it is also described that lateral connections can be implemented as recurrent connections.
-There are several ways to implement recurrent connections. A straightforward possibility is to concatenate the layer input $\boldsymbol{a}^{[l-1]}[t]$ at time $t$ with the layer output $\boldsymbol{a}^{[l]}[t-1]$  at time $t-1$. This is visualised in \figref{lateral_concat}. Of course, $\boldsymbol{a}^{[l]}[t-1]$ is undefined at $t=0$. In this case, $\boldsymbol{a}^{[l]}[t-1]$ is initialized with zeros.
+\subsection{Lateral Connections}\seclbl{horizontal_self_org_lateral_connections}
+As described in \secref{neuro_concepts_lateral_connections}, lateral connections in the human brain serve neurons to support each other, and  can be implemented as recurrent connections.
+There exist several ways to implement recurrent connections. A straightforward possibility is to concatenate the layer input $\boldsymbol{a}^{[l-1]}[t]$ at time $t$ with the layer output $\boldsymbol{a}^{[l]}[t-1]$  at time $t-1$. This is visualised in \figref{lateral_concat}. Of course, $\boldsymbol{a}^{[l]}[t-1]$ is undefined at $t=0$. In this case, $\boldsymbol{a}^{[l]}[t-1]$ is initialized with zeros.
 
 \begin{figure}[h]
     \centering
@@ -232,14 +232,14 @@ There are several ways to implement recurrent connections. A straightforward pos
 \end{figure}
 
 
-Another option is to use a second weight matrix, as it is usually done in recurrent layers. Therefore, the equation \eqref{vso_1} is extended as follows:
+Another option is to multiply the lateral input with an additional weight matrix and to add the result to the input. Therefore, \eqref{vso_1} is extended as follows:
 
 \begin{align}\eqlbl{vso_13}
 		\boldsymbol{a}^{[l]}[t] =  \boldsymbol{W}_x^{[l]} \cdot \boldsymbol{a}^{[l-1]}[t] + \boldsymbol{b}^{[l]} + \overbrace{\boldsymbol{W}_h^{[l]} \cdot \boldsymbol{a}^{[l]}[t-1] }^{\text{lateral connection}}
 \end{align}
 
-whereby $\boldsymbol{W}_x^{[l]}$ is the weight multiplied with the layer input and $\boldsymbol{W}_h^{[l]}$ the weight multiplied with the previous layer output. In both cases, the layer receives information about the activations at the previous time step.
-However, this only seems helpful if the model input is not static. Therefore, the model input is available over several time steps and is augmented after each step. Thus, the model receives different views of the same image and can adjust its activations if necessary. The following image augmentation techniques are applied, each with a probability of $p=0.8$:
+whereby $\boldsymbol{W}_x^{[l]}$ is the weight multiplied with the layer input and $\boldsymbol{W}_h^{[l]}$ the weight multiplied with the previous layer output. In both cases, the layer receives information about the activations at the previous timestep.
+However, intuitively, recurrent connections seem only helpful if the model input is not static. Therefore, the model input is available over several timesteps and is optionally augmented after each step. Thus, the model receives different views of the same image and can adjust its activations if necessary. The following image augmentation techniques are applied:
 
 \begin{itemize}
 	\item \textbf{Color Jitter}: Randomly change the brightness, contrast, and saturation of the image.
@@ -248,7 +248,9 @@ However, this only seems helpful if the model input is not static. Therefore, th
 	\item \textbf{Adjust Sharpness}: Randomly adjust the sharpness of the image.
 \end{itemize}
 
-\figref{mnist_augmented} visualises how this augmentation affects samples of the MNIST dataset \cite{Lecun_Bottou_Bengio_Haffner_1998}. The original image is shown on the left, and $9$ augmented versions of it are shown on the right. This allows the model to perceive the same image from different views.
+These types of augmentation have proven successful in supervised image classification and are therefore expected to be helpful during lateral support as well.
+Unlike image classification, however, the augmentation hyperparameters are initialised randomly and then kept fixed. This ensures that the model receives the same type of augmented view at each timestep and can thus learn to extract better representations from multiple well-known points of view\sidenote{for image classification, the augmentation hyperparameters are typically chosen randomly at each augmentation step to improve robustness}. 
+\figref{mnist_augmented} visualises how this augmentation affects samples of the MNIST dataset \cite{Lecun_Bottou_Bengio_Haffner_1998}. The original image is shown on the left, and $9$ augmented versions of it are shown on the right.
 
 \begin{figure}[h]
     \centering
@@ -258,148 +260,14 @@ However, this only seems helpful if the model input is not static. Therefore, th
 \end{figure}
 
 
-Recurrent connections are typically used to process sequential data or text. Thereby, the data is usually first read token by token before an output is generated.\sidenote{for example, in text classification, all word tokens of a sentence are typically read before the model classifies a sentence. This is necessary because all information is required, and classification cannot be done on the basis of a single token.} Thus, such models depend on sequential timesteps and are typically trained with backpropagation through time (BTT). Thereby, the gradients flow backwards over several time steps. This leads to well-known problems such as vanishing and exploding gradients.
+Recurrent connections are typically used to process sequential data or text. Thereby, the data is usually first read token by token before an output is generated.\sidenote{for example, in text classification, all word tokens of a sentence are typically read before the model classifies a sentence. This is necessary because all information is required, and classification cannot be done on the basis of a single token.} Thus, such models depend on sequential timesteps and are typically trained with backpropagation through time (BTT). Thereby, the gradients flow backwards over several timesteps. This leads to well-known problems such as vanishing and exploding gradients.
 
-In this thesis, BTT is not used, which means that a prediction is made after each time step, but the prediction potentially improves with more time steps. This leads to desirable properties: (i) Problems with vanishing or exploding gradients do not exist, regardless of how many time steps the model requires. (ii) After each time step, representations can be extracted according to \secref{horizontal_self_org_representations}. If an object representation can be assigned to one class label with a high probability, the sequential processing of different image views can be aborted. If this is not the case, further time steps can be carried out until the model has sufficiently high confidence in its prediction. Thus, the number of time steps can be sample-dependent.
+In this thesis, BTT is not used, which means that a prediction is made after each timestep, but the prediction potentially improves with more timesteps. This leads to desirable properties: (i) Problems with vanishing or exploding gradients do not exist, regardless of how many timesteps the model requires. (ii) After each timestep, representations can be extracted according to \secref{horizontal_self_org_representations}. If an object representation can be assigned to one class label with a high probability, the sequential processing of different image views can be aborted. If this is not the case, further timesteps can be carried out until the model has sufficiently high confidence in its prediction. Thus, the number of timesteps can be sample-dependent.
 
-
-% Idee: Mehr Robustheit indem z.b. in einem timestep noise als Input genutzt wird oder bei 1 von 10 timesteps (ausser in den ersten 2) das Bild zufälligerweise vertauscht wird. -> Lateral connections should help
-
-\subsection{Hierarchical Features}\seclbl{horizontal_self_org_hierarchical_features}
-A criticism of the proposed model is that it does not learn hierarchical features, even though hierarchical features are one of the main reasons for the excellent performance of deep learning systems. The loss enforces in each layer that the latent representations of objects of the same class are similar and that the representations of different classes are different. This violates the concept of hierarchical features; the first layers should learn general features that are helpful for all classes but cannot necessarily be assigned to a specific class. Only later layers build class representations that are specific to a class. In the current setting, however, already the first layers generate class-specific representations.
-
-In the following, two possible measures are described to counteract this problem: (i) The fully connected layers are replaced by convolutional layers so that the first layers have a smaller field of view and can only recognise local features. (ii) While specific information in the form of the input image flows into the network from one side, general information in the form of class labels is fed into the network from the other side, and these two types of information are fused. Thus, the training process enforces a hierarchy by fusing specific and general information over multiple layers.
-These measures can be applied either individually or in combination with each other.
-
-
-\subsubsection{Convolutional Architecture}
-In a CNN, the field of view in the first layers is restricted by design but becomes larger in subsequent layers. Consequently, using a CNN architecture instead of a model based on fully connected layers alleviates the problem of non-hierarchical features.
-
-
-\begin{figure}[h]
-    \centering
-    \resizebox{0.99\textwidth}{!}
-{
-\begin{tikzpicture}
-\tikzstyle{connection}=[ultra thick,every node/.style={sloped,allow upside down},draw=\edgecolor,opacity=0.7]
-\tikzstyle{copyconnection}=[ultra thick,every node/.style={sloped,allow upside down},draw={rgb:blue,4;red,1;green,1;black,3},opacity=0.7]
-
-
-\node[canvas is zy plane at x=0] (input) at (0,0,0) {\includegraphics[width=8cm,height=8cm]{imgs/mnist.jpeg}};
-
-
-\pic[shift={(3,0,0)}] at (input) 
-    {Box={
-        name=conv1,
-        caption=Conv + ReLU,
-        xlabel={{1, }},
-        zlabel=16,
-        fill=\ConvColor,
-        height=16,
-        width=2,
-        depth=16
-        }
-    };
-
-
-\draw [connection]  (input) ++(0,0,0)    -- node {\midarrow} (conv1-west);
-
-
-\pic[shift={ (0,0,0) }] at (conv1-east) 
-    {Box={
-        name=pool1,
-        caption= ,
-        fill=\PoolColor,
-        opacity=0.5,
-        height=8,
-        width=1,
-        depth=8
-        }
-    };
-
-
-\pic[shift={(2,0,0)}] at (pool1-east) 
-    {Box={
-        name=conv2,
-        caption=Conv + ReLU,
-        xlabel={{16, }},
-        zlabel=32,
-        fill=\ConvColor,
-        height=8,
-        width=4,
-        depth=8
-        }
-    };
-
-
-\draw [connection]  (pool1-east)    -- node {\midarrow} (conv2-west);
-
-
-\pic[shift={ (0,0,0) }] at (conv2-east) 
-    {Box={
-        name=pool2,
-        caption= ,
-        fill=\PoolColor,
-        opacity=0.5,
-        height=4,
-        width=1,
-        depth=4
-        }
-    };
-
-
-\pic[shift={(2,0,0)}] at (pool2-east) 
-    {Box={
-        name=conv3,
-        caption=Conv + ReLU,
-        xlabel={{32, }},
-        zlabel=64,
-        fill=\ConvColor,
-        height=4,
-        width=6,
-        depth=4
-        }
-    };
-
-
-\draw [connection]  (pool2-east)    -- node {\midarrow} (conv3-west);
-
-
-\end{tikzpicture}
-}
-    \caption[Architecture of the CNN for horizontal self-organisation]{The network architecture of the CNN for horizontal self-organisation with fully connected layers.}
-    \figlbl{horizontal_org_arch2}
-\end{figure}
-
-The CNN architecture used in this thesis is shown in \figref{horizontal_org_arch2}.
-Three convolutional layers with ReLU activation functions and with $16$, $32$, and $64$ channels are used, and max-pooling layers are applied between each convolutional layer. For training, the same hyperparameters and loss functions are used for the model with fully connected layers.
-
-
-\subsubsection{Two-Way Information Flow}
-Hinton \sidecite{ff_algo} introduced with the forward-forward (FF) algorithm (c.f. \secref{alt_train_algo}) a promising idea for models based on proxy objective functions: 
-The image is fed into the input layer of the network, and the corresponding label is fed into the output layer of the network. The image remains static for several time steps, and the network is trained to push the layer's activations above a certain threshold. In the second stage, the image is fed into the network with the wrong label and the network is trained to push the activations below a certain threshold. He found that a feature hierarchy is created when low-level features (i.e. images) are fed into the network from one end and high-level features (i.e. class labels) are fed into the network from the other end. However, this approach has one major disadvantage: During inference, each possible sample-label combination has to be fed into the model, and the label that caused the highest neural activity is used as the model's prediction.
-
-In this thesis, this process is implemented in a different way, which does not have this disadvantage. Identical to the FF algorithm, the image is fed into the network's input layer for multiple time steps. Conversely, the label is not fed directly into the output layer but is made available to the last layer within the loss function. Each layer maximises the mutual information (MI) between its activations and the activations of the previous and subsequent layers. Thus, the first layer maximises the MI between the input image and its activations, and the last layer maximises the MI between its activations and a label vector. This creates a feature pyramid in which a smooth transition from concrete samples to abstract class labels is learned. During inference, the last layer directly predicts latent representations that can be assigned to a class. This process is visualised in Figure \figref{mi_loss}. 
-
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.99\textwidth]{mi_loss}
-    \caption[Horizontal self-organisation with mutual information loss]{Horizontal self-organisation with mutual information loss: Each layer maximises the mutual information (MI) between its activations and the activations of the previous and subsequent layers. The first layer maximises the MI between its activations and the input image (instead of the previous layer), and the last layer maximises the MI between its activations and the image label (instead of the subsequent layer).}
-    \figlbl{mi_loss}
-\end{figure}
-
-
-
-
-TODO: Currently, various experiments are ongoing to find out how this can be implemented (therefore, yet to be explained in more detail).
-
-
-%\subsection{Efficient Parallel Training}
-%Idee: Nachfolgelayer einbeziehen in Loss -> Nachfolgelayer ist gefroren, Output muss aber möglichst gut sein (sollte Performance nicht verschlechtern von Nachfolgelayer) + eigene Performance verbessern
 
 
 \section{Results}\seclbl{horizontal_self_org_methods_results}
-The results obtained by this model are presented in the following. It is important to note that these models aim not to achieve the best possible results in terms of classification accuracy on a benchmark. In large-scale comparisons, it has often been found that end-to-end backpropagation of error is far superior to other methods, especially in image classification \sidecite{Bartunov_Santoro_Richards_Marris_Hinton_Lillicrap_2018}. Instead, the aim here is to examine interesting concepts that might lead to new learning principles in the long run.
+The results obtained by this model are presented in the following. It is important to note that these models aim not to achieve the best possible results in terms of classification accuracy on a benchmark. In large-scale comparisons, it has often been found that end-to-end backpropagation of error is far superior to other methods, especially in image classification \sidecite{Bartunov_Santoro_Richards_Marris_Hinton_Lillicrap_2018}. Instead, the aim is to examine interesting concepts that might lead to new learning principles.
 
 \subsection{Dataset}\seclbl{horizontal_self_org_methods_dataset}
 The model is trained and evaluated on the MNIST \cite{Lecun_Bottou_Bengio_Haffner_1998} dataset. MNIST is a dataset of handwritten digits with $60'000$ training samples and $10'000$ test samples.
@@ -409,31 +277,92 @@ The samples are images of a digit with the resolution $28 \times 28$ pixel in gr
 In addition, the models are evaluated on MNIST-C \sidecite{Mu_Gilmer_2019}, a corrupted MNIST benchmark for testing the out-of-distribution robustness of image classification models. This dataset consists of the MNIST data with $15$ types of corruptions applied to the samples.
 
 \subsection{Baseline Model}
-The base model consists of $4$ fully connected layers with $512$, $256$, $128$ and $64$ neurons as shown in \figref{horizontal_org_arch1}.
-No lateral connections or communication across multiple time steps are used for the baseline. In addition, the measures described in \secref{horizontal_self_org_hierarchical_features} are not used.
-This model achieves an accuracy on MNIST of $93.7\%$. This accuracy is remarkably good considering that the model has never been explicitly trained for classification with, for example, a cross-entropy loss.
-Furthermore, the model is trained extremely fast because these local updates are suitable for batch-gradient descent and not only mini-batch gradient descent.
-Each layer also has a different accuracy, typically in the range of $90.1\% - 92.9\%$. However, due to the implicit voting by using the sum over the cosine similarities, the prediction of the entire model is better than that of a single layer.
+The baseline model consists of $4$ fully connected layers with $512$, $256$, $128$ and $64$ neurons as shown in \figref{horizontal_org_arch1}.
+No lateral connections or communication across multiple timesteps are used to train the baseline.
+This model achieves an accuracy of $82.8\%$ on MNIST, and $64.7\%$ on MNIST-C.
+This accuracy is relatively low compared to models trained with end-to-end backpropagation of error (c.f. \secref{hso_results_backprop}). 
+This weak performance on classification is due to several reasons: First, the model is not explicitly trained for classification, e.g. with a cross-entropy loss. Instead, average image representations are extracted after training and used as object prototypes.
+Furthermore, the goal of the model is to demonstrate novel concepts, and the hyperparameters are not optimised for a specific task like classification.
+
+However, the model also has some very desirable properties; it is trained extremely fast because the local updates without propagating over layers are suitable for batch-gradient descent and not only mini-batch gradient descent.
+Furthermore, each layer has a different accuracy in the range of $76.1\% - 81.9\%$. Due to the implicit voting by using the sum over the cosine similarities, the prediction of the entire model is better than that of a single layer.
+The use of more layers (arranged sequentially or in parallel) would lead to even more votes and could, at best, further improve the result.
+
 
 
 \subsection{Lateral Connections}
-TODO: How do lateral connections improve the result?
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.99\textwidth]{hso_accuracy}
+    \caption[Accuracy of models with lateral connection]{Accuracy of models with lateral connection on the MNIST and MNIST-C datasets for a different number of timesteps. The models are trained with and without data augmentation (aug.) as well as with and without backward connections (bc.).}
+    \figlbl{digit_4_versions}
+\end{figure}
+
+In the human brain, lateral connections provide mutual support between neurons. In horizontal self-organisation, lateral connections are interpreted as recurrent connections within a layer. In this way, activations can be supported or corrected over several timesteps.
+In \secref{horizontal_self_org_lateral_connections}, two suggestions are made on how lateral connections can be implemented; either the output of the layer is concatenated with the input of the layer, or an additional weight matrix is applied to the output of the layer and the result of this linear transformation is added to the input of the layer.
+Both methods work well, but concatenation has, on average, resulted in $1.7$ p.p. better classification accuracy and is therefore preferred and used in the following. One disadvantage of concatenation is that the model has more parameters to train than if the weight matrix is split into two small matrices, as is the case for the second variant.
+However, since the model is rather small, having a better classification performance is preferred over having less parameters.
 
 
-\subsection{Hierarchical Features}
-TODO: How do hierarchical features improve the result?
+The model is evaluated for $1$, $3$, $5$, $10$, $15$ and $20$ timesteps. Data augmentation is applied optionally after each timestep. In addition, backward connections are examined: With backward connections, the input of layer $l$ consists not only of the output of layers $l-1$ and $l$ (lateral connection) but also of the output of layer $l+1$. The intuition is that this implementation allows information to flow backwards. This could be helpful since the backward flow of information is not given without end-to-end backpropagation.
+
+The results are shown in \figref{digit_4_versions}. It can be observed that data augmentation does not improve the results but worsens them (red and orange lines represent models with data augmentation, green and blue lines represent models without data augmentation). So the intuition that multiple views of the same image lead to a better prediction does not hold. Analysis shows that changing the input over timesteps leads to oscillations in the activations and, thus, to less stable results. An intuition is that without BTT, the model does not learn to leverage information from previous activations. When backpropagation through time is performed, the result is significantly better and comparable to that without data augmentation. This suggests that the model can learn to transmit information across timesteps with BTT but not without. However, not uing BTT is desirable as the updates remain local\sidenote{otherwise, they depend on the timestep}. It is also found that backward connections do not affect the result and thus do not improve the model.
+
+
+Training over multiple timesteps without augmentation, on the other hand, seems very helpful: Static input over multiple timesteps improves the accuracy of the basline model on MNIST from $82.8\%$ (1 timestep) up to $94.8\%$ (20 timesteps). On MNIST-C, accuracy also improves significantly from $64.7\%$ to $71.6\%$.
+ Thus, lateral connections with timesteps are helpful even if the input is static. However, an accuracy of $94.5\%$ is already obtained with $10$ timesteps, and, therefore, $10$ timesteps seem to be a good compromise between performance and computational efficiency. Also on MNIST-C the difference is marginal; with 10 timesteps the accuracy is $70.8\%$. Overall, lateral connections are an effective measure to improve the proposed model and it increases the model's accuracy by up to $12$ p.p.
+
+
+\subsection{More Prototypes}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.49\textwidth]{digit_4_versions}
+    \caption[Different versions of the digit ``$4$'' in the MNIST dataset]{Different versions of the digit ``$4$'' in the MNIST dataset.}
+    \figlbl{digit_4_versions}
+\end{figure}
+
+For classification, a sample is compared to the average activation of each class. This average activation can be understood as an object prototype within a world model. Thus, it is compared to which prototype a sample fits best. The problem is that a single object prototype is not sufficient. As an example, \figref{digit_4_versions} shows different versions of the digit $4$ that can be found in the MNIST dataset. This demonstrates that a digit can be written in different ways\sidenote{this applies to all kinds of datasets: Most objects can have various visual characteristics (size, colour, shape) or look different from different viewpoints}.
+Consequently, the digits and, thus, the activations look different for samples from the same class, and the use of more than one prototype per class is helpful. This is also in line with the human brain: The brain stores different views from the same object in its memory.
+
+Therefore, instead of calculating the average activation per class, the activations per class are clustered for each layer using the k-means algorithm.
+Afterwards, the average activation per cluster is calculated to obtain multiple prototypes per class and layer. For each class, the prototype that has the highest cosine similarity with the sample is selected and used for the voting. \figref{hso_accuracy_prototypes} shows the result.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.99\textwidth]{hso_accuracy_prototypes}
+    \caption[Accuracy of models with different number of prototypes]{Accuracy of models on MNIST and MNIST-C datasets using a different number of prototypes. One model is trained with $1$ timestep, the other model with $10$ timesteps.}
+    \figlbl{hso_accuracy_prototypes}
+\end{figure}
+
+The use of more prototypes leads to significantly better results. For example, using $120$ prototypes per class improves the accuracy of the basline model on the MNIST dataset from $82.8\%$ to $96.8\%$ and on the MNIST-C dataset from $64.7\%$ to $76.4\%$.
+This indicates the efficiency of using more prototypes.
+
+Interestingly, using more prototypes only helps the model without timesteps. The model with more timesteps cannot benefit and the performance remains about the same with more prototypes. Despite extensive analysis, it remains unclear why the model with multiple timesteps does not benefit from multiple prototypes. One assumption is that multiple timesteps already separate the classes well and that further prototypes are not helpful.
+
+
+\subsection{Comparison Backpropagation}\seclbl{hso_results_backprop}
+To evaluate the performance of horizontal self-organisation, a model similar to the baseline model is trained with end-to-end backpropagation of the error. This model has an additional classification head with $10$ neurons, i.e. is a fully connected network with $512$, $256$, $128$, $64$ and $10$ neurons. The last layer with $10$ neurons is the classification head using a softmax activation to predict the classes. 
+In addition, the batch size is reduced to $256$ samples since this model has no local updates and thus requires more memory. The other hyperparameters remain identical to the baseline model. The model with end-to-end backpropagation achieves an accuracy of $98.2\%$ on MNIST and $87.7\%$ on MNIST-C. In \tabref{vso_model_performance}, a comparison of the aforementioned models is given. There, it can be seen that the model with end-to-end backpropagation of error is superior for classification compared to the models trained with proxy objective functions. This is in line with \sideciteay{Bartunov_Santoro_Richards_Marris_Hinton_Lillicrap_2018}.
 
 
 
+\begin{table}[h] 
+    \centering
+	 \begin{tabular}{l c c}
+    	 & \textbf{Accuracy} & \textbf{Accuracy}\\
+    	 \textbf{Model} & \textbf{MNIST} & \textbf{MNIST-C}\\
+        \hline
+		End-to-end backpropagation of error & $98.2\%$ & $87.7\%$\\
+		Baseline & $82.8\%$ & $64.7\%$\\
+		Baseline + $10$ timesteps & $94.5\%$ & $70.8\%$\\
+		Baseline + $20$ timesteps & $94.8\%$ & $71.6\%$\\
+		Baseline + $10$ prototypes & $92.9\%$ & $72.1\%$\\
+		Baseline + $120$ prototypes & $96.8\%$ & $76.4\%$\\
+		Baseline + $10$ timesteps + $120$ prototypes & $93.4\%$ & $67.6\%$\\
+    \end{tabular}
+    \caption[Accuracy of different models on MNIST and MNIST-C]{Accuracy of different models on MNIST and MNIST-C. The models are trained with a different number of timesteps and/or a different number of prototypes.}
+    \tablbl{vso_model_performance}
+\end{table}
 
-
-
-
-
-%TODO: vereinheitliche Mathe: Was ist underline, was ist hochgestellt in Klammern ($z^{(i)}$) und was ist hochgestellt in eckigen Klammern? Bei NN: Was ist n, was ist m, ... (+ Lernraten Symbol, Loss Symbol, etc.)
-%Sind alle Vektoren bold?
-
-% TODO: target function und objective function vereinheitlichen
-% TODO: net fragment or net fragment
-
-
+However, the performance of the models based on horizontal self-organisation is only marginal worse; for example, the accuracy of the best model based on horizontal self-organisation is 1.4 p.p. worse  on MNIST compared to the model trained with end-to-end backpropagation of error. For MNIST-C, however, the difference is more significant. This could be due to how the classification is done: In the model based on end-to-end backpropagation, the activations within the network converge to $10$ neurons, using the most active neuron as the predicted class. Noise in the data is implicitly reduced during the forward pass\sidenote{as unimportant information is constantly removed until only class information is left}.
+In contrast, the model based on horizontal self-organisation considers all activations for prediction, including those triggered by noise. Thus, the noise influences the prediction a lot. Alternative strategies for extracting the activations could provide a remedy: For example, a classification head could be applied to each layer to extract more robust representations and to filter out noise.
