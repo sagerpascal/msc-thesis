@@ -161,20 +161,63 @@ In the following, an alternative is proposed which does not have this disadvanta
 
 
 \subsection{Vertical Self-Organisation}\seclbl{future_vso}
-TODO: this section is incomplete, as many experiments are ongoing...
-
-Vertical self-organisation splits the input image into multiple patches and processes each patch with an independent model.
-Similar to horizontal self-organisation (c.f. \secref{future_hso}), the prediction accuracy could be improved by using more prototypes per class, as digits of the same class can look different. In the case of vertical self-organisation, the $\boldsymbol{\mu}$ values per VAE and class should be clustered hierarchically to obtain groups of similar-looking digits per class. Afterwards, the average value per group can be calculated to obtain more prototypes per class.
+Vertical self-organisation splits the input image into multiple patches and processes the patches with independent models. Having multiple independent VAEs works worse than just having a single VAE that receives the entire image as input. However, by predicting larger output patches or adding lateral communication, the models without multiple VAEs create better lantent representations. This is demonstrated by the example of classification where an accuracy of up to $91.1\%$ is obtained on MNIST, significantly outperforming a single VAE that has an accuracy of $85.2\%$.
+However, accuracy could be further improved: Currently, accuracy is calculated by comparing a sample with \emph{one} prototype per class. Using only one prototype might be not enough. For example, when looking at the t-SNE plots in \figref{hso_tSNE}, the same class is divided into more than one cluster. The calculation of the NMI score also indicates that one prototype per class is insufficient: When more clusters are used for k-means clustering, the NMI scores become higher. This is also in line with the findings of horizontal self-organisation (c.f. \secref{future_vso}) where using multiple prototypes significantly improved performance. Thus, the number of prototypes per class should be increased in future work.
 
 An essential concept in the human brain is the prevention of early commitment \sidecite{Marr_2010} (c.f. \secref{future_3_stage}), i.e. that a single entity such as a network layer not commits to something and then persists. Typical CNN architectures for classification have this problem by design, as they combine low-level features into higher-level features. Low-level features are detected locally; thus, it is already determined which feature is within the image before global information is considered. The proposed architecture for vertical self-organisation reduces this problem by creating representations of image patches. The patches are so small that they contain only enough information to build low-level features. For example, the representations from a single VAE cannot be clearly assigned to a class and thus do not contain enough information to commit to higher-level features or an object. Therefore, the VAEs can be considered low-level feature extractors, such as the first layer of a convolutional network. To create higher-level features, communication with neighbouring VAEs (i.e. when looking at the big picture) is needed. Each VAE extracts low-level features (local view) and communicates with other VAEs (global view) to determine their representation. Therefore, this architecture is less susceptible to the early commitment problem than typical end-to-end trained neural networks.
 Furthermore, the representations are learned unsupervised. For classification, the labels are fed into the network \emph{after} training in order to compute average class representations. Thus, no class representation but image compression is learned during training. This further reduces the problem of individual VAEs committing to a class.
 
-In future work, this effect should even be intensified by further reducing the size of the patches and using more VAEs. With $16$ VAEs ($4\times4$), the field of view is restricted to $(8 \times 8)$ pixels, and each VAE can only produce very poor image-level representations that can only be randomly assigned to a class. With more VAEs, communication can also be restricted locally: With $2\times2$ VAEs, each VAE automatically receives information about the entire image when communicating with its neighbours. With $4\times4$ VAEs, on the other hand, it is possible to have each VAE communicate only with its immediate neighbours. In this case, global image information must be propagated over several time steps from one VAE to the next.
+However, future work should address a key problem of this architecture: Currently, this concept only works with images in which the objects always appear at approximately the same place in the image. This can be remedied if the VAEs are applied at different places in the image, similar to a kernel in a convolutional layer. In this case, however, the same VAE sees all image data, meaning that it implicitly receives local and global image information. This could reduce the independence of each VAE. Consequently, it should be investigated how this architecture can become translation invariant similar to CNNs.
 
-Future work should also address a key problem of this architecture: Currently, this concept only works with images in which the objects always appear at approximately the same place in the image. This can be remedied if the VAEs are applied at different places in the image, similar to a kernel in a convolutional layer. In this case, however, the same VAE sees all image data, meaning that it implicitly receives local and global image information. This could reduce the independence of each VAE. Consequently, it should be investigated how this architecture can become translation invariant similar to CNNs.
+Moreover, the communication between the VAEs is quite limited since only reconstructed data is forwarded. More sophisticated could be using a dedicated communication channel and letting the model decide on its own what kind of information is transmitted. One way to implement such a channel could be to add the communication data to additional channels: The input patch is fed into the first channel, and a reconstructed version is predicted in the first output channel. Thus, the first channel corresponds to a classic VAE. Additional channels in the input and output are used for communication. Therefore, each VAE not only outputs a reconstructed patch but also communication data that is added to the input data of its neighbouring VAEs. Thus, each VAE receives an input patch and input communication data and outputs the reconstructed patch and output communication data. 
+The loss function remains the same for the first output channel since the goal is still the same, i.e. to reconstruct the output as well as possible and to have a well-shaped latent space. The only difference is that model can now access four input channels instead of one. However, the communication channels must be trained in order for them to be helpful for other VAEs. Therefore, an additional loss term mus be applied applied to the output communication channels. Since the VAEs are differentiable, one VAE can be trained by freezing the other VAEs and updating its weight in a way so that the performance of the other VAEs increases. Thereby, the output of the communication channels should improve in a way so that the other VAEs can benefit from it.
+
+
+
+
+%\subsubsection{Communication Channel}
+%Another way to communicate is through a dedicated communication channel. For this purpose, each VAE has not only $1$ input and $1$ output channel but $4$ input and output channels. The input patch is fed into the first channel, and a reconstructed version is predicted in the first output channel. Thus, the first channel corresponds to a classic VAE.
+%The remaining three channels are for communication: Each VAE generates a separate communication output for its three neighbouring VAEs. Thus, each VAE receives an input patch to reconstruct and communicate data. These four input matrices are stacked and fed into the encoder. For example, the first VAE receives a given patch on the input channel $1$ and communication data from the 2nd, 3rd, and 4th VAE on the input channels $2$-$4$. Based on this information, it outputs a patch reconstruction on the output channel $1$ and communication data that is sent to the 2nd, 3rd, and 4th VAE on the output channels $2$-$4$. Thus, there is a dedicated two-way communication channel between each neighbouring VAE. This is shown in \figref{vae_comm_channel}.
+
+%\begin{figure}[h]
+%    \centering
+%    \includegraphics[width=0.89\textwidth]{vae_comm_channel}
+%    \caption[Communication between VAEs with a dedicated communication channel]{Each VAE has one output channel to receive and reconstruct a given image patch. The other input and output channels are used for communication: Each VAE has for each other VAE a separate output channel to send messages and an additional input channel to receive messages.}
+%    \figlbl{vae_comm_channel}
+%\end{figure}
+
+%The loss function remains the same for the first output channel since the goal is still the same, i.e. to reconstruct the output as well as possible and to have a well-shaped latent space. The only difference is that model can now access four input channels instead of one. However, the communication channels must be trained in order for them to be helpful for other VAEs. Therefore, an additional loss term is applied to the $3$ output communication channels. Thereby, the idea is to optimise the output of these communication channels so that the other VAEs can better reconstruct their patch.
+
+%Let $V = \{V_1, ..., V_n \}$ be the set of $n$ VAEs. Each VAE has $n$ output channels, one channel for the reconstructed image and $n-1$ channels for communication. Furthermore, each VAE $V_i$ has a loss $\mathcal{L}_{\text{VAE}_i}$ based on the reconstruction goodness and the shape of the latent space (c.f. \eqref{hso_6}). The $3$ communication channels of VAE $i$ can influence the loss $\mathcal{L}_{VAE_j}$ of VAE $j$ (i.e. help to improve the loss by providing better information). How helpful the communication channels are can therefore be determined by the average loss of the other VAEs.
+
+%\begin{align}\eqlbl{hso_9}
+%	\mathcal{L}_{c_i} = \frac{1}{n-1} \sum_{n}^{j=1} \mathcal{L}_{\text{VAE}_j} \text{, if } i \neq j
+%\end{align}
+
+%Thus, the loss of a VAE with a communication channel is
+
+%\begin{align}\eqlbl{hso_10}
+%		\mathcal{L}_{{\text{VAE}_C}_i} = \mathcal{L}_{\text{VAE}_i} + \beta \cdot \mathcal{L}_{\text{KLD}_i} + \beta_2 \cdot \mathcal{L}_{c_i}
+%\end{align}
+
+%where $\beta_2$ is a weight factor for the communication channel. Thus, each model optimises its own reconstruction error, the shape of the latent space, and tries to improve the latent space and reconstruction error of other VAEs.
+
+
+
+%\subsubsection{VQ-VAE}
+%In the case of classification, the latent space has to be shaped in a way that allows to assign a latent representation to a class.
+%This can be simplified if the encoder maps the input image to a discrete variable in the latent space.
+%Vector quantised variational autoencoders (VQ-VAE) \sidecite{NIPS2017_7a98af17} model such a discrete latent space by using vector quantisation (VQ).
+%Vector quantisation is a method that maps multi-dimensional vectors to a finite set of ``code''-vectors.
+%Thus, an image is fed into the encoder to obtain the encoder output $\boldsymbol{h}_e$.
+%Afterwards, a nearest neighbour lookup is made to find the code vector most similar to $\boldsymbol{h}_e$.
+%The code-vector, also called the quantised vector $\boldsymbol{h}_q$, is fed into the decoder to reconstruct the image.
+
 
 
 \section{3-Staged Model}\seclbl{future_3_stage}
+TODO: Frame dieses Kapitel mehr so dass es klingt als wäre dies etwas on-top von VSO und HSO
+
 Christoph von der Malsburg, co-supervisor of this thesis and one of the authors of the ``Theory of Natural Intelligence'' paper\sidenote{the work that served as \emph{the} source of inspiration of this thesis} \sidecite{von_der_Malsburg_Stadelmann_Grewe_2022}, is a pioneer of the theory of self-organising fibre connections in the visual system \sidecite{Wolfrum_Wolff_Lücke_vonderMalsburg_2008, Willshaw_VonDerMalsburg_1979, wiskott1996face, Fernandes_vonderMalsburg_2015}. His theory refers to an image perception model with three stages S$1$-S$3$, and projection fibres between these stages.
 The stage S$1$ refers to the first stage, which is responsible for the extraction of features from images. In this stage, one fundamental principle is to avoid the ``fallacy of early commitment'' \sidecite{Marr_2010}.
 The idea is that local decisions should only be taken if plausible in the light of high-level features, while high-level features can only be defined based on low-level patterns.
