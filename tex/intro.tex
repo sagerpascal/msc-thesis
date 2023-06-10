@@ -103,13 +103,157 @@ This principle is also actively researched by other well-known research groups. 
 Energy-based models can be used for generative modelling tasks. For example, they can learn to generate new samples that resemble the training data by sampling from the energy function. This allows to predict future states and to learn concepts such as viewpoint transformations in a self-supervised manner.
 
 
+\section{An Alternative Vision Framework}
+Current pattern recongition systems are far from the capabilities of the biological system.
+For example, when a human looks at a dog, his brain can immediately construct a model of it, 
+including body schema, motion pattern, shape and attitude of body and limbs and texture of its surface.  
+This internal representation is seamlessly integrated with the emotional and the motor-planning system, so that we can touch and behaviorally interact with it.
+
+
+My, and presumably my supervisors', long-term vision is the implementation of such a system. In order to solidify this vision, a number of inquiries need to be answered: What kind of data structure is used to express the representation of the dog? How does this representation emerge through interaction with sensory signals? And how is the whole structure created and acquired through learning? It seems obvious that the representation of the cat is built from pre-existing or already learned partial descriptions (``net fragments'') that have a certain degree of adaptability and can only be combined in certain ways.
+Based on our understanding of the brain, the current representation of the dog and how it connects with the sensory system, motor system, and behavioral control system can be described as a large group of active neurons and their connections. This network is embedded in a continuum of neighboring networks.
+
+One of the insights from the \emph{Gestalt} psychology is that humans are apparently able to recognize the Gestalt of an object within a very short time; The brain can immediately recognize global patterns - arrays of local features that consistently conform to a known large-scale pattern - even if those local features are buried in noise or would, on the basis of local context, be interpreted very differently. Thus, local decisions should be made based on plausibility considering overall patterns, while the overall patterns can only be defined based on local features.
+
+Therefore, for the extraction of features from images, it is important to avoid the ``fallacy of early commitment'' as David Marr put it \sidecite{Marr_2010}. In contrast, this ability is not apparent in current neural network. Although some of the progress yields results that might give the illusion of this capability, knowledge about the underlying mechanics suggest that neural networks do not possess the same ability at Gestalt recognition as we do: The first layers of deep networks, which extract features from images, typically consider only local patches whose features are compress in later layers. Thus, the first layer do not consider global features but steer the decision process towards specific classes. Therefore, deep network take local decisions without consolidating global information.
+
+Some essential aspects of this vision can be realised in a simple model of invariant object recognition composed of two layers, L1 and L2 and a system of projection fibers that run between L1 and L2 (L1 could stand for primary visual cortex, and L2 for an area in temporal cortex).
+In this context, layer refers not to a layer of an artificial network but to a network consisting of a multitude of neuronal layers.
+The first layer L1 serves as feature extractor, while the second layer L2 represents object representations. The projection fibers map, in an iterative process, the features from L1 to the object representations in L2 and vice versa.
+
+In this thesis, a first step towards the implementation of this vision is taken. Thereby, the main focus is on the implementation of the feature extractor (L1).
+TODO Text.
+
+\subsection{Feature Extraction (L1)}
+The humans mechanism implementing the Gestalt phenomenon allows to recognize the Gestalt of an object within a very short time. The ability of this mechanism is rooted in lateral connections, which are recurrent connections operating at the same level of features. Unlike feed-forward connections that ascend through a hierarchy of feature detectors, these lateral connections enable elementary feature neurons to be activated by input and briefly fire. However, their continued firing relies on receiving support from a sufficient number of other activated neurons, which are also connected to them. Initially activated neurons that do not receive enough lateral support deactivate after a short period. Consequently, a significant response involves a collective group of neurons that mutually support each other through connections. Therefore, it is essential to view the process from the perspective that the winning neurons are integral parts of consistent networks of connections, enabling them to persist beyond the transient phase. These consistent networks are the high-level patterns discussed in the Gestalt movement. Hence, the aforementioned  conundrum, that local decisions should be taken on the basis of plausibility in the light of high-level patterns while the high-level patterns can only be defined on the basis of low-level features, is resolved by the fact that the input activates numerous feature neurons that fit the local input, but the high-level patterns represented by coherent networks of lateral connections only select those that are mutually consistent in terms of the overall pattern.
+
+The connections present in L1 possess the capacity to represent an extensive array of consistent connectivity patterns. Each neuron within L1 exhibits multiple excitatory incoming and outgoing connections, allowing it to be involved in slight variations and deformations of a specific pattern, as well as completely distinct global patterns. However, due to the limited range of lateral connections, coherence is maintained only within that particular range. In order to represent larger-scale structures like that of a dog, longer-range connections become essential, and these are found in L2. In L2, patterns remain invariant to translation, scale, and orientation, enabling the incorporation of broader spatial relationships.
+
+\subsection{Object Representations (L2)}
+Layer L2 exhibits a structure similar to L1, with a few distinctions. It has a smaller coverage area, focusing specifically on object-centered representations rather than encompassing the entire visual field. Additionally, L2 enables connections with an extended range, spanning a significant portion of the object's representation.
+
+In the object recognition process, a comprehensive network plays a central role: It consists of a sub-network within L1 that covers the region of the visual field containing the object, as well as a sub-network in L2 that represents the object. Active projection fibers, or axons, connect corresponding neurons in the L1 and L2 networks. Here, ``corresponding'' refers to neurons relating to the same point on the object's surface.
+
+The fiber projection between the L1 and L2 networks is composed of ``maplets''. A maplet comprises a collection of fibers that establish one-to-one connections between all neurons in a small patch of L1 and all neurons in a small patch of L2 in a topological manner. This topological connection links neighboring neurons in L1 to neighboring neurons in L2. Both L1 and L2 are divided into overlapping patches, and for each pair of patches—one in L1 and one in L2—a corresponding maplet exists.
+
+When the proper control units observe a high pattern correlation between the fibers reaching L2 and the local neural activation pattern there, they initiate activation. They inhibit competing units and stabilize the network in L2 using the activated fibers. Consequently, the activated projection achieves a homeomorphism, where neurons of a particular feature type in L1 are connected to neurons of the same type in L2. Furthermore, neighboring neurons in L1 project to connected neurons in L2.
+
+
+
+\section{Probabilistic Framework}
+The previous section presented an alternative vision framework, that implements the Gestalt phenomena by design. It is based on local subnetworks that emerge over short amounts of time. Subnetworks comprise neurons supporting each other to remain active.
+When presented with the same input, t an attractor state will be reached. This implies the formation of a stable subnetwork of neurons that persists as long as the input remains unchanged or undergoes minimal alterations. Consequently, neurons within this network mutually reinforce one another, utilizing fundamental principles to provide support:
+
+\begin{itemize}
+    \item When a relatively small amount of synapses are active (10 out of 10'000 connections), the neuron is active. 
+    \item Activation is sparse. That is, at each point in time only a fraction of neurons is active.
+    \item Neurons that tend to fire simultaneously tend to form stronger bonds (Hebbian update rule).
+    \item The connections are lateral and not feedforward only. This implies a time-dependency used to form the subnetworks. 
+\end{itemize}
+
+These characteristics differ from typical feed-forward architectures in several ways.  In traditional neural networks, neurons exhibit dense activity, meaning that even with the application of the Rectified Linear Unit (ReLU) activation function, approximately 50\% of neurons remain active (above zero). Consequently, all synapses are active, and a neuron is represented as the weighted sum of all neurons from the previous layer, without incorporating lateral connections. Furthermore, temporal dynamics are absent, as neural networks are typically perceived as functions that promptly process an input and generate an output. Therefore, one can conceptualize a neural network as $\boldsymbol{y} = f(\boldsymbol{x})$. Even autoregressive models adhere to this structure, where $\boldsymbol{y}_t = f(\boldsymbol{y}_{t-1})$.
+
+This suggests that implementing subnetworks requires using different principles than the ones used in classical neural networks. Therefore, a probabilistic framework based on probabilistic neurons is introduced.
+A probabilistic neuron is a binary neuron that does not fire when a certain threshold is reached but uses its internal state as firing probability.
+
+This is a different principle than neural networks that deal with probabilities, such as probabilistic neural networks (PNN) \sidecite{Mohebali_Tahmassebi_Meyer_Baese_Gandomi_2020}. PNNs were already introduced in 1967 by D.F. Specht \cite{Specht_1967, Specht_1990} and are well suited for classification and allocate the class with highest posterior probability to new input data \cite{Zeinali_Story_2017}.
+In contrast to PNNs, the proposed framework is based on \emph{probabilistic neurons} and does not model class but activation probabilities.
+
+A probabilistic neuron $x_i$ is modelled as a probability density function of the form:
+\begin{equation}
+    p(x_i = \text{active} | \text{activity of neighborhood}, \text{environment}) 
+\end{equation}
+
+Thus, the probability of neuron being active depends on the activity pattern of the neurons in its local neighborhood and factors of the environment (e.g., inhibition or presence of neurotransmitters).
+Such a neuron can be implemented using a Bernoulli distribution, i.e., $B(p) = P(X = 1) = p = 1 - P(X=0)$. Having a neuron whose firing probability $p$ is governed by the activity of the neighborhood and the environment allows to implemented the behaviour of subnetworks: After receiving an input, the neurons get excited and fire with a higher probability. However, their fire probability decreases quickly if not supported by neighboring neurons. Thus, uncertainty and potential subnets govern timestep 0 while shortly after the network reaches an attractor state. In the following, some advantages of probabilistic neurons are pointed out before a concrete implementation of subnetworks is proposed.
+
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.99\textwidth]{sdp_mountain_spirit.jpg}
+    \caption[Mountain Spirit in Winter by Snadro del Prete]{Mountain Spirit in Winter by Snadro del Prete. The image is from \citeay{sdp_mountain}.}
+    \figlbl{sdp_mountain}
+\end{figure}
+
+
+\paragraph{Ambiguity.} Probabilistic neurons permits the persistence of multiple subnetworks, enabling the system to handle ambiguity effectively. For example, when presented with a composite face comprised of distinct objects (c.f. \figref{sdp_mountain}), both the subnetwork responsible for abstract faces and the subnetworks associated with individual objects become active concurrently. Consequently, one can attend to these subnetworks simultaneously, utilizing attention in its original sense rather than the conventional deep neural network (DNN) interpretation. I speculate that this represents a fundamental distinction from neural networks that are compelled to represent the entire scene within a single high-dimensional dense vector.
+
+\paragraph{Interpretability.} The probabilistic frame allows for much better interpretability than classical deep networks. Each neuron can be part of a multitude of subnetworks and thus some semantic, i.e. corresponds to something meaningful. Furthermore, its internal state is a probability that can be interpreted as the networks confidence that this specific feature was observed in the input. A network of probabilistic neurons that support each other over timesteps can also be interpreted as a directed graph. This allows to trace how subnetworks are activated. Without formal proof or presenting an interpretability framework, I speculate that using this probabilistic framework will significantly simplify the explainability of intelligent systems.
+
+\paragraph{Robustness.} A neural networks is usually represented with a vector which is sequentially processed by a mathematical functions (e.g. with neural layers). Artificial networks in particular are not robust to noise and are susceptible to adversarial attacks \sidecite{Akhtar_Mian_2018}. Slight changes to the input or a network-internal vector can completely falsify the overall result. This is because typical artificial networks work with continuous numbers and these feature vectors can consequently lie anywhere in the feature space. Therefore, a minimal change, e.g. triggered by noise, can shift the feature to the other side of the decision boundary and change the result. A binary vector, on the other hand, has different mathematical properties and is more robust against noise and adversarial attacks, especially if they are sparse and distributed\sidenote{only a small portion of the bits are ``on'', and representations differ by multiple binary bits} \sidecite{Ahmad_Hawkins_2015}.
+Subsampled or noisy vectors are still semantically similar and are close to the original vectors when compared, for example by counting the overlap of bits between two vectors.
+
+\section{Implementation}
+TODO Add Overview of entire system
+
+
+\subsection{Processing Loops}
+The proposed framework introduces nested learning cycles, each with a different functionality. Since the proposed framework runs on a tacked computer hardware, the cycles are bound to fixed timesteps. At each timestep, the innermost loops executes a step. As soon as the innermost loop is finished, an outer loops takes a step and the process is repeated.
+
+\begin{itemize}
+\item[\textbf{Slow Loop}] The dataset comprises $D$ images, with each image depicting a randomly generated line. The images are processed one after the other, building the outermost loop.
+\item[\textbf{Medium Loop}] For each image in $D$, $V$ different views are sampled by slightly changing the image. This generates $V$ distinct yet visually similar images. Similar to our visual system, which captures multiple frames of an object before moving on to the next, this loop allows to perceive objects from various viewpoints.
+\item[\textbf{Fast Loop}] From each view $V$, a sensory system creates neural activity that is processed by the network for $T$ timesteps. This loop allows the network to build subnetworks over several timesteps. First, the network has a high neural activity, which is quickly reduced within these $T$ steps as only the activations with enough lateral support remain active and build an attractor state.
+\end{itemize}
+
+
+
+\subsection{Sensory Input}
+An intelligent agent may have a multitude of sensory input. The main difficultly is that sensory input (especially images) are in continuous space, and they must be translated into an activation potential.
+Thus, the sensory input must be linked to probabilistic neurons. Such a sensory system can be implemented by using either Gabor filters \sidecite{Gabor_1946, Granlund_1978} or, in a more advanced setting, with learned filters.
+Such filters can be learned, for example, by training a deep network in a autoencoding setting \sidecite{rumelhart1985learning}. Even though such networks violate the principles from the Gestalt phenomena, their first layer exhibit excellent capabilities in extracting relevant features from images. Therefore, I argue that such filters are well suited as a network's sensory system if only the first layers are kept. However, also the output $\boldsymbol{h}$ of such as layer is not binary.
+One option is to consider the normalized values of $\boldsymbol{h}$ as probabilities, with the notion that higher values indicate regions where a filter discovers matching features in the image. Alternatively, another approach involves setting all values in $\boldsymbol{h}$ above a pre-defined threshold to 1 and assigning 0 to the remaining values.
+As a third option, quantization networks such as VQ-VAEs \sidecite{NIPS2017_7a98af17} can be used to map local features to a discrete value that can be translated in a binary activation pattern.
+
+This thesis focuses on implementing a proof-of-concepts for handling straightforward images, which allows the utilization of a pre-defined hand-crafted sensory system. However, when processing complex natural images in future research, it is imperative to conduct empirical investigations to explore these possibilities further.
+
+\subsection{Feature Extractor (L1)}
+The sensory system converts an image into a binary observation of size $C_{in} \times W \times H$ where $C_{in}$ is the number of input channels, $W$ the image width and $H$ the image height. Thus, we have multiple cells representing one of $C_{in}$ feature at each pixel location. Let's denote a cell of feature channel $c \in \{0, ..., C_{in}\}$ at position $w \in \{0, ..., W\}$, $h \in \{0, ..., H\}$ as $x_{cwh}$. 
 
 
 
 
----
-TODO: Wenn in einem späteren Kapitel probablistic neuron motiviert wird: https://cerenaut.ai/2014/12/24/sparse-distributed-representations-sdrs/
- 
+
+\subsection{Object Representation (L2)}
+
+
+
+\subsection{L2 Grounding and Feedback}
+TODO: Read this section and improve it!
+
+This section explores the concept of grounding the activity of subnetworks into model representations within the model recognition layer (L2). L2 comprises abstract representations of various models, ideally invariant to transformations such as rotations or scaling. The mapping from the preceding layer to L2, facilitated by fibers, must handle the desired invariance to these transformations.
+
+The objectives of this layer are twofold. Firstly, it serves as the component responsible for recognizing the objects perceived in the preceding layer. Secondly, it provides feedback to the preceding layer regarding the suitability of the representations or current subnetworks for successful recognition.
+
+L2 also consists of probabilistic neurons that encode abstract representations of different objects. It is important to note that, in the long term, an object or concept can have multiple representations. For example, a face is an abstract construct comprising eyes, a nose, and a mouth, regardless of whether it is depicted on paper, encountered in the real world, or constructed from various objects. Thus, L2 should be capable of storing an invariant model of faces, enabling the recognition of faces regardless of how they are presented to L1.
+
+The construction of L2 remains unclear. In humans, L2 is believed to possess substantial prior knowledge, which is refined based on the environmental experiences during childhood.
+
+As an initial iteration, a fixed version of L2 can be created. Essentially, L2 needs to be modeled as a set of probabilistic neurons, and it may require joint development with L1 in a reciprocal process. However, we will begin by establishing a fixed representation for L2. For instance, when working with MNIST numbers, a binary code vector can be used to represent each object. These binary code representations can be learned using rigorous regularization techniques, thereby representing MNIST numbers as fixed neurons that are either active or inactive (i.e., with a probability of 1 or 0).
+
+L2 is envisioned to serve not only in matching objects to invariant representations but also in providing feedback and reinforcement. If the representations in L1 successfully match a concept in L2 and exhibit minimal ambiguity (e.g., confidently identifying an image as a "7" rather than assigning similar probabilities to different numbers), they should be rewarded. This reward can be administered through neurotransmitters, thereby strengthening the connections among neurons within the subnetwork that recognized the object model stored in L2.
+
+Consequently, two types of signals are employed to reinforce or weaken connections between neurons: co-activity and usefulness.
+
+
+
+
+
+
+
+
+
+
+
+
+
+TODO: Neues Kapitel mit konkreter Implementierung: Basierend auf Overleaf Chapters "Connect to Sensory Inputs" und "Layer-2 Grounding and Feedback"
+
+
+TODO: teste was passiert wenn Noise in Feature Extractor statt Image -> wird dieser entfernt?
+TODO: Teste anderen Noise, z.B. Kreis
+TODO: Kann das hire L2 sein: https://github.com/bacnguyencong/rbm-pytorch/blob/master/rbm.py? Wir minimieren die Energy Function zwischen verschiedenen Views (L1, =v_gibb) und Prototype (L2, =v)
+
 
 
 
