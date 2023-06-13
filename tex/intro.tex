@@ -171,7 +171,7 @@ Such a neuron can be implemented using a Bernoulli distribution, i.e., $B(p) = P
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.99\textwidth]{sdp_mountain_spirit.jpg}
-    \caption[Mountain Spirit in Winter by Snadro del Prete]{Mountain Spirit in Winter by Snadro del Prete. The image is from \citeay{sdp_mountain}.}
+    \caption[Mountain Spirit in Winter by Sandro del Prete]{Mountain Spirit in Winter by Sandro del Prete. The image is from \citeay{sdp_mountain}.}
     \figlbl{sdp_mountain}
 \end{figure}
 
@@ -196,8 +196,6 @@ The proposed framework introduces nested learning cycles, each with a different 
 \item[\textbf{Fast Loop}] From each view $V$, a sensory system creates neural activity that is processed by the network for $T$ timesteps. This loop allows the network to build subnetworks over several timesteps. First, the network has a high neural activity, which is quickly reduced within these $T$ steps as only the activations with enough lateral support remain active and build an attractor state.
 \end{itemize}
 
-
-
 \subsection{Sensory Input}
 An intelligent agent may have a multitude of sensory input. The main difficultly is that sensory input (especially images) are in continuous space, and they must be translated into an activation potential.
 Thus, the sensory input must be linked to probabilistic neurons. Such a sensory system can be implemented by using either Gabor filters \sidecite{Gabor_1946, Granlund_1978} or, in a more advanced setting, with learned filters.
@@ -208,17 +206,90 @@ As a third option, quantization networks such as VQ-VAEs \sidecite{NIPS2017_7a98
 This thesis focuses on implementing a proof-of-concepts for handling straightforward images, which allows the utilization of a pre-defined hand-crafted sensory system. However, when processing complex natural images in future research, it is imperative to conduct empirical investigations to explore these possibilities further.
 
 \subsection{Feature Extractor (L1)}
-The sensory system converts an image into a binary observation of size $C_{in} \times W \times H$ where $C_{in}$ is the number of input channels, $W$ the image width and $H$ the image height. Thus, we have multiple cells representing one of $C_{in}$ feature at each pixel location. Let's denote a cell of feature channel $c \in \{0, ..., C_{in}\}$ at position $w \in \{0, ..., W\}$, $h \in \{0, ..., H\}$ as $x_{cwh}$. 
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.99\textwidth]{local_neighbourhood.png}
+    \caption[Laterally connected cells]{Visualization of the laterally connected cells: The red cell of an array of cells of the size $C \times W \times H$ is laterally connected to an neighbourhood of size  $C \times 2n \times 2n - 1$ ($-1$ representing the red cell itself).}
+    \figlbl{local_neighbourhood}
+\end{figure}
+The sensory system converts an image into a binary observation of size $C_{in} \times W \times H$ where $C_{in}$ is the number of input channels, $W$ the image width and $H$ the image height.
+Our network implements one cell for each binary observation, leading to $C_{in} \times W \times H$ cells.
+Having multiple input channels means having multiple cells at the same pixel location, representing one of $C_{in}$ feature.
+
+Let's denote a cell of feature channel $c \in \{0, ..., C_{in}\}$ at position $w \in \{0, ..., W\}$, $h \in \{0, ..., H\}$ as $x_{c,w,h}$.
+Each cell's activation is supported by neighbouring cells through lateral connections. Let's define the reach of lateral connections along the vertical and horizontal axis of an image as $n$.
+Furthermore, the cells are also laterally connected across the channels, allowing a cell be supported from other cells representing different features.
+Therefore, each cell has $C\cdotn^2 - 1$ laterally connected cells at the positions $\{x_{0,w-n,h-n}, ..., x_{C,w+n,h+n}\} \\ x_{c,w,h}$. This lateral connectivity is also depicted in \figref{local_neighbourhood}. 
+
+A known pattern should excite the cells and the cells should remain active through lateral support. 
+However, the pattern can appear at any position within the image, requiring the lateral support to be position equivariant.
+Computer vision architectures solve this problem with convolutional filters shifting over each pixel location. This mechanism can also be used for implementing the lateral connections: When using a convolutional kernel with size $C_{in} \times 2n+1 \times 2n+1$, the state of a cell is updated based on the local neighbourhood. This local neighbourhood are the laterally connected cells and the learned weights of the kernel is the weight of their support.
+
+
+\subsubsection{Hebbian Updates}
+The human brain's learning algorithm is based on local self-orgnisation and unsupervised (or self-supervised) learning \sideciteay{von_der_Malsburg_Stadelmann_Grewe_2022}. The biologically most plausible learning algorithm is Hebbian learning \sidecite{Hebb_1949}. Hebbian learning can be summarized as ``neurons that fire together wire together'' (c.f. \secref{Hebbian}).
+This learning rule is well suited for learning lateral connections: If two cells are active together (``fire together''), their weight is increased (``wire together''). During training, the cells are activated is a specific pattern based on the sensory input. Hebbian learning strengthens the connections between the cells that are active at the same time, i.e. increasing the lateral support between these cells. Furthermore, the weight (i.e. the strength of the lateral support) is reduced between between cells that fire in disparity (one of the cells is firing while the other is not).
+Thus, Hebbian learning is the algorithm to learn lateral support while being biologically plausible.
+
+The weight $w_{ij}$ between two binary cells $x_i$ and $x_j$ is increased, when they are active at the same time. The weight update $\Delta$ can be calculated as follows, leading to an increase of $w_{ij}$ by $\eta$.
+
+\begin{align}\eqlbl{hebbu_1}
+	\Delta w_{ij} = \eta x_i x_j
+\end{align}
+
+The formula above leads to an increase when both neurons are active at the same time. To decrease lateral support between cells where only one cell is active, the formula can be extended as follows:
+
+\begin{align}\eqlbl{hebbu_2}
+	\Delta w_{ij} = \eta \left( x_i x_j + (x_i-1) x_j + x_i (x_j -1) \right)
+\end{align}
+
+The term $(x_i-1) x_j$ becomes $-1$ if the $x_i=0$ and $x_j=1$ and thus decreases the weight if these cells are firing disparity. The second term $x_i (x_j -1)$ implements the same behaviour for the other cell ($x_i=1$ and $x_j=0$).
+
+So far, only the update between two cells is discussed. However, the network consists of multiple cells whose lateral connection strength is defined by a kernel $\boldsymbol{W}$. This kernel has the size $C_{out} \times C_{in} \times n^2+1 \times n^2+1$. Thus, the activity of a cell is calculated based on different weights connecting all neighbouring cells.
+
+During training, the network might see similar patterns multiple times, leading to very strong connections between specific cells. In order that these lateral connection strengths cannot grow to infinite, the weight is normalized. The weights are normalized per output channel, ensuring that the post-synaptic activity cannot get too high. 
+
+\begin{align}\eqlbl{hebbu_2}
+	\boldsymbol{W(C_{out})} = \boldsymbol{W(C_{out})} / (1\cdot 10^{-10} + \sqrt{\sum_{ci}^{C_{in}}\sum_{w}^{n^2+1}\sum_{h}^{n^2+1} \boldsymbol{W(C_{out},ci,w,h)}})
+\end{align}
+
+
+\paragraph{Breaking the Symmetry.}  Oja \cite{Oja_1982} showed that the Hebbian learning rule converges for linear neurons to the first principle component of the input data. He concluded that a 
+network of such neurons appears not very useful, as all neurons will just learn the first principle component and that an additional element is required providing differentiation between the neurons.
+In practice, this additional element is typically some kind of competition such as winner-take-all. With winner-take-all, only the neuron with the highest activation is selected for learning. In the case of of our network with lateral connections, this means that at each pixel location exactly one of the feature channels $C$ is updated. However, this not desirable: Imagine a pixel region with no activation: In this area, we don't want to learn any support between neurons as there is no activity. However, with winner-take-all, we enforce one channel to be active and thus learn lateral support between this enforced activity. However, we found that no measures are necessary at all. The probabilistic neuron is able to break the symmetry. When using the probabilistic neuron, neurons are activated with e certain probability. This probability provides enough differentiation between cells, 
+making a competition strategy superfluous.
+
+\paragraph{Implementation Details.} Implementing Hebbian updates efficiently in a deep learning framework is not trivial: In an efficient implementation, the kernel is not shifted from cell to cell but a circulant matrix is built so that all kernel updates can be calculated in parallel. However, by applying this operation, information about the cell's lateral influence is lost. One way to efficiently implement Hebbian learning for convolutional operations is to use special loss functions. Miconi \cite{Miconi_2021} proposes to use a loss function whose derivative is exactly the Hebbian update. By doing so, backpropagation of error can be used to update the weights. In this thesis, a different implementation is used that comes with a slight memory overhead but is very efficient and does not rely on backpropagation at all. Furthermore, it gives much more flexibility and allows to implemented different normalization strategies. Instead of using a forward pass through a convolutional layer with subsequent backward pass, my implementation uses two convolutional layers without backward pass. The first layer is a fixed, binary convolution that restructures each input patch into a single column vector. This is followed by a $1\times1$ convolution containing the actual weights. Specifically, we can pass the input through a fixed convolution with an input size of $C_{in} \times n^2+1 \times n^2+1$ and $C_{in} 2(n^2+1)$ output channels. The weight vector for this convolution is set to $1$ for the connections linking input $c_i,w,h$ to output $c_iwh$ (where $c_i$ $w$, and $h$ range from 1 to $C_{in}$, $n^2+1$, and $n^2+1$, respectively), and it is set to 0 everywhere else. This process reorganizes the values of each input patch from the original convolution into non-overlapping column vectors, effectively duplicating them. Next, we can apply the actual weights of the original convolution using a simple $1\times1$ convolution. This can be achieved by performing a tensor product with appropriate broadcasting.
+
+
+\subsubsection{Initialization}
+The lateral support is implemented as weights of a convolutional kernels.
+It is crucial to initialize these kernels properly, otherwise, the activations are not stable and typically converge to weights that either activate all cells or none cells.
+For example, when the kernels are initialized with zeros, there is no lateral support and all cells will turn off immediately.
+If the weights are initialized randomly, the initial support is random and patterns that are not in the training set  are supported.
+
+I found that it works best if the weights are initialized with a high self-support.
 
 
 
+
+
+
+
+\subsubsection{Normalization}
+Probleme, dass Probabilities ansteigen (siehe Initialisierung + Verschiedene Anzahl Activations an each location)
+
+Wie Normieren?
+
+
+\subsubsection{Input over Time}
 
 
 \subsection{Object Representation (L2)}
 
 
 
-\subsection{L2 Grounding and Feedback}
+\subsubsection{L2 Grounding and Feedback}
 TODO: Read this section and improve it!
 
 This section explores the concept of grounding the activity of subnetworks into model representations within the model recognition layer (L2). L2 comprises abstract representations of various models, ideally invariant to transformations such as rotations or scaling. The mapping from the preceding layer to L2, facilitated by fibers, must handle the desired invariance to these transformations.
@@ -241,13 +312,6 @@ Consequently, two types of signals are employed to reinforce or weaken connectio
 
 
 
-
-
-
-
-
-
-TODO: Neues Kapitel mit konkreter Implementierung: Basierend auf Overleaf Chapters "Connect to Sensory Inputs" und "Layer-2 Grounding and Feedback"
 
 
 TODO: teste was passiert wenn Noise in Feature Extractor statt Image -> wird dieser entfernt?
