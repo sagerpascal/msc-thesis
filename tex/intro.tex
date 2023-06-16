@@ -333,12 +333,25 @@ To squeeze the activations values inside these range, min-max normalization is u
 \subsubsection{Measuring Support Goodness}
 An open challenge from this approach is to define how good a trained network works.
 A simple approach is to measure the support needed to remain active.
+A simple metric is to measure the average support active and inactive cells receive.
 At the beginning of training, self-support is used, i.e. it is sufficient to be active at time $t$ to remain active at $t+1$.
-However, after training, lateral support is needed to remain active with a high probability.
-Therefore, a simple metric is to build an probability-support (PS)\sidenote{by chance, this are also the initials of the author of this thesis} curve before and after training.
-The PS curve indicates the average support needed to remain active for a given probability.
+Therefore, the average support of active cell is $1$ and the average support of inactive cells is $0$.
+However, during training, lateral connections are learned that support cells to remain active.
+This leads to a higher activation in general which, in turn, increases the threshold to remain active.
+Thus, the average activation of the cell increases as well as the threshold to remain active.
+In a working system, the activation needed to become active increases during training.
+We measure this statistics to evaluate the goodness of the subnetworks.
 
-TODO: implement / evaluate this
+As a second metric, I measure the normalization factor.
+The cells are activation with a specific strength based on the input and the lateral support they receive.
+However, the normalization squeezes this activation into the range $0, ..., 1$.
+If the cells are activated with a specific activation strength $A$ and normalized afterwards to $A_{norm}$, we can measure the normalization factor 
+$\upsilon$:
+\begin{align}\eqlbl{goodness_lat}
+	\upsilon = \frac{A}{A_{norm}+1\cdot10^{-10}}
+\end{align}
+At the beginning, the cells do not receive a lot of support and thus $\upsilon$ is small. However, with increasing support, $\upsilon$ increases and indicates that a higher activation strength is needed to become active.
+
 
 
 \subsection{Object Representation (L2)}
@@ -351,11 +364,79 @@ In this thesis, a simplified version of such projection fibres is implemented as
 
 In the proposed framework, the L2 fulfils two functions. First, it maps given subnetworks to an object representation. Therefore, local information is combined to global information, allowing us to draw conclusions about the objects within an observed scene. Second, L2 can provide feedback in the form of object probabilities to L1, allowing L1 to update its representations over time (c.f. \secref{l2_grounding}).
 Thus, L2 aims to model the conditional probabilities $P(h|x)$ of a matrix of cell activations $x$ belonging to a object prototype $h$ and vice versa $P(x|h)$.
+There exist approaches that implement similar principles but suffer from a chicken-egg problem (cite work here): L1 requires feedback from L2 to build its representation while L2 requires data from L1 to build object prototypes. Therefore, most approaches typically solve this problem by hand-crafting prototypes in storing them before training in L2. This is due to the fact that they implement projection fibres that are mapped based on the correlation between L1 and L2, forcing representations in L1 and L2 to have a high structural similarity.
+In this thesis, this problem is circumvent by using a different approach that does not require to have prototypes stored in L2 beforehand. Instead, we give L2 a certain capacity in the form of probabilistic neurons and let the network decide itself how to organize them. 
+We use a linear transformation to map from $x$ to $h$ and the inverse linear transformation to map backwards from $h$ to $x$.
+More specifically, we use a weight matrix $\boldsymbol{W}_{L2}$ of the size $C_{out}WH \times 16$ to map the flattened activation matrix $x$ to $h$, a binary vector of length $16$. For both mappings, we use a bias term $a}$ and $b$ and calculate use the sigmoid function to squeeze the activations in the range $0, ..., 1$. 
+\begin{align}\eqlbl{l2_1}
+	h_{act} = P(h_j=1 | x) = \text{sigmoid}(\boldsymbol{W}_{L2} \cdot x + a) / \frac{1}{1 + e^{\boldsymbol{W}_{L2} \cdot x + a}}
+\end{align}
+\begin{align}\eqlbl{l2_2}
+	x_{act} = P(x_i=1 | h) = \text{sigmoid}(\boldsymbol{W}_{L2}^\top \cdot h + b) / \frac{1}{1 + e^{\boldsymbol{W}_{L2}^\top \cdot h + b}}
+\end{align}
+Similar to L1, we treat the activity of these neurons as probability and thus sample the output from a Bernoulli distribution.
+\begin{align}\eqlbl{l2_3}
+	h_{out} ~ \text{Bernoulli}(\text{p}=h_{act})
+\end{align}
+\begin{align}\eqlbl{l2_4}
+	x_{out} ~ \text{Bernoulli}(\text{p}=x_{act})
+\end{align}
 
-Modelling such probabilities requires to measure the compatibility between $x$ and $h$. 
+The question remaining is how to update the parameters $\boldsymbol{W}_{L2}$, $a$ ,and $b$ so that the conditional probabilities $P(h|x)$ and $P(x|h)$ are properly modelled.
+Similar to a restricted Boltzman machine (RBM), we minimize the difference of the free energy function $F(\cdot)$ between $x_{in}$ and $x_{out}$ (i.e. $F(x_{in}) - F(x_{out})$) to optimize the parameters. For interested readers, I provide more details on the implementation and mathematical properties in \secref{l2_math}.
+
+
+\subsubsection{Mathematical Details}\seclbl{l2_math}
+To model the conditional probability between $x$ and $h$, we have to measure their compatibility (i.e. to measure their relationship).
+Lets imagine two cells $x_i$ and $h_j$ and the weight $\boldsymbol{W}_{ij}$ to model the connection between these cells.
+Intuitively, $\boldsymbol{W}_{ij}$ indicates whether $x_i$ and $x_j$ are positively or negatively related: If $x_i$ and $h_j$ are equal, we want $\boldsymbol{W}_{ij} > 0$ and $\boldsymbol{W}_{ij} < 0$ otherwise.
+The energy function $E(x_i, h_j)$ is defined as
+\begin{align}\eqlbl{l2_energy}
+	E(x_i, h_j) = - \boldsymbol{W}_{ij}x_ih_j
+\end{align}
+The energy function is high, if $x_i=h_j=1$ and the weight is wrong, i.e. $\boldsymbol{W}_{ij} < 0$. The energy function with the biases can be formulated as
+\begin{align}\eqlbl{l2_energy2}
+	E(x_i, h_j) = - \boldsymbol{W}_{ij}x_ih_j - a_ix_i - b_jh_j
+\end{align}
+The energy function for the entire network is the sum of all units:
+\begin{align}\eqlbl{l2_energy3}
+	E(x, h) = - \sum_{i,j} \boldsymbol{W}_{ij}x_ih_j - \sum_ia_ix_i - \sum_jb_jh_j
+\end{align}
+To probability for a pair of L1 cell activations $x$ and L2 cell activations $h$ can be calculated as:
+\begin{align}\eqlbl{l2_energy4}
+	P(x,h) = \frac{e^{-E(x, h)}}{Z}
+\end{align}
+where the partition function $Z$ is the sum from all possible states and can be calculated as:
+\begin{align}\eqlbl{l2_energy5}
+	Z = \sum_{x,h} = e^{-E(x,h)}
+\end{align}
+The probability for a cell state in L1 can be calculated by summing over all cell states of L2:
+\begin{align}\eqlbl{l2_energy6}
+	P(x) = \frac{1}{Z} \sum_{h}e^{-E(x,h)}
+\end{align}
+This probability $P(x)$ of observing state $x$ in L1 can be used to learn the weights. In fact, the probability that the models assigns to a specific cell state can be raised by lower the energy of that cell state and to raise the energy of other cell states. I.e. the weights are adapted in a way that this cell state becomes more probable while other cell states become less probable.
+To update the weights, we have to calculate the derivative of the log probability of a cell state $x$ w.r.t. the parameters $\theta$:
+\begin{align}\eqlbl{l2_energy7}
+	\frac{\partial \log P(x)}{\partial \theta }
+\end{align}
+This derivative can be calculated with the free energy function. The free energy of a cell state $x$ describes the ``available energy'' and is the sum of all energy configurations that contain $x$.
+\begin{align}\eqlbl{l2_energy8}
+	F(x) = \ln \left( \sum_h e^{-E(x,h)} \right)
+\end{align}
+Without any proof, the derivative of the log probability of a cell state $x$ w.r.t. the parameters $\theta$ can be calculated as follows:
+\begin{align}\eqlbl{l2_energy9}
+	\frac{\partial \log P(x)}{\partial \theta } = - \frac{\partial \mathcal{F}(x)}{\partial \theta} + \mathbb{E}_{v \sim p} \left[ \frac{\partial \mathcal{F}(v)}{\partial \theta}  \right]
+\end{align}
 
 
 
+
+% https://jhui.github.io/2017/01/15/Machine-learning-Boltzmann-machines/#:~:text=The%20free%20energy%20of%20RBM,(1%2Bexj)
+
+
+\subsubsection{Self-Consistency and Parsimony}
+Wird evtl. eingehalten:
+self-consistency da mehrere Zyklen in denen self-consistency umgesetzt wird. Parsimony: Binary 
 
 
 \subsubsection{L2 Grounding and Feedback}\seclbl{l2_grounding}
