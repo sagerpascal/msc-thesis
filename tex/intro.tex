@@ -1,42 +1,20 @@
 %% intro.tex
-TODO: Umschreiben: Während Thesis ChatGPT -> Durchbruch da gut Anwendbar in Praxis, jedoch keine wirkliche Intelligenz. Vieles fehlt für Intelligenz. 
-Humanity has always tried to simplify its life through technological progress.
-For example, the computer has influenced and changed every field imaginable in the last decades. 
-In fact, it has been so successful that it has spawned its own scientific discipline, computer science.
-Nowadays, it is impossible to imagine life without computers: Almost every household and company owns at least one.
-Computers facilitate various tasks, from communication to the acquisition of knowledge.
-For all these tasks, software developers have created appropriate programs.
-Software development is the process of writing a script with a programming language to specify how the computer should behave for a given input.
-Simply put: A software program tells the computer what to do if the user enters a command.
-Writing software can be done easily if the tasks are clearly defined and can be described precisely.
-However, there exist tasks that are almost impossible to program, such as writing a script that detects cats in images.
-The problem is that we cannot describe to a computer how a cat looks precisely\sidenote{at least not on a pixel-level basis so that one can compare a given image with a precise description}.
+Deep learning systems have been employed for decades \cite{ivakhnenko_cybernetic_1965} and have pervasive influence in our daily lives. This technology is utilized in diverse applications, such as machine translation \cite{dabre_survey_2021}, image analysis \cite{bhatt_cnn_2021}, natural language processing \cite{otter_survey_2021}, and speech synthesis \cite{ning_review_2019}, among others. Deep learning methodologies' remarkable success and widespread adoption have revolutionized various industries \cite{bertolini_machine_2021}, enabling enhanced performance and efficiency in numerous tasks and services.
+However, recently ChatGPT \cite{liu_summary_2023} was introduced, marking a pivotal moment in the widespread application of AI systems.
+Since then, AI systems have transcended conventional boundaries and gained widespread applicability. The emergence of the GPT-4 model \cite{openai_gpt-4_2023} has sparked discussions regarding the potential manifestation of general intelligence \cite{bubeck_sparks_2023}. While some researchers argue in favor of this perspective, I hold a different viewpoint and argue that despite their apparent intelligent behavior, present AI systems, including ChatGPT, lack the essential characteristics necessary to qualify as true intelligence;
+These systems are trained to optimize a specific target function such as predicting the subsequent word token \cite{radford_improving_2018}. Thus, these systems rely on statistical patterns rather than genuine understanding. They still lack cognitive capabilities, reasoning ability, self-awareness, and intentionality \cite{rosenbloom_defining_2023, mitchell_debate_2023}. It might be that current learning framework are not able to overcome these limitations and alternative approaches are necessary (c.f. \secref{limitationsDL}).
 
-Therefore, scientists came up with the idea to not just program such tasks but to let the computer learn them.
-Machine learning (ML) algorithms can learn and adapt without following explicit instructions such as program code.
-Instead, they use statistical models to analyse data, find patterns, and make predictions.
-Machine learning has become an indispensable part of our everyday lives.
-For example, we use it for machine translation, transport and logistics organisation, product recommendations, fraud detection, self-driving cars, unlocking smartphones, improving video games, speech recognition, and much more.
-A sub-branch of machine learning is deep learning (DL) which achieved awe-inspiring results in the last decade and is considered \emph{the} state-of-the-art technology for many of the aforementioned tasks.
+Geoffrey Hinton, recipient of the Turing Award\sidenote{The Turing Award is recognised as the highest academic award in computer science and sometimes also called the ``Nobel Prize of Computing''.} and a prominent figure in the field, is considered one of the pioneers of deep learning.
+His remarkable contributions, including the development of backpropagation for learning (c.f. \secref{ann}), have laid the foundation for today's deep learning systems.
+After more than three decades, Hinton expresses deep scepticism about end-to-end backpropagation of errors and even suggests to ``throw it all away and start again'' to improve current systems fundamentally \cite{axios_hinton}.
+While this view may seem extreme, it shows that the learning algorithm of such systems has significant shortcomings.
+Some of the most critical limitations of deep learning systems are discussed in \secref{limitationsDL}.
+To overcome these challenges, researchers have proposed diverse methods and approaches \cite{long_survey_2022, sager_unsupervised_2022, yarats_improving_2021}. Despite these efforts, progress has been moderate, primarily focusing on mitigating the symptoms rather than addressing the core issues at hand.
 
-Even though this technology works very well for many tasks, such models have some crucial flaws by definition (c.f. \secref{limitationsDL}), which cannot be resolved in the current DL framework.
-One of the godfathers of deep learning is Turing Award\sidenote{the Turing Award is recognised as the highest academic award in computer science and sometimes also called the ``Nobel Prize of Computing''} winner Geoffrey Hinton. 
-Especially his contribution to learning with backpropagation of error (c.f. \secref{ann}) has created the foundation for modern deep learning systems.
-More than 30 years later, Hinton says he is ``deeply suspicious'' about end-to-end backpropagation of error. In his opinion, we have to ``throw it all away and start again'' to improve current systems fundamentally \sidecite{axios_hinton}.
-This seems rather extreme, considering what DL systems have achieved.
-However, it also shows that the learning algorithm of such systems has serious flaws.
+This thesis introduces a novel learning framework inspired by neuroscience to address the core issues inherent in deep learning systems. Inspired by the remarkable learning capabilities of the human brain, which surpass the limitations of deep learning, this research aims to integrate neuroscientific insights into a learning framework. By doing so, it seeks to overcome existing limitations and bridge the gap between artificial and biological intelligence. The thesis draws significant inspiration from the ``Theory of Natural Intelligence" proposed by \sideciteay{von_der_malsburg_theory_2022} and provides a concrete manifestation of the theory within the framework. By anchoring the theoretical concepts in a concrete framework and exemplifying its learning capabilities through practical implementation, this thesis contributes to a comprehensive understanding and application of the principles of the theory.
 
-Some of the most critical limitations of deep learning systems are listed in \secref{limitationsDL}.
-This thesis addresses these problems by exploring different architectures inspired by findings from neuroscience\sidenote{the field of neuroscience studies how the human nervous system and especially the brain works}.
-The inspiration is drawn from neuroscience, as the human brain is a learning system that does not have these problems. Thus, incorporating findings from neuroscience into the deep learning framework might help overcome some of the current limitations.
-In this thesis, the ``Theory of Natural Intelligence'' by von der Malsburg et al. \sidecite{von_der_Malsburg_Stadelmann_Grewe_2022} in particular is used as inspirational source.
-The aforementioned theory focuses on visual processing in the human brain, and consequently, deep learning architectures for image processing are examined in this thesis.
-Thereby, the main focus of this thesis is on \emph{finding new principles} of deep learning architectures rather than on achieving state-of-the-art performance in terms of accuracy or f-score on existing benchmarking datasets.
+This thesis lies at the intersection of deep learning and neurocomputing\sidenote{Neurocomputing is a subfield of neuroscience that focuses on implementing biologically plausible learning algorithms.}. It adopts many learning paradigms from neurocomputing, leaveraging the capabilities of biologically inspired algorithms. At the same time, the computational efficiency of deep learning algorithms is being exploited. By merging the strengths of both fields, this work aims to develop a hybrid approach that combines the biological plausibility of neurocomputing with the computational efficiency of deep learning to foster advances in learning algorithms.
 
-The thesis differs from neurocomputing\sidenote{neurocomputing is a sub-field of neuroscience that deals with the implementation of learning algorithms with a high degree of biological plausibility} in the sense that the architectures investigated are still closely related to the DL framework and, for example, do not use time-dynamic signals. 
-For the completeness of this thesis, an overview of neurocomputing is given in \secref{neurocomputing}.
-However, since these neurocomputing algorithms have not (yet) become established in practical applications, they are not investigated further.
-Thus, the thesis is strongly oriented along the field of deep learning and focuses on incorporating neuroscience findings in the deep learning framework, while natural plausibility is considered less important.
 
 \section{Contribution}
 This thesis makes the following contributions:
@@ -226,7 +204,7 @@ Having multiple input channels means having multiple cells at the same pixel loc
 Let's denote a cell of feature channel $c \in \{0, ..., C_{in}\}$ at position $w \in \{0, ..., W\}$, $h \in \{0, ..., H\}$ as $x_{c,w,h}$.
 Each cell's activation is supported by neighbouring cells through lateral connections. Let's define the reach of lateral connections along the vertical and horizontal axis of an image as $n$.
 Furthermore, the cells are also laterally connected across the channels, allowing a cell be supported from other cells representing different features.
-Therefore, each cell has $C\cdotn^2 - 1$ laterally connected cells at the positions $\{x_{0,w-n,h-n}, ..., x_{C,w+n,h+n}\} \\ x_{c,w,h}$. This lateral connectivity is also depicted in \figref{local_neighbourhood}. 
+Therefore, each cell has $C\cdot n^2 - 1$ laterally connected cells at the positions $\{x_{0,w-n,h-n}, ..., x_{C,w+n,h+n}\} \\ x_{c,w,h}$. This lateral connectivity is also depicted in \figref{local_neighbourhood}. 
 
 A known pattern should excite the cells and the cells should remain active through lateral support. 
 However, the pattern can appear at any position within the image, requiring the lateral support to be position equivariant.
