@@ -57,6 +57,17 @@
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Citation style
+
+% Format for bibliography
+\DeclareFieldFormat{title}{\textit{#1}}
+\DeclareFieldFormat[book]{title}{\textit{#1}}
+
+% Format for citations
+\DeclareFieldFormat{citetitle}{\textit{#1}}
+\DeclareFieldFormat[book]{citetitle}{\textit{#1}} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 
 \pagenumbering{Alph}
@@ -65,7 +76,7 @@
 \titlehead{Master of Science in Engineering with Specialisation in Data Science}
 
 \subject{Master Thesis}
-\title[Self-Organization in a Biologically Inspired Alternative Learning Paradigm with Probabilistic Neurons]{Self-Organization in a Biologically Inspired Alternative Learning Paradigm with Probabilistic Neurons}
+\title[Self-Organization in a Biologically Inspired Novel Learning Framework Based on Probabilistic Neurons]{Self-Organization in a Biologically Inspired Novel Learning Framework Based on Probabilistic Neurons}
 \subtitle{Incorporating Findings from Neuroscience about Natural Intelligence into Modern Deep Learning Architectures}
 
 \author[Pascal Sager]{{\small written by}\\Pascal Sager\\[1ex]  {\small supervised by}\\{\large Prof. Dr. Thilo Stadelmann}\\{\large Dr. Jan Milan Deriu}\\{\large Prof. Dr. Christoph von der Malsburg}\\[4ex]}
@@ -158,6 +169,18 @@
 \setchapterpreamble[u]{\margintoc}
 \chapter{Neuroscientific Concepts}\chlbl{neuro_concepts}
 \input{tex/neuro_concepts}
+
+\setchapterpreamble[u]{\margintoc}
+\chapter{Probabilistic Framework}\chlbl{probabilistic_framework}
+\input{tex/probabilistic_framework}
+
+\setchapterpreamble[u]{\margintoc}
+\chapter{Experiments}\chlbl{experiments}
+\input{tex/experiments}
+
+\setchapterpreamble[u]{\margintoc}
+\chapter{Results}\chlbl{results}
+\input{tex/results}
 
 \setchapterpreamble[u]{\margintoc}
 \chapter{Future Work \& Conclusion}\chlbl{future_work}

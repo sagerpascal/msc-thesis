@@ -42,6 +42,7 @@
 	\ifentrytype{book}{\clearfield{doi}}{}
 }
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Back references
 
@@ -85,7 +86,7 @@
  }
 
 \NewDocumentCommand{\formatmargincitation}{m}{%
-	\margincitedelim\parencite{#1}: \citeauthor*{#1} (\citeyear{#1})\\%, \citetitle{#1}\\%
+	\margincitedelim\parencite{#1}: \citeauthor{#1} (\citeyear{#1}), \citetitle{#1}\\%
 }
 
 \newbibmacro*{volume+number+pp}{%
