@@ -240,9 +240,9 @@ Hebbian learning describes the update of the synaptic weight $w_{ij}$ connecting
 where \(\eta\) is the learning rate.
 In a binary context, the weights between frequently co-activated neurons increase, a process known as Hebbian plasticity.
 This rule causes two cells or cell sub-networks that are constantly active together to form an ``association'' where the activation of one cell or system promotes the activation of the other.
-When a system receives inputs that generates a recurring pattern of activity, the group of active cells comprising that pattern gradually strengthens their connections. Consequently, when a group of neurons that represent a specific pattern is active, they tend to activate all neurons typically associated with this pattern. In this thesis, I call this effect \emph{lateral support}.
+When a system receives inputs that generate a recurring pattern of activity, the group of active cells comprising that pattern gradually strengthens their connections. Consequently, when a group of neurons that represent a specific pattern is active, they tend to activate all neurons typically associated with this pattern. In this thesis, I call this effect \emph{lateral support}.
 
-The aforementioned Hebbian rule increases the weight between two binary cells that are active together, and does not change when only one or none of the cells fires. Thus, connection can only grow stronger.
+The aforementioned Hebbian rule increases the weight between two binary cells that are active together, and does not change when only one or none of the cells fires. Thus, the connection can only grow stronger.
 However, synaptic signals in the human brain can also be inhibitory \cite{coombs_specific_1955}.
 In the context of Hebbian learning, inhibition is interpreted as decreasing the weight between cells that fire exclusively.
 Therefore, inhibition can be implemented by leveraging the covariance of neuronal activity.
@@ -255,7 +255,7 @@ The following equation changes the weight relative to the covariance:
 %
 where \(\psi_i\) and \(\psi_j\) are estimates of the expected pre- and postsynaptic activity\sidenote{The expected activity can be estimated, for example, by calculating a moving average.}.
 
-Including the inhibitory term mentioned above, cells representing a certain pattern not only support other cells representing the same pattern, but also show a tendency to suppress the activity of cells that do not correspond to the supported pattern. Thus, a network whose weights are trained according to Hebb's rule is able to a``auto-associate'' a pattern. In other words: When the pattern is activated, cells associated with that pattern are also activated, while cells not associated with the dominant pattern are inhibited. These learned patterns are called engrams \sidecite{newman_current_1985}, which are associated with memories and other stored patterns in the human brain.
+Including the inhibitory term mentioned above, cells representing a certain pattern not only support other cells representing the same pattern but also show a tendency to suppress the activity of cells that do not correspond to the supported pattern. Thus, a network whose weights are trained according to Hebb's rule is able to ``auto-associate'' a pattern. In other words: When the pattern is activated, cells associated with that pattern are also activated, while cells not associated with the dominant pattern are inhibited. These learned patterns are called engrams \sidecite{newman_current_1985}, which are associated with memories and other stored patterns in the human brain.
 
 The formula above lacks two important constraints.
 First, the weight grow has no upper or lower bound: With long training on the same patterns, a synaptic connection $w_{ij}$ constantly increases or decreases. In practice, boundaries are defined to mitigate this issue. This can be implemented, tor example,  by normalising the length of the weight vector \sidecite{oja_simplified_1982} or by using rate-based threshold adaption \sidecite{bienenstock_theory_1982, intrator_objective_1992}.
@@ -293,8 +293,8 @@ Thus, each cell $i$ is connected to all other cells $j \neq i$ with a specific w
 When the sum of the weights $w_{ij}$ of the active cells ($y_j[T=t] = 1$) is bigger than the threshold $-b_i$, the cell turns on or turned off otherwise.
 Thus, a cell can either keep its state ($y[T=t] = y[T=t+1]$) or flip ($y[T=t] \neq y[T=t+1]$).
 A flipping output influences all other neurons and may encourage them to flip as well.
-There exists a formal proof that after a finite number of timesteps an attractor state is reached, and the neurons do not flip anymore\cite{Hopfield_1982}.
-Thus, the input is used to initialize the neurons, the neurons influence each other, and after a finite number of iterations, the network becomes stable. Thereby, an input pattern is attracted to the closest stable pattern.
+There exists formal proof that after a finite number of timesteps, an attractor state is reached, and the neurons do not flip anymore\cite{Hopfield_1982}.
+Thus, the input is used to initialize the neurons, the neurons influence each other, and the network becomes stable after a finite number of iterations. Thereby, an input pattern is attracted to the closest stable pattern.
 Hebbian learning (c.f. Section \secref*{hebbian}) can be used to define what the stable patterns are:
 With a single iteration over the training patterns, the weights $w_{ij}$ and biases $b_i$ are updated so that these patterns become attractor states \sidecite{hopfield_unlearning_1983}.
 This allows using the network as an associative memory, as an input pattern is mapped to the most similar pre-defined stable pattern.
@@ -306,7 +306,7 @@ The second limiting factor of binary Hopfield networks is that only binary patte
 Recently, Hopfield networks have been extended to continuous patterns \sidecite{ramsauer_hopfield_2021}.
 Continuous Hopfield networks can retrieve continuous patterns or a combination of several similar continuous patterns.
 However, Hopfield networks remain a niche so far, as they still perform worse than retrieval systems \cite{noauthor_information_1997} and memory networks \cite{weston_memory_2015}.
-They also lack hierarchical pattern recognition, and may require additional models to store higher level patterns than just the input data.
+They also lack hierarchical pattern recognition and may require additional models to store higher-level patterns than just the input data.
 
 
 \subsection{Spiking Neural Networks}\seclbl{spiking_networks}
@@ -333,51 +333,38 @@ typically, this conversion involves firing cells that detect higher contrasts in
 However, this process results in losing important information, including colour and texture details. In addition, SNNs use non-differentiable activation functions, which makes them unsuitable for training by backpropagation of error. Consequently, alternative training strategies must be developed to achieve similar benchmark scores as ANNs \cite{nunes_spiking_2022}.
 
 
-
-
-
-
-
-
-
-
-
-
 \subsection{Reservoir Computing}\seclbl{reservoir_comp}
-As described in \secref{biological_learning}, biological neurons are highly dynamic while artificial neurons are not.
-Another type of model that introduces such dynamics is based on reservoir computing.
-Reservoir computing is an umbrella term for networks based on the concepts of echo-state networks (ESN) \sidecite{jager_echo_2001} and liquid state machines (LSM) \sidecite{maass_real-time_2002}.
-A reservoir is a fixed non-linear system that maps an input vector \(\boldsymbol{x}\) to a higher dimensional computation space.
-After the input vector is mapped into the computation space, a simple readout mechanism is trained to return the desired output based on the reservoir state.
-However, only some systems are suited as a reservoir:
+Hopfield networks (c.f. \secref{hopfield}) introduced dynamics, meaning the network's activations undergo changes until an attractor state is reached,
+Another type of model that introduces dynamics is based on reservoir computing.
+Reservoir computing is an umbrella term for networks based on the concepts of echo-state networks (ESN) \sidecite{jager_echo_2001} and liquid-state machines (LSM) \sidecite{maass_real-time_2002}.
+ESNs use perceptrons as a model of neurons, while LSMs are based on spiking neurons (c.f. \secref{spiking_networks}).
+These networks belong to the broader field of recurrent neural networks (RNNs) \cite{} and are designed to handle time-dependent or sequential data efficiently.
+
+In traditional RNNs, the entire network, including input, hidden and output layers, is trained together to learn temporal dependencies. This training process can be computationally intensive and time-consuming. Reservoir computing takes a different approach: It consists of a reservoir and a linear readout layer, whereby only the readout layer requires iterative training.
+Thus, a key advantage of such systems is that the reservoir dynamics are fixed, and only the readout stage is trained.
+
+The reservoir is an untrained, randomly connected network of recurrent cells. The connections are fixed but the recurrent cells encourage rich internal dynamics \sidecite{tanaka_recent_2019}. When an input sequence is fed into the reservoir, the dynamics of the reservoir transform the input into a high-dimensional representation in its state space. This transformation is achieved by passing the input through the recurrent connections of the reservoir.
 A good reservoir system distributes different inputs into different regions of the computation space \sidecite{adamatzky_reservoir_2018}.
+
+After the reservoir has processed the input, a linear readout layer maps the reservoir's state to the desired output. The readout layer usually consists of a linear regression model or a single-layer neural network \cite{tanaka_recent_2019}. Since the reservoir already encodes the temporal information from the input sequence, the task of the readout layer is simplified as it only needs to perform a linear mapping of the reservoir state to the desired output.
 %
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.79\textwidth]{reservoir}
-    \caption[Structure of an echo state network]{Structure of an echo Ssate network. The image is from \citeay{tanaka_recent_2019}.}
+    \caption[Structure of an echo state network]{Structure of an echo state network. The image is from \citeay{tanaka_recent_2019}.}
     \figlbl{reservoir}
 \end{figure}
 %
-An ESN is a set of sparsely connected recurrent neurons as visualised in \figref{reservoir}.
-The reservoir consists of \(N\) nodes which are connected according to an Erdős–Rényi graph model\sidenote{the Erdős–Rényi model is a model for generating random graphs where all graphs based on a fixed set of vertices and edges are equally likely} \sidecite{erdos_random_1959}.
-This graph model is represented by an adjacency matrix \(\boldsymbol{W}\) of size \(N \times N\).
-The time varying input signal \(\boldsymbol{x[t]}\) is mapped to a sub-set of \(N/M\) graph nodes by multiplying it with \(\boldsymbol{W}_{\text{in}} \in \mathbb{R}^{N\times M}\).
-The output is calculated by multiplying the reservoir state with another weight matrix \(\boldsymbol{W}_{\text{out}} \in \mathbb{R}^{M\times N}\).
-Interested readers are referred to \sidecite{montavon_practical_2012} to learn more about the mathematical properties and how the network is updated in detail.
-
-In the original form of ESN, only the readout weights are learned, and the rest is chosen randomly.
-The input \(\boldsymbol{x[t]}\) brings the recurrent units in an initial state.
-Afterwards, the recurrent connections inside the reservoir create different dynamics in the network.
-The readout neurons linearly transform the recurrent dynamics into temporal outputs.
-Thereby, readout weights \(\boldsymbol{W}_{\text{out}}\) are trained to reproduce a target function \(\boldsymbol{y[t]}\).
-
-Liquid State machines, on the other hand, use a spiking neural network instead of a graph of recurrent units as reservoirs.
+The main distinction between reservoir computing frameworks lies in reservoir design.
+An ESN uses the perceptron as the model of neurons and connects them with recurrent connections according to an Erdős–Rényi graph model\sidenote{The Erdős–Rényi model is a model for generating random graphs where all graphs based on a fixed set of vertices and edges are equally likely.} \sidecite{erdos_random_1959}.
+LSM, on the other hand, use a spiking neural network instead of a graph of recurrent cells.
 The nodes of the spiking neural network are randomly connected.
 Thus, every node receives time-varying inputs from other nodes.
-Similar to ESN, the spatiotemporal activation patterns are read out by a linear layer.
+
+The weights of the reservoir connections are randomly assigned and remain unchanged throughout the training process. The readout layer is trained with a supervised learning algorithm such as ridge regression or gradient descent to minimise the discrepancy between predicted and desired outputs.
+Thus, the training is very efficient and does not require complex training algorithms, while the system is still able to efficiently process temporal data.
 
 In general, reservoirs are universal approximators and can approximate any non-linear function, given that there are enough neurons in the reservoir.
 In principle, the system should be capable of any computation if it has a high enough complexity \cite{adamatzky_reservoir_2018}.
-Furthermore, reservoirs generalise better and faster than equivalent MLP.
-Current systems' main drawback is that they cannot deal well with high-dimensional input data such as images.
+Recently, reservoir computing has become popular in quantum computing \cite{ghosh_quantum_2019, chen_temporal_2020} and for chaotic signal processing \cite{vlachas_backpropagation_2020, krishnagopal_separation_2020}.
+However, they are still limited and can only deal well with low-dimensional temporal data. Furthermore, their performance is typically worse than comparable artificial neural networks on most benchmarks \cite{tanaka_recent_2019}.

@@ -1,20 +1,84 @@
 %% related_work.tex
-This chapter presents the related work of the thesis. \secref{natural_intelligence} gives an introduction to a publication entitled ``A Theory of Natural Intelligence'' by von der Malsburg et al. \cite{von_der_Malsburg_Stadelmann_Grewe_2022}. This work is the main source of inspiration and is therefore summarised in detail. It identifies various concepts as the fundamentals of intelligence, including self-organisation. Therefore, the work associated with self-organisation is reviewed in \secref{self_org_related}. Self-organisation is not compatible with end-to-end backpropagation of error. Thus, alternative training algorithms are presented in \secref{alt_train_algo}. Then, \secref{visual_rep_learning} reviews different methods for learning image representations. Finally, meta-learning is summarised in \secref{meta_learning}. Meta-learning is of limited relevance to this thesis but is important for the proposed future work.
+This chapter presents the related work of the thesis. \secref{alternative_approaches} presents different learning frameworks that are not mainstream but might be promising to build more effective learning principle. \secref{natural_intelligence} gives an introduction to a publication entitled ``A Theory of Natural Intelligence'' by \citeay{von_der_malsburg_theory_2022}. This work is the main source of inspiration and is therefore summarised in detail.
+A possible implementation of this theory is by using self-organising projection fibres. Therefore, projection fibres are summarized in \secref{projection_fibres} and work associated with self-organisation is reviewed in \secref{self_org_related}. Self-organisation is not compatible with end-to-end backpropagation of error. Thus, alternative training algorithms are presented in \secref{alt_train_algo}. %Then, \secref{visual_rep_learning} reviews different methods for learning image representations. Finally, meta-learning is summarised in \secref{meta_learning}. Meta-learning is of limited relevance to this thesis but is important for the proposed future work.
+
+
+\section{Alternative Learning Approaches}\seclbl{alternative_approaches}
+Arguably, the only existing systems that, in non-experts' eyes, behave intelligently\sidenote{Which does not mean that such systems exhibit actual intelligence.} are foundation models such as large language models (LLMs) \cite{brown_language_2020, touvron_llama_2023}, and their fine-tuned versions \cite{ouyang_training_2022}. However, like other deep learning models, also foundation models suffer from the typical drawbacks of statistical learning (c.f. \secref{limitationsDL}). Therefore, a lot of research has been conducted to reduce these well-known problems: For example, current research aims to reduce hallucinations \cite{feldman_trapping_2023, manakul_selfcheckgpt_2023}, to implement an ongoing learning framework \cite{sahoo_online_2018, hoi_online_2021}, to transfer knowledge between tasks and data domains \cite{zhuang_comprehensive_2021, sager_unsupervised_2022}, or to learn what should be learned \cite{thrun_learning_1998, hospedales_meta-learning_2021}. However, the underlying framework remains identical: Data is statistically mapped to manually or automatically generated labels, making it difficult to solve problems such as lack of robustness,  out-of-distribution generalisation, data efficiency, causal understanding or common sense reasoning (c.f. \secref{limitationsDL}). In the following, alternative approaches to training deep networks are presented that attempt to alleviate these problems with new principles that do not rely solely on label prediction or data reconstruction. 
+
+\paragraph{1000 Brains.} Jeff Hawking and his research group use the brain as the single source of inspiration and build, following their interpretation, a biologically highly plausible system that implements the brain's learning algorithm \sidecite{hawkins_framework_2019}. The learning algorithm is an adapted version of unsupervised Hebbian learning (c.f. \secref{hebbian}). Their theory is based on Vernon Mountcastle's proposal that the neocortex comprises many cortical columns, all having a similar architecture and performing similar functions \sidecite{mountcastle_columnar_1997, mountcastle_organizing_1978}. Thus, they argue that the brain does not comprise a single learning model like current deep learning systems but many similar but independent models for each object \sidecite{lewis_locations_2019}. Each model uses different inputs from different sensory system parts. These models make predictions based on the input they receive and vote to reach a consensus on the sensory observations.
+This theory is also known as the 1000 brains theory, as many models work in parallel. The principle of many parallel models is closely related to ensemble approaches in deep learning \sidecite{yang_survey_2023}, with the constraint, similar to random forest \sidecite{tin_kam_ho_random_1995}, that only a portion of the data is available to each model. Current results are difficult to interpret as the proposed model has been trained and tested on the same dataset. In its current form, the model can recognise several hundred objects and is robust to noise. However, the number of input signals severely limits the network's capacity. By adding more cortical columns (expanding the capacity in hidden layers), the model cannot scale to recognise more objects. 
+
+Strictly enforcing biological plausibility limits performance significantly, as the biologically inspired algorithm cannot fully exploit the mathematical capabilities of computational hardware. Intuitively, however, several proposed principles appear promising: \emph{Sparse coding} encourages compact and efficient representation of complex data \sidecite{ferrier_toward_2014}, \emph{self-organisation} of a large number of parallel models increases robustness \cite{Yang_Lv_Chen_2023}, and \emph{predicting future cell activation} allows learning in an unsupervised manner and does not restrict the model to specific predefined tasks.
+
+\paragraph{Recursive Cortical Network.} A second type of network that has evolved from the 1000 brains theory is called the recursive cortical network (RCN) \sidecite{george_generative_2017}\sidenote{The driving force behind it, Dileep George, worked in Jeff Hawkings' group and was instrumental in developing the fundamentals of the 1000 brains theory.}. It is based on the insight that human vision processes shape and appearance differently and that a familiar object with an unexpected colour can still be easily recognised.
+The RCN uses separate mechanisms to process contours and appearances and uses lateral connections for contour consistency.
+When the features cannot explain an image at a certain level $n$, the active features from the level below $n-1$ are combined to create a new feature at level $n$. Afterwards, features are pruned using a cost function considering both reconstruction and compression errors.
+A significant advantage of RCN is that it can learn from a few examples and has one-shot and few-shot learning capabilities.
+However, in its current form, RCNs cannot be applied to natural images: The creation of contour hierarchies works only if the object is clearly separated from its background. Therefore, the network, in its current form, is limited to MNIST \cite{lecun_gradient-based_1998} and text-based CAPTCHAs.
+
+Similar to the 1000 brains theory, this model has drawbacks that prevent its practical application but introduces many promising concepts: The \emph{separation of shape and appearance} seems promising, as this limits the feature space, and these concepts can be learned independently. This allows the model to transfer knowledge better: a fist-sized ball can be an apple, an orange or a lemon, depending on its appearance. However, the shape of these fruits only needs to be learned once. Furthermore, in the case of multiple classes, the network does not make a single prediction but creates hypotheses that are evaluated by an outer loop. Thus, it loops between \emph{generating} and \emph{evaluating} hypotheses.
+
+\paragraph{Capsule Networks.} Neuronal capsule networks (CapsNet) \sidecite{sabour_dynamic_2017} mimic biological neural organisation and explicitly model hierarchical relationships. These networks group neurons into ``capsules''; each capsule represents a property such as position, size, orientation, deformation, texture, colour or movement. The results of several of these capsules form more stable representations for higher capsules. Dynamic routing matches bottom-up activations and top-down concepts ``generated'' by the available evidence over multiple iterations. Thus, dynamic routing is used to learn ``viewpoint invariant'' knowledge that generalises to novel viewpoints.
+Furthermore, it can deal with highly overlapping objects and explain that one object is in front of another object. However, CapsNets are still an active area of research and are not yet adopted in real-world scenarios. In particular, dynamic routing makes the algorithm slow, and so far, this approach has only worked on very small datasets such as MNIST \cite{lecun_gradient-based_1998} or CIFAR-10 \cite{krizhevsky_learning_2009}.
+
+Some concepts of CapsNets are closely related to those of the 100 brains theory and RCNs. However, CapsNets have their origins in computer science and are oriented towards deep learning principles. In contrast, the other frameworks have their origins in neuroscience and focus on biological plausibility. CapsNets divide the features into capsules which is helpful for good generalisation. In combination with dynamic routing, capsules allow the model to generalise to new, unseen viewpoints, have a high robustness to affine transformations, and can segment overlapping images. However, a severe problem is the accumulation of spatial information, which prevents the model from scaling to larger datasets. This could be due to the fact that the model processes independent images sequentially. This problem might be alleviated if the model is adapted to either process sequentially related images or videos or if the model can interact with objects to obtain better spatial information.
+
+\paragraph{Parsimony and Self-Consistency.} \sideciteay{ma_principles_2022} suggest that appropriate data structuring can lead to the emergence of intelligence, especially if the data is structured according to the principles of parsimony and self-consistency. The two principles describe \emph{what} and \emph{how} should be learned. Parsimony implies that an intelligent learning system should recognise low-dimensional structures in observed high-dimensional data and organise them in the most compact and structured way\sidenote(The goal is not to achieve the best possible compression but to obtain compact and structured representations in a computationally efficient way.). The second principle of self-consistency states that an intelligent learning system minimises the \emph{internal} discrepancy between observed and regenerated observations. Such internal representations can be learned through self-criticism \sidecite{rennie_self-critical_2017}, where the internal representations are consistent and satisfy the principle of parsimony. The described framework is very promising as it incorporates biological concepts into a framework that unifies and clarifies many practices and empirical findings of deep learning.
+Unfortunately, the authors do not present any metrics, so estimating the framework's performance is difficult.
+The challenge of this framework seems to be improving the modelling of the parsimony principle, i.e. improving the constraints responsible for forming the latent space and scaling it to larger datasets.
+
+\paragraph{Actionable Representations.} Another frequently used principle inspired by biological learning is the combination of representations with actions \cite{knoblich_social_2006, zhou_does_2019}. For example, it is known from animal research that both eye movements and behavioural states influence the reactions of neurons in the visual cortex \sidecite{keller_sensorimotor_2012}.
+Thus, animals integrate their actions (i.e., movements) with incoming sensory signals.
+\sideciteay{keurti_homomorphism_2023} argue that efference copies\sidenote{The internal copy of an outgoing motion-generating signal.} help to learn useful latent representations of input the visual system perceives. They allow an agent to perform actions by transforming objects and ensure that real-world transformations can also be applied to latent representations, i.e., mental objects and real-world objects remain consistent when similar transformations are applied.
+Allowing an agent to interact with the world to understand it better and create better representations seems essential not only from a neuroscientific point of view but is also in line with theories from psychology:
+\sideciteay{piaget_part_1964} argues that perceiving an object is more about understanding how it changes and behaves than creating a mental copy of the object.
+The combination of perception and action for autonomous machine intelligence is also postulated by \sideciteay{lecun_path_2022}. He proposes creating a world model whose state can be predicted based on planned actions. He emphasises the importance of self-supervised learning in combination with energy functions.
+
+These works raise the question of how representations should look like. Actionable representations not only represent the system's input data but also capture their behaviour when undergoing actions applied to them. However, increasing the representation's information content comes with the costs of providing richer input data: Learning visual representations of an object requires images only, learning an object's appearance from different viewpoints requires sequences of images, and learning actionable representations requires a simulation in which actions can be applied to objects. 
+
+\paragraph{Active Inference.} \citeay{lecun_path_2022} further describes that energy functions are well suited to make predictions of the world state based on actions because they can nicely shape the latent space due to their regulating properties.
+In the context of active inference \sidecite{friston_active_2016, parr_active_2022}, perception presents itself as a process of minimising the free energy of variation with respect to beliefs about hidden variables. This enables planning and inference by modelling generative processes $p(s,o)$. For example, if it rained at night ($p(s)$), one can infer that the grass is wet ($p(o)$). The model tries to model the chances of different hidden situations $p(s|o)$ based on prior beliefs ($p(s)$) and the likelihood of what it already observed ($p(o|s)$). 
+Thus, active inference aims to minimise the variational free energy by using past experiences to learn how the world works. This helps to predict what might happen in the future by minimising the probability of surprising or unexpected situations.
+This principle is also actively researched by other well-known research groups. For example, Bengio's research group works on GFlowNets (Generative Flow Networks) \sidecite{bengio_flow_2021, bengio_gflownet_2022}, making it possible to disentangle the explanatory causal factors and the mechanisms that connect them. This allows for a more rational approach to generalisations well outside of distribution.
+Furthermore, energy-based models can generate new samples that resemble the training data by sampling from the energy function \sidecite{du_implicit_2020}. This allows for predicting future states and learning concepts such as viewpoint transformations in a self-supervised manner.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\paragraph{Conculsion.} TODO
 
 \section{Natural Intelligence}\seclbl{natural_intelligence}
-According to \sideciteay{von_der_Malsburg_Stadelmann_Grewe_2022}, the process of learning is influenced by ``nature'', ``nurture'', and ``emergence''\sidenote{nature refers to the influence of genes and evolution, nurture to the influence of experience and education, and emergence to the construction of network structures}.
-They point out that the human genome (as of nature) only contains 1GB of information \sidecite{hbcrd} and humans only absorb a few GB into permanent memory over a lifetime (as of nurture), but it requires about 1PB to describe the connectivity in the human brain.
-Thus, there is a massive gap between the amount of information needed to describe the brain's structure and the amount of information needed to generate it.
-Therefore, they argue that the human brain must be highly structured and that the processes of nature and nurture construct the human brain by selecting from a set of pre-structured patterns.
-The authors call the process of generating the highly structured network in the human brain the ``Kolmogorov Algorithm \sidecite{Kolmogorov_1998} of the Brain''\sidenote{the Kolmogorov complexity describes the number of bits required by the shortest algorithm that can generate a given structure}.
-Network self-organisation is the only mechanism that experiments have not yet disproved as the brains Kolmogorov algorithm \sidecite{Willshaw_VonDerMalsburg_1976, Willshaw_VonDerMalsburg_1979}.
+\sideciteay{von_der_malsburg_theory_2022} point out that the human genome only contains 1GB of information and humans only absorb a few GB into permanent memory over a lifetime \sidecite{mcpherson_physical_2001}. Still, it requires about 1PB to describe the connectivity in the human brain.
+Thus, there is a massive gap between the amount of information needed to describe the brain's structure and the amount needed to generate it.
+Therefore, the human brain must be highly structured, and the processes of nature and nurture\sidenote{Nature refers to the influence of genes and evolution, nurture to the influence of experience and education, and emergence to the construction of network structures.} construct the human brain by selecting from a set of pre-structured patterns.
+The authors call the process of generating the highly structured network in the human brain the ``Kolmogorov Algorithm \sidecite{kolmogorov_tables_1998} of the Brain''\sidenote{The Kolmogorov complexity describes the number of bits required by the shortest algorithm that can generate a given structure.}.
+Network self-organisation is the only mechanism that experiments have not yet disproved as the brains Kolmogorov algorithm \sidecite{willshaw_how_1976, willshaw_marker_1979}.
 This mechanism loops between activity and connectivity, with activity acting back on connectivity through synaptic plasticity until a steady state, called an attractor network, is reached.
-The consistency property of an attractor network implies that a network has many alternative signal pathways between pairs of neurons \sidecite{Malsburg_1987}.
-Thus, the brain develops as an overlay of attractor networks called net fragments \sidecite{vonderMalsburg_2018}.
+The consistency property of an attractor network implies that a network has many alternative signal pathways between pairs of neurons \sidecite{von_der_malsburg_neural_1987}.
+Thus, the brain develops as an overlay of attractor networks called net fragments \sidecite{von_der_malsburg_concerning_2018}.
 Net fragments consist of small sets of neurons, whereby each neuron can be part of several net fragments.
 The network self-organisation has to start from an already established coarse global structure which is improved in a coarse-to-fine manner to avoid being caught in local optima.
 
-Also, von der Malsburg et al. \cite{von_der_Malsburg_Stadelmann_Grewe_2022} discuss scene representation (i.e. how a scene is represented in the brain) even though they point out that this is a contested concept \sidecite{freeman1990representations}.
+It is known for a long time that the human brain is highly structured \cite{gazzaniga_organization_1989, ackerman_discovering_1992, bassett_understanding_2011}. Also the argument that the brain is dominated by similar pre-structured patterns \cite{mountcastle_organizing_1978, mountcastle_columnar_1997} and is self-organising \cite{singer_brain_1986, kelso_selforganizing_1995, kelso_dynamic_1999} was made before.
+
+
+
+Also, \sideciteay{von_der_malsburg_theory_2022} discuss scene representation (i.e. how a scene is represented in the brain) even though they point out that this is a contested concept \sidecite{freeman_representations_1990}.
 Scene representation is an organisational framework to put abstract interpretations of scene layouts, elements, potential actions, and emotional responses in relation.
 The details are not rendered as in photographic images, but the framework supports the detailed reconstructions of narrow sectors of the scene.
 The primary goal of learning is to integrate a behavioural schema into the flow of scene representations.
@@ -25,15 +89,15 @@ They point out that network self-organisation groups neurons in one or multiple 
 The net fragments can be considered filters that detect previously seen patterns in the visual input signal.
 An object is represented by multiple net fragments, where each fragment responds to the surface of that object and has shared neurons and connections with other net fragments representing that object.
 Thus, net fragments render the topological structure of the surfaces that dominate the environment.
-Von der Malsburg et al. \sidecite{von_der_Malsburg_Stadelmann_Grewe_2022} propose that net fragments represent shape primitives which can adapt to the shape of actual objects\sidenote{adapt despite deformations, depth rotation, and position}.
-Shifter circuits are one possible implementation of networks that enable invariant responses to the position- and shape-variant representations \sidecite{Arathorn_2002, Olshausen1995}.
-They comprise net fragments that can be formed by network self-organisation \sidecite{Fernandes_vonderMalsburg_2015}.
+\citeay{von_der_malsburg_theory_2022} propose that net fragments represent shape primitives which can adapt to the shape of actual objects\sidenote{adapt despite deformations, depth rotation, and position}.
+Shifter circuits are one possible implementation of networks that enable invariant responses to the position- and shape-variant representations \sidecite{arathorn_map-seeking_2002, olshausen_multiscale_1995}.
+They comprise net fragments that can be formed by network self-organisation \sidecite{fernandes_self-organization_2015}.
 They also argue that net fragments are the compositional data structure used by the brain.
 Nested net fragments of different sizes may represent a hierarchy of features.
 Complex objects, such as mental constructs, can thus be seen as larger net fragments composed of mergers of pre-existing smaller net fragments.
 
-Von der Malsburg et al. \cite{von_der_Malsburg_Stadelmann_Grewe_2022} have not addressed how their interesting theoretical concepts can be implemented as a mathematical model.
-However, a concrete implementation was proposed by Claude Lehmann in the form of a Master's thesis \sidecite{lehmann}.
+\citeay{von_der_malsburg_theory_2022} have not addressed how their interesting theoretical concepts can be implemented as a mathematical model.
+However, a concrete implementation was proposed by Claude Lehmann in the form of a Master's thesis \sidecite{lehmann_leveraging_2022}.
 He proposes a new layer called the laterally connected layer (LCL).
 The LCL layer extends convolutional layers by forming lateral intra-layer connections based on the Hebbian learning rule (c.f. \secref{hebbian}).
 Convolutional filters calculate multiple feature maps.
@@ -42,15 +106,15 @@ When two feature maps are similar in spatially close locations, their connection
 Thus, Hebbian learning forms lateral connections between the feature maps with a high covariance.
 This process forms new filters based on existing filters.
 Lehmann found that LCL layers increase robustness for object recognition.
-He shows on the MNIST dataset \cite{Lecun_Bottou_Bengio_Haffner_1998} that for a slight reduction in accuracy of 1\%, the performance on corrupted images increases by up to 21\%.
+He shows on the MNIST dataset \cite{lecun_gradient-based_1998} that for a slight reduction in accuracy of 1\%, the performance on corrupted images increases by up to 21\%.
 However, the proposed layer has only improved performance on small networks, and its effectiveness on larger networks has yet to be demonstrated.
 
-In this thesis, the ideas from the work of von der Malsburg et al. \cite{von_der_Malsburg_Stadelmann_Grewe_2022} are incorporated into a deep learning model.
+In this thesis, the ideas from the work of von der Malsburg et al. \cite{von_der_malsburg_theory_2022} are incorporated into a deep learning model.
 Thus, their work is considered to be \emph{the} inspiration for this thesis.
-However, this thesis is based on other concepts than the thesis by Lehmann \cite{lehmann} and therefore has little in common with his work.
+However, this thesis is based on other concepts than the thesis by Lehmann \cite{lehmann_leveraging_2022} and therefore has little in common with his work.
 
 
-\subsection{3-Staged Model}
+\subsection{Projection Fibres}\seclbl{projection_fibres}
 A practical implementation of this theory is a $3$-staged model based on self-organising projection fibres.
 For a long time, this model was state-of-the-art for applications in automatic image analysis, for example, for face recognition \sidecite{XXXXXXXXXXXX}.
 However, this model has become less popular with the advent of deep neural networks, as deep networks exhibit excellent feature extraction capabilities that can be used for image analysis tasks.
@@ -97,7 +161,7 @@ In nature, groups of thousands of units that solve complex tasks using only loca
 For example, ants can navigate rugged terrain with local pheromone-based communication and thus form a collective type of intelligence.
 Such observations inspired researchers to build algorithms based on local communication and self-organisation, for example, ant colony optimisation algorithms \sidecite{dorigo1997ant}.
 DeepSwarm \sidecite{Byla_Pang_2020} is a neural architecture search method that uses this algorithm to search for the best neural architecture.
-This method achieves competitive performance on relatively small datasets such as MNIST \cite{Lecun_Bottou_Bengio_Haffner_1998}, Fashion-MNIST \cite{xiao2017/online}, and CIFAR-10 \cite{cifar_10}.
+This method achieves competitive performance on relatively small datasets such as MNIST \cite{lecun_gradient-based_1998}, Fashion-MNIST \cite{xiao2017/online}, and CIFAR-10 \cite{krizhevsky_learning_2009}.
 
 Cellular automata mimic developmental processes in multi-cell organisms.
 They contain a grid of similar cells with an internal state updated periodically.
@@ -202,7 +266,7 @@ Based on the learned patterns, the inter-layer connections are modified to gener
 
 In general, SNNs must ``convert'' static input data such as images to a dynamic signal. However, such approaches lose a lot of information about the input.
 For example, all information about colour and thin structures is lost if DoG filters (c.f. \secref{spiking_networks}) are used to generate spikes.
-Currently, this seems to be one of the limiting factors why such SNNs cannot match the performance of deep learning algorithms and often only work well for small grey-scale image datasets such as MNIST \cite{Lecun_Bottou_Bengio_Haffner_1998}.
+Currently, this seems to be one of the limiting factors why such SNNs cannot match the performance of deep learning algorithms and often only work well for small grey-scale image datasets such as MNIST \cite{lecun_gradient-based_1998}.
 
 
 
@@ -367,7 +431,7 @@ Therefore, alternative learning algorithms are very relevant to this thesis.
 The approach based on horizontal self-organisation uses proxy objective functions to train the layer locally as independent units (c.f. \chref{horizontal_self_org}).
 Proxy objective functions are used in this thesis as this method is the only known alternative to backpropagation of error that scales well to large neural networks and large datasets \sidecite{Bartunov_Santoro_Richards_Marris_Hinton_Lillicrap_2018, Duan_Principe_2022}.
 
-
+\begin{comment}
 \section{Representation Learning}\seclbl{visual_rep_learning}
 
 \subsection{Autoencoders}\seclbl{visual_rep_learning_ae}
@@ -560,3 +624,4 @@ Finally, the meta-optimisation can either be done offline (i.e. the inner and ou
 %Such models achieve rotation covariance\sidenote{rotation covariance means that applying a rotation to the input image results in a shift of the output across the features} and only need to learn a single canonical filter per orientation group.
 %This concept can also be applied to the rotation group in the final layers of a CNN to obtain invariance to global rotations \sidecite{Wu_Hu_Kong_2015}.
 
+\end{comment}
