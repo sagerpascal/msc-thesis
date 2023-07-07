@@ -263,27 +263,24 @@ It is also possible to eliminate the backward pass by training the auxiliary gra
 However, the synthetic gradients method works significantly worse than when actual gradients are used to train auxiliary models.
 An advantage of synthetic gradient methods is that they can approximate backpropagation through time (BTT) for unlimited timesteps \cite{jaderberg_decoupled_2017}.
 
-TODO: Persönliche Einschätzung
-
 \paragraph{Feedback Alignment.} \emph{Feedback alignment} algorithms use fixed, random weights during the backward pass \sidecite{lillicrap_random_2016}.
 The gradients are calculated similarly to stochastic gradient descent but with random weights.
 Thus the symmetry between the weights used during the forward and the backward pass is broken.
 The network still learns to make the feedback useful even though the weights during forward and backward passes are different. 
 Later, the algorithm was improved by using fixed, random weights that share the signs with the actual weights of the network \sidecite{liao_how_2016}.
 
-TODO: Persönliche Einschätzung
+Feedback alignment algorithms are a more biologically plausible alternative to backpropagation as they avoid the weight transport problem.
+When combined with  application-specific integrated circuits, they can reduce training time and energy costs \cite{lillicrap_random_2016}.
+However, they cannot yet scale to large datasets, and further research is required towards this direction.
 
 \paragraph{Auxiliary Variables.} Lastly, another group of learning algorithms use \emph{auxiliary variables} \sidecite{carreira-perpinan_distributed_2014, taylor_training_2016, zhang_convergent_2017, lau_proximal_2018.
 These methods use the idea of variable splitting, i.e. transforming a complicated problem into a simpler one by introducing additional trainable variables.
 Introducing auxiliary variables may pose scalability issues, and these methods require special, usually tailor-made solvers.
 Therefore, such methods usually scale to specific use cases only.
 
-TODO: Persönliche Einschätzung
+\paragraph{Relevance.} In this chapter, several alternative learning algorithms to the widely used backpropagation of error with gradient descent are discussed. However, it is shown that only proxy objective functions can scale to larger datasets. Backpropagation of error remains the state-of-the-art approach for various machine learning tasks, despite its biological implausibility and associated drawbacks (c.f. \secref{limitationsDL}). Therefore, research into alternative learning algorithms is considered important.
 
-\paragraph{Relevance}
-
-TODO: Persönliche Einschätzung
-
+Furthermore, the question arises whether studying a learning algorithm exclusively in the context of typical deep learning tasks is sufficient. The brain that inspires alternative learning algorithms is not a network that deals exclusively with a single task. Rather, it is a complex system that is simultaneously engaged in multiple tasks. Therefore, it is important to consider this broader context when exploring new learning algorithms. 
 
 
 
