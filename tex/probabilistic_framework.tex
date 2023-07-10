@@ -1,6 +1,6 @@
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.99\textwidth]{sdp_mountain_spirit.jpg}
+    \includegraphics[width=0.8\textwidth]{sdp_mountain_spirit.jpg}
     \caption[Mountain Spirit in Winter by Sandro del Prete]{Mountain Spirit in Winter by Sandro del Prete. The image is from \citeay{sdp_mountain}.}
     \figlbl{sdp_mountain}
 \end{figure}
@@ -9,12 +9,12 @@ One of the insights from the \emph{Gestalt} psychology \sidecite{ellis_source_19
 
 For example, when looking at \figref{sdp_mountain}, local and global patterns are not aligned. A painter drawing a picture from a house in a snowy landscape can be observed when looking at local features. However, when looking at the overarching pattern, a man's face is visible.
 This example illustrates that, when extracting features from images, it is important to avoid the ``fallacy of early commitment'', as David Marr put it \sidecite{marr_vision_2010}.
-Otherwise, when looking at local features only, systems could commit to objects like trees, a painter, an image, a house, and snow. Such systems would not be able to observe the global pattern as a men's face typically comprises eyes, nose, etc. and not the aforementioned objects.
-The theory of natural intelligence and work based on self-organising projection fibres (c.f. \secref{projection_fibres}) considers the principle of preventing early commitment as the core principle for the effectiveness of human vision systems.
+Otherwise, when looking at local features only, systems could commit to objects like trees, a painter, an image, a house, and snow. Such systems would not be able to recognise the global pattern as a men's face typically comprises eyes, nose, etc. and not the aforementioned objects.
+The theory of natural intelligence \sidecite{von_der_Malsburg_Stadelmann_Grewe_2022} and work based on self-organising projection fibres (c.f. \secref{projection_fibres}) considers the principle of preventing early commitment as the core principle for the effectiveness of the human visual system.
 
-The most used architectures for image processing are CNNs. This type of network cannot prevent early commitment by design: The first layers extract local features from images, thereby having access to small image patches only. The extracted features are combined into higher-level features in later layers \sidecite{prince_understanding_2023}. Thus, the first layers do not consider global features but steer the decision process toward specific directions based on local features. Therefore, CNNs take local decisions without consolidating global information.
+The most used architectures for image processing are based on CNNs (c.f. \secref{cnns}). This type of network cannot prevent early commitment by design: The first layers extract local features from images, thereby having access to small patches only. The extracted low-level features are combined into higher-level features in later layers \sidecite{prince_understanding_2023}. Thus, the first layers do not consider global features but steer the decision process toward specific directions based on local features. Therefore, CNNs take local decisions without consolidating global information.
 
-Fully connected \sidecite{tolstikhin_mlp-mixer_2021} or transformer-based vision \sidecite{dosovitskiy_image_2021} architectures, on the other hand, might not have this limitation since these architectures can access the entire input.
+Transformer-based \sidecite{dosovitskiy_image_2021} or fully connected \sidecite{tolstikhin_mlp-mixer_2021} vision architectures, on the other hand, might not have this limitation since these architectures can access the entire input.
 However, they have a fallacy of early commitment in the sense that they process the input layer-wise. Typically, the input of a vision architecture is specific (e.g. an image) and mapped to more general information (e.g. a class label).
 However, general information is not used to confirm or validate specific information.
 Thus, the first layers make decisions on lower-level features and steer the learning process towards a specific direction without considering higher-level features, thereby being prone to early commitment as well.
@@ -29,143 +29,176 @@ Thus, the first layers make decisions on lower-level features and steer the lear
 \end{figure}
 
 A system that avoids the fallacy of early commitment should fulfil the conundrum that local decisions are taken on the basis of plausibility in the light of high-level patterns, while high-level patterns can only be defined on the basis of low-level features.
-The only solution is to iterate between local and global features, refining both coarse and finely. It requires a two-way mapping from local features to prototypes and vice versa as visualized in \figref{prototype_mapping}.
+The only solution is to iterate between local and global features, refining them in a coarse to fine manner \sidecite{wiskott_face_1996, wolfrum_recurrent_2008}. This process requires a two-way mapping from local features to prototypes and vice versa, as visualized in \figref{prototype_mapping}.
 Thus, the system should be able to map parts of an image to meaningful prototypes, as shown on the left, and not just compress the entire image to an embedding representation as typically done in deep learning applications \sidecite{prince_understanding_2023}.
-Such systems have been explored in the theory of self-organising projection fibres (c.f. \secref{projection_fibres}), however, did not yet scale to natural images despite human faces.
+Such systems have been explored in the theory of self-organising projection fibres (c.f. \secref{projection_fibres}), however, did not yet scale to natural images except for human faces \cite{wolfrum_recurrent_2008}.
 
-This section describes the implementation of a system that might scale to natural images is described.
+This section describes a system that might scale to natural images.
 It is based on three main components: A sensory stage \emph{L0} that extracts features from the image, a stage \emph{L1} building local features, and a stage \emph{L2} mapping these local features to object prototypes by utilising projection fibres.
-In the context of biology, the sensory stage \emph{L0} could stand for the eyes translating visual information into neuronal activity, \emph{L1} could stand for the primary visual cortex, and \emph{L2} for an area in the temporal cortex.
-These building blocks are described in the following.
+In the context of biology, the sensory stage \emph{L0} could stand for the eyes translating visual information into neuronal activity, \emph{L1} could stand for the primary visual cortex \sidecite{tong_primary_2003, grill-spector_human_2004}, and \emph{L2} for an area in the temporal cortex \sidecite{miyashita_inferior_1993, conway_organization_2018}.
+These three building blocks are described in the following.
 
 \subsection{Building Blocks}
-The proposed framework consists of the three building blocks as described above.
-Unlike deep learning networks, the framework should be highly interpretative and robust to noise.
-The limited interpretability of deep networks is one of the reasons why they cannot fully leverage their potential and be used, for example, in security-critical applications \sidecite{TODO}.
-This is especially due to the fact that the activation of artificial neurons can be any floating point number, giving a neuron the capability to represent an infinite number of states. This limits interpretability as it is unclear what these states actually mean.
-Furthermore, it hinders networks from forming proper net fragments: An input image depicting a pattern creates activation within the network, and the cells that respond to that pattern should strengthen their connections. However, unique patterns should activate a unique group of cells. With floating point numbers, different patterns can activate the same cells with different magnitudes and might hinder forming proper local features as described in the following.
-Therefore, all proposed building blocks are based on neurons that sample their activity from a Bernoulli distribution and thus are binary (c.f. \secref{}).
-Therefore, these neurons are highly interpretable, as they are either turned on or off, depending on the pattern that is present at the network's input.
-Furthermore, binary neurons increase robustness to noise \sidecite{TODO}.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.99\textwidth]{system ovierview}
+    \caption[Overview of the framework]{Overview of the framework. \emph{L0} extracts features from the image at timestep $t=0$, \emph{L1} builds local features, and \emph{L2} maps them to global features. The network refines the features over multiple timesteps by iterating between local and global features.}
+    \figlbl{system_overview}
+\end{figure}
 
+\figref{system_overview} provides an overview of the building blocks of the proposed framework. The Sensors system \emph{L0} is only active once and extracts features. These features are refined over multiple timesteps by iterating between local and global feature processing, thereby preventing the system from early commitment.
 
 \paragraph{Sensors System \emph{L0}.} The sensory stage \emph{L0} extracts features from the image that are forwarded to \emph{L1}.
-A typical input to the sensory stage is an image of size $C_{in}\times H\times W$ where $C_{in}$ stands for the number of input channels (typically $C_{in}=3$ for RGB images or $C_{in}=1$ for grayscale images), $H$ for the input height, and $W$ for the input width. Thus, this layer has $C_{in}\cdot H \cdot W$ incoming connections. 
-However, the sensory stage can extract multiple features at the same spatial location.
-Each of the extracted features is stored in a different channel, thus changing the dimensionality to $C_{out}\times H\times W$ where typically $C_{out} > C_{in}$.
-Therefore, this layer has $C_{out}$ cells at the same spatial location and $C_{out}\cdot H \cdot W$ cells in total.
+A typical input to the sensory stage is an image having one (grayscale) or three (RGB) colour channels. Therefore, such an image can be interpreted as having one or three features at every spatial location.
+The sensory system extracts multiple higher-level features by considering a spatially local neighbourhood. Thus, the number of features is increased by the sensory system.
+A sensory system can be, for example, the first layer of a pre-trained CNN model.
 
-\paragraph{Local Features Stage \emph{L1}.} The local feature stage is dominated by lateral connection that allow neurons to support each other. Lateral connections can be considered recurrent connections operating at the same level of features. Unlike feed-forward connections that ascend through a hierarchy of feature detectors, these lateral connections enable elementary feature neurons to be activated by input and briefly fire. However, their continued firing relies on receiving support from a sufficient number of other activated neurons, which are also connected to them. Initially activated neurons that do not receive enough lateral support deactivate after a short period. Consequently, a significant response involves a collective group of neurons that mutually support each other through connections. Therefore, it is essential to view the process from the perspective that the winning neurons are integral parts of consistent networks of connections, enabling them to persist beyond the transient phase. These consistent networks are the high-level patterns discussed in the Gestalt movement \cite{ellis_source_1938, kohler_gestalt_1992, wagemans_century_2012, hamlyn_psychology_2017}. Hence, the aforementioned  conundrum, that local decisions should be taken on the basis of plausibility in the light of high-level patterns while the high-level patterns can only be defined on the basis of low-level features, is resolved by the fact that the input activates numerous feature neurons that fit the local input, but the high-level patterns represented by coherent networks of lateral connections only select those that are mutually consistent in terms of the overall pattern.
+\paragraph{Local Features Stage \emph{L1}.} The local feature stage is a single layer with short-ranging lateral connections \sidecite{gilbert_lateral_1990}, allowing neurons in a spatially narrow neighbourhood to support each other. Lateral connections can be considered recurrent connections operating at the same level of features. Input from the sensory system activates some feature neurons in \emph{L1}. However, their continued firing relies on receiving support from a sufficient number of other activated neurons that are laterally connected to them. Initially activated neurons that do not receive enough lateral support deactivate after a short period due to inhibition \sidecite{coombs_specific_1955}.
 
-The connections present in \emph{L1} possess the capacity to represent an extensive array of consistent connectivity patterns. Each neuron within \emph{L1} exhibits multiple excitatory incoming and outgoing connections, allowing it to be involved in slight variations and deformations of a specific pattern, as well as completely distinct global patterns. However, due to the limited range of lateral connections, coherence is maintained only within that particular range.
+The lateral connections are learned through self-organisation. Patterns occurring repeatedly in the training data will constantly activate the same cells simultaneously. Using Hebbian learning strengthens the connection between these cells, and the pattern is ``stored'' in a net fragment. The inhibition strength increases during training so that only frequently occurring patterns can lead to constant cell activation.
 
-\paragraph{Global Features Stage \emph{L2}.} In order to represent larger-scale structures like that of an object, longer-range connections become essential, and these are found in \emph{L2}. In \emph{L2}, patterns remain invariant to translation, scale, and orientation, enabling the incorporation of broader spatial relationships.
-It has a smaller coverage area, focusing specifically on object-centered representations rather than encompassing the entire visual field. Additionally, L2 enables connections with an extended range, spanning a significant portion of the object's representation.
+Consequently, many neurons might be activated by the sensory stage, but only the ones supporting each other remain active.
+Therefore, it is essential to view the process from the perspective that the winning neurons are integral parts of consistent net fragments, enabling them to persist.
+The connections present in \emph{L1} possess the capacity to represent an extensive array of consistent connectivity patterns. Each neuron within \emph{L1} exhibits multiple excitatory incoming and outgoing connections, allowing it to be involved in slight variations and deformations of a specific pattern and completely distinct global patterns. However, due to the limited range of lateral connections, coherence is maintained only within that particular range.
 
-In the object recognition process, a comprehensive network plays a central role: It consists of a sub-network within L1 that covers the region of the visual field containing the object, as well as a sub-network in L2 that represents the object. Active projection fibers, or axons, connect corresponding neurons in the L1 and L2 networks. Here, ``corresponding'' refers to neurons relating to the same point on the object's surface.
+\paragraph{Global Features Stage \emph{L2}.} Long-range connections are essential to represent larger-scale structures like an object. In \emph{L2}, large patterns, typically representing objects, are stored. 
+It has a smaller coverage area, focusing specifically on object-centred representations rather than encompassing the entire visual field.
+The patterns in \emph{L2} remain invariant to translation, scale, and orientation, enabling the incorporation of broader spatial relationships.
 
-The fibre projection between the L1 and L2 networks is composed of ``maplets''. A maplet comprises a collection of fibers that establish one-to-one connections between all neurons in a small patch of L1 and all neurons in a small patch of L2 in a topological manner. This topological connection links neighboring neurons in L1 to neighboring neurons in L2. Both L1 and L2 are divided into overlapping patches, and for each pair of patches—one in L1 and one in L2—a corresponding maplet exists.
+In the object recognition process, corresponding net fragments in \emph{L1} are mapped to object prototypes in \emph{L2} through active projection fibres. Here, ``corresponding'' refers to neurons relating to the same point on the object's surface.
+The projection fibres between \emph{L1} and \emph{L2} are composed of ``maplets''. A maplet comprises a collection of fibres that establish one-to-one connections between all neurons in a small patch of \emph{L1} and all neurons in a small patch of \emph{L2} in a topological manner. This topological connection links neighbouring neurons in \emph{L1} to neighbouring neurons in \emph{L2}. Both \emph{L1} and \emph{L2} are divided into overlapping patches, and for each pair of patches — one in \emph{L1} and one in \emph{L2} — a corresponding maplet exists.
 
-When the proper control units observe a high pattern correlation between the fibres reaching L2 and the local neural activation pattern there, they initiate activation. They inhibit competing units and stabilize the network in L2 using the activated fibres. Consequently, the activated projection achieves a homeomorphism, where neurons of a particular feature type in L1 are connected to neurons of the same type in L2. Furthermore, neighbouring neurons in L1 project to connected neurons in L2.
+Control units are used to activate projection fibres.
+Control units initiate activation when they observe a high pattern correlation between the fibres reaching \emph{L1} and \emph{L2}. They inhibit competing units and stabilize the network in \emph{L2} using the activated fibres. Consequently, the activated projection achieves a homeomorphism, where neurons of a particular feature type in \emph{L1} are connected to neurons of the same type in \emph{L2}.
+
+
+\paragraph{Bernoulli Neuron.} The limited interpretability of deep networks is one of the reasons why they cannot always fully leverage their potential and be used, for example, in safety-critical applications \sidecite{gerasimou_importance-driven_2020, li_interpretable_2022}.
+This is especially due to the fact that the activation of artificial neurons can be any floating point number, giving a neuron the capability to represent an infinite number of states. This limits interpretability as it is unclear what these neuronal activity strengths actually mean.
+Furthermore, it hinders networks from forming proper net fragments: An input image depicting a pattern creates activation within the network, and the cells that respond to that pattern should strengthen their connections. However, unique patterns should activate a unique group of cells. With floating point numbers as cell states, different patterns can activate the same cells with different magnitudes and might hinder forming proper net fragments.
+Therefore, all proposed building blocks are based on neurons that sample their activity from a Bernoulli distribution and thus are binary (c.f. \secref{bernoulli_neuron}).
+Such neurons are highly interpretable, as they are either turned on or off, depending on the pattern presented at the network's input.
+Furthermore, binary neurons increase robustness to noise \sidecite{Ahmad_Hawkins_2015}.
+
 
 \subsection{Relation to Theory of Natural Intelligence}
 The mapping between input data and stored object prototypes is closely related to the human brain's functionality and in line with findings from neuroscience \cite{kandel_principles_2013, olshausen_emergence_1996, vogels_inhibitory_2011, payeur_burst-dependent_2021} and psychology \cite{ellis_source_1938, kohler_gestalt_1992, wagemans_century_2012, hamlyn_psychology_2017}.
 
-The theory of natural intelligence by \sideciteay{von_der_Malsburg_Stadelmann_Grewe_2022} describes how the brain develops an overlay of attractor networks called net fragments (c.f. \secref{natural_intelligence}). These attractor networks consist of neurons supporting each other to remain active.
+The theory of natural intelligence by \sideciteay{von_der_Malsburg_Stadelmann_Grewe_2022} describes how the brain develops an overlay of net fragments (c.f. \secref{natural_intelligence}). These attractor networks consist of neurons supporting each other to remain active.
 This behaviour is implemented in the local feature stage \emph{L1}: The sensory signal from \emph{L1} activates many neurons from which only the ones receiving enough lateral support remain active. The neurons that support each other thus build a net fragment.
 
 The theory also describes that an object is represented by multiple net fragments, whereby each net fragment represents a part of the surface of that object.
-As described above, the net fragments are build in \emph{L1} but are restricted to a spatially local neighbourhood. Projection fibres map these net fragments to object prototypes in \emph{L2}. Thus, an overlay of attractor networks represent an object as suggested in the theory of natural intelligence.
+As described above, net fragments are built in \emph{L1} but are restricted to a spatially local neighbourhood. Projection fibres map these net fragments to object prototypes in \emph{L2}. Thus, an overlay of attractor networks represents an object, as suggested in the theory of natural intelligence.
 
-
-Furthermore, it is postulated that in the theory that self-organisation is the key algorithm to form such fragments and the learning mechanism loops between activity and connectivity for a short time until an attractor state is reached.
+Furthermore, it is postulated in the theory that self-organisation is the key algorithm to form such fragments and the learning mechanism loops between activity and connectivity for a short time until an attractor state is reached.
 In the context of this work, self-organisation is used to organise the lateral connection in \emph{L1}. In fact, local Hebbian learning is applied to learn the support strength between neurons, allowing the network to turn off neurons that are not part of the dominating net fragments.
 Furthermore, looping between activity and connectivity is implemented with projection fibres. 
-Each prototype in \emph{L2} considered a hypothesis of what object is present in the input. A net fragment can be mapped to multiple prototypes, and each active net fragment supports specific hypotheses in \emph{L2}. The hypotheses act back on L1 and, in turn, support net fragments in \emph{L1}. Thus, the activity part is realised by \emph{L1} when supporting or turning off cells and the connectivity part is realised by projection fibres mapping the net fragments to \emph{L2}, thereby providing feedback to \emph{L1}.
+Each prototype in \emph{L2} is considered a hypothesis of what object is present in the input. A net fragment can be mapped to multiple prototypes, and each active net fragment supports specific hypotheses in \emph{L2}. The hypotheses act back on \emph{L1} and, in turn, support local net fragments. Thus, the activity part is realised by \emph{L1} when supporting or turning off cells and the connectivity part is realised by projection fibres mapping the net fragments to \emph{L2}, thereby providing feedback to \emph{L1}.
 
-Overall, I argue that the proposed framework is an implementation following strictly the theory of natural intelligence \cite{von_der_malsburg_theory_2022}. Thus, according to leading experts in the field, this framework has the ability to make steps towards natural intelligence. However, not all parts have been incorporated yet. For example, the framework is still limited to processing images and cannot yet deal with multi-modality. However, incorporating multi-modality can be done in a very similar way than the vision processing system (c.f. \secref{}).
-
-
-\subsection{Advantages}
+Overall, I argue that the proposed framework is an implementation following strictly the theory of natural intelligence \cite{von_der_malsburg_theory_2022}. Thus, according to leading experts in the field, this framework has the ability to make a step towards natural intelligence. However, not all parts have been incorporated yet. For example, the framework is still limited to processing images and cannot yet deal with multi-modality. However, incorporating multi-modality can be done similarly to the principle of the vision processing system (c.f. \secref{framework_multi_modality}).
 
 
+\subsection{Advantages}\seclbl{framework_advantages}
+The proposed framework is expected to have various advantages over the typical deep learning setting. These are described in the following.
 
-TODO: Describe effects expected from projection fibres: Robustness, Interpretability, less adversarial attacks, stop when consensus is reached, add constraints so that ordering of objects is more relevant, learn transformation independent of objects.
-% Advantages & Hopes
+\paragraph{Ambiguity.} The proposed framework permits the persistence of multiple net fragments, enabling the system to handle ambiguity effectively. For example, when presented with a face comprised of distinct objects (c.f. \figref{sdp_mountain}), both the subnetwork responsible for abstract faces and the subnetworks associated with individual objects become active concurrently. Consequently, one can attend to these subnetworks simultaneously, utilizing attention in its original sense rather than the conventional deep neural network (DNN) interpretation \sidecite{niu_review_2021}. I speculate that this represents a fundamental distinction from neural networks that are compelled to represent the entire scene within a single high-dimensional dense vector.
 
-\subsection{Multi Modality}
-This work focuses on the study of a three-staged architecture for computer vision. However, the architecture has broader applicability and can be used for processing different sensor signals and be used in multimodal settings \cite{ngiam_multimodal_2011, liu_learn_2018, baltrusaitis_multimodal_2019}.
+\paragraph{Interpretability.} The framework allows for much better interpretability than classical deep networks. Each neuron is binary and can be part of a multitude of subnetworks and thus has a semantic meaning, i.e. corresponds to something meaningful. Furthermore, every neuron's internal state is a probability that can be interpreted as the network's confidence that this specific feature was observed in the input. A network of probabilistic neurons that support each other over timesteps can also be interpreted as a directed graph. This allows to trace how subnetworks are activated. 
+Furthermore, the projection fibres map net fragments to object prototypes, making it much simpler to understand the network's decision process for object detection.
+Without formal proof or presenting an interpretability framework, I speculate that using this framework will significantly simplify the explainability of intelligent systems.
 
-Sensor signals generate activations in the first stage \emph{L1} that form network fragments supported by lateral connections. In the case of images, these network fragments represent learned patterns that are part of the object's surface. Through projection fibres, they are mapped onto corresponding object prototypes.
+\paragraph{Robustness.} A neural network is usually represented with a vector which is sequentially processed by mathematical functions (e.g. with neural layers). Artificial networks, in particular, are not robust to noise and are susceptible to adversarial attacks \sidecite{Akhtar_Mian_2018}. Slight changes to the input or a network-internal vector can completely falsify the overall result. This is because typical artificial networks work with continuous numbers, and these feature vectors can consequently lie anywhere in the feature space. Therefore, a minimal change, e.g. triggered by noise, can shift the feature to the other side of the decision boundary and change the result. A binary vector, on the other hand, has different mathematical properties and is more robust against noise and adversarial attacks, especially if they are sparse and distributed\sidenote{Only a small portion of the bits are ``on'', and representations differ by multiple binary bits.} \sidecite{Ahmad_Hawkins_2015}.
+Subsampled or noisy vectors are still semantically similar and are close to the original vectors when compared, for example, by counting the overlap of bits between two vectors.
 
+\paragraph{Processing Duration.} A neural network usually processes input for a fixed number of iterations. The proposed framework has an adaptable processing duration: The activated prototypes in \emph{L2} can be interpreted as hypotheses, which are refined until a consensus, i.e. an attractor state, is reached. This happens rather fast if the local features can be unambiguously mapped to one of the prototypes and requires more iteration between \emph{L1} and \emph{L2} if it is unclear to which prototype the local features belong to or if the input is ambiguous. Thus, the processing duration can be automatically adjusted to the input data.
+
+\paragraph{Object-Independent Transformations.} The same projection fibres are applied to all object prototypes, allowing to learn object-independent transformations. For example, an object might be slightly stretched, rotated, or deformed compared to the stored prototypes. The projection fibres learn to ignore such slight deformations independent of the object type. This allows the architecture to learn transformation invariance and to transfer this capability to new objects that have not been transformed in the training data.
+
+\subsection{Multi-Modality}\seclbl{framework_multi_modality}
+This work focuses on a framework for computer vision. However, the architecture has broader applicability and can be used for processing different sensor signals and be used in multimodal settings \cite{ngiam_multimodal_2011, liu_learn_2018, baltrusaitis_multimodal_2019}.
+Having similar cell architectures processing different kind of signals is also in line with findings from neuroscience \sidecite{mountcastle_organizing_1978, mountcastle_columnar_1997}.
+
+In the case of images, net fragments in \emph{L1} represent learned visual patterns that are part of an object's surface and are mapped with protection fibres to object prototypes that describe the visual appearance of objects. 
 The same architectural structure can be applied to other types of signals. For example, an alternative sensory system could perceive audio signals. In this scenario, the local support in \emph{L1} would extend over nearby frequency ranges and time intervals. Consequently, phonemes or syllables could be learned locally and represented by net fragments. In the second stage (\emph{L2}), a sequence of phonemes or syllables could be mapped onto word prototypes.
 
-Different sensory systems could have separate domain-specific \emph{L1} layers in a multimodal setting, while the prototypes in \emph{L2} could be shared across modalities. This arrangement allows the integration of different sensor signals and facilitates the creation of multimodal internal models of objects.
+Different sensory systems could even have separate domain-specific \emph{L1} layers in a multimodal setting, while the prototypes in \emph{L2} could be shared across modalities. This arrangement would allow to integrate different sensor signals and facilitates the creation of internal object representations with multiple modalities.
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-\section{Bernoulli-Sampling Neuron}
-The previous section presented an alternative vision framework, that implements the Gestalt phenomena \cite{ellis_source_1938, kohler_gestalt_1992, wagemans_century_2012, hamlyn_psychology_2017} by design. It is based on local subnetworks that emerge over short amounts of time. Subnetworks comprise neurons supporting each other to remain active.
-When presented with the same input, t an attractor state will be reached. This implies the formation of a stable subnetwork of neurons that persists as long as the input remains unchanged or undergoes minimal alterations. Consequently, neurons within this network mutually reinforce one another, utilizing fundamental principles to provide support:
+\section{Bernoulli-Sampling Neuron}\seclbl{bernoulli_neuron}
+In traditional neural networks, neurons exhibit dense activity, meaning that even with applying the rectified linear unit (ReLU) activation function (c.f. \eqref{act_functions}), many neurons remain active (above zero) \sidecite{rhu_compressing_2018}, even though it is known that sparsity can improve results \sidecite{ide_improvement_2017}. Consequently, most synapses are active, and a neuron is represented as the weighted sum of many neurons from the previous layer without incorporating lateral connections. Furthermore, temporal dynamics are absent, as neural networks are typically perceived as functions that promptly process an input and generate an output. However, biological neurons have different characteristics than artificial neural networks \sidecite{kandel_principles_2013}:
 
 \begin{itemize}
-    \item When a relatively small amount of synapses are active (10 out of 10'000 connections), the neuron is active. 
-    \item Activation is sparse. That is, at each point in time only a fraction of neurons is active.
+    \item A neuron is active when a relatively small amount of synapses are active (10 out of 10'000 connections). 
+    \item Activation is sparse, i.e. at each point in time, only a fraction of neurons are active.
     \item Neurons that tend to fire simultaneously tend to form stronger bonds (Hebbian update rule).
-    \item The connections are lateral and not feedforward only. This implies a time-dependency used to form the subnetworks. 
+    \item The connections are also lateral and not feed-forward only. This implies a time dependency used to form the net fragments. 
 \end{itemize}
 
-These characteristics differ from typical feed-forward architectures in several ways.  In traditional neural networks, neurons exhibit dense activity, meaning that even with the application of the Rectified Linear Unit (ReLU) activation function, approximately 50\% of neurons remain active (above zero). Consequently, all synapses are active, and a neuron is represented as the weighted sum of all neurons from the previous layer, without incorporating lateral connections. Furthermore, temporal dynamics are absent, as neural networks are typically perceived as functions that promptly process an input and generate an output. Therefore, one can conceptualize a neural network as $\boldsymbol{y} = f(\boldsymbol{x})$. Even autoregressive models adhere to this structure, where $\boldsymbol{y}_t = f(\boldsymbol{y}_{t-1})$.
 
-This suggests that implementing subnetworks requires using different principles than the ones used in classical neural networks. Therefore, a probabilistic framework based on probabilistic neurons is introduced.
-A probabilistic neuron is a binary neuron that does not fire when a certain threshold is reached but uses its internal state as firing probability.
+This suggests that implementing net fragments, similar to the human brain, requires using different principles than the ones used in classical neural networks. Therefore, a probabilistic neuron that samples its activation from a distribution is introduced.
+Such a neuron is a binary neuron that does not fire when a certain threshold is reached but uses its internal state as firing probability.
 
-This is a different principle than neural networks that deal with probabilities, such as probabilistic neural networks (PNN) \sidecite{Mohebali_Tahmassebi_Meyer_Baese_Gandomi_2020}. PNNs were already introduced in 1967 by D.F. Specht \cite{Specht_1967, Specht_1990} and are well suited for classification and allocate the class with highest posterior probability to new input data \cite{Zeinali_Story_2017}.
-In contrast to PNNs, the proposed framework is based on \emph{probabilistic neurons} and does not model class but activation probabilities.
-
-A probabilistic neuron $x_i$ is modelled as a probability density function of the form:
+A probabilistic neuron $x_i$ in the context of net fragments is modelled as a probability density function of the form:
 \begin{equation}
     p(x_i = \text{active} | \text{activity of neighborhood}, \text{environment}) 
 \end{equation}
 
-Thus, the probability of neuron being active depends on the activity pattern of the neurons in its local neighborhood and factors of the environment (e.g., inhibition or presence of neurotransmitters).
-Such a neuron can be implemented using a Bernoulli distribution, i.e., $B(p) = P(X = 1) = p = 1 - P(X=0)$. Having a neuron whose firing probability $p$ is governed by the activity of the neighborhood and the environment allows to implemented the behaviour of subnetworks: After receiving an input, the neurons get excited and fire with a higher probability. However, their fire probability decreases quickly if not supported by neighboring neurons. Thus, uncertainty and potential subnets govern timestep 0 while shortly after the network reaches an attractor state. In the following, some advantages of probabilistic neurons are pointed out before a concrete implementation of subnetworks is proposed.
+Thus, the probability of a neuron being active depends on the activity pattern of the neurons in its local neighbourhood and factors of the environment (e.g., inhibition or presence of neurotransmitters).
+Such a neuron can be implemented using a Bernoulli distribution, i.e., $B(p) = P(X = 1) = p = 1 - P(X=0)$. Having a neuron whose firing probability $p$ is governed by the neighbourhood activity and the environment allows to implement the behaviour of net fragments: After receiving an input, the neurons get excited and fire with a higher probability. However, their fire probability decreases quickly if not supported by neighbouring neurons. Thus, uncertainty and potential net fragments govern timestep 0 while shortly after the network reaches an attractor state. 
+
+\subsection{Properties}
+TODO: This section sounds bad
+
+The proposed neuron implements a stochastic process and thus can flip, i.e. can fire even when the firing probability is low or vice versa.
+This leads to noise in the network's activations.
+However, this noise can be considered as normalisation mechanism within the network, similar to dropout layers \sidecite{TODO}.
+Having neurons that might flip enforces the network to learn parallel paths and to ignore noise.
+Similar to dropouts, the stochastic process can be deactivated during inference by using a fixed threshold of $0.5$. This leads to a more stable network during inference.
+Having many binary neurons and sparse network activations increases robustness \cite{Ahmad_Hawkins_2015}.
+
+Furthermore, binary neurons with an activation probability as internal cell state leads to much better interpretability as described in \secref{framework_advantages}.
+Each neuron represents one single property as its state is binary, and the internal cell state describes how high the probability is of having that property observed.
 
 
-\paragraph{Ambiguity.} Probabilistic neurons permit the persistence of multiple subnetworks, enabling the system to handle ambiguity effectively. For example, when presented with a composite face comprised of distinct objects (c.f. \figref{sdp_mountain}), both the subnetwork responsible for abstract faces and the subnetworks associated with individual objects become active concurrently. Consequently, one can attend to these subnetworks simultaneously, utilizing attention in its original sense rather than the conventional deep neural network (DNN) interpretation. I speculate that this represents a fundamental distinction from neural networks that are compelled to represent the entire scene within a single high-dimensional dense vector.
+\subsection{Practical Considerations}
+TODO: This section sounds bad
 
-\paragraph{Interpretability.} The probabilistic frame allows for much better interpretability than classical deep networks. Each neuron can be part of a multitude of subnetworks and thus some semantic, i.e. corresponds to something meaningful. Furthermore, its internal state is a probability that can be interpreted as the networks confidence that this specific feature was observed in the input. A network of probabilistic neurons that support each other over timesteps can also be interpreted as a directed graph. This allows to trace how subnetworks are activated. Without formal proof or presenting an interpretability framework, I speculate that using this probabilistic framework will significantly simplify the explainability of intelligent systems.
+A network layer processing images consists of $n_{\text{cells}} = C\cdot H \cdot W$ cells, $n_{\text{cells}}$ typically beeing a large number.
+Thus, many neurons fire based on a probability distribution. In order that the network is not dominated by noise, it is important that the probabilities are not distributed around a mean $\mu = 0.5$.
+Otherwise, most neurons have a high uncertainty if they should fire, leading to many neurons that fire randomly.
+This is an issue especially at the beginning of training, when the network is dominated by uncertainty.
 
-\paragraph{Robustness.} A neural networks is usually represented with a vector which is sequentially processed by a mathematical functions (e.g. with neural layers). Artificial networks in particular are not robust to noise and are susceptible to adversarial attacks \sidecite{Akhtar_Mian_2018}. Slight changes to the input or a network-internal vector can completely falsify the overall result. This is because typical artificial networks work with continuous numbers and these feature vectors can consequently lie anywhere in the feature space. Therefore, a minimal change, e.g. triggered by noise, can shift the feature to the other side of the decision boundary and change the result. A binary vector, on the other hand, has different mathematical properties and is more robust against noise and adversarial attacks, especially if they are sparse and distributed\sidenote{only a small portion of the bits are ``on'', and representations differ by multiple binary bits} \sidecite{Ahmad_Hawkins_2015}.
-Subsampled or noisy vectors are still semantically similar and are close to the original vectors when compared, for example by counting the overlap of bits between two vectors.
+This issue can be migigated by pushing the activation probabilities towards $0$ or $1$. A simple solution is to use the Softmax function or to use the activations to the power of a factor $s$, i.e. $\boldsymbol{a} := \boldsymbol{a}^s$. The softmax function pushes the probabilities equally towards $0$ or $1$, while using a large factor $s$ pushes most activations towards $0$ while only the high probabilities remain high.
+The advantage of using a factor $s$ is that it is adjustable, i.e. can be high at the beginning and constantly be decreased towards $1$ during training. Thus, it allows to scope with the uncertainty that dominates the network at the beginning and is reduced during training.
 
 
 
 
-% Problem statement (why?) -> Unclear how to model a proper neuron, robustness, interpretability
-% Implementation: Sample from Bernoulli distribution (either during training & inference or only during training like a dropout layer)
-% Expected Effects: Parallel pathways, more noise, better activation confidence
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \section{Model Overview}
 %Overview 2-Staged Model (3 Components: Sensory System, L1, L2)
 %For each stage: Motivation (what does the stages do)
 %For each stage: Biological inspiration
 %Processing loops: Multiple views per image, multiple steps per view
-%Timesteps: Sensory system captures data at t=0, iterate between L1 and L2 for t=1, …, T
+%Timesteps: Sensory system captures data at t=0, iterate between \emph{L1} and \emph{L2} for t=1, …, T
 
 
 \subssection{Sensory System}
@@ -186,8 +219,8 @@ Subsampled or noisy vectors are still semantically similar and are close to the 
 
 \section{L2}
 % Projection fibres and L2: Description and advantage
-% Structuring of L2 -> unclear, might require some iterations to define?
-% How to map L1 to L2-> unclear, might require some iterations to define?
+% Structuring of \emph{L2} -> unclear, might require some iterations to define?
+% How to map \emph{L1} to L2-> unclear, might require some iterations to define?
 % Providing feedback to L1-> unclear, might require some iterations to define?
 
 
@@ -360,24 +393,24 @@ At the beginning, the cells do not receive a lot of support and thus $\upsilon$ 
 
 As a third goodness measurement, we can measure the robustness to noise.
 The subnetworks consists of cells supporting each other through lateral connections. However, they should only support cells that were activated by a learned pattern. Thus, cells activated by noise should receive not receive enough support and be turned off after a few cycles.
-Therefore, as a third metric, we can add noise to the input image and measure how many cells  in the sensory system are activated due to the noise and what ratio of them remains active after L1.
+Therefore, as a third metric, we can add noise to the input image and measure how many cells  in the sensory system are activated due to the noise and what ratio of them remains active after \emph{L1}.
 
 
 \subsection{Object Representation (L2)}
-The layer L2 combines the subnetworks of L1 to bigger and more complex structures so that entire objects can modelled, whereby an object is made up of a composition of (overlapping) subnetworks.
+The layer \emph{L2} combines the subnetworks of \emph{L1} to bigger and more complex structures so that entire objects can modelled, whereby an object is made up of a composition of (overlapping) subnetworks.
 This mapping from subnetworks to an object representations seems to be one of the core algorithms of our visual system as it is able to solve the binding problem \sidecite{Revonsuo_Newman_1999, Feldman_2013}, i.e. answers the questions how visually perceived objects are bound together based on their properties such as shape, texture, color, contour, or motion. This process is well described in psychology and known as Gestalt phenomena \cite{ellis_source_1938, kohler_gestalt_1992, wagemans_century_2012, hamlyn_psychology_2017}, yet it is unclear how to implement it.
 A promising approach seems to be to use a dynamic link architecture \sidecite{Wiskott_Fellous_Kuiger_Von, Wiskott_Fellous_Kuiger_VonDerMalsburg_1997}, 
-a system of rapidly switching fibres connection netfragments from L1 and L2 based on their correlation.
+a system of rapidly switching fibres connection netfragments from \emph{L1} and \emph{L2} based on their correlation.
 However, so far, these connections were not learn with a highly flexible model such as neural network.
 In this thesis, a simplified version of such projection fibres is implemented as a single linear layer\sidenote{Admittedly, this implementation is quite limited, yet still sufficient to implement a proof-of-concept of such an architecture.}.
 
-In the proposed framework, the L2 fulfils two functions. First, it maps given subnetworks to an object representation. Therefore, local information is combined to global information, allowing us to draw conclusions about the objects within an observed scene. Second, L2 can provide feedback in the form of object probabilities to L1, allowing L1 to update its representations over time (c.f. \secref{l2_grounding}).
-Thus, L2 aims to model the conditional probabilities $P(h|x)$ of a matrix of cell activations $x$ belonging to a object prototype $h$ and vice versa $P(x|h)$.
-There exist approaches that implement similar principles but suffer from a chicken-egg problem (cite work here): L1 requires feedback from L2 to build its representation while L2 requires data from L1 to build object prototypes. Therefore, most approaches typically solve this problem by hand-crafting prototypes in storing them before training in L2. This is due to the fact that they implement projection fibres that are mapped based on the correlation between L1 and L2, forcing representations in L1 and L2 to have a high structural similarity.
-In this thesis, this problem is circumvent by using a different approach that does not require to have prototypes stored in L2 beforehand. Instead, we give L2 a certain capacity in the form of probabilistic neurons and let the network decide itself how to organize them. 
+In the proposed framework, the \emph{L2} fulfils two functions. First, it maps given subnetworks to an object representation. Therefore, local information is combined to global information, allowing us to draw conclusions about the objects within an observed scene. Second, \emph{L2} can provide feedback in the form of object probabilities to L1, allowing \emph{L1} to update its representations over time (c.f. \secref{l2_grounding}).
+Thus, \emph{L2} aims to model the conditional probabilities $P(h|x)$ of a matrix of cell activations $x$ belonging to a object prototype $h$ and vice versa $P(x|h)$.
+There exist approaches that implement similar principles but suffer from a chicken-egg problem (cite work here): \emph{L1} requires feedback from \emph{L2} to build its representation while \emph{L2} requires data from \emph{L1} to build object prototypes. Therefore, most approaches typically solve this problem by hand-crafting prototypes in storing them before training in \emph{L2}. This is due to the fact that they implement projection fibres that are mapped based on the correlation between \emph{L1} and L2, forcing representations in \emph{L1} and \emph{L2} to have a high structural similarity.
+In this thesis, this problem is circumvent by using a different approach that does not require to have prototypes stored in \emph{L2} beforehand. Instead, we give \emph{L2} a certain capacity in the form of probabilistic neurons and let the network decide itself how to organize them. 
 We use a linear transformation to map from $x$ to $h$ and the inverse linear transformation to map backwards from $h$ to $x$.
 More specifically, we use a weight matrix $\boldsymbol{W}_{L2}$ of the size $C_{out}WH \times 16$ to map the flattened activation matrix $x$ to $h$, a binary vector of length $16$. For both mappings, we use a bias term $a$ and $b$ and calculate use the sigmoid function to squeeze the activations in the range $0, ..., 1$. 
-The weight $\boldsymbol{W}_{L2}$ can be interpreted as fully connected projection fibres, mapping the cells in L1 ($x$) to cells in L2 ($h$).
+The weight $\boldsymbol{W}_{L2}$ can be interpreted as fully connected projection fibres, mapping the cells in \emph{L1} ($x$) to cells in \emph{L2} ($h$).
 \begin{align}\eqlbl{l2_1}
 	P(h_j=1 | x) = \text{sigmoid}(\boldsymbol{W}_{L2} \cdot x + a) / \frac{1}{1 + e^{\boldsymbol{W}_{L2} \cdot x + a}}
 \end{align}
@@ -395,19 +428,19 @@ Similar to L1, we treat the activity of these neurons as probability and thus sa
 The question remaining is how to update the parameters $\boldsymbol{W}_{L2}$, $a$ ,and $b$ so that the conditional probabilities $P(h|x)$ and $P(x|h)$ are properly modelled.
 Similar to a restricted Boltzman machine (RBM), we minimize the difference of the free energy function $F(\cdot)$ between $x_{in}$ and $x_{out}$ (i.e. $F(x_{in}) - F(x_{out})$) to optimize the parameters. For interested readers, I provide more details on the implementation and mathematical properties in \secref{l2_math}.
 
-L2 thus allows to model $P(h|x)$ and $P(x|h)$, whereby $h$ is of limited size.
-By minimizing the free energy function, L2 decides by itself which representation should be stored.
-However, since the capacity is quite limited, L2 can only store a rather small set of representations.
-When observing cell activity $x$ in L1, $P(h|x)$ defines the probability for the cell activity in L2. Since we sample $h_{out} \thicksim \text{Bernoulli}(P(h | x) )$, $h_{out}$ becomes binary, whereby cells with a low probability tend to be turned off, while cells with a high probability tend to fire.
+\emph{L2} thus allows to model $P(h|x)$ and $P(x|h)$, whereby $h$ is of limited size.
+By minimizing the free energy function, \emph{L2} decides by itself which representation should be stored.
+However, since the capacity is quite limited, \emph{L2} can only store a rather small set of representations.
+When observing cell activity $x$ in L1, $P(h|x)$ defines the probability for the cell activity in \emph{L2}. Since we sample $h_{out} \thicksim \text{Bernoulli}(P(h | x) )$, $h_{out}$ becomes binary, whereby cells with a low probability tend to be turned off, while cells with a high probability tend to fire.
 This can be interpreted as filter against noise and slight deformations: A cell activity $x$ is mapped to the closest known configuration of $h$.
-To provide feedback to L2, $P(x|h)$ is calculated in a similar fashion. Thus, L2 can be interpreted as a type of probabilistic associative memory, providing feedback to L1 based on its current cell state.
+To provide feedback to L2, $P(x|h)$ is calculated in a similar fashion. Thus, \emph{L2} can be interpreted as a type of probabilistic associative memory, providing feedback to \emph{L1} based on its current cell state.
 However, it does not map a configuration of $x$ to a single cell (i.e. multiple cells in $h$ can be active) and thus can interpolate within the data distribution to some extend.
 
-One problem is that at the beginning of training, L1 and L2 are rather unstructured and their cell activation may change rather strongly.
-For example, the feedback from L2 evolves from initial noise and is, therefore, not only useless for L1 but harmful as it can provide wrong feedback and steer learning process of L1 towards a wrong direction (i.e. L1 learns to build noise instead of proper subnetworks).
-Therefore, the feedback of L2 to L1 is turned off during the first training epochs.
-This allows L1 to learn subnetworks and to forward its activation to L2. L2, on the other hand, organizes its internal structure which takes a few epochs.
-After L2 is well organized and its feedback is helpful for L1, the feedback loop is activated.
+One problem is that at the beginning of training, \emph{L1} and \emph{L2} are rather unstructured and their cell activation may change rather strongly.
+For example, the feedback from \emph{L2} evolves from initial noise and is, therefore, not only useless for \emph{L1} but harmful as it can provide wrong feedback and steer learning process of \emph{L1} towards a wrong direction (i.e. \emph{L1} learns to build noise instead of proper subnetworks).
+Therefore, the feedback of \emph{L2} to \emph{L1} is turned off during the first training epochs.
+This allows \emph{L1} to learn subnetworks and to forward its activation to \emph{L2}. L2, on the other hand, organizes its internal structure which takes a few epochs.
+After \emph{L2} is well organized and its feedback is helpful for L1, the feedback loop is activated.
 
 
 
@@ -427,7 +460,7 @@ The energy function for the entire network is the sum of all units:
 \begin{align}\eqlbl{l2_energy3}
 	E(x, h) = - \sum_{i,j} \boldsymbol{W}_{ij}x_ih_j - \sum_ia_ix_i - \sum_jb_jh_j
 \end{align}
-To probability for a pair of L1 cell activations $x$ and L2 cell activations $h$ can be calculated as:
+To probability for a pair of \emph{L1} cell activations $x$ and \emph{L2} cell activations $h$ can be calculated as:
 \begin{align}\eqlbl{l2_energy4}
 	P(x,h) = \frac{e^{-E(x, h)}}{Z}
 \end{align}
@@ -435,11 +468,11 @@ where the partition function $Z$ is the sum from all possible states and can be 
 \begin{align}\eqlbl{l2_energy5}
 	Z = \sum_{x,h} = e^{-E(x,h)}
 \end{align}
-The probability for a cell state in L1 can be calculated by summing over all cell states of L2:
+The probability for a cell state in \emph{L1} can be calculated by summing over all cell states of L2:
 \begin{align}\eqlbl{l2_energy6}
 	P(x) = \frac{1}{Z} \sum_{h}e^{-E(x,h)}
 \end{align}
-This probability $P(x)$ of observing state $x$ in L1 can be used to learn the weights. In fact, the probability that the models assigns to a specific cell state can be raised by lower the energy of that cell state and to raise the energy of other cell states. I.e. the weights are adapted in a way that this cell state becomes more probable while other cell states become less probable.
+This probability $P(x)$ of observing state $x$ in \emph{L1} can be used to learn the weights. In fact, the probability that the models assigns to a specific cell state can be raised by lower the energy of that cell state and to raise the energy of other cell states. I.e. the weights are adapted in a way that this cell state becomes more probable while other cell states become less probable.
 To update the weights, we have to calculate the derivative of the log probability of a cell state $x$ w.r.t. the parameters $\theta$:
 \begin{align}\eqlbl{l2_energy7}
 	\frac{\partial \log P(x)}{\partial \theta }
@@ -453,8 +486,8 @@ Without any proof, the derivative of the log probability of a cell state $x$ w.r
 	\frac{\partial \log P(x)}{\partial \theta } = - \frac{\partial \mathcal{F}(x)}{\partial \theta} + \mathbb{E}_{x' \sim p} \left[ \frac{\partial \mathcal{F}(x')}{\partial \theta}  \right]
 \end{align}
 
-Thereby, $x$ is the original cell state of L1 and $x'$ a reconstructed version of it.
-The reconstructed version $x'$ can be calculated by mapping $x$ to an object prototype in L2  $h \thicksim \text{Bernoulli}(P(h | x) )$ and sampling from $h$, i.e. $x' \thicksim \text{Bernoulli}(P(x | h))$.
+Thereby, $x$ is the original cell state of \emph{L1} and $x'$ a reconstructed version of it.
+The reconstructed version $x'$ can be calculated by mapping $x$ to an object prototype in \emph{L2}  $h \thicksim \text{Bernoulli}(P(h | x) )$ and sampling from $h$, i.e. $x' \thicksim \text{Bernoulli}(P(x | h))$.
 Thus, the loss can be calculated by minimizing $F(x) - F(x')$ w.r.t. $\theta$ by using gradient descent.
 
 
@@ -466,33 +499,33 @@ Thus, the loss can be calculated by minimizing $F(x) - F(x')$ w.r.t. $\theta$ by
 %Studies in neuroscience suggest that the brain’s world model is highly structured \sidecite{Olshausen_Field_1996, Bao_She_McGill_Tsao_2020}.
 %The key to the brain's efficiency and effectiveness in perceiving, predicting, and making intelligent decisions is thought to lie in a structured model \sidecite{Josselyn_Tonegawa_2020}.
 %Some of the most important principles of such a structured model is parsimony and self-consistency \sidecite{Ma_Tsao_Shum_2022}.
-%In this thesis, the world model is encoded in L2.
-%L2 learns object prototypes that are arranged in its feature space in a self-organizing manner.
+%In this thesis, the world model is encoded in \emph{L2}.
+%\emph{L2} learns object prototypes that are arranged in its feature space in a self-organizing manner.
 %However, constraints inspired by the principles of parsimony and self-consistency ensure that these features are organized in a meaningful way.
 
 %The principle of parsimony is to identify low-dimensional structures in the data and to reorganize them in the most compact and structured way.
 %According \cite{Ma_Tsao_Shum_2022}, this can be achieved with compression, linearization, and sparsification.
-%Compression is achieved by mapping the cell's activity in L1 to a low-dimensional representation in L2. In fact, we reduce a martix of size $4\times32\times32$ to a vector of size $1\times16$, thus compressing the data by a factor of $256$.
-%L2 uses binary neurons, whereby each neuron represents a specific feature.
-%Since the activations in L1 depend strongly on the data (i.e. are low-level features), they vary a lot.
+%Compression is achieved by mapping the cell's activity in \emph{L1} to a low-dimensional representation in \emph{L2}. In fact, we reduce a martix of size $4\times32\times32$ to a vector of size $1\times16$, thus compressing the data by a factor of $256$.
+%\emph{L2} uses binary neurons, whereby each neuron represents a specific feature.
+%Since the activations in \emph{L1} depend strongly on the data (i.e. are low-level features), they vary a lot.
 %L2, on the other hand, tries to capture the this diversity as good as possible by minimizing its weights' free energy.
-%Therefore, each neuron in L2 represents a quite unique feature, leading to sparse representations (TODO reference sparse coding).
+%Therefore, each neuron in \emph{L2} represents a quite unique feature, leading to sparse representations (TODO reference sparse coding).
 %However, I do not enforce a orthogonal features (a ``one-hot'' encoding). This is also in line with the human brain where more than one cell is active in specific brain regions (cite).
 %But the aforementioned constraints lead to such sparse cell activations in L2, that only a few (on average $4$ out of $16$) cells are active.
-%Thus, L2 encourages linearization while fulfilling compression and sparsification. Therefore, I argue that it implements the principle of parsimony to a large extend.
+%Thus, \emph{L2} encourages linearization while fulfilling compression and sparsification. Therefore, I argue that it implements the principle of parsimony to a large extend.
 
 %The principle of self-consistency describes that a network should seek the most self-consistent world-model by minimizing the internal discrepancy between representations of observed and regenerated data.
-%L2 is trained to minimize the free energy of $x$ and $\hat{x}$, thus optimizing the free energy of the weights w.r.t. the outer representations. However,  L2 is not implemented with a separate encoder and decoder. Instead, the mapping of the encoder is based on a linear weight matrix $\boldsymbol{W}$, and the decoder is based on the transposed weight matrix $\boldsymbol{W}^\top$. 
+%\emph{L2} is trained to minimize the free energy of $x$ and $\hat{x}$, thus optimizing the free energy of the weights w.r.t. the outer representations. However,  \emph{L2} is not implemented with a separate encoder and decoder. Instead, the mapping of the encoder is based on a linear weight matrix $\boldsymbol{W}$, and the decoder is based on the transposed weight matrix $\boldsymbol{W}^\top$. 
 
 
 %TODO: Self-Consistency -> Why??
 
 
-\subsubsection{Measuring L2 Goodness}
-L2 maps activations of learned patterns to object prototypes and vice-versa.
+\subsubsection{Measuring \emph{L2} Goodness}
+\emph{L2} maps activations of learned patterns to object prototypes and vice-versa.
 It can be interpreted as a type of associative memory with the capability of interpolating within the data distribution.
-Thereby, it should be more robust to noise and slight image transformation than L1.
-Thus, the goodness of L2 can be measured in terms of reconstruction of transformed or partially masked objects and removing noise.
+Thereby, it should be more robust to noise and slight image transformation than \emph{L1}.
+Thus, the goodness of \emph{L2} can be measured in terms of reconstruction of transformed or partially masked objects and removing noise.
 
 
 - Reconstruct Lines
@@ -505,7 +538,7 @@ The proposed framework is an interesting alternative to current vision architect
 However, it still has many drawbacks and requires further research to improve certain aspects.
 The most pressing issues, from the author's perspective, are described in the following.
 
-The core idea is to build subnetworks in L1 and to map them to 
+The core idea is to build subnetworks in \emph{L1} and to map them to 
 
 
 - How to put prototypes into L2
