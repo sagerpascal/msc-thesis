@@ -5,10 +5,10 @@ The term ``machine learning'' stems from the fact that \emph{machines} step-wise
 Deep learning, a sub-branch of machine learning, has emerged as the state-of-the-art for various learning tasks, particularly on high-dimensional data such as texts, audio recordings, 2D and 3D images, and videos \cite{lecun_deep_2015}.
 Deep learning algorithms utilize artificial neural networks that are inspired by biological neuron structures within the human brain \cite{bain_mind_1873, james_principles_1890}.
 
-Accordingly, \secref{neurons} provides a brief explanation of how biological neurons work and relates them to artificial neurons.
+Accordingly, \secref{neurons} provides a brief explanation of how biological neurons and learning work and relates them to their artificial counterparts.
 Next, \secref{ann} describes artificial neural networks, which connect a multitude of artificial neurons.
 In \secref{limitationsDL}, the limitations of such artificial neural networks are pointed out.
-Next, \secref{biological_learning} highlights some of the differences between deep learning and biological learning. Finally, \secref{neurocomputing} explores biologically more plausible learning methods.
+Finally, \secref{neurocomputing} explores biologically more plausible learning methods.
 These last two sections are not crucial for comprehending this thesis and can optionally be skipped. However, they are relevant for future work (i.e. to answer the question how the proposed framework could be further improved) and serve as supplementary material for interested readers seeking a comprehensive overview of the entire field.
 
 \section{Human Brain}\seclbl{neurons}
@@ -57,7 +57,7 @@ Researching biologically more plausible learning algorithms for artificial neura
 Thus, among the most important differences between biological and artificial neurons is the time-dependent and asynchronous firing of biological neurons compared to the predefined synchronous firing of artificial neurons. In addition, biological networks have different types of neurons, while artificial networks are usually composed of identical neurons. Finally, biological networks are organised in a complex way \sidecite{felleman_distributed_1991}, while artificial networks are composed of simpler connection patterns.
 
 \section{Artificial Neural Networks}\seclbl{ann}
-\sideciteay{McCulloch_Pitts_1943} proposed the first model of a neuron that can be connected to other neurons.
+\sideciteay{mcculloch_logical_1943} proposed the first model of a neuron that can be connected to other neurons.
 Similar to the biological neuron, the artificial neuron of McCulloch and Pitts receives multiple input signals and transforms them into an output signal.
 Their neuron takes a binary input vector $\boldsymbol{x} = (x_1, ..., x_n)$ where $x_i \in \{0, 1\}$ and maps it to an output $\hat{y} \in \{0, 1\}$.
 The mapping from the input to the output is done by using an aggregation function $g(\cdot)$ that sums up the input vector $\boldsymbol{x}$ and an activation function $f(\cdot)$ that outputs $1$ if the output of $g(\cdot)$ is bigger than a threshold $\theta$ and $0$ otherwise.
@@ -80,7 +80,7 @@ The formula is often rewritten by using a positive  bias $b$ term instead of the
     	\end{cases}
 \end{align}
 %
-In 1958, \sideciteay{Rosenblatt_1958} proposed the perceptron, which extends the neuron with learnable weights: The input vector $\boldsymbol{x}$ of length $n$ is multiplied with a weight vector $\boldsymbol{w} \in \mathbb{R}^n$ of the same length.
+In 1958, \sideciteay{rosenblatt_perceptron_1958} proposed the perceptron, which extends the neuron with learnable weights: The input vector $\boldsymbol{x}$ of length $n$ is multiplied with a weight vector $\boldsymbol{w} \in \mathbb{R}^n$ of the same length.
 %
 \begin{align}\eqlbl{nn}%
 	z = g(\boldsymbol{x}) = \boldsymbol{w} \cdot \boldsymbol{x} + b = \left( \sum_{i=1}^{n}w_i \cdot x_i \right) + b
@@ -160,7 +160,7 @@ A typical CNN consists of subsequently connected convolutional layers and poolin
 Usually, an activation function is applied after each convolutional layer, while no activation function is used after pooling layers.
 
 Convolutional layers employ convolution filters or kernels that slide along the input, generating translation-equivariant \sidecite{gerber_stride_2020} responses known as feature maps \sidecite{zhang_parallel_1990}.
-. Translation-equivariant means that the relative placement of objects remains consistent between the layer's input and output, as the same filter is applied to all image positions.
+Translation-equivariant means that the relative placement of objects remains consistent between the layer's input and output, as the same filter is applied to all image positions.
 During the filtering process, the dot product is calculated between the filter and an input area (of the same size as the filter), resulting in a scalar value that is assigned to one position of the output matrix (i.e. the feature map) \cite{goodfellow_deep_2016}.
 This process is repeated by shifting the filter by a specified stride until the entire input is processed and all values in the output matrix are calculated.
 Compared to fully connected layers of the same size, convolutional layers require much fewer parameters because only the kernels need to be learned.
@@ -191,7 +191,7 @@ Besides CNNs, alternative architectures for image processing have emerged that a
 \paragraph{Computing Resources.} Deep learning models are typically trained on modern computing infrastructure. They take advantage of Moore's law \sidecite{moore_cramming_1965}, which states that the number of transistors in a dense integrated circuit doubles about every two years. However, the physical limits of transistor size will most likely stop this exponential growth \sidecite{kumar_fundamental_2015}, and the future progress of hardware remains uncertain.
 Alongside the growth in computing power, the size of modern deep learning models has also exhibited exponential growth:
 For example, state-of-the-art language models have experienced astonishing growth in the number of parameters in the past years: In 2018, ELMo used around 94 million parameters \sidecite{peters_deep_2018}, in 2020, GPT-3 used around 175 billion \sidecite{brown_language_2020}, and in 2022, Megatron-Turing NLG 530B has 530 billion parameters \sidecite{smith_using_2022}.
-An analysis by \citeay{open_ai_ai_2018} shows exponential growth in computational usage by AI models, with a doubling time of about 3.4 months, outpacing the rate of hardware progress, which has a doubling time of 2 years. Moreover, the increasing size of deep networks poses a challenge for inference on low-budget hardware such as smartphones or embedded systems \sidecite{berthelier_deep_2021}. Although techniques such as quantisation \sidecite{wu_integer_2020}, model pruning \sidecite{choudhary_comprehensive_2020} and model distillation \sidecite{zhou_distilling_2021} exist to reduce model size after training, the question is whether increasing model size is the best way to develop more advanced systems in regard to feasibility but also in regard to energy consumption \cite{garcia-martin_estimation_2019}.
+An analysis by \citeay{open_ai_ai_2018} shows exponential growth in computational usage by AI models, with a doubling time of about 3.4 months, outpacing the rate of hardware progress, which has a doubling time of 2 years. Moreover, the increasing size of deep networks poses a challenge for inference on low-budget hardware such as smartphones or embedded systems \sidecite{berthelier_deep_2021}. Although techniques such as quantisation \sidecite{wu_integer_2020}, model pruning \sidecite{choudhary_comprehensive_2020} and model distillation \sidecite{zhou_distilling_2021} exist to reduce model size after training, the question is whether increasing model size is the best way to develop more advanced systems regarding feasibility but also regarding energy consumption \cite{garcia-martin_estimation_2019}.
 
 \paragraph{Catastrophic Forgetting.} Another major issue of deep learning systems is that they suffer from catastrophic forgetting \cite{kirkpatrick_overcoming_2017, liu_overcoming_2021}.
 If a model is trained on a specific task and afterwards trained (or fine-tuned) on another task, the model suffers a ``catastrophic'' drop in performance over the first task.
@@ -229,7 +229,7 @@ This statement still seems true almost $30$ years later.
 Neuroinformatics is a recognised subfield of neuroscience that focuses on implementing learning algorithms that adhere to biological plausibility. As a result, researchers are addressing the discrepancy described in \secref{neurons} and striving to develop alternative learning algorithms.
 
 \subsection{Hebbian Learning}\seclbl{hebbian}
-Hebbian learning, as proposed by \sideciteay{Hebb_1949}, implements the adaptive nature of the connections between cells in the nervous system. Hebb's description states that when an axon of cell A is in close proximity to cell B and consistently contributes to its firing, growth processes or metabolic changes occur in one or both cells that increase the effectiveness of cell A in firing cell B. This description is often summarised as ``neurons that fire together wire together''.
+Hebbian learning, as proposed by \sideciteay{hebb_organization_1949}, implements the adaptive nature of the connections between cells in the nervous system. Hebb's description states that when an axon of cell A is in close proximity to cell B and consistently contributes to its firing, growth processes or metabolic changes occur in one or both cells that increase the effectiveness of cell A in firing cell B. This description is often summarised as ``neurons that fire together wire together''.
 
 Hebbian learning describes the update of the synaptic weight $w_{ij}$ connecting neuron $i$ to neuron $j$. The weight change depends on the presynaptic activity $a_i$ of neuron $i$ and postsynaptic activity $a_j$ of neuron $j$. The presynaptic and postsynaptic activity corresponds to the output resulting from a neuron's activation function $f(\cdot)$ in the preceding and following layers, respectively.
 %
@@ -242,7 +242,7 @@ In a binary context, the weights between frequently co-activated neurons increas
 This rule causes two cells or cell sub-networks that are constantly active together to form an ``association'' where the activation of one cell or system promotes the activation of the other.
 When a system receives inputs that generate a recurring pattern of activity, the group of active cells comprising that pattern gradually strengthens their connections. Consequently, when a group of neurons that represent a specific pattern is active, they tend to activate all neurons typically associated with this pattern. In this thesis, I call this effect \emph{lateral support}.
 
-The aforementioned Hebbian rule increases the weight between two binary cells that are active together, and does not change when only one or none of the cells fires. Thus, the connection can only grow stronger.
+The aforementioned Hebbian rule increases the weight between two binary cells that are active together and does not change when only one or none of the cells fires. Thus, the connection can only grow stronger.
 However, synaptic signals in the human brain can also be inhibitory \cite{coombs_specific_1955}.
 In the context of Hebbian learning, inhibition is interpreted as decreasing the weight between cells that fire exclusively.
 Therefore, inhibition can be implemented by leveraging the covariance of neuronal activity.
@@ -293,7 +293,7 @@ Thus, each cell $i$ is connected to all other cells $j \neq i$ with a specific w
 When the sum of the weights $w_{ij}$ of the active cells ($y_j[T=t] = 1$) is bigger than the threshold $-b_i$, the cell turns on or turned off otherwise.
 Thus, a cell can either keep its state ($y[T=t] = y[T=t+1]$) or flip ($y[T=t] \neq y[T=t+1]$).
 A flipping output influences all other neurons and may encourage them to flip as well.
-There exists formal proof that after a finite number of timesteps, an attractor state is reached, and the neurons do not flip anymore\cite{Hopfield_1982}.
+There exists formal proof that after a finite number of timesteps, an attractor state is reached, and the neurons do not flip anymore\cite{hopfield_neural_1982}.
 Thus, the input is used to initialize the neurons, the neurons influence each other, and the network becomes stable after a finite number of iterations. Thereby, an input pattern is attracted to the closest stable pattern.
 Hebbian learning (c.f. Section \secref*{hebbian}) can be used to define what the stable patterns are:
 With a single iteration over the training patterns, the weights $w_{ij}$ and biases $b_i$ are updated so that these patterns become attractor states \sidecite{hopfield_unlearning_1983}.
