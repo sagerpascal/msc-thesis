@@ -24,6 +24,8 @@
 	citecounter=true,
 	citetracker=true,
 	ibidtracker=context,
+    minbibnames=5,
+    maxbibnames=10,
 }{biblatex}
 \DeclareOption*{\PassOptionsToPackage{\CurrentOption}{biblatex}}
 
@@ -32,6 +34,9 @@
 \RequirePackage{biblatex}
 
 \AtEveryBibitem{
+    \clearfield{note}
+    \clearlist{language}
+    \clearfield{urldate}
 	\clearfield{issn}
 	\clearfield{isbn}
 	\clearfield{archivePrefix}

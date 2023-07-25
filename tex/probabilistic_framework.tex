@@ -33,7 +33,7 @@ The subsequent sections provide an overview of the framework, highlight its adva
 
 
 
-\section{Neuroscientific Inspiration and Vocabulary}
+\section{Neuroscientific Inspiration and Vocabulary}\seclbl{framework_neuroscience}
 Readers of this work are expected to be primarily people with a background in computer science or neuroinformatics. However, in order to understand the fundamental principles underlying the proposed framework, understanding of neuroscience findings and vocabulary is required. Therefore, this section explains the neuroscientific inspirations and key terms related to this work.
 The neuroscience concepts presented in this thesis are simplified to make the proposed framework comprehensible to readers from various fields. Experts from the field of neuroscience may find this section superfluous and may skip it.
 
@@ -126,6 +126,12 @@ the human brains makes this decision based on a high-level pattern (i.e. based o
 \paragraph{Local Learning Principle.} In the brain, consistency is evaluated at the level of individual synapses \sidecite{hebb_organization_1949}. Each synapse is established if the firing of its source neuron and its target neuron are consistent with each other, allowing the source neuron to predict the activity of the target neuron. This process is crucial for the establishment of net structures, where each neuron within a net fragment can predict with high probability the firing of other neurons.
 This local learning is a key difference between natural (animal or human) learning and the frequently used backpropagation of error \sidecite{rosenblatt_principles_1962, linnainmaa_taylor_1976}. With backpropagation, consistency is optimized at a single point, specifically between the system's output and a teacher signal. All synapses, including those that are distantly connected (the ``deep'' connections) are guided by the consistency of this this single point.
 
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.99\textwidth]{maplets}
+    \caption[An active maplet mapping net fragments to object prototypes]{Net fragments (on the left) are projected to an object (on the right). There run many projection fibres (gray) between the net fragments and objects, but only a few of them that belong to a maplet (red) have been turned on.}
+    \figlbl{maplets}
+\end{figure}
 \paragraph{Projection Fibres, Maplets, and Control Units.} As described at the beginning of this chapter, the visual cortex extracts pattern from visual information. This process is is implemented with the aforementioned building blocks such as lateral connections and net fragments. In theory, this is sufficient to implement the principles from the Gestalt psychology \sidecite{ellis_source_1938, kohler_gestalt_1992, wagemans_century_2012, hamlyn_psychology_2017}. However, it is not sufficient for efficient visual object detection.
 
 In the human brain, object detection takes place in the temporal cortex.
@@ -146,7 +152,11 @@ Such sets of projection fibres, that are activated at the same time, are grouped
 A control unit is a kind of neuron that has extensions (so-called processes or fibers) that end in synapses and can conduct signals in both directions - from the synapse to the neuron and from the neuron to the synapse.
 Control units trigger a mapping when a net fragment in the visual cortex matches well another fragment in the temporal cortex, i.e. when these two fragments have a high correlation. However, they only remain active if numerous other projection fibres confirm the decision and map their respective fragments in the visual cortex to the same object prototype. By doing so, the human brain generates numerous hypotheses about observations, but inhibitory signals quickly deactivate most projections, leaving only the plausible ones active.
 
-Projection fibres thus provide generalisation, i.e. different, transformed, versions of an object can be mapped to each other. This explains the ability of humans to see a new object once and immediately recognize it in transformed version.
+\figref{maplets} visualises such a projection between net fragments and an object prototype of a line. There exists a vast amount of projection fibres (gray) running between these two areas but only the most suitable ones are activated by the control unit of a maplet (red).
+Please note that the line on the left is translated and stretched. However, the projection fibres still map such transformed object to a idealised prototype.
+\figref{maplets} shows a direct mapping from net fragments to prototypes for better clarity. In the brain, however, this mapping is done over several hierarchical levels, saving a large amount of projection fibres \sidecite{anderson_shifter_1987}.
+
+Projection fibres thus provide generalisation, i.e. different, transformed, versions of an object can be mapped to each other. This explains the ability of humans to see a new object once and immediately recognizs it in transformed version.
 
 \paragraph{Emergence.} One question that constantly puzzles the field of AI is whether a system exhibits an emergence of intelligence.
 This question also has many philosophical aspects and cannot be answered conclusively within the scope of this thesis.
@@ -212,7 +222,12 @@ Furthermore,  Bernoulli neurons allow to model net fragments with lateral suppor
 
 
 \subsection{Relation to Theory of Natural Intelligence}
-The mapping between input data and stored object prototypes is closely related to the human brain's functionality and in line with findings from neuroscience \cite{kandel_principles_2013, olshausen_emergence_1996, vogels_inhibitory_2011, payeur_burst-dependent_2021} and psychology \cite{ellis_source_1938, kohler_gestalt_1992, wagemans_century_2012, hamlyn_psychology_2017}.
+The porposed architecture is based on a correspondence-based system \sidecite{zhu_maplets_2004}, a method that achieves invariance by routing signals through rapidly changing connections. Such systems not only transmit information about the type of features but also about their spatial arrangement by mapping net fragments to a prototype \sidecite{olshausen_neurobiological_1993, wiskott_face_1996, arathorn_map-seeking_2002}.
+Experiments from neuroscience show that the recognition time for humans depends on the size \sidecite{bundesen_visual_1975} and orientation \sidecite{jolicoeur_time_1985, lawson_effect_1999} of objects. Thus, it takes time to align the external world with internal representations.
+This suggests that the brain implements an active dynamic process for correspondence finding rather than having a single forward pass.
+Furthermore, there exist physiological evidence that connections in the visual system are static \sidecite{kusunoki_time_2003, womelsdorf_dynamic_2006}.
+
+Therefore, I argue that the mapping between input data and stored object prototypes is closely related to the human brain's functionality and in line with findings from neuroscience \cite{kandel_principles_2013, olshausen_emergence_1996, vogels_inhibitory_2011, payeur_burst-dependent_2021} and psychology \cite{ellis_source_1938, kohler_gestalt_1992, wagemans_century_2012, hamlyn_psychology_2017}.
 
 The theory of natural intelligence by \sideciteay{von_der_malsburg_theory_2022} serves as inspiration of this thesis and describes how the brain develops an overlay of net fragments (c.f. \secref{natural_intelligence}). These attractor networks consist of neurons supporting each other to remain active.
 This behaviour is implemented in the feature building stage \emph{S1}: The sensory signal from \emph{S0} activates many neurons from which only the ones receiving enough lateral support remain active. Furthermore, it is implemented on the control units of the maplets. Initially, many maplets can be active, allowing various active fibres between \emph{S1} and \emph{S2}. However, an inhibitory signals serves as compeition between these maplets, allowing only the most consistent to remain active after a short transient phase.
@@ -412,7 +427,7 @@ Thus, the same weight $\boldsymbol{W}$ is applied at different locations.
 This operation corresponds exactly to the output of a convolutional layer without bias term.
 
 
-\subsection{Hebbian Updates}
+\subsection{Hebbian Updates}\seclbl{framework_hebb_updates}
 The previous section introduces how a convolutional kernel $\boldsymbol{W}$ can be used to model the lateral support of neighbouring cells.
 This section describes how the support strength, i.e. the weights of $\boldsymbol{W}$, can be learned.
 The human brain's learning algorithm is based on local self-organisation and unsupervised (or self-supervised) learning \sidecite{von_der_malsburg_theory_2022}. The biologically most plausible learning algorithm is Hebbian learning \sidecite{hebb_organization_1949}.
@@ -450,18 +465,6 @@ Afterwards, the model undergoes a Hebbian update based on the initial network in
 %Furthermore, a proper initialisation based on self-support instead of random weights can encourage distinct feature channels.
 %This measures differentiation between connection updates, making a competition strategy superfluous.
 
-
-
-
-
-
-
-
-
-
-
-
-
 \subsection{Initialisation}\seclbl{lateral_init}
 \begin{figure}[h]
     \centering
@@ -487,23 +490,7 @@ $C_{out} = C_{in}$, $w = n+1$, and $h = n+1$. Thus, the weight at the middle of 
 Such a weight matrix ensures that the cell's activations at time $t$ and $t+1$ are identical. Therefore, the input and output activation is identical, and the cells receive a support of $1$ (i.e. one other cell with a synapse weight of $1$ is active).
 However, after applying the Hebbian learning rule, the weights are updated to capture the data's statistics so that active cells receive more support.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-\subsection{Normalisation}
+\subsection{Normalisation}\seclbl{framework_norm}
 A continuous value representing the support strength is obtained after applying the convolutional operation to the binary input signal.
 The support strength has to be normalised into the range of $0, ..., 1$, so that it can be used as an activation probability of a Bernoulli neuron.
 In the context of neuroscience, this normalisation is interpreted as the brain's inhibitory signal:
@@ -515,15 +502,6 @@ However, the support strength does not only change during training. It also vari
 Besides being time-dependent, the support strength also changes depending on the data:
 Some images contain more features in general, leading to more active cells and higher lateral support in general. Furthermore, support varies across different spatial locations. Typically, some image regions contain more features than others. Therefore, cells in such regions typically receive more support than those in regions with fewer features and less activated cells.
 
-
-
-
-
-
-
-
-
-
 To cope with such dynamically changing support strength, the inhibition strength must be highly adaptive and take into account the training progress, the current time step, the input data and the spatial location. 
 The training progress is taken into account by dividing the output activation in channel $c_{\text{out}}$ through the average weights in $c_{\text{out}}$. Thus, if an output channel has many synapses that could provide lateral support, inhibition is stronger:
 %
@@ -532,9 +510,9 @@ The training progress is taken into account by dividing the output activation in
 \end{align}
 %
 A solution to deal with varying support strength due to the time step, input data, and spatial location can be found in the human brain.
-Findings from neuroscience suggest that there is an upper limit of concurrently active incoming synapses for active cells \sidecite{kandel_principles_2013}. Thus, each cell has not only a lower limit of lateral support but also an upper limit.
-If a cells support is above a pre-defined threshold $\rho$, the support is reduced.
-Preliminary results suggest that a values in the range $\rho = 1.2n_l, ..., 1.5n_l$ work well.
+Neuroscience findings suggest an upper limit of concurrently active incoming synapses for active cells \sidecite{kandel_principles_2013}. Thus, each cell has not only a lower limit of lateral support but also an upper limit.
+If a cell's support is above a pre-defined threshold $\rho$, the support is reduced.
+Preliminary results suggest that values in the range $\rho = 1.2n_l, ..., 1.5n_l$ work well.
 %
 \begin{align}\eqlbl{norm_2}
 	x_{c_{\text{out}},w,h} := \begin{cases}
@@ -549,206 +527,274 @@ Preliminary results suggest that a values in the range $\rho = 1.2n_l, ..., 1.5n
     \caption[Inhibition for too many activated cells]{The visualisation of formula \eqref{norm_2}. The x-axis shows the received support and the y-axis the support after normalisation: As soon as the received support is bigger than $\rho$, it is reduced with a slope of $-0.5$.}
     \figlbl{norm_support}
 \end{figure}
-The result the function described in \eqref{norm_2} is shown in \figref{norm_support}. As long as a cell's activation is below $\rho$, no normalisation is applied. However, if the activation is above $\rho$, the cell's activation is decreased with a slope of $-0.5$, resulting in a reduction of lateral support.
-
+The result of the function described in \eqref{norm_2} is shown in \figref{norm_support}. No normalisation is applied as long as a cell's activation is below $\rho$. However, if the activation is above $\rho$, the cell's lateral support strength is decreased with a slope of $-0.5$.
 
 
 \subsection{Alternative Cells}
+As described in \secref{framework_neuroscience}, alternative cells and pathways are necessary to deal with different patterns that activate similar cells.
+``Alternative'' in this context means that only one cell among the alternatives is active, i.e. these cells are mutually exclusive.
+At the beginning of training, alternative cells are copies of an initial cell.
+However, after training, these cells contribute to different patterns and have different behaviour.
 
+Alternative cells can be implemented by adding additional (alternative) output channels.
+The duplication factor $\kappa$ defines how many alternative channels should be added.
+Thus, the weight $\boldsymbol{W}$ with alternative cells is of shape $(\kappa \cdot C_{\text{out}} \times C_{\text{in}} \times 2n+1 \times 2n+1)$.
 
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.99\textwidth]{lateral_init_weights_alt}
+    \caption[Initialization of the lateral weight matrix with alternative cells]{Initialization of the lateral weight matrix with alternative cells. The initialisation is similar to \figref{lateral_init_weights}, except each channel is duplicated $\kappa=2$ times.}
+    \figlbl{lateral_init_weights_alt}
+\end{figure}
+
+\figref{lateral_init_weights_alt} visualises how the weight $\boldsymbol{W}$ with a duplication factor of $\kappa=2$ are initialised.
+In that case, $\kappa=2$ output channels are mutually exclusive, leading to activation in only one of these channels.
+Since the Hebbian learning rule only increases lateral support between active cells, only synapses to cells within these active channels are updated.
+
+Implementing mutually exclusive cells requires competition between alternative cells so that if multiple exclusive cells are active, only the most suitable cell can remain active.
+Such a competition can be implemented, for example, by comparing how well a certain activation pattern fits the already learned lateral support.
+Another option is the implement inhibition between the competing channels, so that the dominant channel turns off the other channels.
+However, these options have not been explored yet and must be investigated in future work.
 
 
 \subsection{Measuring Support Goodness}
-An open challenge from this approach is to define how good a trained network works.
-A simple approach is to measure the support needed to remain active.
-A simple metric is to measure the average support active and inactive cells receive.
+In this section, it is discussed how the network's performance can be measured.
+A simple approach is to measure the support needed to remain active, and the average support active and inactive cells receive.
 At the beginning of training, self-support is used, i.e. it is sufficient to be active at time $t$ to remain active at $t+1$.
-Therefore, the average support of active cell is $1$ and the average support of inactive cells is $0$.
+Therefore, the average support of active cells is $1$, and the average support of inactive cells is $0$.
 However, during training, lateral connections are learned that support cells to remain active.
-This leads to a higher activation in general which, in turn, increases the threshold to remain active.
+This leads to higher activation in general, which, in turn, increases the threshold to remain active.
 Thus, the average activation of the cell increases as well as the threshold to remain active.
 In a working system, the activation needed to become active increases during training.
-We measure this statistics to evaluate the goodness of the subnetworks.
+These statistics can be measured over the training process to evaluate the goodness of the net fragments.
 
 As a second metric, I measure the normalization factor.
-The cells are activation with a specific strength based on the input and the lateral support they receive.
-However, the normalization squeezes this activation into the range $0, ..., 1$.
-If the cells are activated with a specific activation strength $A$ and normalized afterwards to $A_{norm}$, we can measure the normalization factor 
+The cells receive lateral support from neighbouring cells.
+However, the normalisation procedure squeezes these activations into the range $0, ..., 1$.
+If the cells are activated with a specific activation strength $\boldsymbol{a}$ and normalized afterwards to $\boldsymbol{a}_{norm}$, we can measure the normalization factor 
 $\upsilon$:
 \begin{align}\eqlbl{goodness_lat}
-	\upsilon = \frac{A}{A_{norm}+1\cdot10^{-10}}
+	\upsilon = \frac{\boldsymbol{a}}{\boldsymbol{a}_{norm}+1\cdot10^{-10}}
 \end{align}
-At the beginning, the cells do not receive a lot of support and thus $\upsilon$ is small. However, with increasing support, $\upsilon$ increases and indicates that a higher activation strength is needed to become active.
+With increasing support, $\upsilon$ increases, indicating that a higher activation strength is needed to become active.
 
-As a third goodness measurement, we can measure the robustness to noise.
-The subnetworks consists of cells supporting each other through lateral connections. However, they should only support cells that were activated by a learned pattern. Thus, cells activated by noise should receive not receive enough support and be turned off after a few cycles.
-Therefore, as a third metric, we can add noise to the input image and measure how many cells  in the sensory system are activated due to the noise and what ratio of them remains active after \emph{S1}.
+As a third goodness measurement, we can measure the robustness against noise.
+Net fragments should only support cells that are activated by a learned pattern. Thus, cells activated by noise should not receive enough support and be turned off after a few cycles.
+Therefore, as a third metric, we can add noise to the input image and measure how many cells in the sensory system are activated due to the noise and what ratio of them remains active after \emph{S1}.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 
 
 \section{Global Feature Stage \emph{S2}}
-% Projection fibres and \emph{S2}: Description and advantage
-% Structuring of \emph{S2} -> unclear, might require some iterations to define?
-% How to map \emph{S1} to \emph{S2}-> unclear, might require some iterations to define?
-% Providing feedback to \emph{S1}-> unclear, might require some iterations to define?
+In the stage \emph{S2}, the net fragments are mapped to idealised reference objects.
+This mapping is implemented by projection fibres, which are grouped into maplets.
+As soon as a control unit of a maplet detects a strong correlation between the neurons it connections in \emph{S1} and \emph{S2}, it initialises the mapping by turning on its fibres.
 
-The stage \emph{S2} combines the subnetworks of \emph{S1} to bigger and more complex structures so that entire objects can modelled, whereby an object is made up of a composition of (overlapping) subnetworks.
-This mapping from subnetworks to an object representations seems to be one of the core algorithms of our visual system as it is able to solve the binding problem \sidecite{revonsuo_binding_1999, feldman_neural_2013}, i.e. answers the questions how visually perceived objects are bound together based on their properties such as shape, texture, color, contour, or motion. This process is well described in psychology and known as Gestalt phenomena \cite{ellis_source_1938, kohler_gestalt_1992, wagemans_century_2012, hamlyn_psychology_2017}, yet it is unclear how to implement it.
-A promising approach seems to be to use a dynamic link architecture \sidecite{wiskott_face_1997}, 
-a system of rapidly switching fibres connection netfragments from \emph{S1} and \emph{S2} based on their correlation.
-However, so far, these connections were not learn with a highly flexible model such as neural network.
-In this thesis, a simplified version of such projection fibres is implemented as a single linear layer\sidenote{Admittedly, this implementation is quite limited, yet still sufficient to implement a proof-of-concept of such an architecture.}.
+This mapping from fragments to reference representations seems to be one of the core algorithms of our visual system as it is able to solve the binding problem \sidecite{revonsuo_binding_1999, feldman_neural_2013}, i.e. answers the questions of how visually perceived objects are bound together based on their properties such as shape, texture, colour, contour, or motion. This process is well described in psychology and known as Gestalt phenomena \cite{ellis_source_1938, kohler_gestalt_1992, wagemans_century_2012, hamlyn_psychology_2017}
 
-In the proposed framework, the \emph{S2} fulfils two functions. First, it maps given subnetworks to an object representation. Therefore, local information is combined to global information, allowing us to draw conclusions about the objects within an observed scene. Second, \emph{S2} can provide feedback in the form of object probabilities to \emph{S1}, allowing \emph{S1} to update its representations over time (c.f. \secref{l2_grounding}).
-Thus, \emph{S2} aims to model the conditional probabilities $P(h|x)$ of a matrix of cell activations $x$ belonging to a object prototype $h$ and vice versa $P(x|h)$.
-There exist approaches that implement similar principles but suffer from a chicken-egg problem (cite work here): \emph{S1} requires feedback from \emph{S2} to build its representation while \emph{S2} requires data from \emph{S1} to build object prototypes. Therefore, most approaches typically solve this problem by hand-crafting prototypes in storing them before training in \emph{S2}. This is due to the fact that they implement projection fibres that are mapped based on the correlation between \emph{S1} and \emph{S2}, forcing representations in \emph{S1} and \emph{S2} to have a high structural similarity.
-In this thesis, this problem is circumvent by using a different approach that does not require to have prototypes stored in \emph{S2} beforehand. Instead, we give \emph{S2} a certain capacity in the form of probabilistic neurons and let the network decide itself how to organize them. 
-We use a linear transformation to map from $x$ to $h$ and the inverse linear transformation to map backwards from $h$ to $x$.
-More specifically, we use a weight matrix $\boldsymbol{W}_{S2}$ of the size $C_{out}WH \times 16$ to map the flattened activation matrix $x$ to $h$, a binary vector of length $16$. For both mappings, we use a bias term $a$ and $b$ and calculate use the sigmoid function to squeeze the activations in the range $0, ..., 1$. 
-The weight $\boldsymbol{W}_{S2}$ can be interpreted as fully connected projection fibres, mapping the cells in \emph{S1} ($x$) to cells in \emph{S2} ($h$).
-\begin{align}\eqlbl{l2_1}
-	P(h_j=1 | x) = \text{sigmoid}(\boldsymbol{W}_{S2} \cdot x + a) / \frac{1}{1 + e^{\boldsymbol{W}_{S2} \cdot x + a}}
+Implementing such a framework poses various challenges.
+In the following, some simplifications are assumed that are ignored in the proposed framework and have to be solved in future work.
+\begin{itemize}
+    \item \textbf{Storing object prototypes in \emph{S2}}: It is assumed that the reference representations are already stored in \emph{S2}. Consequently, the mapping process is reduced to finding the most suitable projection, disregarding the case that the object prototype might not be stored. Nevertheless, it would be desirable that the network can, for example, when encountering high uncertainty, autonomously recognise the absence of a proper object prototype and create one.
+    \item \textbf{Enhancing object prototypes in \emph{S2}}: It is assumed that the object prototypes are in an idealised form and can remain static, and do not require further updates. 
+    Findings from psychology suggest that our brain is highly structured and might contain such prototypes from birth \sidecite{simion_face_2015}. However, these prototypes are also known to be optimised with increasing experience over time \cite{simion_face_2015}.
+    Moreover, updating prototypes is important when novel prototypes are stored, as an optimised form of such a reference object can not be derived from a single sample.
+    \item \textbf{Object-centered input}: The input images are assumed to contain exactly one object rather than complex scenes containing multiple objects. This allows to map a part of an image, i.e. the region where the object is located, to exactly one object reference frame. In real-world scenarios, visual scenes often comprise multiple objects, requiring the model to map a single input to multiple prototypes. Consequently, an attention mechanism becomes important to identify object boundaries before comparing them to suitable references.
+    \item \textbf{Pre-defined projection fibres}: It is assumed that the projection fibres already exist from the beginning and remain unchanged throughout the learning process. Thus, the learning process focuses on the activation of control units. This assumption requires to pre-define many fibres, some of which may be unnecessary, making the system less efficient. However, either growing or pruning fibres dynamically could make the system more efficient and robust.
+\end{itemize}
+
+\subsection{Correspondence-based Recognition}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.99\textwidth]{correspondence_recognition}
+    \caption[The visual correspondence problem]{Visualisation of the correspondence problem: Corresponding points between an input and a model must be linked. All potential correspondences are visualised as grey lines, while the correct correspondences are shown as black lines. Example $\boldsymbol{A}$ shows a correct correspondence, while example $\boldsymbol{B}$ visualises a wrong correspondence, although similar features are connected. The image is from \cite{wolfrum_recurrent_2008}.}
+    \figlbl{correspondence_recognition}
+\end{figure}
+
+So far, the problem is described as mapping entire net fragments to object prototypes.
+However, this is a rather simplified view as a vast amount of similar objects only differ slightly.
+Therefore, one can not just compare objects but rather multiple features that define an object.
+This problem of mapping features extracted from an input image to features from a reference object is known as the correspondence problem.
+\sideciteay{wolfrum_recurrent_2008} explain the correspondence problem based on \figref{correspondence_recognition}. This figure contains two stick figures where the input's features, such as the head or neck, must be linked to the corresponding model's features.
+There exist various mappings, symbolised as grey lines.
+The correspondence problem is to find a subset of these links that are the correct correspondences (visualised as black lines in example $\boldsymbol{A}$). 
+
+Unfortunately, it is not sufficient to calculate the similarity between features as illustrated in 
+\figref{correspondence_recognition} example $\boldsymbol{B}$. Different images of the same object can vary significantly, resulting in a high degree of similarity between non-corresponding features \sidecite{wiskott_role_1999}. The reason is that not only the features define an object but also their spatial arrangement. Therefore, correspondence-based systems must take both into account.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\textwidth]{projection_operations}
+    \caption[Different projection operation]{Different projection operations that must be implemented with projection fibres. Projection fibres should make the mapping process invariant to translation, rotation, and deformation.}
+    \figlbl{projection_operations}
+\end{figure}
+\figref{projection_operations} visualises the operation needed to take the spatial arrangement into account.
+Projection fibres must be invariant to translation, rotation, and deformation. However, such transformation can occur not only globally, as depicted in \figref{projection_operations}, but also locally.
+In the following, \secref{framework_s2_sim} describes how the similarity can be measured, subsequently, \secref{framework_s2_mapping} describes the mapping process.
+
+\subsection{Measuring Similarity}\seclbl{framework_s2_sim}
+As described in the previous section, the mapping process must consider both feature similarity and  spatial feature arrangement to implement correspondence-based mapping.
+Since binary neurons are used, similarity can be calculated by comparing the neurons' activity. If both neurons are on or off, they are similar; if one neuron is on while the other is not, they are dissimilar.
+However, multiple neurons exist at the same spatial location, representing various features.
+The mapping process compares how similar the spatial locations between a net fragment and a corresponding location of the reference object are.
+Thus, all features at a given spatial location are of interest, not a single feature. Therefore, not only one neuron is compared, but all neurons at the same location.
+
+Both, the net fragments in \emph{S1} and the prototypes in \emph{S2} are of shape $C_{\text{out}} \times W \times H$. Thus, per spatial location $(x,y)$ (where $x \in \{0, ..., W\}$ and $y \in \{0, ..., H\}$), there is a one dimensional feature vector of length $C_{\text{out}}$. This vector is denoted as $\boldsymbol{a}_{x,y|S1}$ for \emph{S1} and $\boldsymbol{a}_{x,y|S2}$ for \emph{S2}.
+These two vectors can be compared using the Jaccard similarity $J$, that is defined as:
+%
+\begin{align}\eqlbl{jaccard}
+	J_{x,y} = J(\boldsymbol{a}_{x,y|S1}, \boldsymbol{a}_{x,y|S2}) = \frac{|\boldsymbol{a}_{x,y|S1} \cap \boldsymbol{a}_{x,y|S2}|}{|\boldsymbol{a}_{x,y|S1} \cup \boldsymbol{a}_{x,y|S2}|}
 \end{align}
-\begin{align}\eqlbl{l2_2}
-	P(x_i=1 | h) = \text{sigmoid}(\boldsymbol{W}_{S2}^\top \cdot h + b) / \frac{1}{1 + e^{\boldsymbol{W}_{S2}^\top \cdot h + b}}
+%
+The term $|\boldsymbol{a}_{x,y|S1} \cap \boldsymbol{a}_{x,y|S2}|$ describes the number of features that are activated in both \emph{S1} and \emph{S2}, while the second term $|\boldsymbol{a}_{x,y|S1} \cup \boldsymbol{a}_{x,y|S2}|$ is the number of features that are activated in either \emph{S1} or \emph{S2}. Features that are deactivated in \emph{S1} and \emph{S2} are not taken into account.
+The Jaccard similarity $J$ is in the range of $0, ..., 1$, where $1$ is the highest possible 
+
+As demonstrated in \figref{correspondence_recognition} example $\boldsymbol{B}$, having a high similarity between two feature vectors is not enough to describe the goodness of a projection.
+Additionally, the context must be considered.
+Therefore, not only the similarity between two neurons is compared but also the one in close proximity.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\textwidth]{jaccard_similarity}
+    \caption[Similarity between two vectors and their spatial neighbours]{The Jaccard similarity between two vectors (coloured in dark blue) and their spatial neighbours (coloured in light blue).}
+    \figlbl{jaccard_similarity}
+\end{figure}
+Such a comparison is visualised in \figref{jaccard_similarity}:
+The similarity between two vectors (depicted as dark blue circle) also depends on their local neighbours (light blue circles).
+The size of the local neighbourhoods is defined as $n_J$, and the local neighbourhoods as  $\boldsymbol{A}_{x,y|S1} = \{ \boldsymbol{a}_{x-n_J,y-n_J|S1}, ...,  \boldsymbol{a}_{x+n_J,y+n_J|S1}\}$  and $\boldsymbol{A}_{x,y|S2} = \{ \boldsymbol{a}_{x-n_J,y-n_J|S2}, ...,  \boldsymbol{a}_{x+n_J,y+n_J|S2}\}$, respectively.
+The Jaccard similarity between two vectors that consider the local neighbourhood is thus defined as:
+%
+\begin{align}\eqlbl{jaccard2}
+	J_{x,y} = J(\boldsymbol{A}_{x,y|S1}, \boldsymbol{A}_{x,y|S2})
 \end{align}
-Similar to \emph{S1}, we treat the activity of these neurons as probability and thus sample the output from a Bernoulli distribution.
-\begin{align}\eqlbl{l2_3}
-	h_{out} \thicksim \text{Bernoulli}(P(h | x) )
-\end{align}
-\begin{align}\eqlbl{l2_4}
-	x_{out} \thicksim \text{Bernoulli}(P(x | h))
-\end{align}
-
-The question remaining is how to update the parameters $\boldsymbol{W}_{S2}$, $a$ ,and $b$ so that the conditional probabilities $P(h|x)$ and $P(x|h)$ are properly modelled.
-Similar to a restricted Boltzman machine (RBM), we minimize the difference of the free energy function $F(\cdot)$ between $x_{in}$ and $x_{out}$ (i.e. $F(x_{in}) - F(x_{out})$) to optimize the parameters. For interested readers, I provide more details on the implementation and mathematical properties in \secref{l2_math}.
-
-\emph{S2} thus allows to model $P(h|x)$ and $P(x|h)$, whereby $h$ is of limited size.
-By minimizing the free energy function, \emph{S2} decides by itself which representation should be stored.
-However, since the capacity is quite limited, \emph{S2} can only store a rather small set of representations.
-When observing cell activity $x$ in \emph{S1}, $P(h|x)$ defines the probability for the cell activity in \emph{S2}. Since we sample $h_{out} \thicksim \text{Bernoulli}(P(h | x) )$, $h_{out}$ becomes binary, whereby cells with a low probability tend to be turned off, while cells with a high probability tend to fire.
-This can be interpreted as filter against noise and slight deformations: A cell activity $x$ is mapped to the closest known configuration of $h$.
-To provide feedback to \emph{S2}, $P(x|h)$ is calculated in a similar fashion. Thus, \emph{S2} can be interpreted as a type of probabilistic associative memory, providing feedback to \emph{S1} based on its current cell state.
-However, it does not map a configuration of $x$ to a single cell (i.e. multiple cells in $h$ can be active) and thus can interpolate within the data distribution to some extend.
-
-One problem is that at the beginning of training, \emph{S1} and \emph{S2} are rather unstructured and their cell activation may change rather strongly.
-For example, the feedback from \emph{S2} evolves from initial noise and is, therefore, not only useless for \emph{S1} but harmful as it can provide wrong feedback and steer learning process of \emph{S1} towards a wrong direction (i.e. \emph{S1} learns to build noise instead of proper subnetworks).
-Therefore, the feedback of \emph{S2} to \emph{S1} is turned off during the first training epochs.
-This allows \emph{S1} to learn subnetworks and to forward its activation to \emph{S2}. \emph{S2}, on the other hand, organizes its internal structure which takes a few epochs.
-After \emph{S2} is well organized and its feedback is helpful for \emph{S1}, the feedback loop is activated.
+%
+Taking a local neighbourhood into account can be likened to having local support, as it is the case for to net fragments. For example, the similarity between two different vectors can still be high, if their context is similar. This is helpful to deal with noise in the data.
+Furthermore, the similarity between two identical vectors is low, if their context is very dissimilar and therefore do not match.
+Such a local support thus increases robustness and provides higher similarity for spatially correctly arranged features.
 
 
 
-\subsubsection{Mathematical Details}\seclbl{l2_math}
-To model the conditional probability between $x$ and $h$, we have to measure their compatibility (i.e. to measure their relationship).
-Lets imagine two cells $x_i$ and $h_j$ and the weight $\boldsymbol{W}_{ij}$ to model the connection between these cells.
-Intuitively, $\boldsymbol{W}_{ij}$ indicates whether $x_i$ and $x_j$ are positively or negatively related: If $x_i$ and $h_j$ are equal, we want $\boldsymbol{W}_{ij} > 0$ and $\boldsymbol{W}_{ij} < 0$ otherwise.
-The energy function $E(x_i, h_j)$ is defined as
-\begin{align}\eqlbl{l2_energy}
-	E(x_i, h_j) = - \boldsymbol{W}_{ij}x_ih_j
-\end{align}
-The energy function is high, if $x_i=h_j=1$ and the weight is wrong, i.e. $\boldsymbol{W}_{ij} < 0$. The energy function with the biases can be formulated as
-\begin{align}\eqlbl{l2_energy2}
-	E(x_i, h_j) = - \boldsymbol{W}_{ij}x_ih_j - a_ix_i - b_jh_j
-\end{align}
-The energy function for the entire network is the sum of all units:
-\begin{align}\eqlbl{l2_energy3}
-	E(x, h) = - \sum_{i,j} \boldsymbol{W}_{ij}x_ih_j - \sum_ia_ix_i - \sum_jb_jh_j
-\end{align}
-To probability for a pair of \emph{S1} cell activations $x$ and \emph{S2} cell activations $h$ can be calculated as:
-\begin{align}\eqlbl{l2_energy4}
-	P(x,h) = \frac{e^{-E(x, h)}}{Z}
-\end{align}
-where the partition function $Z$ is the sum from all possible states and can be calculated as:
-\begin{align}\eqlbl{l2_energy5}
-	Z = \sum_{x,h} = e^{-E(x,h)}
-\end{align}
-The probability for a cell state in \emph{S1} can be calculated by summing over all cell states of \emph{S2}:
-\begin{align}\eqlbl{l2_energy6}
-	P(x) = \frac{1}{Z} \sum_{h}e^{-E(x,h)}
-\end{align}
-This probability $P(x)$ of observing state $x$ in \emph{S1} can be used to learn the weights. In fact, the probability that the models assigns to a specific cell state can be raised by lower the energy of that cell state and to raise the energy of other cell states. I.e. the weights are adapted in a way that this cell state becomes more probable while other cell states become less probable.
-To update the weights, we have to calculate the derivative of the log probability of a cell state $x$ w.r.t. the parameters $\theta$:
-\begin{align}\eqlbl{l2_energy7}
-	\frac{\partial \log P(x)}{\partial \theta }
-\end{align}
-This derivative can be calculated with the free energy function. The free energy of a cell state $x$ describes the ``available energy'' and is the sum of all energy configurations that contain $x$.
-\begin{align}\eqlbl{l2_energy8}
-	F(x) = \ln \left( \sum_h e^{-E(x,h)} \right)
-\end{align}
-Without any proof, the derivative of the log probability of a cell state $x$ w.r.t. the parameters $\theta$ can be calculated as follows:
-\begin{align}\eqlbl{l2_energy9}
-	\frac{\partial \log P(x)}{\partial \theta } = - \frac{\partial \mathcal{F}(x)}{\partial \theta} + \mathbb{E}_{x' \sim p} \left[ \frac{\partial \mathcal{F}(x')}{\partial \theta}  \right]
-\end{align}
-
-Thereby, $x$ is the original cell state of \emph{S1} and $x'$ a reconstructed version of it.
-The reconstructed version $x'$ can be calculated by mapping $x$ to an object prototype in \emph{S2}  $h \thicksim \text{Bernoulli}(P(h | x) )$ and sampling from $h$, i.e. $x' \thicksim \text{Bernoulli}(P(x | h))$.
-Thus, the loss can be calculated by minimizing $F(x) - F(x')$ w.r.t. $\theta$ by using gradient descent.
 
 
-% https://jhui.github.io/2017/01/15/Machine-learning-Boltzmann-machines/#:~:text=The%20free%20energy%20of%20RBM,(1%2Bexj)
 
 
-%\subsubsection{Self-Consistency and Parsimony}
-%A fundamental task of all learning frameworks is to define how data should be organized.
-%Studies in neuroscience suggest that the brain’s world model is highly structured \sidecite{Olshausen_Field_1996, Bao_She_McGill_Tsao_2020}.
-%The key to the brain's efficiency and effectiveness in perceiving, predicting, and making intelligent decisions is thought to lie in a structured model \sidecite{Josselyn_Tonegawa_2020}.
-%Some of the most important principles of such a structured model is parsimony and self-consistency \sidecite{Ma_Tsao_Shum_2022}.
-%In this thesis, the world model is encoded in \emph{S2}.
-%\emph{S2} learns object prototypes that are arranged in its feature space in a self-organizing manner.
-%However, constraints inspired by the principles of parsimony and self-consistency ensure that these features are organized in a meaningful way.
-
-%The principle of parsimony is to identify low-dimensional structures in the data and to reorganize them in the most compact and structured way.
-%According \cite{Ma_Tsao_Shum_2022}, this can be achieved with compression, linearization, and sparsification.
-%Compression is achieved by mapping the cell's activity in \emph{S1} to a low-dimensional representation in \emph{S2}. In fact, we reduce a martix of size $4\times32\times32$ to a vector of size $1\times16$, thus compressing the data by a factor of $256$.
-%\emph{S2} uses binary neurons, whereby each neuron represents a specific feature.
-%Since the activations in \emph{S1} depend strongly on the data (i.e. are low-level features), they vary a lot.
-%\emph{S2}, on the other hand, tries to capture the this diversity as good as possible by minimizing its weights' free energy.
-%Therefore, each neuron in \emph{S2} represents a quite unique feature, leading to sparse representations (TODO reference sparse coding).
-%However, I do not enforce a orthogonal features (a ``one-hot'' encoding). This is also in line with the human brain where more than one cell is active in specific brain regions (cite).
-%But the aforementioned constraints lead to such sparse cell activations in \emph{S2}, that only a few (on average $4$ out of $16$) cells are active.
-%Thus, \emph{S2} encourages linearization while fulfilling compression and sparsification. Therefore, I argue that it implements the principle of parsimony to a large extend.
-
-%The principle of self-consistency describes that a network should seek the most self-consistent world-model by minimizing the internal discrepancy between representations of observed and regenerated data.
-%\emph{S2} is trained to minimize the free energy of $x$ and $\hat{x}$, thus optimizing the free energy of the weights w.r.t. the outer representations. However,  \emph{S2} is not implemented with a separate encoder and decoder. Instead, the mapping of the encoder is based on a linear weight matrix $\boldsymbol{W}$, and the decoder is based on the transposed weight matrix $\boldsymbol{W}^\top$. 
 
 
-%TODO: Self-Consistency -> Why??
+
+
+
+
+% TODO: Korrigiere diese Section
+\subsection{Mapping Process}\seclbl{framework_s2_mapping}
+The previous section discusses how the similarity between neurons connected by a projection fibre can be calculated.
+In the following, it is described how projection fibres can be wired.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\textwidth]{prototype_operations}
+    \caption[Operations applied to a prototype]{Different operations applied to a prototype.}
+    \figlbl{prototype_operations}
+\end{figure}
+A straight-forward approach is to apply different operations such as translation, rotation, and deformation to a reference frame as shown in \figref{prototype_operations}. These operations can be applied either separately or in combination.
+This yields various augmented views of a prototype.
+Thereby, the shift of each neuron is tracked, and a projection fibre is used to map a neuron from the prototype to the corresponding neuron in the augmented version.
+Each augmentation steps leads to a bunch of projection fibres, that are grouped into a maplet and can be activated as a whole by a control unit.
+Thus, this approach leads to many maplets that can map object from various input positions and different transformations to an object reference.
+
+When processing an image, each projection fibre calculates the similarity between the neurons it connects.
+Afterwards, the average similarity is calculated per maplet and this similarity is used as activation probability of a Bernoulli neuron, that can turn on the corresponding control unit.
+Thus, the better a maplet can map a prototype to a object reference, the higher its porbability to turn on.
+
+However, this approach is not practicable since too many projection fibres are created.
+This problem is solved in the next section by introducing a hierarchical mapping.
+
+\subsection{Hierarchical Mapping}
+The hierarchical mapping was introduced by \sideciteay{anderson_shifter_1987} under the name ``shifter circuits'' and later improved by \sideciteay{olshausen_neurobiological_1993}.
+In the following, shifter circuits are motivated with 1D data.
+The reason for using 1D data is that it is simpler to visualise.
+However, all these principles can also be applied to 2D data such as images.
+
+
+
+
+
+
+
+
+
+
+
+
+
+Alle Zellen an jede Position verbinden: 32*32 connections
+Eine Zelle in jeweils 4 Segmente verbinden: 4*4*4*4 connections
+Erlaubt eine Art von Pruning: Vergleiche Modell mit allen anderen Modellen. Pro Hierarchiestufe gibt es ein Pruning, indem schlechtere Verbindungen weggeschnitten werden.
+
+
+
+
+\subsection{Feedback to \emph{L1}}
+\emph{L2} serves two purposes: It not only maps an input to a reference frame to obtain a transformation-invariant representation but also provides feedback to \emph{L1} by mapping the reference object back to \emph{L1}.
+To provide feedback, the most plausible prototype is selected, i.e. the prototype with the highest Jaccard similarity.
+As described in \secref{framework_s1}, this prototype from \emph{L2} can overwrite the representations in \emph{L1} and is thus incorporated in the learning process in \emph{L1}.
+
+The representations in \emph{L1} and \emph{L2} might slightly vary as the net fragments in \emph{L1} represent a very specific instance of an object. In contrast, \emph{L2} represents a generalised (optimised) version of the same object.
+However, these representations should still be similar (otherwise, a proper prototype in \emph{L2} is missing).
+Therefore, \emph{L1} receives an optimised version of the net fragments as input. This can be considered a bias towards a better representation.
+By applying Hebbian updates between the input in \emph{L1} and the prototypes from \emph{L2}, \emph{L1} learns to convert its features to an optimised version.
+Thus, the feedback from \emph{L2} can help \emph{L1} to build better representations.
+
+
+
+
 
 
 \subsubsection{Measuring \emph{S2} Goodness}
-\emph{S2} maps activations of learned patterns to object prototypes and vice-versa.
-It can be interpreted as a type of associative memory with the capability of interpolating within the data distribution.
-Thereby, it should be more robust to noise and slight image transformation than \emph{S1}.
-Thus, the goodness of \emph{S2} can be measured in terms of reconstruction of transformed or partially masked objects and removing noise.
+\emph{S2} is highly dependent on \emph{S1}. To evaluate the performance \emph{S2} independently, it has to be encapsulated from \emph{S1}.
+This can be achieved by using reference objects from \emph{S2} as input instead of actual net fragments from \emph{S1}.
+To ensure that the input and prototypes are not identical, the input data is highly augmented by shifting, rescaling, and resizing the object.
+Thus, the input that should be matched to a target prototype is just an augmented version of the target.
+However, when evaluating the entire system, the actual output from \emph{S1} is used as input.
+It is important to note that the evaluation metrics described in the following can be applied to both types of data.
+
+\emph{S2} maps net fragments to object prototypes. Therefore, one way to evaluate the goodness of \emph{S2} is to measure if the input is mapped to the corresponding object prototype.
+The mapping accuracy can be measured on a class level with typical classification metrics such as accuracy or F1-score.
+However, the mapping can also be measured at the pixel level by using segmentation metrics such as IoU scores.
+Furthermore, \emph{S2} provides feedback to \emph{S1}.
+To measure the goodness of the feedback, the prototypes are mapped back and similar metrics as in the forward mapping can be utilised to measure the goodness of the mapping.
+
+\emph{S2} can be considered an associative memory, mapping net fragments to the most suitable reference frame.
+A strength of such a system is that it is highly robust and can deal well with noisy data or occluded objects \sidecite{ramsauer_hopfield_2021}.
+Therefore, \emph{S2} can also be evaluated by occluding data and letting it reconstruct it as it is done for many deep learning systems \sidecite{han_image-based_2021, qu_transmef_2022}. 
 
 
-- Reconstruct Lines
-- Remove noise (not removed by \emph{S1})
 
-
-
-\subsection{Limitations}
-The proposed framework is an interesting alternative to current vision architectures.
-However, it still has many drawbacks and requires further research to improve certain aspects.
-The most pressing issues, from the author's perspective, are described in the following.
-
-The core idea is to build subnetworks in \emph{S1} and to map them to 
-
-
-- How to put prototypes into \emph{S2}
-- Multi-step projection fibres based on correlation
-- position invariance \emph{S2}
-- unbalanced data (i.e. some patterns dominate \emph{S1}) -> probabilistic neuron is not enough -> requires competition to learn
-- Mehrere parallele identische Zellen nötig, damit sich verschiedene Feature-Kombinationen ausbilden können (z.B. Feature 1+2 ohne 3 aber auch Feature 1+3)
-
-
-TODO
-- Neue Normalisierung beschreiben
-- Hemmung beschreiben
-- Beschreiben, dass alternative Zellen nötig sind für verschiedene Muster -> Symmetrieproblem -> Benötigt eine Art Competition -> Evtl. können sich Zellen bei zu viel Aktivität sogar selbstständig verdoppeln
 
 
 
@@ -760,3 +806,6 @@ TODO: Teste anderen Noise, z.B. Kreis
 TODO \emph{S2}: https://devpost.com/software/recursive-cortical-network-visualizations
 
 TODO: Chaining multiple \emph{S1} - \emph{S2} stages. Could a stage serve as \emph{S1} and \emph{S2} at the same time? -> Build a chain of stage?
+
+
+Cite this somewhere: https://www.nature.com/articles/s41467-018-08080-2
