@@ -568,17 +568,7 @@ Thus, the average activation of the cell increases as well as the threshold to r
 In a working system, the activation needed to become active increases during training.
 These statistics can be measured over the training process to evaluate the goodness of the net fragments.
 
-As a second metric, I measure the normalization factor.
-The cells receive lateral support from neighbouring cells.
-However, the normalisation procedure squeezes these activations into the range $0, ..., 1$.
-If the cells are activated with a specific activation strength $\boldsymbol{a}$ and normalized afterwards to $\boldsymbol{a}_{norm}$, we can measure the normalization factor 
-$\upsilon$:
-\begin{align}\eqlbl{goodness_lat}
-	\upsilon = \frac{\boldsymbol{a}}{\boldsymbol{a}_{norm}+1\cdot10^{-10}}
-\end{align}
-With increasing support, $\upsilon$ increases, indicating that a higher activation strength is needed to become active.
-
-As a third goodness measurement, we can measure the robustness against noise.
+As a third second measurement, we can measure the robustness against noise.
 Net fragments should only support cells that are activated by a learned pattern. Thus, cells activated by noise should not receive enough support and be turned off after a few cycles.
 Therefore, as a third metric, we can add noise to the input image and measure how many cells in the sensory system are activated due to the noise and what ratio of them remains active after \emph{S1}.
 

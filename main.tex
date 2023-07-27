@@ -18,7 +18,7 @@
 
 \usepackage{styles/phdbibliobyphd}
 %\addbibresource{main.bib}
-\addbibresource{zotero.bib}
+\addbibresource{zotero2.bib}
 
 \graphicspath{{imgs/}{./}}
 \newcommand\home{./}  % for path adjustments 
@@ -66,6 +66,19 @@
 % Format for citations
 %\DeclareFieldFormat{citetitle}{\textit{#1}}
 %\DeclareFieldFormat[book]{citetitle}{\textit{#1}} 
+
+
+% Modify the title format to include quotes
+\DeclareFieldFormat{title}{\mkbibquote{#1}}
+
+% Disable italics for book titles
+\DeclareFieldFormat[book]{title}{\mkbibquote{#1}}
+
+% Disable italics for article titles
+\DeclareFieldFormat[article]{title}{\mkbibquote{#1}}
+
+% Customize title format for \citetitle
+\DeclareFieldFormat{citetitle}{\mkbibquote{#1}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}

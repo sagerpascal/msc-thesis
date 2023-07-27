@@ -70,7 +70,7 @@ These filters function similarly to a convolutional layer with frozen (non-train
 During processing, the filters are shifted with a stride of $1$ across the input image of size $(1 \times 32 \times 32)$. 
 The borders are padded with $0$ values to keep the input and output sizes identical.
 After applying the four filters, the output has a shape of $(4 \times 32 \times 32)$. 
-However, the activations can be in a range of $-1, ..., +1$.
+However, the activations can be in the range of $-1, ..., +1$.
 In order to obtain binary activations, these activations are modelled using the Bernoulli neuron.
 This means that the initial activation is used as a probability value and its binary activation is sampled from a Bernoulli distribution.
 
@@ -109,7 +109,7 @@ However, at the end of the normalisation procedure, each output channel is divid
 \end{align}
 %
 The input is processed over $6$ timesteps and the Hebbian update is calculated between the input and the median activation during these timesteps.
-The learning rate is set to $0.1$, the mini-batch size is $256$ and the model is trained for $20$ epochs.
+The learning rate is set to $0.1$, the mini-batch size is $256$ and the model is trained for $10$ epochs.
 
 
 
@@ -170,15 +170,15 @@ Similar to \emph{S1}, we treat the activity of these neurons as probability and 
 
 The parameters $\boldsymbol{W}_{S2}$, $a$, and $b$ are updated by minimizing the difference of the free energy function $F(\cdot)$ \sidecite{hinton_training_2002} between $\boldsymbol{a}_{in}$ and $\boldsymbol{a}_{out}$ (i.e. $F(\boldsymbol{a}_{in}) - F(\boldsymbol{a}_{out})$)\sidenote{Interested readers are referred to the publication by \citeay{\sidecite{hinton_training_2002}} or a well-written blog-post by \sideciteay{hui_machine_2017}.}.
 The free energy function is minimised using the Adam \sidecite{kingma_adam_2017} optimiser with a learning rate of $0.05$, and the parameters $\beta_1=0.9$, $\beta_2=0.999$, and $\epsilon=1\cdot10^{-8}$.
-During training, the learning rate is reduced by a factor of $0.1$ if the free energy does not reduce further for more than 5 epochs until a final learning rate of $1\cdot10^{-6}$ is reached.
-The batch size is set to $256$ and the model is trained for $20$ epochs (similar to \emph{S1}).
+During training, the learning rate is reduced by a factor of $0.1$ if the free energy does not reduce further for more than 3 epochs until a final learning rate of $1\cdot10^{-6}$ is reached.
+The batch size is set to $256$ and the model is trained for $10$ epochs (similar to \emph{S1}).
 
 
 
 By minimizing the free energy function, the memory decides by itself which representation should be stored.
 However, since the capacity is quite limited, it can only store a rather small set of representations.
 When observing cell activity $\boldsymbol{a}$ in \emph{S1}, $P(\boldsymbol{h}|\boldsymbol{a})$ defines the probability for the cell activity in \emph{S2}. Since we sample $\boldsymbol{h}_{out} \thicksim \text{Bernoulli}(P(\boldsymbol{h} | \boldsymbol{a}) )$, $\boldsymbol{h}_{out}$ becomes binary, whereby cells with a low probability tend to be turned off, while cells with a high probability tend to fire.
-This can be interpreted as filter against noise and slight deformations: A cell activity $\boldsymbol{a}$ is mapped to the closest known configuration of $\boldsymbol{h}$.
+This can be interpreted as a filter against noise and slight deformations: A cell activity $\boldsymbol{a}$ is mapped to the closest known configuration of $\boldsymbol{h}$.
 To provide feedback to \emph{S2}, $P(\boldsymbol{a}|\boldsymbol{h})$ is calculated in a similar fashion. Thus, \emph{S2} is a probabilistic associative memory, providing feedback to \emph{S1} based on its current cell state.
 
 One problem is that at the beginning of training, \emph{S1} and \emph{S2} are rather unstructured and their cell activation may change rather strongly.

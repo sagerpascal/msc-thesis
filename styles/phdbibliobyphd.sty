@@ -14,8 +14,8 @@
 % use biber to compile references
 \PassOptionsToPackage{
 	%style=numeric-comp,
-	citestyle=numeric-comp,% authortitle-icomp,
-	bibstyle=numeric,% authoryear,
+	citestyle=ieee,%numeric-comp,% authortitle-icomp,
+	bibstyle=ieee,% authoryear,
 	sorting=none,% nyt,
 	%sortcites=true,
 	backend=biber,
@@ -26,6 +26,8 @@
 	ibidtracker=context,
     minbibnames=5,
     maxbibnames=10,
+    minalphanames=999,
+    maxalphanames=999,
 }{biblatex}
 \DeclareOption*{\PassOptionsToPackage{\CurrentOption}{biblatex}}
 
@@ -65,7 +67,6 @@
 % Sidenote citations
 
 % \newlength\sclen
-
 \NewDocumentCommand{\citeay}{m}{%
 	\citeauthor*{#1} \parencite*{#1}%
 }
