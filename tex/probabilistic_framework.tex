@@ -156,7 +156,7 @@ Control units trigger a mapping when a net fragment in the visual cortex matches
 Please note that the line on the left is translated and stretched. However, the projection fibres still map such transformed object to a idealised prototype.
 \figref{maplets} shows a direct mapping from net fragments to prototypes for better clarity. In the brain, however, this mapping is done over several hierarchical levels, saving a large amount of projection fibres \sidecite{anderson_shifter_1987}.
 
-Projection fibres thus provide generalisation, i.e. different, transformed, versions of an object can be mapped to each other. This explains the ability of humans to see a new object once and immediately recognizs it in transformed version.
+Projection fibres thus provide generalisation, i.e. different, transformed, versions of an object can be mapped to each other. This explains the ability of humans to see a new object once and immediately recognise it in a transformed version.
 
 \paragraph{Emergence.} One question that constantly puzzles the field of AI is whether a system exhibits an emergence of intelligence.
 This question also has many philosophical aspects and cannot be answered conclusively within the scope of this thesis.
@@ -530,7 +530,7 @@ Preliminary results suggest that values in the range $\rho = 1.2n_l, ..., 1.5n_l
 The result of the function described in \eqref{norm_2} is shown in \figref{norm_support}. No normalisation is applied as long as a cell's activation is below $\rho$. However, if the activation is above $\rho$, the cell's lateral support strength is decreased with a slope of $-0.5$.
 
 
-\subsection{Alternative Cells}
+\subsection{Alternative Cells}\seclbl{framework_alt_cells}
 As described in \secref{framework_neuroscience}, alternative cells and pathways are necessary to deal with different patterns that activate similar cells.
 ``Alternative'' in this context means that only one cell among the alternatives is active, i.e. these cells are mutually exclusive.
 At the beginning of training, alternative cells are copies of an initial cell.
@@ -711,48 +711,24 @@ In the following, it is described how projection fibres can be wired.
     \caption[Operations applied to a prototype]{Different operations applied to a prototype.}
     \figlbl{prototype_operations}
 \end{figure}
-A straight-forward approach is to apply different operations such as translation, rotation, and deformation to a reference frame as shown in \figref{prototype_operations}. These operations can be applied either separately or in combination.
-This yields various augmented views of a prototype.
+A straightforward approach is to apply different operations such as translation, rotation, and deformation to a reference frame as shown in \figref{prototype_operations}. These operations can be applied individually or in combination, resulting in multiple augmented versions of the prototype.
 Thereby, the shift of each neuron is tracked, and a projection fibre is used to map a neuron from the prototype to the corresponding neuron in the augmented version.
 Each augmentation steps leads to a bunch of projection fibres, that are grouped into a maplet and can be activated as a whole by a control unit.
-Thus, this approach leads to many maplets that can map object from various input positions and different transformations to an object reference.
+Thus, this approach leads to many maplets that can map objects from various input positions and different transformations to a reference object.
 
 When processing an image, each projection fibre calculates the similarity between the neurons it connects.
-Afterwards, the average similarity is calculated per maplet and this similarity is used as activation probability of a Bernoulli neuron, that can turn on the corresponding control unit.
-Thus, the better a maplet can map a prototype to a object reference, the higher its porbability to turn on.
+Afterwards, the average similarity is calculated per maplet and this similarity is used as the activation probability of a Bernoulli neuron, that can turn on the corresponding control unit.
+Thus, the better a maplet can map a prototype to an object reference, the higher its probability to turn on.
 
-However, this approach is not practicable since too many projection fibres are created.
-This problem is solved in the next section by introducing a hierarchical mapping.
-
-\subsection{Hierarchical Mapping}
-The hierarchical mapping was introduced by \sideciteay{anderson_shifter_1987} under the name ``shifter circuits'' and later improved by \sideciteay{olshausen_neurobiological_1993}.
-In the following, shifter circuits are motivated with 1D data.
-The reason for using 1D data is that it is simpler to visualise.
-However, all these principles can also be applied to 2D data such as images.
-
-
-
-
-
-
-
-
-
-
-
-
-
-Alle Zellen an jede Position verbinden: 32*32 connections
-Eine Zelle in jeweils 4 Segmente verbinden: 4*4*4*4 connections
-Erlaubt eine Art von Pruning: Vergleiche Modell mit allen anderen Modellen. Pro Hierarchiestufe gibt es ein Pruning, indem schlechtere Verbindungen weggeschnitten werden.
-
+However, an issue with this approach is that many projection fibres are required.
+This issue can be solved by using a hierarchical mapping that is known as ``shifter circuits''  \sidecite{anderson_shifter_1987, olshausen_neurobiological_1993}.
 
 
 
 \subsection{Feedback to \emph{L1}}
 \emph{L2} serves two purposes: It not only maps an input to a reference frame to obtain a transformation-invariant representation but also provides feedback to \emph{L1} by mapping the reference object back to \emph{L1}.
 To provide feedback, the most plausible prototype is selected, i.e. the prototype with the highest Jaccard similarity.
-As described in \secref{framework_s1}, this prototype from \emph{L2} can overwrite the representations in \emph{L1} and is thus incorporated in the learning process in \emph{L1}.
+As described in \secref{framework_s1}, this prototype from \emph{L2} can overwrite the representations in \emph{L1} and is thus incorporated into the learning process in \emph{L1}.
 
 The representations in \emph{L1} and \emph{L2} might slightly vary as the net fragments in \emph{L1} represent a very specific instance of an object. In contrast, \emph{L2} represents a generalised (optimised) version of the same object.
 However, these representations should still be similar (otherwise, a proper prototype in \emph{L2} is missing).
@@ -783,19 +759,3 @@ To measure the goodness of the feedback, the prototypes are mapped back and simi
 A strength of such a system is that it is highly robust and can deal well with noisy data or occluded objects \sidecite{ramsauer_hopfield_2021}.
 Therefore, \emph{S2} can also be evaluated by occluding data and letting it reconstruct it as it is done for many deep learning systems \sidecite{han_image-based_2021, qu_transmef_2022}. 
 
-
-
-
-
-
-
-TODO: teste was passiert wenn Noise in Feature Extractor statt Image -> wird dieser entfernt?
-TODO: Teste anderen Noise, z.B. Kreis
-
-
-TODO \emph{S2}: https://devpost.com/software/recursive-cortical-network-visualizations
-
-TODO: Chaining multiple \emph{S1} - \emph{S2} stages. Could a stage serve as \emph{S1} and \emph{S2} at the same time? -> Build a chain of stage?
-
-
-Cite this somewhere: https://www.nature.com/articles/s41467-018-08080-2

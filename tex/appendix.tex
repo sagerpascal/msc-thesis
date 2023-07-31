@@ -49,3 +49,50 @@ For a detailed explanation of the content and observations in each video, please
 
 
 
+\chapter{Negative Hebbian Learning}\chlbl{neg_hebb_updates}
+%
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.99\textwidth]{neg_hebb_learning}
+    \caption[Weight matrix and activations with negative Hebbian learning]{The weight matrix and the corresponding activation probabilities for a vertical line of a model trained with negative Hebbian learning.}
+    \figlbl{neg_hebb_learning}
+\end{figure}
+%
+This section examines the concept of negative Hebbian Learning in \emph{S1}, a learning mechanism designed to enable neural networks to forget unimportant or incorrect features. 
+So far, only positive Hebbian learning is used to strengthen connections between active cells.
+Negative Hebbian learning additionally reduces the connection strength between cells that fire disjointly.
+While negative Hebbian learning allows to eliminate previously learned connections, it also presents challenges in maintaining supportive relationships between distinct features.
+
+\figref{neg_hebb_learning} visualises the weight matrix and the activation probabilities for a vertical line fed into a model trained with negative Hebbian learning.
+Even tough the activations probabilities look different than for positive Hebbian learning, they are still considered valid representations of lines.
+However, the main issue is that the output channels do not rely on distinct features.
+For example, the output channel $A$ representing vertical lines only considers the input channels $1$ and $5$, whereby channel $1$ contains the ``vertical lines features'' from the sensory system and channel $5$ is the recurrent connection.
+However, the other sensory signals, arriving at input channel $2$-$4$ are not taken into account by output channel $A$.
+Thus, only cells representing vertical line features support this output channel.
+In contrast, positive Hebbian learning considers all input channels.
+
+
+Therefore, the lateral support is lower with negative Hebbian learning.
+This might not be an issue for the used line dataset but is crucial for real world scenarios\sidenote{For example, a channel could represent eyes and another eyelashes. These features should support each other.}.
+Thus, negative Hebbian learning can forget irrelevant features, but also suffers from features becoming mutually exclusive, which prevents adequate support between them.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.99\textwidth]{correlations_hebb_learning}
+    \caption[Feature correlations]{Correlation between features from the input channels and the output channel $A$. The upper part of the images visualises the features fed into channel $A$ and the expected result. The lower part of the image indicates where positive and negative correlation occurs between input channels and output channel $A$.}
+    \figlbl{correlations_hebb_learning}
+\end{figure}
+%
+In the following, it is discussed why the features become mutually exclusive.
+The primary issue is that, except for one input channel, there is more negative correlation between the input channels and a single output channel, as visualised in \figref{correlations_hebb_learning}.
+In this context, ``negative correlation'' refers to disjointly active cells while ``positive correlation'' refers to cells that fire together.
+In the case of the vertical line, it is expected that output channel $A$ roughly reassembles the line.
+Hebbian learning compares this output to the input channels and increases the weight if there is a positive correlation between input and output and decreases the weight if the correlation is negative.
+These correlations are visualised in the lower part of \figref{correlations_hebb_learning}.
+Input channel $1$ and output channel $A$ are roughly identical, therefore, the activations between input and output have a positive correlation and the corresponding lateral connections undergoes a positive Hebbian update.
+
+However, all the other channels have only at the line ends a positive correlation, and a negative correlation in the middle section of the line.
+Therefore, there is more negative correlation than positive correlation and these features undergo more negative updates than positive updates.
+
+The resolution to this issue remains unclear and require additional experiments. One potential approach is to use a significantly smaller learning rate for negative updates than for positive updates, another solution could be to introduce alternative cells (c.f. \secref{TODO})
+
