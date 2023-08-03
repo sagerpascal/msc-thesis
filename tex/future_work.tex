@@ -1,19 +1,19 @@
 \section{Discussion}
 Deep learning networks have proven themselves as exceptional feature extractors.
 Recent scaling has brought them to a level where they can become widely established in our everyday lives.
-Nevertheless, they still have shortcomings, and it remains unclear whether they can overcome them.
-This thesis proposes a framework that addresses some of these issues, such as early commitment and object-independent transformation-invariance.
+Nevertheless, they still have shortcomings, and whether they can overcome them remains unclear.
+This thesis proposes a framework that addresses some of these issues, such as early commitment and object-independent transformation invariance.
 However, it is still far from being developed enough to make a reliable statement about whether it can solve these problems of deep learning.
 
 The proposed framework is strongly oriented towards the biological brain, the only known system to which we attribute true intelligence.
-One of the main contributions of this thesis is the identification of neuroscientific findings and transferring them into the context of a computational framework.
-A key difference of the proposed system to deep network is that deep learning evaluates consistency at a single point in the network by comparing its final prediction which a teaching signal.
+One of this thesis's main contributions is identifying neuroscientific findings and transferring them into the context of a computational framework.
+
+A key difference between the proposed system and deep networks is that deep learning evaluates consistency at a single point in the network by comparing its final prediction with a teaching signal.
 By using backpropagation of error, all neurons within the network are optimised so that this single point in the network is as consistent as possible with the teaching signal.
 
-In contrast, the human brain achieves consistency between all cells within the networks. 
-The proposed framework implements a model based in this principle and optimises consistency at every point in the network, thereby focusing on the visual system.
+In contrast, the proposed framework implements, similar to the human brain, a model that optimises consistency at every point in the network, thereby focusing on the visual system.
 It consists of three building blocks, all using binary Bernoulli neurons.
-Binary neurons are biologically plausible and allow to implement net fragments, but currently not fully optimised in most computational frameworks.
+Binary neurons are biologically plausible and allow to implement net fragments, but they are currently not fully optimised in most computational frameworks.
 
 The sensory stage \emph{S0} corresponds to the eyes and extracts features from images.
 It can be implemented as a CNN layer extracted from the first layer of a pre-trained autoeoncoder. CNNs have proven themselves as exceptional feature extractor systems, therefore, it is expected that this stage performs well and does not require much further research.
@@ -22,7 +22,7 @@ The feature building stage \emph{S1}, inspired by the primary visual cortex, use
 This stage is well examined in this thesis and has been iteratively refined based on experiments.
 The conducted experiments demonstrate that lateral connections are useful to reconstruct occluded objects or to remove noise.
 
-\The global feature stage \emph{S2} is inspired by the ventral visual stream and the temporal cortex.
+\The prototype stage \emph{S2} is inspired by the ventral visual stream and the temporal cortex.
 It uses projection fibres to map net fragments to object prototypes.
 In this thesis, only the theoretical concepts are introduced. However, it lacks experimental validation and refinement to the same extent as \emph{S1}.
 
@@ -33,7 +33,7 @@ The iterative process of building net fragments and mapping them to object proto
 In summary, the proposed framework introduces several promising principles.
 However, these principals have to be explored and refined further in future work, as elaborated in the next section.
 It remains unclear whether this framework can achieve the same performance as deep networks, and extensive work is required to answer this question.
-I argue that deep network work excellent for very specific tasks, because they optimise all neuron of a network so that the consistency between prediction and teaching signal (of this given task)
+I argue that deep network work excellent for very specific tasks, because they optimise all neurons of a network so that the consistency between prediction and teaching signal (of this given task)
 at a single point in the network is as high as possible.
 Thus, all neurons are updated so that a few output neurons are as precise as possible.
 On the other hand, optimising consistency at every single point in the network, as done in the proposed framework, might be a road towards more intelligent systems. Such a system could integrate multiple signals, each contributing to consistent representations or a decision-making process. By doing so, each signal and cell votes for an action, seeking consensus without a global teaching signal.
@@ -80,10 +80,11 @@ Another solution are alternative cells: If two patterns have a positive correlat
 
 \subsection{Refine \emph{S2}}
 An obvious task for future work is the refinement of \emph{S2}, which has only been theoretically developed based on identified neuroscientific findings. The initial proposal for its implementation has to be refined by conducting experiments and to advance the development of \emph{S2}.
+In a first step, projection fibres based on shifter circuits \sidecite{anderson_shifter_1987, olshausen_neurobiological_1993} should be implemented and tested with the proposed framework.
 
-During this process, also different object views should be explored (the medium processing loop). Currently, these views are only used during evaluation, but once \emph{S2} is implemented, they can be crucial in learning to associate different views to the same prototype, encouraging transformation-invariant mappings.
+During this process, also different object views should be explored (provided by the medium processing loop). Currently, these views are only used during evaluation, but once \emph{S2} is implemented, they can be crucial in learning to associate different views to the same prototype, encouraging transformation-invariant mappings.
 
-
+As soon as such an initial mapping works, the assumed simplifications can be eliminated (c.f. \secref{framework_s2}). For example, new prototypes can be stored automatically, the prototypes can be improved during the course of training, projection fibres can be learned dynamically, and the network can be extended so that it can interpret entire scenes instead of object-centred images.
 
 \subsection{Scaling to Different Datasets}
 In the conducted experiments, a dataset comprising straight lines is used, which is effective in demonstrating the principles and enhancing the understanding of the proposed framework.

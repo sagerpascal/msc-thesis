@@ -2,7 +2,7 @@ The following sections describe preliminary experiments conducted to assess the 
 The experiments' main focus is on the first stage \emph{S1}, as it is the foundation to develop the second stage \emph{S2}. Furthermore, there exists no work about implementing stage \emph{S1}, in opposite to self-organizing projection fibres, which are the central element of \emph{S2}.
 However, to demonstrate the effectiveness of incorporating feedback from the second into the first stage, a simple mockup is used to simulate \emph{S2}.
 
-In the following, a simple dataset is introduced in \secref{exp_dataset}. Next, the implementation of the sensory system is presented in \secref{exp_s0}, the feature extracting stage in \secref{exp_s1}, and the global feature stage in \secref{exp_s2}. The results obtained from these experiments are presented in the following \chref{results}.
+In the following, a simple dataset is introduced in \secref{exp_dataset}. Next, the implementation of the sensory system is presented in \secref{exp_s0}, the feature extracting stage in \secref{exp_s1}, and the prototype stage in \secref{exp_s2}. The results obtained from these experiments are presented in the following \chref{results}.
 
 
 \section{Dataset}\seclbl{exp_dataset}
@@ -108,8 +108,8 @@ However, at the end of the normalisation procedure, each output channel is divid
 	x_{c_{\text{out}},w,h} := \frac{x_{c_{\text{out}},w,h}}{max_{c=0}^{C_{\text{out}} x_{c,w,h}}
 \end{align}
 %
-The input is processed over $6$ timesteps and the Hebbian update is calculated between the input and the median activation during these timesteps.
-The learning rate is set to $0.1$, the mini-batch size is $256$ and the model is trained for $10$ epochs.
+The input is processed over $6$ timesteps, and the Hebbian update is calculated between the input and the median activation during these timesteps to increase training stability.
+The learning rate is set to $0.1$, the mini-batch size is $256$, and the model is trained for $10$ epochs.
 
 
 
@@ -130,7 +130,7 @@ Thus, the proposed method allows calculating Hebbian updates while fully leverag
 
 
 
-\section{Global Feature Stage \emph{S2}}\seclbl{exp_s2}
+\section{Prototype Stage \emph{S2}}\seclbl{exp_s2}
 % Mockup, wie classification im Gehirn
 The conducted experiments focus on \emph{S1}.
 However, since \emph{S2} is needed to provide feedback to \emph{S1}, a mockup simulates such as feedback signal.
