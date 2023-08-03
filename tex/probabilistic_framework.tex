@@ -1,7 +1,7 @@
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.85\textwidth]{sdp_mountain_spirit.jpg}
-    \caption[Mountain Spirit in Winter by Sandro del Prete]{Mountain Spirit in Winter by \citeay{del_prete_mountain_1982}.}
+    \caption[Mountain Spirit in Winter by Sandro del Prete]{Mountain Spirit in Winter by \citeay{del_prete_mountain_1982} demonstrating that humans immediately can observe the overall pattern (a man's face) even though local features depict a painter drawing a house.}
     \figlbl{sdp_mountain}
 \end{figure}
 
@@ -36,7 +36,7 @@ The subsequent sections provide an overview of the framework, highlight its adva
 
 
 
-\section{Neuroscientific Inspiration and Vocabulary}\seclbl{framework_neuroscience}
+\section{Neuroscientific Inspiration}\seclbl{framework_neuroscience}
 Readers of this work are expected to be primarily people with a computer science or neurocomputing background. However, in order to understand the fundamental principles underlying the proposed framework, an understanding of neuroscientific findings and vocabulary is required. Therefore, this section introduces the neuroscientific inspirations and key terms related to this work.
 The neuroscience concepts presented in this thesis are simplified to make the proposed framework comprehensible to readers from various fields. Experts in neuroscience may find this section superfluous and may skip it.
 
@@ -214,11 +214,11 @@ Furthermore, Bernoulli neurons allow the modelling of net fragments with lateral
 The proposed architecture is based on a correspondence-based system \sidecite{zhu_maplets_2004}, a method that achieves invariance by routing signals through rapidly changing connections. Such systems not only transmit information about the type of features but also about their spatial arrangement by mapping net fragments to a prototype \sidecite{olshausen_neurobiological_1993, wiskott_face_1996, arathorn_map-seeking_2002}.
 Experiments from neuroscience show that the recognition time for humans depends on the size \sidecite{bundesen_visual_1975} and orientation \sidecite{jolicoeur_time_1985, lawson_effect_1999} of objects. Thus, it takes time to align the external world with internal representations.
 This suggests that the brain implements an active dynamic process for correspondence finding rather than having a single forward pass.
-Furthermore, physiological evidence exists that connections in the visual system are static \sidecite{kusunoki_time_2003, womelsdorf_dynamic_2006}.
+Furthermore, physiological evidence exists that connections in the visual system are static \cite{kusunoki_time_2003, womelsdorf_dynamic_2006}.
 
 Therefore, I argue that the mapping between input data and stored object prototypes is closely related to the human brain's functionality and in line with findings from neuroscience \cite{kandel_principles_2013, olshausen_emergence_1996, vogels_inhibitory_2011, payeur_burst-dependent_2021} and psychology \cite{ellis_source_1938, kohler_gestalt_1992, wagemans_century_2012, hamlyn_psychology_2017}.
 
-This assumption is also backed by the theory of natural intelligence by \sideciteay{von_der_malsburg_theory_2022}.
+This assumption is also backed by the theory of natural intelligence by \citeay{von_der_malsburg_theory_2022}.
 This theory serves as inspiration for this thesis, and the relationship between their theoretical concepts and the proposed framework is discussed in the following.
 The theory of natural intelligence describes how the brain develops an overlay of net fragments (c.f. \secref{natural_intelligence}) consisting of neurons supporting each other to remain active.
 This behaviour is implemented in the feature building stage \emph{S1}: The sensory signal from \emph{S0} activates many neurons from which only the ones receiving enough lateral support remain active. Furthermore, it is implemented in the control units of the maplets. Initially, many maplets can be active, allowing various active fibres between \emph{S1} and \emph{S2}. However, an inhibitory signal serves as competition between these maplets, allowing only the most consistent to remain active after a short transient phase.
@@ -284,7 +284,7 @@ When alternative cells are always active simultaneously, they cannot be part of 
 However, having cells that implement a stochastic process can break this symmetry at the beginning, allowing the network to learn lateral connections to only a subset of alternative cells.
 
 During inference, the stochastic process can be disabled using a fixed threshold of $0.5$, resulting in a more stable network.
-Furthermore, using many binary neurons and sparse network activations increases the robustness of the network \cite{ahmad_properties_2015}.
+Furthermore, using many binary neurons and sparse network activations increases the robustness of the network \sidecite{ahmad_properties_2015}.
 
 
 \subsection{Practical Considerations}
@@ -535,7 +535,7 @@ In stage \emph{S2}, the net fragments are mapped to idealised reference objects.
 This mapping is implemented by projection fibres, which are grouped into maplets.
 As soon as a control unit of a maplet detects a strong correlation between the neurons it connects in \emph{S1} and \emph{S2}, it initialises the mapping by turning on its fibres.
 
-This mapping from fragments to reference representations seems to be one of the core algorithms of our visual system as it is able to solve the binding problem \sidecite{revonsuo_binding_1999, feldman_neural_2013}, i.e. answers the questions of how visually perceived objects are bound together based on their properties such as shape, texture, colour, contour, or motion. This process is well described in psychology and known as Gestalt phenomena \cite{ellis_source_1938, kohler_gestalt_1992, wagemans_century_2012, hamlyn_psychology_2017}
+This mapping from fragments to reference representations seems to be one of the core algorithms of our visual system as it is able to solve the binding problem \sidecite{revonsuo_binding_1999, feldman_neural_2013}, i.e. answers the questions of how visually perceived objects are bound together based on their properties such as shape, texture, colour, contour, or motion. This process is well described in psychology and known as Gestalt phenomena \sidecite{ellis_source_1938, kohler_gestalt_1992, wagemans_century_2012, hamlyn_psychology_2017}
 
  Implementing such a framework poses various challenges.
 In the following, some simplifications are assumed that are ignored in the proposed framework and have to be solved in future work.
@@ -624,7 +624,7 @@ In the following, it is described how projection fibres can be wired.
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.5\textwidth]{prototype_operations}
+    \includegraphics[width=0.99\textwidth]{prototype_operations}
     \caption[Operations applied to a prototype]{Different operations applied to a prototype.}
     \figlbl{prototype_operations}
 \end{figure}
@@ -644,7 +644,7 @@ Afterwards, the average similarity is calculated per maplet, and this similarity
 Similar to \emph{S1}, this leads to many activations at the beginning and inhibition is used to turn some of the maplets off.
 Maplets support each other locally and can only remain active if neighbouring features in \emph{S1} remain neighbouring features in \emph{S2}.
 Thus, the better a set of maplets can map a prototype to an object reference, the higher its probability of remaining active.
-For more details on the implementation, please refer to the work by \citeay{anderson_shifter_1987}, and \citeay{olshausen_neurobiological_1993}.
+For more details on the implementation, please refer to the work by \sideciteay{anderson_shifter_1987} and \sideciteay{olshausen_neurobiological_1993}.
 
 
 \subsection{Feedback to \emph{L1}}
