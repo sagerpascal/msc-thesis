@@ -1,109 +1,105 @@
 \section{Discussion}
-Deep learning networks have proven themselves as exceptional feature extractors.
-Recent scaling has brought them to a level where they can become widely established in our everyday lives.
-Nevertheless, they still have shortcomings, and whether they can overcome them remains unclear.
-This thesis proposes a framework that addresses some of these issues, such as early commitment and object-independent transformation invariance.
-However, it is still far from being developed enough to make a reliable statement about whether it can solve these problems of deep learning.
+Deep learning networks have demonstrated their exceptional capabilities as feature extractors. 
+Recent advancements in scaling have brought them to a level where they hold the potential for widespread applicability across various tasks in our everyday lives.
+Nevertheless, they have intrinsic limitations, and the prospect of overcoming these barriers remains uncertain.
+This thesis presents a vision framework that addresses several of these challenges, primarily focusing on mitigating early commitment and facilitating object-agnostic transformation invariance.
 
-The proposed framework is strongly oriented towards the biological brain, the only known system to which we attribute true intelligence.
-One of this thesis's main contributions is identifying neuroscientific findings and transferring them into the context of a computational framework.
+The proposed framework is strongly inspired by the biological brain, the only known system to which we attribute true intelligence.
+One of this thesis's main contributions is identifying neuroscientific findings and their subsequent integration within the contours of a computational framework.
 
-A key difference between the proposed system and deep networks is that deep learning evaluates consistency at a single point in the network by comparing its final prediction with a teaching signal.
-By using backpropagation of error, all neurons within the network are optimised so that this single point in the network is as consistent as possible with the teaching signal.
+A key difference between the proposed system and deep networks is that deep learning lies in the mechanism of building consistency:
+Deep networks optimise consistency at a single point in the network by comparing its prediction with a teaching signal.
+A global error correction algorithm such as backpropagation adjusts all components in the network to minimise inconsistencies at a single point.
 
-In contrast, the proposed framework implements, similar to the human brain, a model that optimises consistency at every point in the network, thereby focusing on the visual system.
-It consists of three building blocks, all using binary Bernoulli neurons.
-Binary neurons are biologically plausible and allow to implement net fragments, but they are currently not fully optimised in most computational frameworks.
+In contrast, the proposed framework implements a model that optimises consistency at every point in the network, akin to the human brain.
+It encompasses three building blocks, all using binary Bernoulli neurons.
+These biologically plausible neurons allow net fragments to be implemented and improve robustness. However, their full optimisation within the prevailing computational framework remains an ongoing endeavour.
 
-The sensory stage \emph{S0} corresponds to the eyes and extracts features from images.
-It can be implemented as a CNN layer extracted from the first layer of a pre-trained autoeoncoder. CNNs have proven themselves as exceptional feature extractor systems, therefore, it is expected that this stage performs well and does not require much further research.
+The sensory stage \emph{S0} corresponds in the biological context to the eyes and extracts features from images.
+The implementation could involve the first convolutional layer of a pre-trained autoencoder. Given the well-established feature extraction capabilities of CNNs, it is reasonable to expect the suitability of this layer without having done extensive experiments within this thesis.
 
-The feature building stage \emph{S1}, inspired by the primary visual cortex, uses lateral connections to generate net fragments, groups of neurons that support each other's activity. 
-This stage is well examined in this thesis and has been iteratively refined based on experiments.
-The conducted experiments demonstrate that lateral connections are useful to reconstruct occluded objects or to remove noise.
+The feature building stage \emph{S1}, inspired by the primary visual cortex, leverages lateral connections to form net fragments, groups of neurons that support each other's activity.
+This stage is well examined in this thesis and iteratively refined based on empirical investigations.
+The experiments confirm the usefulness of lateral connections in tasks such as occluded object reconstruction and noise reduction.
 
-\The prototype stage \emph{S2} is inspired by the ventral visual stream and the temporal cortex.
-It uses projection fibres to map net fragments to object prototypes.
-In this thesis, only the theoretical concepts are introduced. However, it lacks experimental validation and refinement to the same extent as \emph{S1}.
+The prototype stage \emph{S2} takes inspiration from the ventral visual stream and the temporal cortex.
+It uses projection fibres to map network fragments onto object prototypes. While this aspect is well explained theoretically in this thesis, it lags behind \emph{S1} in empirical validation and refinement.
 
-The entire network is based on self-organisation, locality, and consistency. Net fragments are built using cells that communicate with their spatial neighbours, while projection fibers consider neighbouring projection fibers and spatially close cells. These principles fundamentally differ from current deep networks.
-Furthermore, the network  incorporates constraints to address the problem of early commitment and to increase robustness.
-The iterative process of building net fragments and mapping them to object prototypes facilitates transformation-invariant feature processing independent of objects.
 
-In summary, the proposed framework introduces several promising principles.
-However, these principals have to be explored and refined further in future work, as elaborated in the next section.
-It remains unclear whether this framework can achieve the same performance as deep networks, and extensive work is required to answer this question.
-I argue that deep network work excellent for very specific tasks, because they optimise all neurons of a network so that the consistency between prediction and teaching signal (of this given task)
-at a single point in the network is as high as possible.
-Thus, all neurons are updated so that a few output neurons are as precise as possible.
-On the other hand, optimising consistency at every single point in the network, as done in the proposed framework, might be a road towards more intelligent systems. Such a system could integrate multiple signals, each contributing to consistent representations or a decision-making process. By doing so, each signal and cell votes for an action, seeking consensus without a global teaching signal.
+At its core, the entire network is based on the principles of self-organisation, locality and cell consistency.
+Network fragments arise from cells communicating with their spatial neighbours, while projection fibres connect neighbouring cells in \emph{S1} and \emph{S2} and seek consistency with neighbouring fibres.
+These basic principles are fundamentally different from existing deep networks. In addition, the network incorporates constraints aimed at reducing early commitment and increasing robustness. The iterative process of assembling net fragments and mapping them to object prototypes leads to transformation-invariant feature processing independent of specific objects.
 
-%(Highly speculative and without scientific background or proof, it could be argued that this is a possible path towards emergence. Emergence could occur when a network is able to achieve consistency on its own, without any teaching signal. Self-organisation in a proper structured network could allow building such a system. Deep network, on the other hand, do not seem to be able to achieve such a consistency on their own but derive consistency always from their training samples.)
+In summary, the proposed framework introduces several promising principles. However, as elaborated in the next section, these principles must be explored and refined further in future work.
+Comparing the proposed framework with deep networks is not possible at its current stage as it is far from being developed enough. 
+I speculate that deep networks excel at well-defined tasks that can be measured with corresponding metrics because they optimise all network neurons to maximise consistency between a prediction and a task-specific teaching signal at a single network node. Conversely, optimising the consistency at every single point in the network, as done in the proposed framework, might be a way towards more intelligent systems. Such a configuration could harmonise different signals, each contributing to coherent representations in the decision-making processes. By doing so, each signal and cell would cast its vote for a particular course of action and seek consensus without an external source providing a global teaching signal.
 
 
 \section{Future Work}
-This work is a preliminary study for a possible dissertation, with a focus on refining the proposed framework.
-Consequently, there are numerous avenues for future work to improve the proposed framework. The following section outlines some of the most pressing issues and proposed next steps.
+This work is a preliminary study for a possible dissertation, focusing on refining the proposed framework.
+Consequently, numerous avenues exist for future work to improve the proposed framework. The following section outlines some of the most pressing issues and proposes the next steps.
+
 
 \subsection{Alternative Cells in \emph{S1}}
-Each cell in \emph{S1} represents a specific feature present at a given spatial location.
-These cells provide support to each other.
-As described in \secref{framework_neuroscience}, these cells can contribute to net fragments that are mutually exclusive.
-For example, cell $A$ can build a net fragment with cell $B$ and with cell $C$, while cell $B$ and $C$ are never active together.
-This exceeds the capacity of $A$, and a copy of $A$ is needed so this cell has separate lateral connections with cell $B$ and $C$. 
+In the context of \emph{S1}, individual cells represent distinct features that are localised in a specific spatial location. These cells support each other's neuronal activity. As outlined in \secref{framework_neuroscience}, these cells can contribute to mutually exclusive net fragments. For example, cell $A$ may participate in a fragment with cell $B$ and another fragment with cell $C$, while cell $B$ and $C$ avoid simultaneous activation. This exceeds the functional capacity of cell $A$, and a copy of $A$ is needed to establish separate lateral connections with cell $B$ and $C$.
 
-In \secref{framework_alt_cells}, it is described that such alternative cells can be implemented by copying the output channels of the weight matrix $\boldsymbol{W}$ of \emph{S1}.
-However, these cells should contribute to different net fragments and be mutually exclusive.
-Therefore, winner take all competition between alternative cells is required to select and update only one of them.
-Such a competition could be implemented by measuring the correlation between patterns and alternative cell combinations, to select the most suitable cells.
-Alternatively, inhibition can be applied between alternative cells so that they suppress each other and the network selects the best suitable cells based on self-organisation.
+The \secref{framework_alt_cells} described that alternative cells could be implemented by duplicating the output channels of the weight matrix $\boldsymbol{W}$ of \emph{S1}.
+Alternative cells contribute to different net fragments and are mutually exclusive.
+Consequently, competition between these alternative cells is required to ensure that only a winning cell can become active and that activity in alternative cells is suppressed\sidenote{Activity can be suppressed by inhibition, as it is already implemented in \emph{S1}.}.
 
-Preliminary experiments have shown that it is difficult to implement this competition effectively because all alternative cells start with similar features, resulting in a symmetry that must first be broken.
-Therefore, it could be helpful to introduce some randomness at the beginning so that the learning process becomes more stochastic.
-This randomness could lead to better differentiation and separation between alternative cells.
+Preliminary experiments suggest that the initially similar characteristics between alternative cells make it difficult to establish effective competition and that this initial symmetry that needs to be broken first.
+Introducing controlled randomness during the initial phase could increase the stochasticity of the learning process. This randomness can potentially enhance differentiation and separation between these different cells.
 
-Furthermore, an extension of Hebbian learning is needed to facilitate the forgetting of previously learned patterns.
-Currently, each update only increases the weights, which increases lateral support. However, some updates may inadvertently connect the wrong alternative cells. 
-The next section describes negative Hebbian learning, a mechanism that allows to forget learned connections and that seems crucial to implement alternative cells.
-This eliminates the need to forcefully ensure that no false updates occur during intial training, but false updates could be corrected as soon as the alternative cells are separated enough.
+Furthermore, an extension of Hebbian learning is needed to enable the forgetting of previously learned patterns.
+Currently, each update only increases the weights, which strengthens lateral support.
+However, some updates could inadvertently create incorrect connections between different (alternative) cells.
+The following section describes negative Hebbian learning, a mechanism that allows forgetting learned connections and seems crucial to implementing alternative cells.
+This mechanism eliminates the need to carefully prevent false updates during the initial training phase, as erroneous updates can be corrected as soon as the alternative cells are separated enough.
 
+\subsection{Negative Hebbian Learning within \emph{S1}}
+The previous section describes how negative Hebbian learning can help to realise alternative cells.
+While conventional Hebbian learning increases the synaptic weights between simultaneously active neurons, negative Hebbian learning introduces a complementary process by decreasing the synaptic weight between cells that fire disjoint.
+These negative updates are not only crucial in the formation of alternative cells but also in gradually eliminating less significant patterns that have been imprinted during the training phase.
 
-\subsection{Negative Hebbian Learning in \emph{S1}}
-The previous section describes how negative Hebbian learning can be utilised to implement alternative cells.
-While standard Hebbian learning increases the weights between cells that fire together, negative Hebbian learning additionally decreases the synaptic weight between cells that fire disjoint.
-These negative updates are not only crucial in the formation of alternative cells, but also in forgetting less significant patterns that were initially captured during training.
-
-Implementing negative Hebbian updates is challenging, especially when the data has more negative than positive correlations, as shown in \chref{neg_hebb_updates}.
-One possible solution to address this problem is to use a much lower learning rate for negative updates compared to positive updates. This ensures that forgetting occurs slower than learning, preventing immediate deletion of learned patterns.
-Another solution are alternative cells: If two patterns have a positive correlation at one point and a negative correlation at another point (as in the example shown in \chref{neg_hebb_updates}), these patterns can be processed differently by employing alternative cells, effectively maintaining their distinct representations.
+Implementing negative Hebbian updates is challenging, especially when the data is dominated by negative correlations\sidenote{The dataset contains more samples where two feature cells are active separately than simultaneously.}, as shown in \chref{neg_hebb_updates}.
+One possible strategy to overcome this problem is using a significantly lower learning rate for negative updates than for positive ones.
+This asymmetry ensures that the process of forgetting is slower than the process of learning, preventing the abrupt erasure of acquired patterns.
+Another solution is alternative cells: If two patterns have a positive correlation at one point and a negative correlation at another point (as in the example shown in \chref{neg_hebb_updates}), these patterns can be processed differently by employing alternative cells, effectively maintaining their distinct representations.
 
 
 \subsection{Refine \emph{S2}}
-An obvious task for future work is the refinement of \emph{S2}, which has only been theoretically developed based on identified neuroscientific findings. The initial proposal for its implementation has to be refined by conducting experiments and to advance the development of \emph{S2}.
-In a first step, projection fibres based on shifter circuits \sidecite{anderson_shifter_1987, olshausen_neurobiological_1993} should be implemented and tested with the proposed framework.
+An important task for future work is the empirical improvement of \emph{S2}, which has only been theoretically developed based on identified neuroscientific findings. The current blueprint describing its implementation has to be further refined by conducting experiments.
 
+In the first phase, the integration and evaluation of projection fibres based on shifter circuits \sidecite{anderson_shifter_1987, olshausen_neurobiological_1993} should be done and explored within the proposed framework.
 During this process, also different object views should be explored (provided by the medium processing loop). Currently, these views are only used during evaluation, but once \emph{S2} is implemented, they can be crucial in learning to associate different views to the same prototype, encouraging transformation-invariant mappings.
 
-As soon as such an initial mapping works, the assumed simplifications can be eliminated (c.f. \secref{framework_s2}). For example, new prototypes can be stored automatically, the prototypes can be improved during the course of training, projection fibres can be learned dynamically, and the network can be extended so that it can interpret entire scenes instead of object-centred images.
+Once an initial effective mapping has been created, the presumed simplifications can be avoided (c.f. \secref{framework_s2}). In particular, novel prototypes from unseen objects can be stored automatically, the prototypes can be iteratively improved throughout training, projection fibres can be learned dynamically, and the network can be extended to interpret complete scenes, thus going beyond the limits of object-centric images.
+
+
+
+
+
 
 \subsection{Scaling to Different Datasets}
-In the conducted experiments, a dataset comprising straight lines is used, which is effective in demonstrating the principles and enhancing the understanding of the proposed framework.
-However, it is important to assess the models' scalability to larger and more diverse datasets.
-One way could be to use classical classification datasets such as MNIST \sidecite{lecun_gradient-based_1998}, CIFAR-10 \sidecite{krizhevsky_learning_2009}, or ImageNet \sidecite{russakovsky_imagenet_2015}.
-Nevertheless, the focus should not be on pushing benchmarks for image classification.
+In the experiments, a dataset comprising straight lines is used, effectively illustrating the principles and enhancing understanding of the proposed framework.
+Nevertheless, assessing the models' scalability to larger and more diverse datasets is important.
+One possible avenue is to use traditional classification datasets such as MNIST \sidecite{lecun_gradient-based_1998}, CIFAR-10 \sidecite{krizhevsky_learning_2009}, or ImageNet \sidecite{russakovsky_imagenet_2015}.
+However, it is important to note that the primary goal is not to push benchmarks for image classification.
 Rather, the goal is to obtain high-quality object representations.
 
-This might require to build new datasets that are based on a image rendering engine capable of modeling 3D objects and generating data in real-time.
-By using such an engine, it is possible to create objects that undergo realistic transformations and depth rotations. This approach would allow the evaluation of the model's ability to process more complex and diverse visual data that better resembles real-world scenarios.
-Furthermore, such transformation are necessary for the proposed processing loop and would even allow interaction with objects (e.g. the model decides from which viewpoint an object should be observed to improve its representations or to obtain internal consistency).
+This endeavour may require building new datasets generated by an image rendering engine capable of simulating 3D objects and generating data in real-time.
+Using such an engine allows to generate visualisation of objects undergoing realistic-looking transformations and depth rotations.
+This method allows the evaluation of the model's ability to process complex and diverse visual data that more closely resembles real-world scenarios.
+Moreover, these transformations are an integral part of the proposed processing loop and even allow interaction with objects. For example, the model could determine the optimal viewing angle when looking at an object and thus improve its representation to ensure internal consistency.
+
 
 
 
 \subsection{Multi-Modality}\seclbl{framework_multi_modality}
 This work focuses on a framework for computer vision. However, the architecture has broader applicability and can be used for processing different sensor signals and be used in multimodal settings \cite{ngiam_multimodal_2011, liu_learn_2018, baltrusaitis_multimodal_2019}.
-Having similar cell architectures processing different kind of signals is also in line with findings from neuroscience \sidecite{mountcastle_organizing_1978, mountcastle_columnar_1997}.
+Having similar cell architectures processing different kinds of signals is also in line with findings from neuroscience \sidecite{mountcastle_organizing_1978, mountcastle_columnar_1997}.
 
 In the case of images, net fragments in \emph{S1} represent learned visual patterns that are part of an object's surface and are mapped with protection fibres to object prototypes that describe the visual appearance of objects. 
-The same architectural structure can be applied to other types of signals. For example, an alternative sensory system could perceive audio signals. In this scenario, the local support in \emph{S1} would extend over nearby frequency ranges and time intervals. Consequently, phonemes or syllables could be learned locally and represented by net fragments. In the second stage (\emph{S2}), a sequence of phonemes or syllables could be mapped onto word prototypes.
+The same architectural structure can be applied to other types of signals. For example, an alternative sensory system could perceive audio signals. In this scenario, the local support in \emph{S1} would extend over nearby frequency ranges and time intervals. Consequently, phonemes or syllables could correspond to frequently occurring patterns that are captured and supported by net fragments. In the second stage (\emph{S2}), a sequence of phonemes or syllables could be mapped onto word prototypes.
 
-Different sensory systems could even have separate domain-specific \emph{S1} stages in a multimodal setting, while the prototypes in \emph{S2} could be shared across modalities. This arrangement would allow to integrate different sensor signals and facilitates the creation of internal object representations with multiple modalities.
+Different sensory systems could even have separate domain-specific \emph{S1} stages in a multimodal setting, while the prototypes in \emph{S2} could be shared across modalities. This arrangement would allow the integration of various sensor signals and facilitates the creation of internal object representations with multiple modalities.

@@ -1,0 +1,19 @@
+Deep Learning hat sich im letzten Jahrzehnt im Bereich der automatischen Bildanalyse als herausragende Technologie etabliert.
+Trotz beeindruckender Ergebnisse weist diese Technologie diverse Schwächen auf, wie begrenzte Robustheit gegenüber Störsignalen, eingeschränkte Transformationsinvarianz bei der Objekterkennung sowie den Bedarf an umfangreichen Trainingsdaten.
+Viele Forschungsansätze zielen darauf ab, diese Schwächen zu reduzieren, behandeln dabei aber hauptsächlich die Symptome indem beispielsweise Daten augmentiert werden, gehen aber nicht die zugrundeliegende Ursache an, welche auf das Lernprinzip tiefer neuronaler Netzwerke zurückzuführen ist.
+
+Im Gegensatz dazu sind diese Schwächen im menschlichen Gehirn kaum vorhanden.
+Dies resultiert teilweise aus der nicht-sequenziellen Verarbeitung extrahierter Bildmerkmale und der Fähigkeit, eine visuelle Szene als mehr als die Summe ihrer Teile zu interpretieren, wie es die Gestalt-Psychologie beschreibt.
+Basierend auf diesen Erkenntnissen wird in dieser Thesis ein neues Bildverarbeitungs-Framework vorgeschlagen, das sich stark an der Funktionsweise des menschlichen Gehirns orientiert.
+Entsprechend widmet sich ein bedeutender Teil dieser Thesis der Identifizierung und Interpretation von neurowissenschaftlichen Erkenntnissen.
+Diese Erkenntnisse werden analysiert und in ein Computerframework übertragen, wobei den einzelnen Komponenten des Frameworks eindeutige Rolle zugewiesen und jeweils ihre Relation zum biologischen Lernen verdeutlicht wird.
+
+Das Framework besteht aus drei Komponenten: Dem Sensorsystem \emph{S0}, welches Low-Level Merkmale aus den Bildern extrahiert; der Feature-Building Stage \emph{S1}, welche mithilfe lateralen (intra-layer) Verbindungen Neuronengruppen, sogenannte Netzfragmente, bildet, welche sich gegenseitig stützen und dadurch bekannte Muster stabilisieren; der Prototype Stage \emph{S2}, welche die gebildeten Netzfragmente  mittels Projektionsphasern zu Objekt-Prototypen mappt sowie Feedback an \emph{S1} gibt.
+Dieser Projektionsprozess ist iterativ und dauert bis eine Konsistenz an jedem Punkt im Netzwerk erreicht wird, d.h. bis Zellen und Synapsen einen stabilen Zustand erreicht haben.
+Sämtliche Lernprozesse sind dabei auf Selbstorganisation und lokale Interaktion beschränkt, was eine deutliche Differenzierung zu neuronalen Netzwerken darstellt, die typischerweise Konsistenz an einem einzigen Punkt im Netzwerk zwischen einer Vorhersage und einem Lernsignal durch einen globalen Fehlerkorrekturalgorithmus wie Backpropagation of Error erzeugen.
+
+Während frühere Forschung bereits die Effizienz von Projektionsphasen gezeigt hat, ist die Implementierung von Netzfragmenten in \emph{S1} mehrheitlich unerforscht.
+Folglich wird in dieser Arbeit die Implementierung dieser Komponente im Detail untersucht und anhand von Experimenten auf einem einfachen Datensatz mit geraden Linien diskutiert.
+
+Die Ergebnisse der Experimente zeigen, dass laterale Verbindungen trainiert mit Hebbian Learning tatsächlich zum Zellsupport genutzt werden kann.
+Mithilfe des Zellsupports weist das Netzwerk eine deutlich höhere Robustheit gegenüber Rauschsignalen auf und kann bis zu $91.7\%$ der unerwünscht durch Störsignale aktivierten Zellen deaktivieren. Zudem können unterbrochene Linien aufgrund der lateralen Unterstützung wiederhergestellt werden. Mit einer Reichweite der lateralen Verbindungen von $11$ Pixeln können Unterbrechungen von bis zu $8$ Pixeln rekonstruiert werden, mit zusätzlichem Feedback von \emph{S2} sogar Unterbrüche bis zu $20$ Pixel. Eine Ausarbeitung des vorgeschlagenen Frameworks könnte einige der Schwächen von neuronalen Netzwerken reduzieren und wird als vielversprechende Alternative zu aktuellen Bildverarbeitungsalgorithmen angesehen.
