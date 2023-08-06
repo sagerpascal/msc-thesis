@@ -1,0 +1,51 @@
+\section{Notation}
+
+Depending on the context, a variable can be a scalar value, a vector, or a matrix. The following formatting is used:
+
+\begin{tabular}{ p{5cm} p{2cm} p{7cm} }
+	\textbf{Formatting} & \textbf{Example} & \textbf{Meaning}\\
+	\hline
+  	No formatting, lower case & $a$ & A scalar value\\
+  	Bold, lower case & $\boldsymbol{a}$ & A vector\\
+  	Bold, upper case & $\boldsymbol{A}$ & A matrix\\
+  	Curved brackets & $a(\cdot)$ & A function, where $(\cdot)$ is a placeholder for a variable\\
+  	Rectangular brackets & $a[t]$ & Variable $a$ at time $t$\\
+   Superscript rectangular brackets & $a^{[l]}$ & Layer index: $l$ is the index of the layer, e.g. $\boldsymbol{W}^{[l]}$ is the weight matrix of layer $l$\\
+\end{tabular}
+
+\section{Variables}
+
+\begin{tabular}{ p{3cm} p{11cm} }
+	\textbf{Variable} & \textbf{Meaning}\\
+	\hline
+	$\eta$ & The learning rate of an optimisation algorithm.\\
+	$\boldsymbol{a} = (a_1, ..., a_k)$ & The output of an intermediate layer of a multi-layer network with $k$ neurons, the output of the last layer is typically denoted as $\boldsymbol{\hat{y}}$. $a_i$ is the output of an activation function of a single neuron.\\
+	$\boldsymbol{b} = (b_1, ..., b_k)$ & The bias of a network layer with $k$ neurons. $b_i$ & is the bias of a single neuron.\\
+    $k$ & The number of neurons within a layer.\\
+    $L$ & The number of layers of a network.\\
+    $n$ & The length (size) of a vector, for example, an input of length $n$ is defined as $\boldsymbol{x} = (x_1, ..., x_n)$.\\
+    $w_{ij}$ & The weight between neuron $i$ and neuron $j$.\\
+	$\boldsymbol{w} = (w_1, ..., w_n)$ & A weight vector of a neuron, mapping an input of length $n$ to a scalar value.\\
+	$\boldsymbol{W} = (\boldsymbol{w}_1, ..., \boldsymbol{w}_k)$ & A weight matrix of a network layer.\\
+    $\boldsymbol{x} = (x_1, ..., x_n)$ & An input sample that is fed into a model or a network layer, typically a vector of length $n$.\\
+    $\boldsymbol{y}$ & The expected output of a model or a network layer (i.e. the ground truth), typically a vector ($\boldsymbol{y}$) for a multi-class classification task or a scalar value ($y$) for a regression or single-class classification task.\\
+	$\boldsymbol{\hat{y}}$ & The actual output of a model or a network layer (i.e. the prediction), typically a vector ($\boldsymbol{\hat{y}}$) for a multi-class classification task or a scalar value ($\hat{y}$) for a regression or single-class classification task.\\
+	$\boldsymbol{z} = (z_1, ..., z_k)$ & The output of the aggregation functions $g_1(\cdot), ..., g_n(\cdot)$ of a network layer of length $k$. $z_i$  is the output of the aggregation function of a single neuron.\\
+\end{tabular}
+
+
+\section{Functions}
+
+\begin{tabular}{ p{3cm} p{11cm} }
+	\textbf{Function} & \textbf{Meaning}\\
+	\hline
+	$f(\cdot)$ & An activation function such as $\sigma(\cdot)$, $(\cdot)^{+}$, or $\tanh(\cdot)$ (c.f. \eqref{act_functions})\\
+	$g(\cdot)$ & The aggregation function that calculates the scalar value that is fed into the activation function $f(\cdot)$ (c.f. \eqref{McCulloch_Pitts_agg},  \eqref{nn})\\
+\end{tabular}
+
+
+
+
+
+
+
