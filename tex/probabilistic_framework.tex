@@ -134,7 +134,7 @@ Projection fibres thus provide generalisation, i.e. different, transformed versi
 
 
 
-\section{3-Staged Model}
+\section{3-Staged Model}\seclbl{framework_3_staged_model}
 The previous section introduced several neuroscientific concepts.
 These concepts are a carefully selected subset of the findings from neuroscience and serve as inspiration to develop a novel and biologically plausible vision system.
 Some of the aforementioned principles have been explored in the theory of self-organising projection fibres (c.f. \secref{projection_fibres}). However, these approaches do not yet scale to natural images except for human faces \cite{wolfrum_recurrent_2008}. This could be due to the fact that most work in this area neglects the net fragments built in the visual cortex.
@@ -334,7 +334,7 @@ An overview about the input and output of \emph{S1} is depicted in \figref{s1_in
 The output of \emph{S1} is optionally replaced by the output of \emph{S2}. In both cases, this array has a size of $(C_{\text{out}} \times W \times H)$ and is stacked with the output from the sensory system of size $(C_{\text{Sensor}} \times W \times H)$, resulting in an input of size $(C_{\text{in}} \times W \times H)$.
 
 
-\subsection{Lateral Support}
+\subsection{Lateral Support}\seclbl{framework_s1_lat_support}
 In this section, it is described how lateral support can be implemented.
 A single output cell in \emph{S1} is denoted as $x_{c,w,h}$, where $c \in \{0, ..., C_{\text{out}}\}$ is the output feature channel, and $w \in \{0, ..., W\}$ and $h \in \{0, ..., H\}$ denote the spatial position.
 

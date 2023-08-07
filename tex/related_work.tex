@@ -1,61 +1,61 @@
 %% related_work.tex
-This chapter presents the related work of the thesis. \secref{alternative_approaches} presents different learning frameworks that are not mainstream but might be promising to build more effective learning principle. \secref{natural_intelligence} gives an introduction to a publication entitled ``A Theory of Natural Intelligence'' by \citeay{von_der_malsburg_theory_2022}. This work is the main source of inspiration and is therefore summarised in detail.
-A possible implementation of this theory is by using self-organising projection fibres. Therefore, projection fibres are summarized in \secref{projection_fibres} and work associated with self-organisation is reviewed in \secref{self_org_related}. Self-organisation is not compatible with end-to-end backpropagation of error. Thus, alternative training algorithms are presented in \secref{alt_train_algo}. %Then, \secref{visual_rep_learning} reviews different methods for learning image representations. Finally, meta-learning is summarised in \secref{meta_learning}. Meta-learning is of limited relevance to this thesis but is important for the proposed future work.
+This chapter presents the related work of the thesis. \secref{alternative_approaches} presents diverse learning frameworks that deviate from the mainstream but might be promising for building more effective learning principles. \secref{natural_intelligence} provides an introduction to a publication titled ``A Theory of Natural Intelligence'' by \citeay{von_der_malsburg_theory_2022}. This work is the main source of inspiration for this thesis and is summarised in detail.
+This theory can be implemented by combining projection fibres with lateral connections in a self-organising manner. Therefore, projection fibres are summarised in \secref{projection_fibres} and work associated with self-organisation is reviewed in \secref{self_org_related}. Self-organisation is not compatible with end-to-end backpropagation of error. Thus, alternative training algorithms are presented in \secref{alt_train_algo}. %Then, \secref{visual_rep_learning} reviews different methods for learning image representations. Finally, meta-learning is summarised in \secref{meta_learning}. Meta-learning is of limited relevance to this thesis but is important for the proposed future work.
 
 
 \section{Alternative Learning Approaches}\seclbl{alternative_approaches}
-Arguably, the only existing systems that, in non-experts' eyes, behave intelligently\sidenote{Which does not mean that such systems exhibit actual intelligence.} are foundation models such as large language models (LLMs) \cite{brown_language_2020, touvron_llama_2023}, and their fine-tuned versions \cite{ouyang_training_2022}. However, like other deep learning models, also foundation models suffer from the typical drawbacks of statistical learning (c.f. \secref{limitationsDL}). Therefore, a lot of research has been conducted to reduce these well-known problems: For example, current research aims to reduce hallucinations \cite{feldman_trapping_2023, manakul_selfcheckgpt_2023}, to implement an ongoing learning framework \cite{sahoo_online_2018, hoi_online_2021}, to transfer knowledge between tasks and data domains \cite{zhuang_comprehensive_2021, sager_unsupervised_2022}, or to learn what should be learned \cite{thrun_learning_1998, hospedales_meta-learning_2021}. However, the underlying framework remains identical: Data is statistically mapped to manually or automatically generated labels, making it difficult to solve problems such as lack of robustness,  out-of-distribution generalisation, data efficiency, causal understanding or common sense reasoning (c.f. \secref{limitationsDL}). In the following, alternative approaches to training deep networks are presented that attempt to alleviate these problems with new principles that do not rely solely on label prediction or data reconstruction. 
+Arguably, the only existing systems that, in non-experts' eyes, behave intelligently\sidenote{Which does not mean that such systems exhibit actual intelligence.} are foundation models such as large language models (LLMs) \sidecite{brown_language_2020, touvron_llama_2023}, and their fine-tuned versions \sidecite{ouyang_training_2022}. However, like other deep learning models, also foundation models suffer from the typical drawbacks of statistical learning (c.f. \secref{limitationsDL}). Therefore, a lot of research has been conducted to reduce these well-known problems: For example, current research aims to reduce hallucinations \sidecite{feldman_trapping_2023, manakul_selfcheckgpt_2023}, to implement an ongoing learning framework \cite{sahoo_online_2018, hoi_online_2021}, to transfer knowledge between tasks and data domains \cite{zhuang_comprehensive_2021, sager_unsupervised_2022}, or to learn what should be learned \cite{thrun_learning_1998, hospedales_meta-learning_2021}. However, the underlying framework remains identical: Data is statistically mapped to manually or automatically generated labels, making it difficult to solve problems such as lack of robustness,  out-of-distribution generalisation, data efficiency, causal understanding or common sense reasoning (c.f. \secref{limitationsDL}). In the following, alternative approaches to training deep networks are presented that attempt to alleviate these problems with new principles that do not rely solely on label prediction or data reconstruction. 
 
-\paragraph{1000 Brains.} Jeff Hawking and his research group use the brain as the single source of inspiration and build, following their interpretation, a biologically highly plausible system that implements the brain's learning algorithm \sidecite{hawkins_framework_2019}. The learning algorithm is an adapted version of unsupervised Hebbian learning (c.f. \secref{hebbian}). Their theory is based on Vernon Mountcastle's proposal that the neocortex comprises many cortical columns, all having a similar architecture and performing similar functions \sidecite{mountcastle_organizing_1978, mountcastle_columnar_1997}. Thus, they argue that the brain does not comprise a single learning model like current deep learning systems but many similar but independent models for each object \sidecite{lewis_locations_2019}. Each model uses different inputs from different sensory system parts. These models make predictions based on the input they receive and vote to reach a consensus on the sensory observations.
-This theory is also known as the 1000 brains theory, as many models work in parallel. The principle of many parallel models is closely related to ensemble approaches in deep learning \sidecite{yang_survey_2023}, with the constraint, similar to random forest \sidecite{ho_random_1995}, that only a portion of the data is available to each model. Current results are difficult to interpret as the proposed model has been trained and tested on the same dataset. In its current form, the model can recognise several hundred objects and is robust to noise. However, the number of input signals severely limits the network's capacity. By adding more cortical columns (expanding the capacity in hidden layers), the model cannot scale to recognise more objects. 
+\paragraph{1000 Brains.} Jeff Hawking and his research group use the brain as the single source of inspiration and build, following their interpretation, a biologically highly plausible system that implements the brain's learning algorithm \sidecite{hawkins_framework_2019}. The learning algorithm is an adapted version of unsupervised Hebbian learning (c.f. \secref{hebbian}). Their theory is based on Vernon Mountcastle's proposal that the neocortex comprises many cortical columns, all having a similar architecture and performing similar functions \sidecite{mountcastle_organizing_1978, mountcastle_columnar_1997}. Thus, they argue that the brain does not comprise a single learning model like current deep learning systems but many similar but independent models for each object \cite{lewis_locations_2019}. Each model uses different inputs from different sensory system parts. These models make predictions based on the input they receive and vote to reach a consensus on the sensory observations.
+This theory is also known as the 1000 brains theory, as many models work in parallel. The principle of many parallel models is closely related to ensemble approaches in deep learning \sidecite{yang_survey_2023}, with the constraint, similar to random forest \sidecite{ho_random_1995}, that only a portion of the data is available to each model. Current results are difficult to interpret as the proposed model has been trained and tested on the same dataset. In its current form, the model can recognise several hundred objects and is robust to noise. However, the number of input signals severely limits the network's capacity, and the model cannot yet scale to recognise more objects. 
 
 Strictly enforcing biological plausibility limits performance significantly, as the biologically inspired algorithm cannot fully exploit the mathematical capabilities of computational hardware. Intuitively, however, several proposed principles appear promising: \emph{Sparse coding} encourages compact and efficient representation of complex data \sidecite{ferrier_toward_2014}, \emph{self-organisation} of a large number of parallel models increases robustness \cite{yang_survey_2023}, and \emph{predicting future cell activation} allows learning in an unsupervised manner and does not restrict the model to specific predefined tasks.
 
 \paragraph{Recursive Cortical Network.} A second type of network that has evolved from the 1000 brains theory is called the recursive cortical network (RCN) \sidecite{george_generative_2017}\sidenote{The driving force behind it, Dileep George, worked in Jeff Hawkings' group and was instrumental in developing the fundamentals of the 1000 brains theory.}. It is based on the insight that human vision processes shape and appearance differently and that a familiar object with an unexpected colour can still be easily recognised.
 The RCN uses separate mechanisms to process contours and appearances and uses lateral connections for contour consistency.
-When the features cannot explain an image at a certain level $n$, the active features from the level below $n-1$ are combined to create a new feature at level $n$. Afterwards, features are pruned using a cost function considering both reconstruction and compression errors.
+When the features cannot explain an image at a certain level $n$, the active features from the level below $n-1$ are combined to create a new feature at level $n$. Afterwards, features are pruned using a cost function considering reconstruction and compression errors.
 A significant advantage of RCN is that it can learn from a few examples and has one-shot and few-shot learning capabilities.
-However, in its current form, RCNs cannot be applied to natural images: The creation of contour hierarchies works only if the object is clearly separated from its background. Therefore, the network, in its current form, is limited to MNIST \cite{lecun_gradient-based_1998} and text-based CAPTCHAs.
+However, in its current form, RCNs cannot be applied to natural images: The creation of contour hierarchies works only if the object is clearly separated from its background. Therefore, the network, in its current form, is limited to MNIST \sidecite{lecun_gradient-based_1998} and text-based CAPTCHAs.
 
 Similar to the 1000 brains theory, this model has drawbacks that prevent its practical application but introduces many promising concepts: The \emph{separation of shape and appearance} seems promising, as this limits the feature space, and these concepts can be learned independently. This allows the model to transfer knowledge better: a fist-sized ball can be an apple, an orange or a lemon, depending on its appearance. However, the shape of these fruits only needs to be learned once. Furthermore, in the case of multiple classes, the network does not make a single prediction but creates hypotheses that are evaluated by an outer loop. Thus, it loops between \emph{generating} and \emph{evaluating} hypotheses.
 
-\paragraph{Capsule Networks.} Neuronal capsule networks (CapsNet) \sidecite{sabour_dynamic_2017} mimic biological neural organisation and explicitly model hierarchical relationships. These networks group neurons into ``capsules''; each capsule represents a property such as position, size, orientation, deformation, texture, colour or movement. The results of several of these capsules form more stable representations for higher capsules. \emph{Dynamic routing} matches bottom-up activations and top-down concepts ``generated'' by the available evidence over multiple iterations. Thus, dynamic routing is used to learn ``viewpoint invariant'' knowledge that generalises to novel viewpoints.
-Furthermore, it can deal with highly overlapping objects and explain that one object is in front of another object. However, CapsNets are still an active area of research and are not yet adopted in real-world scenarios. In particular, dynamic routing makes the algorithm slow, and so far, this approach has only worked on very small datasets such as MNIST \cite{lecun_gradient-based_1998} or CIFAR-10 \cite{krizhevsky_learning_2009}.
+\paragraph{Capsule Networks.} Neuronal capsule networks (CapsNet) \sidecite{sabour_dynamic_2017} mimic biological neural organisation and explicitly model hierarchical relationships. These networks group neurons into ``capsules''; each capsule represents a property such as position, size, orientation, deformation, texture, colour or movement. The results of several of these capsules form more stable representations for higher-level capsules. \emph{Dynamic routing} matches bottom-up activations and top-down concepts ``generated'' by the available evidence over multiple iterations. Thus, dynamic routing is used to learn ``viewpoint invariant'' knowledge that generalises to novel viewpoints.
+Furthermore, it can deal with highly overlapping objects and explain that one object is in front of another. However, CapsNets are still an active area of research and are not yet adopted in real-world scenarios. In particular, dynamic routing makes the algorithm slow, and so far, this approach has only worked on small datasets such as MNIST \sidecite{lecun_gradient-based_1998} or CIFAR-10 \sidecite{krizhevsky_learning_2009}.
 
-Some concepts of CapsNets are closely related to those of the 100 brains theory and RCNs. However, CapsNets have their origins in computer science and are oriented towards deep learning principles. In contrast, the other frameworks have their origins in neuroscience and focus on biological plausibility. CapsNets divide the features into capsules which is helpful for good generalisation. In combination with dynamic routing, capsules allow the model to generalise to new, unseen viewpoints, have a high robustness to affine transformations, and can segment overlapping images. However, a severe problem is the accumulation of spatial information, which prevents the model from scaling to larger datasets. This could be due to the fact that the model processes independent images sequentially. This problem might be alleviated if the model is adapted to either process sequentially related images or videos or if the model can interact with objects to obtain better spatial information.
+Some concepts of CapsNets are closely related to those of the 1000 brains theory and RCNs. However, CapsNets have their origins in computer science and are oriented towards deep learning principles. In contrast, the other frameworks have originated in neuroscience and focus on biological plausibility. CapsNets divide the features into capsules which is helpful for good generalisation. In combination with dynamic routing, capsules allow the model to generalise to new, unseen viewpoints, have a high robustness to affine transformations, and can segment overlapping images. However, a severe problem is the accumulation of spatial information, which prevents the model from scaling to larger datasets. This could be due to the fact that the model processes independent images sequentially. This problem might be alleviated if the model is adapted to either process sequentially related images or videos to obtain better spatial information.
 
 \paragraph{Parsimony and Self-Consistency.} \sideciteay{ma_principles_2022} suggest that appropriate data structuring can lead to the emergence of intelligence, especially if the data is structured according to the principles of parsimony and self-consistency. The two principles describe \emph{what} and \emph{how} should be learned. Parsimony implies that an intelligent learning system should recognise low-dimensional structures in observed high-dimensional data and organise them in the most compact and structured way\sidenote{The goal is not to achieve the best possible compression but to obtain compact and structured representations in a computationally efficient way.}. The second principle of self-consistency states that an intelligent learning system minimises the \emph{internal} discrepancy between observed and regenerated observations. Such internal representations can be learned through self-criticism \sidecite{rennie_self-critical_2017}, where the internal representations are consistent and satisfy the principle of parsimony. The described framework is very promising as it incorporates biological concepts into a framework that unifies and clarifies many practices and empirical findings of deep learning.
 Unfortunately, the authors do not present any metrics, so estimating the framework's performance is difficult.
-The challenge of this framework seems to be improving the modelling of the parsimony principle, i.e. improving the constraints responsible for forming the latent space and scaling it to larger datasets.
+This framework's challenge is improving the parsimony principle's modelling, i.e., improving the constraints responsible for forming the latent space and scaling it to larger datasets.
 
-\paragraph{Actionable Representations.} Another frequently used principle inspired by biological learning is the combination of representations with actions \cite{knoblich_social_2006, zhou_does_2019}. For example, it is known from animal research that both eye movements and behavioural states influence the reactions of neurons in the visual cortex \sidecite{keller_sensorimotor_2012}.
+\paragraph{Actionable Representations.} Another frequently used principle inspired by biological learning is the combination of representations with actions \sidecite{knoblich_social_2006, zhou_does_2019}. For example, it is known from animal research that both eye movements and behavioural states influence the reactions of neurons in the visual cortex \cite{keller_sensorimotor_2012}.
 Thus, animals integrate their actions (i.e., movements) with incoming sensory signals.
-\sideciteay{keurti_homomorphism_2023} argue that efference copies\sidenote{The internal copy of an outgoing motion-generating signal.} help to learn useful latent representations of input the visual system perceives. They allow an agent to perform actions by transforming objects and ensure that real-world transformations can also be applied to latent representations, i.e., mental objects and real-world objects remain consistent when similar transformations are applied.
+\citeay{keurti_homomorphism_2023} argue that efference copies\sidenote{The internal copy of an outgoing motion-generating signal.} help to learn useful latent representations of input the visual system perceives. They allow an agent to perform actions by transforming objects and ensure that real-world transformations can also be applied to latent representations, i.e., mental objects and real-world objects remain consistent when similar transformations are applied.
 Allowing an agent to interact with the world to understand it better and create better representations seems essential not only from a neuroscientific point of view but is also in line with theories from psychology:
 \sideciteay{piaget_part_1964} argues that perceiving an object is more about understanding how it changes and behaves than creating a mental copy of the object.
 The combination of perception and action for autonomous machine intelligence is also postulated by \sideciteay{lecun_path_2022}. He proposes creating a world model whose state can be predicted based on planned actions. He emphasises the importance of self-supervised learning in combination with energy functions.
 
-These works raise the question of how rich representations should be. Actionable representations not only represent the system's input data but also capture their behaviour when undergoing actions applied to them. However, increasing the representation's information content comes with the costs of providing richer input data: Learning visual representations of an object requires images only, learning an object's appearance from different viewpoints requires sequences of images, and learning actionable representations requires a simulation in which actions can be applied to objects. 
+These works raise the question of how rich representations should be. Actionable representations not only represent the system's input data but also capture their behaviour when undergoing actions applied to them. However, increasing the representation's information content comes with the costs of providing richer input data:
+\begin{itemize}
+    \item Learning visual representations of an object requires images only.
+    \item Learning an object's appearance from different viewpoints requires sequences of images of the same object.
+    \item Learning actionable representations requires a simulation in which actions can be applied to objects. 
+\end{itemize}
 
-\paragraph{Active Inference.} \citeay{lecun_path_2022} further describes that energy functions are well suited to make predictions of the world state based on actions because they can nicely shape the latent space due to their regulating properties.
-In the context of active inference \sidecite{friston_active_2016, parr_active_2022}, perception presents itself as a process of minimising the free energy of variation with respect to beliefs about hidden variables. This enables planning and inference by modelling generative processes $p(s,o)$. For example, if it rained at night ($p(s)$), one can infer that the grass is wet ($p(o)$). The model tries to model the chances of different hidden situations $p(s|o)$ based on prior beliefs ($p(s)$) and the likelihood of what it already observed ($p(o|s)$). 
-Thus, active inference aims to minimise the variational free energy by using past experiences to learn how the world works. This helps to predict what might happen in the future by minimising the probability of surprising or unexpected situations.
+\paragraph{Active Inference.} \citeay{lecun_path_2022} describes that energy functions are well suited to make predictions of the world state based on actions because they can nicely shape the latent space due to their regulating properties.
+In the context of active inference \sidecite{friston_active_2016, parr_active_2022}, perception presents itself as a process of minimising the free energy of variation with respect to beliefs about hidden variables. This process enables planning and inference by modelling generative processes $p(s,o)$. For example, if it rained at night ($p(s)$), one can infer that the grass is wet ($p(o)$). The model tries to model the chances of different hidden situations $p(s|o)$ based on prior beliefs ($p(s)$) and the likelihood of what it already observed ($p(o|s)$). 
+Thus, active inference minimises the variational free energy by using past experiences to learn how the world works. This helps to predict what might happen in the future by minimising the probability of surprising or unexpected situations.
 This principle is also actively researched by other well-known research groups. For example, Bengio's research group works on GFlowNets (Generative Flow Networks) \sidecite{bengio_flow_2021, bengio_gflownet_2022}, making it possible to disentangle the explanatory causal factors and the mechanisms that connect them. This allows for a more rational approach to generalisations well outside of distribution.
 Furthermore, energy-based models can generate new samples that resemble the training data by sampling from the energy function \sidecite{du_implicit_2020}. This allows for predicting future states and learning concepts such as viewpoint transformations in a self-supervised manner.
 
-\paragraph{Conculsion.} There exist various alternative learning approaches with interesting principles. The research identifies the most promising principles from these alternative frameworks and integrates them into a new framework. Sparse coding shows promise in enhancing interpretability and robustness \sidecite{ahmad_properties_2015}. The principle of self-organisation offers the potential to overcome the limitations of current deep learning models that are trained with backpropagation of errors. The iterative process of generating and evaluating hypotheses, as seen in RCNs, is considered essential. Current learning systems often rely on a single forward pass and hastily commit to feature representations without considering the overall structure \sidecite{marr_vision_2010}. When storing representations, the question arises as to the extent of their richness. Actionable representations allow an agent better to understand the behaviour of objects under certain transformations. Storing such representations based on parsimony and self-consistency principles can promote natural intelligence. Finally, combining self-organisation with energy functions can guide the learning process in certain directions so that the agent gains a deeper understanding of its data distribution and acquires reasoning capabilities.
+\paragraph{Conculsion.} There exist various alternative learning approaches with interesting principles. Many of these principles are adopted in this thesis; Similar to the 1000 brains theory, local self-organisation is used to build consistency between small models, i.e. between cells representing features.
+Also, sparse coding is used in the thesis as it shows promise in enhancing interpretability and robustness \sidecite{ahmad_properties_2015}. The iterative process of generating and evaluating hypotheses, as seen in RCNs, is considered essential to prevent early commitment \sidecite{marr_vision_2010}. In the proposed framework, such a loop is implemented between cells of the same layer: A cell can only remain active when consistent with the global pattern (evaluation loop) while simultaneously defining the global pattern (generation loop). Lastly, the proposed framework leverages an energy function to implement a memory component. 
 
-
-
-
-
-
-
-
+Besides these adopted principles, other methodologies seem essential for future work: Especially the organisation of internal representations should be investigated further. Promising appear actionable representations that allow an agent to better understand objects' behaviour under certain transformations and the principles of parsimony and self-consistency to refine the latent representations further.
 
 \section{Natural Intelligence}\seclbl{natural_intelligence}
 \sideciteay{von_der_malsburg_theory_2022} point out the massive gap between the amount of information needed to describe the brain's structure (1 PB) and the amount needed to generate it (few GB) \sidecite{mcpherson_physical_2001}. Therefore, the brain must be highly structured \cite{gazzaniga_organization_1989, ackerman_discovering_1992, bassett_understanding_2011}
-Therefore, the authors argue that the ``Kolmogorov algorithm \sidecite{kolmogorov_tables_1998} of the brain''\sidenote{The Kolmogorov complexity describes the number of bits required by the shortest algorithm that can generate a given structure.} builds the neuronal structure by selecting from a set of pre-structured patterns. This is in line with other research that argues that the brain is dominated by similar cell patterns \cite{mountcastle_organizing_1978, mountcastle_columnar_1997}.
+The theory's authors argue that the ``Kolmogorov algorithm \sidecite{kolmogorov_tables_1998} of the brain''\sidenote{The Kolmogorov complexity describes the number of bits required by the shortest algorithm that can generate a given structure.} builds the neuronal structure by selecting from a set of pre-structured patterns. This is in line with other research that argues that the brain is dominated by similar cell patterns \sidecite{mountcastle_organizing_1978, mountcastle_columnar_1997}.
 Self-organisation is the only mechanism that experiments have not yet disproved as the brains Kolmogorov algorithm \cite{willshaw_how_1976, willshaw_marker_1979, singer_brain_1986, kelso_selforganizing_1995, kelso_dynamic_1999}.
 
 This mechanism loops between activity and connectivity, with activity acting back on connectivity through synaptic plasticity until a steady state, called an attractor network, is reached.
@@ -66,30 +66,33 @@ In the case of visual processing, net fragments can be considered filters that d
 An object is represented by multiple net fragments, where each fragment responds to the surface of that object and has shared neurons and connections with other net fragments representing that object.
 Thus, net fragments render the topological structure of the surfaces that dominate the environment.
 
-Such net fragments could be implemented with the Hebbian rule (c.f. \secref{hebbian}) as it can be used to learn to associate patterns with net fragments. However, there exists a plethora amount of patterns in natural images. Thus, net fragments are not suitable to represent entire objects but shape primitives which can adapt to the shape of actual objects\sidenote{Adapt despite deformations, depth rotation, and position.}.
-Shifter circuits are one possible implementation of networks that enable invariant responses to the position- and shape-variant representations \sidecite{arathorn_map-seeking_2002, olshausen_multiscale_1995}.
+Such net fragments can be implemented with the Hebbian rule (c.f. \secref{hebbian}).
 Nested net fragments of different sizes may represent a hierarchy of features.
 Complex objects, such as mental constructs, can thus be seen as larger net fragments composed of mergers of pre-existing smaller net fragments.
 
-\citeay{von_der_malsburg_theory_2022} have not addressed how their theoretical concepts can be implemented as a mathematical model.
-A concrete implementation was proposed by Claude Lehmann in the form of a Master's thesis \sidecite{lehmann_leveraging_2022}.
+\citeay{von_der_malsburg_theory_2022} have not addressed how their theoretical concepts can be translated into a computational model.
+This is probably not elaborated in their work because their theory speculates about neuroscientific concepts necessary for emergence and these insights are not intended to preclude implementations.
+However, the theory can be interpreted differently, and consequently, various ways exist to implement it.
+A concrete implementation is proposed by Lehmann in the form of a Master's thesis \sidecite{lehmann_leveraging_2022}.
 He proposes a new layer called the laterally connected layer (LCL) that forms lateral intra-layer connections based on the Hebbian learning rule (c.f. \secref{hebbian}).
+Such lateral connections are synapses running between cells in the same layer.
 However, the proposed layer has only improved performance on small networks, and its effectiveness on larger networks has yet to be demonstrated.
+Furthermore, lateral connections are only used at the end of the network, thereby not preventing the model from early commitment since features are still processed hierarchically.
 
-Local net fragments can be formed using mechanisms such as the Hebbian learning rule. However, the process of constructing a hierarchy of network fragments that can map initial cell activations to object prototypes remains unclear. It seems obvious that these rules must be learned as the amount of existing net fragments for each position- and shape-invariant object representation is enormous. Existing approaches to achieve this goal are reviewed in \secref{projection_fibres}.
-However, building such a transformation-invariant network architecture is a hot research topic \cite{poulenard_effective_2019, mumuni_cnn_2021} and is not yet considered solved. The realisation of such a system is the crucial missing component in the implementation of an image processing system based on the theory of natural intelligence.
+In this thesis, lateral connections similar to \citeay{lehmann_leveraging_2022} are used in combination with two processing stages: One stage processes the perceived input using lateral connections with a limited reach\sidenote{The reach defines how many spatially neighbouring cells are connected.} while the second stage represents transformation-invariant object prototypes, allowing for lateral connections with a longer reach.
+Between these two stages, projection fibres map neighbouring neurons in the first stage to neighbouring neurons in the second stage and vice versa.
 
 
 \subsection{Projection Fibres}\seclbl{projection_fibres}
-The previous section introduces net fragments, i.e. overlapping graphs of cells limited to a local neighbourhood. Also, it raises the question how such net fragments can be mapped to object prototypes in a position- and transformation-invariant manner.
-This chapter presents projection fibres that can be utilized for such a mapping.
+The previous section introduces two stages, one containing image-dependent features and one containing object prototypes.
+As will be outlined in \secref{framework_neuroscience}, these stages are inspired by the human brain: The eyes activate cells in the primary visual cortex \sidecite{tong_primary_2003, grill-spector_human_2004} that represent the visually perceived scene.
+The objects within this scene are mapped to reference frames (object prototypes) that represent the same object but are independent of transformation and position.
+In the human brain, such prototypes are stored in the temporal cortex \sidecite{miyashita_inferior_1993, conway_organization_2018} and projection fibres, a type of axons, map the object in the visual cortex to reference frames in the temporal cortex in a position- and transformation-invariant manner.
+This chapter presents different implementations of projection fibres, while \secref{framework_neuroscience} discusses biological aspects in more detail. 
 
-Projection fibres connect different areas in the brain \cite{poljak_experimental_1927, yasui_subparafascicular_1990, yamada_somatotopic_2007}.
-Such fibres could also be responsible for mapping net fragments, perceived in the primary visual cortex, to the temporal cortex where the object prototypes are stored \cite{tanigawa_organization_2005, yamada_somatotopic_2007}.
-Thus, projection fibres could be the mechanism for mapping low-level features to concrete object representations in the human brain. These fibres implicitly remove transformations and position information from the features and assemble them into objects. Projection fibres can be interpreted as a graph combining features hierarchically, ignoring local distortions to create transformation-independent object detection.
-
+Projection fibres can be interpreted as a graph combining features hierarchically, ignoring local distortions to create transformation-independent object detection.
 From a computational perspective, projection fibres can be implemented as matching labelled subgraphs \cite{bienenstock_neural_1987, lades_distortion_1993, wiskott_face_1996}.
-Therefore, an image is typically interpreted as a graph of image features. To construct such a graph, features are extracted from the image using filters. These features serve as labels of the graph and are linked to neighbouring features. The connections of the graph thus represent the spatial relationships between the features in the image.
+Therefore, an image is typically interpreted as a graph of image features. The image features serve as graph labels and are linked to neighbouring features. The connections of the graph thus represent the spatial relationships between the features in the image.
 The resulting graph represents the entire image. However, not all pixels usually belong to the same object; therefore, a subgraph represents an object.
 In addition, an idealised version of this object's subgraph can be stored as a prototype.
 By matching the subgraphs of an image and the stored subgraph prototypes, projection fibres can be formulated as a subgraph-matching problem.
@@ -98,26 +101,26 @@ By matching the subgraphs of an image and the stored subgraph prototypes, projec
 Therefore, a sparse graph of the image features is adaptively formed to best match a given prototype graph. The matching process is based on adjusting one-to-one links between vertices in the model and image graphs; the model prototypes' graphs are moved over the input's graph and locally slightly deformed. A cost function controls the graph adaptation by favouring similarities and penalising metric deformations. This matching process between image features and stored models is repeated for each stored model prototype. Finally, the prototype with the lowest cost is selected as the recognised model. This process is straightforward, but the sequential matching of models prevents the model from scaling to large datasets requiring many prototypes.
 
 An alternative approach is described by \sideciteay{bienenstock_neural_1987}. They connect all prototype graphs to the input graph randomly, and a self-organising learning process iteratively improves these connections in a coarse-to-fine fashion.
-The matching process from prototypes to feature sub-graphs is implemented by minimizing an energy function.
+The matching process from prototypes to feature sub-graphs is implemented by minimising an energy function.
 However, their work only showed that this matching procedure works for $3$ rather simple prototypes.
 So far, this approach could not scale to larger datasets or photorealistic images.
 
-\sideciteay{wiskott_face_1996} proposed self-organising projection fibres for face recognition. They do not store all prototypes in distinct graphs. The mapping between the image array and the stored prototype array is based on synaptic plasticity and the constraint of preservation of topography to find matches. The preservation of topography is achieved with lateral connections, which are excitatory over short range and inhibitory over a long range.
-The connectivity matrix is initialized using the similarities between the features of the connected neurons. Afterwards, the connectivity matrix is adjusted by moving the prototype sub-graph across the image until a good matching to the feature graph is found.
+\sideciteay{wiskott_face_1996} proposed self-organising projection fibres for face recognition. They do not store all prototypes in distinct graphs. The mapping between the image array and the stored prototype array is based on synaptic plasticity and the constraint of preservation of topography to find matches. The preservation of topography is achieved with lateral connections, which are excitatory over a short range and inhibitory over a long range.
+The connectivity matrix is initialised using the similarities between the features of the connected neurons. Afterwards, the connectivity matrix is adjusted by moving the prototype sub-graph across the image until a good match to the feature graph is found.
 However, one problem with this model is that matching takes a long time and is, therefore, impractical.
 
 \sideciteay{wolfrum_recurrent_2008} proposed a novel model for invariant face recognition based on projection fibres.
-They utilize three layers, an input layer to extract image features, an assembly layer for recurrent information integration, and a gallery layer for storing face prototypes.
-The input layer is organized in a rectangular grid, while the assembly and gallery layers have face graph topology.
+They utilise three layers, an input layer to extract image features, an assembly layer for recurrent information integration, and a gallery layer for storing face prototypes.
+The input layer is organised in a rectangular grid, while the assembly and gallery layers have face graph topology.
 Projection fibres map the features from the input layer to the assembly layer, from where the face graph is compared with prototypes in the gallery.
 This architecture is biologically plausible, works fast, and obtains good results. 
-However, the main drawback is that the cells are organized according to a face graph topology. Thus, it does not work for different objects. Furthermore, faces always look quite similar, and it is unclear how such an architecture could deal with stronger deformations or different viewpoints as observed in natural images.
+However, the main drawback is that the cells are organised according to a face graph topology. Thus, it does not work for different objects. Furthermore, faces always look quite similar, and it is unclear how such an architecture could deal with stronger deformations or different viewpoints as observed in natural images.
 
-Similar to CNNs, features are extracted from images and stored in a 2D grid of cell activations.
-However, typical CNN architectures map these features to a class label by feeding them through multiple layers sequentially. Projection fibres, on the other hand, map the features to stored object prototypes based on their local similarity. This creates an explicit one-to-one mapping between features and prototypes. This means that, in contrast to CNNs, no position and transformation information is lost, and the mapping is better interpretable.
-On the other hand, a CNN has the advantage that it is extremely fast and flexible and can handle local transformations and position invariance extremely well. Current implementations of projection fibres are mostly graphs without such high degrees of freedom and cannot handle strong transformations. However, this capability is necessary to deal with natural images and needs to be addressed in future research.
-
-
+Projection fibres map the features found in the image to stored object prototypes based on their local similarity. This creates an explicit one-to-one mapping between features and prototypes. Therefore, unlike CNNs, no position and transformation information is lost, and the mapping is better interpretable.
+Current implementations cannot map images to prototypes if the features do not match well.
+This problem is alleviated in this thesis by mapping so-called net fragments instead of features.
+Net fragments are consistent groups of neurons representing well-known patterns and are explained in detail in \secref{framework_neuroscience}.
+Net fragments are based on image features but remove noise, reconstruct missing parts, and locally generalise features. Thus, net fragments transform features into suitable representations that similarly occur in reference frames, enabling a more robust mapping.
 
 \section{Self-Organisation}\seclbl{self_org_related}
 Self-organisation is the process by which systems consisting of many units spontaneously acquire their structure or function without interference from an external agent or system \sidecite{morris_cognitive_2006}.
@@ -126,7 +129,9 @@ The absence of a central control unit allows self-organising systems to adjust t
 Additionally, such systems have built-in redundancy with a high degree of robustness as they consist of many simpler individual units \sidecite{wagner_robustness_2013}.
 These individual units can even fail without the overall system breaking down.
 
-\paragraph{Grow Patterns.} Cellular automata contain a grid of similar cells\sidenote{An image or features of images can be interpreted as a 2D grid of cells.} with an internal state updated periodically.
+Self-organisation is highly relevant in this thesis: First, the theory of natural intelligence (c.f. \secref{natural_intelligence}) argues the brain's Kolmogorov algorithm is self-organising and a key to natural intelligence. Second, implementing a system that prevents early commitment cannot rely on a central control system that steers the entire process. Instead, local decisions are taken based on the feasibility of overarching patterns through a self-organising approach.
+
+\paragraph{Growing Patterns.} Cellular automata contain a grid of similar cells\sidenote{An image or features of images can be interpreted as a 2D grid of cells.} with an internal state updated periodically.
 Update rules define the transition from a given state to a subsequent state.
 During an update, cells can only communicate with the neighbouring cells.
 Thus, self-organisation is enforced by the definition of the update rules \cite{wolfram_cellular_1984, vichniac_simulating_1984}.
@@ -137,12 +142,10 @@ NCAs can be trained with gradient descent to grow given 2D patterns such as imag
 These images are grown through self-organisation (i.e. the pixels pick a colour based on the colour of neighbouring pixels) and are surprisingly resistant to damage.
 For example, large parts of the images can be removed, and the system can still rebuild the entire image.
 However, the aforementioned approaches can only grow the pattern they were trained on.
-A recent method called Variational Neural Cellular Automata \sidecite{palm_variational_2022} use an NCA as the decoder of a variational autoencoder \cite{kingma_auto-encoding_2022}.
+A recent method called Variational Neural Cellular Automata \sidecite{palm_variational_2022} uses an NCA as the decoder of a variational autoencoder \cite{kingma_auto-encoding_2022}.
 This probabilistic generative model can grow images based on a vector sampled from a Gaussian distribution.
 However, there is still a big gap in performance compared to state-of-the-art generative models.
-Besides growing 2D patterns, NCAs can also create 3D patterns \sidecite{sudhakaran_growing_2021}, simulate robots \sidecite{hu_regenerating_2021}, or generalize to graph structures \sidecite{grattarola_learning_2021}.
-
-NCAs consist of self-organizing cells that can grow patterns such as images through local communication. The created images have high robustness and can re-generate themselves even when large parts are destroyed due to local self-organisation. However, the images are rather simple, and such local algorithms cannot yet compete with models that optimize a global target function with backpropagation of error.
+Besides growing 2D patterns, NCAs can also create 3D patterns \sidecite{sudhakaran_growing_2021}, simulate robots \sidecite{hu_regenerating_2021}, or generalise to graph structures \sidecite{grattarola_learning_2021}.
 
 \paragraph{Classify Images.} The process of growing images from cells of an NCA can also be inverted:
 \sideciteay{randazzo_self-classifying_2020} propose to use NCAs to classify given structures such as images.
@@ -158,11 +161,11 @@ Hebbian learning is considered a learning rule that follows self-organising prin
 By using self-organisation and Hebbian learning, they show that it is possible to learn powerful learning algorithms such as backpropagation while running the network in forward mode only.
 However, it works only for small-scale problems as it can quickly get stuck in local optima.
 
-Self-organisation can even be used to control reinforcement learning (RL) agents.
-\sideciteay{variengien_towards_2021} use the observations of the environment as cell states of an NCA. The following states predicted by the NCA are used as Q-value estimates of a deep Q-learning algorithm \sidecite{mnih_playing_2013}. This allows training RL agents with local self-organisation instead of backpropagation of error.
+%Self-organisation can even be used to control reinforcement learning (RL) agents.
+%\sideciteay{variengien_towards_2021} use the observations of the environment as cell states of an NCA. The following states predicted by the NCA are used as Q-value estimates of a deep Q-learning algorithm \sidecite{mnih_playing_2013}. This allows training RL agents with local self-organisation instead of backpropagation of error.
 
 
-\paragraph{Network Architectures}
+\paragraph{Network Architectures.}
 Unsupervised learning techniques usually map high-dimensional input data to a lower-dimensional representation \cite{russell_artificial_2021}. Such mappings can also be implemented in a self-organising manner, for example, based on self-organising maps (SOMs) \sidecite{kohonen_self-organized_1982, kohonen_self-organization_1989}.
 SOMs map the input data to a discrete representation space of the training samples called a map.
 Unlike ANNs, they use competitive learning instead of error correction learning algorithms such as backpropagation of error.
@@ -170,48 +173,35 @@ Local competitive learning ensures that samples are close in the input space are
 Thus, the data space is self-organised by local rearrangements.
 
 However, SOMs have two significant limitations; First, the network structure must be pre-defined, limiting the mapping accuracy. Second, the map's capacity is pre-defined through the number of nodes.
-Growing networks overcome these limitations and add nodes or whole layers of nodes into the network structure at the positions of the map where the error is highest \sidecite{fritzke_growing_1994-1, reilly_neural_1982, fritzke_growing_1994, marsland_self-organising_2002}.
+Growing networks overcome these limitations and add nodes or whole layers of nodes into the network structure at the positions of the map where the error is highest \cite{reilly_neural_1982, fritzke_growing_1994, marsland_self-organising_2002}.
 
-Besides ANNs, the structure of spiking neural networks (c.f. Section \secref{spiking_networks}) can also be optimized using self-organisation. 
+Besides ANNs, the structure of spiking neural networks (c.f. Section \secref{spiking_networks}) can also be optimised using self-organisation. 
 SNNs can either be assembled from multiple stackable sub-systems \sidecite{raghavan_self-organization_2020}
-or be grown from a single cell \sidecite{raghavan_neural_2019} by adding additional cells and connections.
+or be grown from a single cell \cite{raghavan_neural_2019} by adding additional cells and connections.
 
-
-\paragraph{Relevance}
-According to \sideciteay{von_der_malsburg_theory_2022}, self-organisation is the fundamental principle for natural intelligence (c.f. \secref{natural_intelligence}).
-As summarized in this section, self-organisation can be used for making local decisions (generating or classifying images), learning network parameters, and organizing neural network structures.
-However, self-organisation is often inferior to systems trained with end-to-end backpropagation of error.
-\sideciteay{risi_future_2021} describes why self-organising systems are hard to train;
-First, the system is hard to control because no central entity is in charge, but the system must still be nudged in the right direction.
-Second, self-organising systems are unpredictable (i.e., no mathematical model tells the outcome of the self-organising process).
-Therefore, he concludes that training such systems is much more complex than training a system with central supervision, such as end-to-end backpropagation of error.
-Self-organising systems are generally hard to optimise and only work for small datasets and simple problems.
-
-
-
-
-
-
+\paragraph{Relevance.} The proposed framework is highly related to the aforementioned self-organising principles: First, net fragments can reconstruct local patterns when occluded, resembling methodologies that can grow patterns. Second, projection fibres implement a mapping from scenes to reference frames, related to approaches that implement classification based on self-organising principles. Finally, the proposed framework relies on a self-organising Hebbian learning algorithm.
+In contrast, the architecture of the network is currently predefined and has not yet adopted a self-organising approach. Nevertheless, it is essential for future research efforts to explore the dynamic incorporation of patterns in reference frames, thereby increasing the relevance of introduced concepts such as self-organising maps (SOMs).
 
 
 
 \section{Learning Algorithms}\seclbl{alt_train_algo}
 Neural networks are usually optimised with backpropagation of errors (c.f. \secref{ann}).
-Soon after backpropagation was published, whether this algorithm is suitable for explaining learning in the brain \sidecite{grossberg_competitive_1987, crick_recent_1989} was questioned.
+Soon after backpropagation was published, it was questioned whether this algorithm is suitable for explaining learning in the brain \sidecite{grossberg_competitive_1987, crick_recent_1989}.
 Besides the fact that backpropagation seems biologically not plausible and might be responsible for many of the limitations described in \secref{limitationsDL}, it also has technical shortcomings:
 First, gradients might vanish or explode when propagating through too many layers \sidecite{zhang_why_2020}.
-Second, it turns the networks into ``black boxes'' and prevents users from getting valuable insights from trained models\sidenote{training a model layer-wise allows modularisation, i.e., dividing and conquering}.
-Training end-to-end does not allow controlling the loss function's effect on a hidden layer because of the non-linearity in the network \sidecite{lee_deeply-supervised_2015}.
+Second, it turns the networks into ``black boxes'' and prevents users from getting valuable insights from trained models.
+Third, training end-to-end does not allow controlling the loss function's effect on a hidden layer because of the non-linearity in the network \sidecite{lee_deeply-supervised_2015}.
 Finally, the loss landscapes are non-optimal, which might lead to slow convergence, or the optimisation process can get stuck in a local minimum  \sidecite{ioffe_batch_2015}.
+However, despite these deficits, it is still considered the best error correction algorithm to optimise neural networks on a specific task. 
 
 Hebbian learning (c.f. \secref{hebbian}), on the other hand, is widely accepted in the fields of neurocomputing, psychology, neurology, and neurobiology \sidecite{widrow_natures_2019}.
 Hebbian learning works well, for example, for topographic mappings \sidecite{kohonen_self-organization_1989, grajski_hebb-type_1990}, implementing neuroplasticity\sidenote{The network's ability to reorganise itself by forming new connections.} \sidecite{montague_spatial_1991}, or recognising non-linear patterns \sidecite{mel_nmda-based_1992}, but also has limitations \cite{anderson_biased_1998}.
 For example, Hebb's learning rule is insufficient as a general rule for time-shifted signals as it requires (almost) synchronous stimuli \sidecite{anderson_biased_1998, rumelhart_learning_1986}.
-Furthermore, Hebbian learning is hard to tune.
-Besides Hebbian learning, various other optimization algorithms exist that are inspired by the human brain. These algorithms are summarised in the following.
+In this thesis, Hebbian learning is used.
+Besides Hebbian learning, various other optimisation algorithms exist that are inspired by the human brain. These algorithms are summarised in the following to provide a comprehensive overview of alternative learning principles. Readers who are only interested in the proposed framework may optionally skip this chapter.
 
 
-\paragraph{Proxy Objective Functions.} Typical deep learning models are trained by minimizing a global objective function \cite{prince_understanding_2023}. \emph{Proxy objective functions} \sidecite{mostafa_deep_2018, marquez_deep_2018, belilovsky_greedy_2019} are objective functions applied to each layer in the model. For example, the loss function of the first layer (i.e. the proxy objective of the first layer) influences only the trainable parameters of the first layer but not the parameters of the second layer.
+\paragraph{Proxy Objective Functions.} Typical deep learning models are trained by minimising a global objective function \cite{prince_understanding_2023}. \emph{Proxy objective functions} \cite{mostafa_deep_2018, marquez_deep_2018, belilovsky_greedy_2019} are objective functions applied to each layer in the model. For example, the loss function of the first layer (i.e. the proxy objective of the first layer) influences only the trainable parameters of the first layer but not the parameters of the second layer.
 Thus, proxy objective functions allow decoupling layers.
 Instead of a metric, also an auxiliary model that evaluates the goodness of representations can be used as proxy objective functions \cite{duan_kernel_2020, duan_modularizing_2022, wang_revisiting_2021, belilovsky_greedy_2019, mostafa_deep_2018, marquez_deep_2018} or a combination of auxiliary network and metric \sidecite{nokland_training_2019}.
 
@@ -226,7 +216,7 @@ However, training is typically slower than end-to-end backpropagation, even with
 In addition, layer-by-layer training of a network for the sole purpose of biological plausibility using the same loss function as the global objective function seems unnecessary. Instead, a more promising approach might be to train layers in parallel and use a voting mechanism to reach a consensus and realise the full potential of proxy objective functions. However, such strategies have not yet been explored.
 
 \paragraph{Forward Forward Algorithm.}
-Recently, Hinton \sidecite{hinton_forward-forward_2022} introduced the \emph{forward-forward (FF) algorithm} which is considered a special instance of proxy objective functions.
+Recently, Hinton \sidecite{hinton_forward-forward_2022} introduced the \emph{forward-forward (FF) algorithm}, which is considered a special instance of proxy objective functions.
 This algorithm uses two forward passes, one with positive (i.e. real) data and one with negative data.
 Positive data consists of an input vector and the correct label, and negative data consists of an input vector with the wrong label.
 Each layer has its objective function that aims to have a high ``goodness'' for positive data and a low ``goodness'' for negative data. 
@@ -236,7 +226,7 @@ During inference, the data is fed with each label through the network, and the o
 The same input is fed into the model over multiple timesteps to obtain hierarchical features \sidecite{hinton_how_2021}.
 The trick is to feed the input into the network from one side and the label into the network from the other side. A layer receives as input the activity vector of the previous layer and the activity vector of the subsequent layer at the previous timestep. By enforcing high goodness when the input and label match, information must flow in both directions. Thus, hierarchical features can be learned without a backward pass.
 
-The FF algorithm did not yet scale to large datasets. Furthermore, inference is very slow for datasets with many labels, as each sample is compared with all existing labels. However, a promising approach is to input specific information (e.g. images) into one end of the network, and general information (e.g. labels) into the other end and effectively merge these inputs to extract hierarchical features.
+The FF algorithm did not yet scale to large datasets. Furthermore, inference is very slow for datasets with many labels, as each sample is compared with all existing labels. Overall, feeding specific information (e.g. images) into one end of the network and general information (e.g. labels) into the other end and effectively merging these inputs to extract hierarchical features seems very promising.
 
 \paragraph{Target Propagation.} \emph{Target propagation} methods compute targets\sidenote{A target can be interpreted as the value that a layer should predict.} rather than gradients at each layer \sidecite{bengio_how_2014, appice_difference_2015, meulemans_theoretical_2020}.
 Each layer is trained to minimise the difference between its activations and its received target values.
@@ -246,13 +236,8 @@ During a forward pass, an input vector $\boldsymbol{x}$ is fed through all encod
 
 An advantage of calculating targets is that only layer-wise gradients are required, which allows models to have non-differentiable operations \cite{appice_difference_2015}.
 A significant drawback is that auxiliary decoders must be trained to approximate the hidden targets, which might outweigh the savings achieved by eliminating a complete backward pass.
-Furthermore, this approach does not scale well in praxis as the decoder cannot perfectly calculate the inverse of the layers' mapping function. 
+Furthermore, this approach does not scale well in praxis as the decoder cannot perfectly calculate the layers' mapping function inverse. 
 Thus, the learning process is rather unstable as the target is approximated per layer and might steer the learning process in the wrong direction.
-
-
-
-
-
 
 
 \paragraph{Synthetic Gradients.} \emph{Synthetic gradients} methods \sidecite{jaderberg_decoupled_2017, czarnecki_understanding_2017} replace the gradients of backward passes with approximated local gradients, estimated with auxiliary models, and utilise gradient-based optimisation algorithms such as stochastic gradient descent to update the weights locally.
@@ -272,7 +257,7 @@ The network still learns to make the feedback useful even though the weights dur
 Later, the algorithm was improved by using fixed, random weights that share the signs with the actual weights of the network \sidecite{liao_how_2016}.
 
 Feedback alignment algorithms are a more biologically plausible alternative to backpropagation as they avoid the weight transport problem.
-When combined with  application-specific integrated circuits, they can reduce training time and energy costs \cite{lillicrap_random_2016}.
+When combined with application-specific integrated circuits, they can reduce training time and energy costs \cite{lillicrap_random_2016}.
 However, they cannot yet scale to large datasets, and further research is required towards this direction.
 
 \paragraph{Auxiliary Variables.} Lastly, another group of learning algorithms use \emph{auxiliary variables} \sidecite{carreira-perpinan_distributed_2014, taylor_training_2016, zhang_convergent_2017, lau_proximal_2018}.
@@ -280,9 +265,12 @@ These methods use the idea of variable splitting, i.e. transforming a complicate
 Introducing auxiliary variables may pose scalability issues, and these methods require special, usually tailor-made solvers.
 Therefore, such methods usually scale to specific use cases only.
 
-\paragraph{Relevance.} In this chapter, several alternative learning algorithms to the widely used backpropagation of error with gradient descent are discussed. However, it is shown that only proxy objective functions can scale to larger datasets. Backpropagation of error remains the state-of-the-art approach for various machine learning tasks, despite its biological implausibility and associated drawbacks (c.f. \secref{limitationsDL}). Therefore, research into alternative learning algorithms is considered important.
+\paragraph{Relevance.} In this chapter, several alternative learning algorithms to the widely used backpropagation of error with gradient descent are discussed. However, it is shown that only proxy objective functions can scale to larger datasets. Backpropagation of error remains the state-of-the-art approach for various machine learning tasks, despite its biological implausibility and associated drawbacks (c.f. \secref{limitationsDL}).
 
-Furthermore, the question arises whether studying a learning algorithm exclusively in the context of typical deep learning tasks is sufficient. The brain that inspires alternative learning algorithms is not a network that deals exclusively with a single task. Rather, it is a complex system that is simultaneously engaged in multiple tasks. Therefore, it is important to consider this broader context when exploring new learning algorithms. 
+Furthermore, the question arises whether studying a learning algorithm exclusively in the context of typical deep learning tasks is sufficient:
+Backpropagation of error optimises consistency between a prediction and teaching signal, updating all neurons within a network to contribute to a single consistent output. Therefore, this algorithm works excellently for such well-defined tasks.
+Biological systems do not optimise consistency at a single point but between all cells and synapses \sidecite{hebb_organization_1949}.
+Such algorithms might perform worse when training on a single task but could have different advantages, scale to multiple tasks, or outperform global error correction algorithms in the long run.
 
 
 
@@ -371,7 +359,7 @@ Black-box models use meta-learning to directly provide the parameters to the bas
 Special cases of black-box models are approaches based on metric learning:
 The outer meta-learning process optimises a model to transform inputs into representations that the inner process can use for classification by comparing the cosine similarity or euclidean distance between them \cite{10-5555-3294996-3295163, qiao2018few, Chen_Liu_Kira_Wang_Huang_2020}.
 
-Other approaches meta-learn the optimiser of the inner base learning algorithm \cite{ravi2017optimization, Li_Malik_2016, Li_Zhou_Chen_Li_2017}.
+Other approaches meta-learn the optimiser of the inner base learning algorithm \cite{ravi2017optimisation, Li_Malik_2016, Li_Zhou_Chen_Li_2017}.
 Typically, such approaches generate each optimisation step of the base learning algorithm based on the model's parameters and a given base objective function.
 The trainable component can, for example, be simple hyper-parameters such as the learning rate \sidecite{Li_Zhou_Chen_Li_2017} or more sophisticated such as pre-conditioned matrices \sidecite{Park_Oliva_2020}.
 Even the learning algorithm itself can be learned \sidecite{kirsch2021meta}.
@@ -390,7 +378,7 @@ Even the dataset itself can be learned with dataset distillation; a rather large
 \subsection{Meta-Optimiser}
 The second dimension of the meta-learning landscape is the \emph{meta-optimiser}.
 The meta-optimiser describes how the algorithm in the outer meta-learning loop is learned.
-Many methods use backpropagation of error and gradient descent (c.f. \secref{ann}) to optimise the meta parameters \cite{ravi2017optimization, 10-5555-3305381-3305498, li2019feature, 10-5555-3305381-3305502, pmlr-v80-franceschi18a, Micaelli_Storkey_2021, pmlr-v108-lorraine20a}.
+Many methods use backpropagation of error and gradient descent (c.f. \secref{ann}) to optimise the meta parameters \cite{ravi2017optimisation, 10-5555-3305381-3305498, li2019feature, 10-5555-3305381-3305502, pmlr-v80-franceschi18a, Micaelli_Storkey_2021, pmlr-v108-lorraine20a}.
 However, this algorithm has some well-known weaknesses (c.f. \secref{limitationsDL}) and requires differentiability.
 When the inner base learning algorithm includes non-differentiable steps \sidecite{Cubuk_2019_CVPR} or the outer meta objective function is non-differentiable \sidecite{huang2019addressing}, many methods utilise the RL paradigm to optimise the outer objective \sidecite{Duan_Schulman_Chen_Bartlett_Sutskever_Abbeel_2016}.
 However, using RL to alleviate the differentiability requirement is usually computationally very costly.
@@ -403,7 +391,7 @@ The third dimension of the meta-learning landscape is the \emph{meta-objective}.
 The meta-objective describes the goal of the meta-learning algorithm.
 Typically, the performance of a meta-learning algorithm is evaluated with a metric on the inner loop or a meta-metric on the outer loop.
 However, there are several design options within the meta-learning framework.
-First, the inner base-learning episodes can either take few \sidecite{ravi2017optimization, 10-5555-3305381-3305498} or many \sidecite{10-5555-3305381-3305502, 10-5555-3305890-3306069} samples, and thus the goal can be to either improve few- or many-shot performance.
+First, the inner base-learning episodes can either take few \sidecite{ravi2017optimisation, 10-5555-3305381-3305498} or many \sidecite{10-5555-3305381-3305502, 10-5555-3305890-3306069} samples, and thus the goal can be to either improve few- or many-shot performance.
 Second, the validation loss of the inner base-learning algorithm can either be calculated at the end of a learning episode to encourage a better \emph{final} performance of the base task or as the sum of the loss calculated after each update step to encourage \emph{faster} learning \cite{antoniou2018how}.
 Third, the goal of the meta-learning can either be to solve better any task drawn from a set of (often related) tasks (i.e. multi-task setting) \sidecite{10-5555-3305381-3305498, 10-5555-3294996-3295163, li2019feature}, or to solve one specific task better than when only the inner base learning algorithm is used (i.e. single task setting) \sidecite{10-5555-3305381-3305502}.
 Finally, the meta-optimisation can either be done offline (i.e. the inner and outer loop alternate) \sidecite{10-5555-3305381-3305498} or online (i.e. the meta-learning takes place within a base learning episode) \cite{li2019feature}.

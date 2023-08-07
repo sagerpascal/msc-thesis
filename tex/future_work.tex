@@ -1,4 +1,4 @@
-\section{Discussion}
+\section{Discussion}\seclbl{discussion}
 Deep learning networks have demonstrated their exceptional capabilities as feature extractors. 
 Recent advancements in scaling have brought them to a level where they hold the potential for widespread applicability across various tasks in our everyday lives.
 Nevertheless, they have intrinsic limitations, and the prospect of overcoming these barriers remains uncertain.
@@ -25,10 +25,13 @@ The experiments confirm the usefulness of lateral connections in tasks such as o
 The prototype stage \emph{S2} takes inspiration from the ventral visual stream and the temporal cortex.
 It uses projection fibres to map network fragments onto object prototypes. While this aspect is well explained theoretically in this thesis, it lags behind \emph{S1} in empirical validation and refinement.
 
-
 At its core, the entire network is based on the principles of self-organisation, locality and cell consistency.
 Network fragments arise from cells communicating with their spatial neighbours, while projection fibres connect neighbouring cells in \emph{S1} and \emph{S2} and seek consistency with neighbouring fibres.
 These basic principles are fundamentally different from existing deep networks. In addition, the network incorporates constraints aimed at reducing early commitment and increasing robustness. The iterative process of assembling net fragments and mapping them to object prototypes leads to transformation-invariant feature processing independent of specific objects.
+
+\secref{limitationsDL} pointed out some of the most pressing limitations of deep networks.
+I speculate that the proposed framework can potentially mitigate some of these issues. Properly implemented projection fibres can map net fragments to object prototypes even when they are transformed. Furthermore, these projections can be learned independently of objects: This allows to transfer knowledge much more efficiently between objects, could increase computational efficiency and allow better extrapolation of the data distribution. Furthermore, prototypes are stored in \emph{S2} in separate reference frames, thereby reducing the risk of catastrophic forgetting as newly acquired knowledge cannot overwrite previously learned knowledge.
+
 
 In summary, the proposed framework introduces several promising principles. However, as elaborated in the next section, these principles must be explored and refined further in future work.
 Comparing the proposed framework with deep networks is not possible at its current stage as it is far from being developed enough. 
@@ -46,6 +49,7 @@ In the context of \emph{S1}, individual cells represent distinct features that a
 The \secref{framework_alt_cells} described that alternative cells could be implemented by duplicating the output channels of the weight matrix $\boldsymbol{W}$ of \emph{S1}.
 Alternative cells contribute to different net fragments and are mutually exclusive.
 Consequently, competition between these alternative cells is required to ensure that only a winning cell can become active and that activity in alternative cells is suppressed\sidenote{Activity can be suppressed by inhibition, as it is already implemented in \emph{S1}.}.
+Well-known competition strategies are winner-take-all competition, providing an external competitive signal, anti-Hebbian learning \sidecite{vogels_inhibitory_2011}, or adapting the activation function of the neurons to enforce a specific activity distribution \sidecite{joshi_rules_2009, teichmann_intrinsic_2015} (c.f. \secref{hebbian}).
 
 Preliminary experiments suggest that the initially similar characteristics between alternative cells make it difficult to establish effective competition and that this initial symmetry that needs to be broken first.
 Introducing controlled randomness during the initial phase could increase the stochasticity of the learning process. This randomness can potentially enhance differentiation and separation between these different cells.
