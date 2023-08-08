@@ -1,12 +1,15 @@
-In this thesis, a framework implementing these principles is proposed in the following.
-The inspiration stems from the human brain, and numerous insights from neuroscience are incorporated into the framework.
+The introduction in \secref{intro_motivation} describes that preventing early commitment is considered a fundamental property of the human visual system that is absent in current deep learning frameworks.
+The previous chapter introduced neuroscientific findings (\secref{neuroscience_findings}) that could explain why this problem is absent in the human brain and that are considered the principles implementing the findings of the Gestalt psychology \sidecite{ellis_source_1938, kohler_gestalt_1992, wagemans_century_2012, hamlyn_psychology_2017}.
+
+In the following, a novel framework incorporating these identified principles is proposed.
+The focus is on translating the two stages described in \secref{neuroscience_findings} into a computational framework.
+Incorporating further stages that implement the long-term vision described in \secref{biologial_inspiration_vision} remains an open task for future research.
+Thus, while the ideas and principles are based on previous research, the following section describes a novel computational framework that is considered the main scientific contribution of this thesis.
 
 \section{3-Staged Model}\seclbl{framework_3_staged_model}
-The previous section introduced several neuroscientific concepts.
-These concepts are a carefully selected subset of the findings from neuroscience and serve as inspiration to develop a novel and biologically plausible vision system.
-Some of the aforementioned principles have been explored in the theory of self-organising projection fibres (c.f. \secref{projection_fibres}). However, these approaches do not yet scale to natural images except for human faces \cite{wolfrum_recurrent_2008}. This could be due to the fact that most work in this area neglects the net fragments built in the visual cortex.
+Some of the neuroscientific principles described in \secref{\secref{neuroscience_findings}} have been explored in the theory of self-organising projection fibres (c.f. \secref{projection_fibres}). However, these approaches do not yet scale to natural images except for human faces \cite{wolfrum_recurrent_2008}. This could be due to the fact that most work in this area neglects the net fragments built in the visual cortex.
 
-This section describes a system with the potential to scale to natural images since it extends the projection fibres with this missing part.
+This section describes a completely different system based on binary neurons with the potential to scale to natural images since it extends the projection fibres with other concepts.
 The proposed system comprises three main components: A first stage \emph{S0} that extracts features from the image, a stage \emph{S1} that builds an overlay of net fragments, and a stage \emph{S2} that uses projection fibres to map them to object prototypes.
 I call the stage \emph{S0} the sensory system, \emph{S1} the feature building stage, and \emph{S2} the prototype stage.
 In the context of biology, the sensory stage \emph{S0} could stand for the eyes translating visual information into neuronal activity, \emph{S1} could stand for the primary visual cortex \sidecite{tong_primary_2003, grill-spector_human_2004}, and \emph{S2} for the ventral stream and an area in the temporal cortex \sidecite{miyashita_inferior_1993, conway_organization_2018}.
