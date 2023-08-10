@@ -125,7 +125,7 @@ The input in the first layer is the input data itself, i.e. $\boldsymbol{a}^{[0]
 		\boldsymbol{a}^{[l]} = f(\boldsymbol{z}^{[l]})
 \end{align}
 
-As outlined in \secref{intro_motivation}, layer-wise data processing leads to early commitment. Within the context of this thesis's framework, hierarchical representations are not build over multiple layers but within the same layer as outlined in \secref{framework_3_staged_model}.
+As outlined in \secref{intro_motivation}, layer-wise data processing leads to early commitment. Within the context of this thesis's framework, hierarchical representations are not built over multiple layers but within the same layer as outlined in \secref{framework_3_staged_model}.
 
 
 \subsection{Learning Algorithm}\seclbl{learning_algorithm}
@@ -314,7 +314,7 @@ There exists formal proof that after a finite number of timesteps, an attractor 
 Thus, the input is used to initialise the neurons, the neurons influence each other, and the network becomes stable after a finite number of iterations. Thereby, an input pattern is attracted to the closest stable pattern.
 Hebbian learning (c.f. Section \secref*{hebbian}) can be used to define what the stable patterns are:
 With a single iteration over the training patterns, the weights $w_{ij}$ and biases $b_i$ are updated so that these patterns become attractor states \sidecite{hopfield_unlearning_1983}.
-This allows using the network as an associative memory, as an input pattern is mapped to the most similar pre-defined stable pattern.
+This allows using the network as an associative memory, as an input pattern is mapped to the most similar predefined stable pattern.
 
 For a long time, Hopfield networks had two limiting factors: First, the capacity $C$, i.e. the number of patterns that can be stored, was for a network with $N$ neurons limited to $C=0.138N$ \sidecite{mceliece_capacity_1987}.
 However, this limitation could be resolved more than three decades after the introduction of the binary Hopfield networks; 

@@ -66,12 +66,12 @@ While negative Hebbian learning facilitates eliminating previously learned but i
 Despite the divergence of the activation probabilities compared to those of positive Hebbian learning, these activations are still considered valid representations of lines.
 However, the major issue is that the output channels do not rely on distinct features.
 
-For instance, the output channel $A$ representing vertical lines only considers the input channels $1$ and $5$, whereby channel $1$ contains the ``vertical lines features'' from the sensory system and channel $5$ is its own recurrent connection.
+For instance, the output channel $A$ representing vertical lines only considers the input channels $1$ and $5$, whereby channel $1$ contains the ``vertical lines features'' from the sensory system, and channel $5$ is its own recurrent connection.
 Regrettably, input channels $2$-$4$, which contain additional sensory signals, are disregarded by output channel $A$. Consequently, only cells representing vertical line features support this output channel.
 In contrast, positive Hebbian learning considers all input channels, resulting in different features supporting each other.
 
 Consequently, negative Hebbian learning leads to lower lateral support within the network.
-This might not be an issue for the used line dataset but is crucial for real-world scenarios\sidenote{For example, one channel could represent eyes and another eyelashes. These features should support each other.}.
+This might not be an issue for the used line dataset but is crucial for real-world scenarios\sidenote{For example, one channel could represent eyes and another channel eyelashes. These features should support each other.}.
 Negative Hebbian learning, while facilitating the filtering out of irrelevant features, also tends to make features mutually exclusive, which prevents learning adequate support between them.
 
 \begin{figure}[h]
@@ -83,7 +83,7 @@ Negative Hebbian learning, while facilitating the filtering out of irrelevant fe
 %
 Subsequently, it is discussed why the features become mutually exclusive.
 The primary issue is that, except for one input channel, there are more negative correlations between the input channels and a single output channel, as illustrated in \figref{correlations_hebb_learning}.
-In this context, ``negative correlation'' refers to disjointly active cells while ``positive correlation'' refers to cells that fire together.
+In this context, ``negative correlation'' refers to disjointly active cells, while ``positive correlation'' refers to cells that fire together.
 In the case of the vertical line, the output channel $A$ is expected to roughly reassemble the line.
 
 Hebbian learning compares this output with the input channels, strengthening the weights for positively correlated input-output pairs and weakening them for negatively correlated pairs.

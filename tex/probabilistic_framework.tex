@@ -32,7 +32,7 @@ Thus, the sensory system extracts many low-level features from images based on l
 
 \paragraph{Feature Building Stage \emph{S1}.} The feature building stage is a single layer with lateral connections \sidecite{gilbert_lateral_1990} that builds an overlay of net fragments. Input from the sensory system activates some feature neurons in \emph{S1}. However, their continued firing relies on receiving support from a sufficient number of other activated neurons that are laterally connected to them. Initially activated neurons that do not receive enough lateral support deactivate after a short period due to inhibition \sidecite{coombs_specific_1955}.
 
-The lateral connections are learned through self-organisation. Patterns occurring repeatedly in the training data will constantly activate the same cells simultaneously. Using Hebbian learning strengthens the connection between these cells, and the pattern is ``stored'' in a net fragment. The inhibition strength increases during training to account for the increasing numbers of lateral connections so that cells with fewer connections can be suppressed in favor of those with more connections, allowing the latter to acquire even more lateral connections.
+The lateral connections are learned through self-organisation. Patterns occurring repeatedly in the training data will constantly activate the same cells simultaneously. Using Hebbian learning strengthens the connection between these cells, and the pattern is ``stored'' in a net fragment. The inhibition strength increases during training to account for the increasing numbers of lateral connections so that cells with fewer connections can be suppressed in favour of those with more connections, allowing the latter to acquire even more lateral connections.
 
 Consequently, many neurons might be activated by the sensory stage, but only the ones supporting each other remain active.
 Therefore, it is essential to view the process from the perspective that active neurons are integral parts of consistent global net fragments, and only the support from neurons within the same net fragments enables them to persist.
@@ -111,7 +111,7 @@ A probabilistic neuron $x_i$ in the context of net fragments is modelled as a pr
 \end{equation}
 
 Thus, the probability of a neuron being active depends on the activity pattern of the neurons in its local neighbourhood and factors of the environment (e.g., inhibition or presence of neurotransmitters).
-Such a neuron can be implemented using a Bernoulli distribution, i.e., $B(p) = P(X = 1) = p = 1 - P(X=0)$. Having a neuron whose firing probability $p$ is governed by the neighbourhood activity and the environment allows to implement the behaviour of net fragments: After receiving an input, the neurons get excited and fire with a higher probability. However, their probability to fire decreases quickly if not supported by neighbouring neurons. Thus, uncertainty and potential net fragments govern timestep 0, while the network reaches an attractor state shortly after. 
+Such a neuron can be implemented using a Bernoulli distribution, i.e., $B(p) = P(X = 1) = p = 1 - P(X=0)$. Having a neuron whose firing probability $p$ is governed by the neighbourhood activity and the environment allows the implementation of the behaviour of net fragments: After receiving an input, the neurons get excited and fire with a higher probability. However, their probability of firing decreases quickly if not supported by neighbouring neurons. Thus, uncertainty and potential net fragments govern timestep 0, while the network reaches an attractor state shortly after. 
 
 \subsection{Properties}
 The proposed neuron implements a stochastic process that allows it to fire even when the probability of it firing is low or, conversely, not to fire when the probability is high.
@@ -285,7 +285,7 @@ However, after applying the Hebbian learning rule, the weights are updated to ca
 
 \subsection{Normalisation}\seclbl{framework_norm}
 A continuous value representing the support strength is obtained after applying the convolutional operation to the binary input signal.
-The support strength has to be normalised into the range of $0, ..., 1$, so that it can be used as an activation probability of a Bernoulli neuron.
+The support strength has to be normalised into the range of $0, ..., 1$ so that it can be used as an activation probability of a Bernoulli neuron.
 In the context of neuroscience, this normalisation is interpreted as the brain's inhibitory signal:
 After initialisation of the weight matrix $\boldsymbol{W}$, the highest possible support strength per cell is $1$ as only self-support exists. Thus, a value of $1$ should be mapped to an activation probability of approximately $1$. However, during training, the maximum support strength increases significantly (up to $2n_l + 1$) as other cells start supporting a given cell.
 Consequently, the support required to remain active increases during training.
@@ -317,7 +317,7 @@ Preliminary experiments suggest that values in the range $\rho = 1.2n_l, ..., 1.
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.99\textwidth]{norm_support}
-    \caption[Inhibition for too many activated cells]{The visualisation of formula \eqref{norm_2}. The x-axis shows the received support, and the y-axis the support after normalisation: As soon as the received support is bigger than $\rho$, it is reduced with a slope of $-0.5$.}
+    \caption[Inhibition for too many activated cells]{The visualisation of formula \eqref{norm_2}. The x-axis shows the received support, and the y-axis shows the support after normalisation: As soon as the received support is bigger than $\rho$, it is reduced with a slope of $-0.5$.}
     \figlbl{norm_support}
 \end{figure}
 The result of the function described in \eqref{norm_2} is shown in \figref{norm_support}. No normalisation is applied if a cell's activation is below $\rho$. However, if the activation is above $\rho$, the cell's lateral support strength is decreased with a slope of $-0.5$.
@@ -400,7 +400,7 @@ In the following, some simplifications are assumed that are ignored in the propo
 \end{figure}
 
 So far, the problem is described as mapping entire net fragments to object prototypes.
-However, this is a somewhat simplified view as many similar objects only differ slightly.
+However, this is a somewhat simplified view, as many similar objects only differ slightly.
 Therefore, one cannot just compare objects but rather multiple features that define an object.
 This problem of mapping features extracted from an input image to features from a reference object is known as the correspondence problem.
 \sideciteay{wolfrum_recurrent_2008} explain the correspondence problem based on \figref{correspondence_recognition}. This figure contains two stick figures where the input's features, such as the head or neck, must be linked to the corresponding model's features.
