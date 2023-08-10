@@ -81,11 +81,11 @@ Capturing global patterns would require exponentially more cells than if local p
 The size of the local neighbourhood in the human brain varies \sidecite{pessoa_understanding_2014}.
 The primary visual cortex captures the input signal with a high local variance and therefore has a strongly limited local neighbourhood size. The temporal cortex contains transformation-independent object representations and can afford larger neighbourhood sizes as fewer distinct global patterns exist.
 
-\subsubsection{Overlay of Net Fragments}
+\subsubsection{Hierarchy of Net Fragments}
 A single cell is supported by its neighbouring cells, which, in turn, are supported by their neighbouring cells. Therefore, the support reaches much further than only the local neighbourhood.
 As the processing progresses, increasing inhibition causes cells without sufficient support to be turned off. Turning off one cell can trigger a chain reaction of further turn-offs. Therefore, lateral support occurs not only between individual cells but also between many overlapping net fragments.
 
-Thus, the network consists of an overlay of net fragments, which can be interpreted as a larger net fragment, i.e. a multitude of cells supporting each other.
+Thus, the network consists of a hierarchy of net fragments, which can be interpreted as a larger net fragment, i.e. a multitude of cells supporting each other.
 The size of a net fragment cannot be defined; the smallest possible net fragment is a single cell with its local neighbourhood, while the largest net fragment can span all active cells that are laterally connected.
 
 \subsubsection{Alternative Cells and Pathways.}
@@ -94,7 +94,7 @@ However, the capacity of a net fragment is limited to represent a single pattern
 For example, cell $A$ may often fire with cells $B$ and $C$ in close proximity, exhibiting a high mutual lateral support with these cells.
 However, cells $B$ and $C$ might not fire together. Consequently, cell $A$ is involved in two distinct and mutually exclusive net fragments, once together with cell $B$ and once with cell $C$.
 To facilitate such coexistence between net fragments, \emph{alternative cells} are required. A copy of cell $A$ must exist that behaves similarly but has different synaptic connections, i.e. exhibits \emph{alternative pathways}.
-The precise biological mechanism of how this is implemented is unclear; one theory could be that an overstressed cell (a cell that is unusually often active) initiates cell division, thereby creating an alternative cell to reduce its firing rate. This process allows to split a cell at the same spatial location and enables the formation of alternative and mutually exclusive net fragments.
+The precise biological mechanism of how this is implemented is unclear; One hypothesis is that within a group of cells that initially have similar afferent connections, cells undergo divergent connectivity changes during training, resulting in cells specialising in different patterns. This process allows to split a cell at the same spatial location and enables the formation of alternative and mutually exclusive net fragments.
 
 \subsection{Local Learning Principle}\seclbl{neuroscience_findings_local_learning_principle}
 In the brain, consistency is evaluated at the level of individual synapses in every single point in the network \sidecite{hebb_organization_1949}. Each synapse is established if the firing of its source neuron and its target neuron are consistent, allowing the source neuron to predict the activity of the target neuron. This process is crucial for establishing net structures, where each neuron within a net fragment can predict the firing of other neurons with a high probability.
@@ -119,7 +119,7 @@ Object prototypes in the temporal cortex are net fragments similar to those in t
 This overlay of fragments is a description of a captured visual scene, whereby it is unclear which sub-fragments represent distinct objects and how they are related.
 On the other hand, the fragments in the temporal cortex depict exactly one single object, whereby these objects are position and transformation-invariant.
 
-Projection fibres map neurons from the captured science (in the visual cortex to neurons) to object prototypes (in the temporal cortex) with one-to-one connections \sidecite{anderson_shifter_1987}, where pairs of neurons connected in the visual cortex project to pairs of neurons connected in the temporal cortex. The projection fibres have some flexibility, allowing for local distortions and enabling transformation- and position-invariant mapping \sidecite{wiskott_face_1996, wolfrum_recurrent_2008}. This mapping allows the recognition of one or more objects in a scene and their relationships to each other, facilitating object recognition and scene interpretation.
+Projection fibres map neurons within the captured scene (in the primary visual cortex) to object prototypes (in the temporal cortex) with one-to-one connections \sidecite{anderson_shifter_1987}, where pairs of neurons connected in the visual cortex project to pairs of neurons connected in the temporal cortex. The projection fibres have some flexibility, allowing for local distortions and enabling transformation- and position-invariant mapping \sidecite{wiskott_face_1996, wolfrum_recurrent_2008}. This mapping allows the recognition of one or more objects in a scene and their relationships to each other, facilitating object recognition and scene interpretation.
 
 \subsubsection{Maplets and Control Units}
 Each existing neuron in the visual cortex has projection fibres running to the temporal cortex. Consequently, there is a multitude of projection fibres, but only a fraction are active at any given time.
@@ -136,24 +136,35 @@ Please note that the line on the left is translated and stretched. However, the 
 Projection fibres thus provide generalisation, i.e. different, transformed versions of an object are recognised and mapped to a reference frame. This explains the ability of humans to see a new object once and immediately recognise it in a transformed version.
 
 \section{Vision}\seclbl{biologial_inspiration_vision}
-In the following, a vision is described how these findings could serve as the foundation to build a novel vision framework\sidenote{Much of the vision is inspired by self-organising projection fibres (c.f. \secref{projection_fibres}) and inputs by leading experts from the field that supervise this thesis.
-However, the vision is adapted to some extent according to my personal view and not entirely backed by existing scientific findings - that's why it is a vision.}.
-The previous section introduced promising neuroscientific findings to build a novel vision framework.
+The aforementioned neuroscientific findings serve as foundation to build a novel image-processing framework\sidenote{Much of this vision is inspired by self-organising projection fibres (c.f. \secref{projection_fibres}) and inputs by leading experts from the field that supervise this thesis.}.
 The core behind this vision is based on two stages and projection fibres connecting them.
-The first stage builds net fragments reassembling a visual scene captured with our eyes. The lateral reach within this stage is limited since many pattern combinations can be experienced in the real world. However, scenes are dominated by locally similar-looking patterns that can be captured with net fragments.
+The first stage builds net fragments reassembling a visual scene captured with a sensory system (the eyes). The lateral reach within this stage is limited since many pattern combinations can be experienced in the real world. However, scenes are dominated by locally similar-looking patterns that can be captured with net fragments.
 The second stage contains not entire visual scenes but reference frames representing specific objects. These objects are centred and transformation-invariant and can thus afford longer-reaching lateral connections.
 Multiple 2D reference frames must exist for each object to represent an object from various viewpoints.
-If, for example, for each object rotated by 30°, a different object exists, information about the object's rotation is still available in the second stage but with a lower resolution than in the first stage.
+If, for example, for each object rotated by 30°, a different reference frame exists, information about the object's rotation is still available in the second stage but with a lower resolution than in the first stage.
 
 Projection fibres connect these two stages, mapping objects within a visual scene to object prototypes.
-This mapping is not intended as a classification layer but rather as a scene interpretation layer: A classification layer would map a pattern, for example, to a specific person with a name. In contrast, projection fibres map the pattern to a more generalised view of this person, i.e. transforming it into a reference person. A subsequent memory stage would be needed to map such a reference person to an actual label, such as the person's name. However, this memory has yet to be investigated in detail within this thesis and remains an open question for future research.
+This mapping serves as a scene interpretation layer by describing which objects are located where in the observed scene.
+In the next \chref{probabilistic_framework}, a framework is proposed that implements these two stages with projection fibres.
+It is considered as a computational implementation of the foundation of the biological visual system.
+However, in the long term, this framework can be further expanded and is not limited to these two stages, thereby leading to a highly efficient scene processing system.
+These extensions are discussed in the following.
+
+\subsection{Object Classification}
+A classification layer maps an object to a specific instance, for example, a person, to a person's name. Projection fibres do not provide such a classification as these fibres map the pattern to a more generalised view, i.e. transforming a person to a reference person. Instead, a subsequent memory stage is needed to map a reference object to an actual label.
+This memory stage contains multiple instances for each object and provides distinction between objects. The memory stage implements an n-to-n mapping to the reference frame: Each reference frame has multiple instances (e.g. multiple persons exist), and each instance can belong to multiple reference frames (e.g. a face and a body could be different reference frames but belong to the same instance).
+
+The human brain has cells representing instances of objects \sidecite{gross_genealogy_2002}.
+Therefore, memory is assumed to consist of one or a few cells, while reference frames consist of many cells.
+This allows to store many object instances while not requiring a vast amount of cells.
+
 
 \subsection{Scene Interpretation}
 As described in \secref{neuroscience_findings_local_learning_principle}, the human brain optimises consistency at every point in the network.
-This is considered a key principle that has to be integrated into a computational framework: Consistency is optimised between the cells within the two stages to build net fragments but also between the projection fibres connection net fragments to obtain a valid mapping.
+This crucial principle must be integrated into a computational framework: Consistency is optimised between the cells within the two stages to build net fragments and between the projection fibres connection net fragments to obtain a valid mapping.
 
 This thesis only investigates these two stages and describes how building consistency could initiate a mapping between them. In the long term, more components could be added, allowing to build consistency between memories and reference frames.
-For instance, projection fibres could map one object in the scene to a person while mapping another object in close spatial proximity of this person's foot to a ball. By building consistency between these two objects, one could conclude that this person is most likely playing football (soccer). If such scenes are observed several times, synaptic connections between these references could be formed, allowing for scene interpretation.
+For instance, projection fibres could map one object in the scene to a person while mapping another object in close spatial proximity of this person's foot to a ball. By building consistency between these two objects, one could conclude that this person is most likely playing football (soccer). Synaptic connections between these references could be formed if such scenes are observed several times, allowing for scene interpretation.
 Furthermore, memories could be integrated that either confirms or rejects this hypothesis. If, for example, the person is identified as a soccer player such as Ronaldo, it would further strengthen this hypothesis.
 
 Such a system could learn interpretations of visual scenes and might even have the potential to understand how objects are related to each other. A pivotal difference to deep networks is that the model can build such consistency on its own, while deep learning systems require a teaching signal to learn consistency.
@@ -166,8 +177,8 @@ The brain's solution to prevent early commitment are net fragments.
 A single layer with lateral connections that forms net fragments can represent local and global features at the same time\sidenote{This way of thinking about features can be hard to comprehend, especially for computer scientists familiar with deep learning.}.
 Each set of active and laterally connected neurons can be considered a net fragment. Net fragments with a few cells depict local features, while fragments containing many features represent global features.
 
-A system that avoids the fallacy of early commitment should fulfil the conundrum that local decisions are taken based on plausibility in the light of high-level patterns, while high-level patterns can only be defined based on low-level features.
-The most fundamental local decision is whether a single cell should be active. Since a single cell receives support from all laterally connected cells, a high-level pattern (i.e. the activity of all directly or indirectly laterally connected cells) is used to make this decision. Therefore, local decisions are taken based on high-level patterns. The high-level pattern used to make this decision is defined by the sum of individual cells (i.e. low-level features). Hence, the human brain fulfils the conundrum within every single layer.
+A system that avoids the fallacy of early commitment should solve the conundrum that local decisions are taken based on plausibility in the light of high-level patterns, while high-level patterns can only be defined based on low-level features.
+The most fundamental local decision is whether a single cell should be active. Since a single cell receives support from all laterally connected cells, a high-level pattern (i.e. the activity of all directly or indirectly laterally connected cells) is used to make this decision. Therefore, local decisions are taken based on high-level patterns. The high-level pattern used to make this decision is defined by the sum of individual cells (i.e. low-level features). Hence, the human brain solves the conundrum within every single layer.
 
 
 \subsection{Hierarchical Features}
@@ -176,8 +187,12 @@ The fact that deep networks consist of multiple layers suggests that such a hier
 Otherwise, having one network layer would be sufficient.
 
 As described in \secref{neuroscience_findings}, cortical columns also consist of multiple layers.
-However, these layers serve different functionalities and are required, for example, to deal with depth rotation rather than extracting higher-level features hierarchically. 
+However, to the best of the author's knowledge, there is no proof of what these layers represent and, thus, are not necessarily used to process input layer-wise to extract hierarchical features.
+Some evidence suggests that the layers in cortical columns could deal with depth rotations \sidecite{iamshchinina_perceived_2021}, implementing hierarchical processing in different stages \sidecite{felleman_distributed_1991}.
+Therefore, it is considered biologically plausible that the brain does not leverage multiple stacked layers to process features but implements this capability differently.
 
-
-
-
+Instead, I hypothesise hierarchical feature processing is implemented with net fragments and projection fibres.
+First, net fragments are built over time and cells without insufficient support turn off, while deactivated cells might even turn on.
+This process discards unimportant and noisy activations, thus mapping very specific activations to more general features.
+Second, projection fibres are responsible for mapping specific scenes to general reference frames, implementing the process that deep networks achieve through layer-wise forward propagation. These fibres are hierarchically organised as outlined in work about shifter circuits \sidecite{anderson_shifter_1987, olshausen_neurobiological_1993}. 
+Thus the proposed framework implements hierarchical processing and can analyse complex patterns while still relying on building consistency locally in a self-organising manner.

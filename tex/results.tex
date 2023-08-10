@@ -229,7 +229,7 @@ If, on the other hand, the weights are initialised with zeros, the network has n
 
 In conclusion, using one of the two self-support weight initialisation strategies shown in \figref{init_weight_self_support} is crucial. These methods ensure proper functioning and effective learning, unlike the random or zero weight initialisation strategies depicted in \figref{init_weight_not_working}.
 
-\section{Support Goodness}
+\section{Support Quality}
 %
 \begin{figure}[h]
     \centering
@@ -239,7 +239,7 @@ In conclusion, using one of the two self-support weight initialisation strategie
 \end{figure}
 %
 \figref{support_strength} presents the support strength received by active and inactive cells during training before the activation strength is normalised and translated into an activation probability.
-The green interval depicts the support with inhibition, and the blue interval without inhibition.
+The green interval depicts the support with inhibition and the blue interval without inhibition.
 
 Before training, only self-support exists, i.e. the received support for active cells is $1$.
 After training for $3$ epochs, the average support active cells receive increases to $13.8$ with inhibition and $15.7$ without inhibition.
@@ -289,9 +289,14 @@ Instead, inhibition normalises the activation probabilities throughout the train
 Without inhibition, the activations are dominated by line ends, causing all channels to learn similar features.
 With inhibition, the channels specialise more on distinct features as no feature dominates the learning process. Therefore, the weights (and thus the activation probabilities shown on the second row of \figref{inhibition_heatmap}) are more diverse.
 
+\section{Conclusion}
+The previous sections discuss the obtained results, thereby focusing on specific aspects.
+In conclusion, \emph{S1} can build net fragments, and it is demonstrated that these fragments associate input patterns with learned patterns, thereby removing noise or reconstructing occluded parts of objects.
+Since removing noise and reconstructing objects improves representations over multiple timesteps, it is considered a hierarchical processing of features without being subject to early commitment.
+Thus, the experiments demonstrate that net fragments can be implemented according to the proposed principles.
 
-
-
-
-
-
+This is considered an important step towards implementing the proposed framework.
+Implementing projection fibres is based on the principle of comparing local features in \emph{S1} and \emph{S2} and initiating a mapping between them if neighbouring fibres agree \sidecite{bienenstock_neural_1987, lades_distortion_1993, wiskott_face_1996}.
+Such a mapping only works well if patterns in the two stages are highly similar.
+This is achieved with net fragments that either turn off cells representing unknown patterns that are not present in \emph{S2} and thus cannot be mapped or support and reconstruct (i.e. optimise) existing patterns to become more similar to patterns stored in \emph{S2}.
+Thus, the conducted experiments lay the foundation for future research and implementing projection fibres that map net fragments instead of cells as done in previous work (c.f. \secref{projection_fibres}).

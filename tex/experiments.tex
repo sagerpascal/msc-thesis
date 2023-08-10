@@ -59,7 +59,7 @@ For the conducted experiments, hand-crafted filters seem sufficient and are pref
 The hand-crafted filters are illustrated in \figref{filters_feature_extractor}.
 Four filters are used, each specialising in a different type of line.
 These filters function similarly to a convolutional layer with frozen (non-trainable) weights and no bias term. 
-During processing, the filters are shifted with a stride of $1$ across the input image of size $(1 \times 32 \times 32)$. 
+During processing, the filters are shifted with a stride of $1$ across the input image of size $(1 \times 32 \times 32)$ so that it is applied at all input positions. 
 The borders are padded with $0$ values to keep the input and output sizes identical.
 After applying the four filters, the output has a shape of $(4 \times 32 \times 32)$. 
 However, the activations can be in the range of $-1, ..., +1$.
