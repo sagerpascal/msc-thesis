@@ -1,5 +1,5 @@
 The introduction in \secref{intro_motivation} describes that preventing early commitment is considered a fundamental property of the human visual system that is absent in current deep learning frameworks.
-The previous chapter introduced neuroscientific findings (\secref{neuroscience_findings}) that could explain why this problem is absent in the human brain and that are considered the principles implementing the findings of the Gestalt psychology \sidecite{ellis_source_1938, kohler_gestalt_1992, wagemans_century_2012, hamlyn_psychology_2017}.
+The previous chapter introduced neuroscientific findings (\secref{neuroscience_findings}) that could explain why this problem is absent in the human brain and that are considered the principles implementing the findings of the Gestalt psychology \cite{ellis_source_1938, kohler_gestalt_1992, wagemans_century_2012, hamlyn_psychology_2017}.
 
 In the following, a novel framework incorporating these identified principles is proposed.
 The focus is on translating the two stages described in \secref{neuroscience_findings} into a computational framework.
@@ -380,7 +380,7 @@ In stage \emph{S2}, the net fragments are mapped to idealised reference objects.
 This mapping is implemented by projection fibres, which are grouped into maplets.
 As soon as a control unit of a maplet detects a strong correlation between the neurons it connects in \emph{S1} and \emph{S2}, it initialises the mapping by turning on its fibres.
 
-This mapping from fragments to reference representations seems to be one of the core algorithms of our visual system as it is able to solve the binding problem \sidecite{revonsuo_binding_1999, feldman_neural_2013}, i.e. answers the questions of how visually perceived objects are bound together based on their properties such as shape, texture, colour, contour, or motion. This process is well described in psychology and known as Gestalt phenomena \sidecite{ellis_source_1938, kohler_gestalt_1992, wagemans_century_2012, hamlyn_psychology_2017}
+This mapping from fragments to reference representations seems to be one of the core algorithms of our visual system as it is able to solve the binding problem \sidecite{revonsuo_binding_1999, feldman_neural_2013}, i.e. answers the questions of how visually perceived objects are bound together based on their properties such as shape, texture, colour, contour, or motion. This process is well described in psychology and known as Gestalt phenomena \cite{ellis_source_1938, kohler_gestalt_1992, wagemans_century_2012, hamlyn_psychology_2017}
 
  Implementing such a framework poses various challenges.
 In the following, some simplifications are assumed that are ignored in the proposed framework and have to be solved in future work.
@@ -488,7 +488,7 @@ Afterwards, the average similarity is calculated per maplet, and this similarity
 Similar to \emph{S1}, this leads to many activations at the beginning and inhibition is used to turn some of the maplets off.
 Maplets support each other locally and can only remain active if neighbouring features in \emph{S1} remain neighbouring features in \emph{S2}.
 Thus, the better a set of maplets can map a prototype to an object reference, the higher its probability of remaining active.
-For more details on the implementation, please refer to the work by \sideciteay{anderson_shifter_1987} and \sideciteay{olshausen_neurobiological_1993}.
+For more details on the implementation, please refer to the work by \citeay{anderson_shifter_1987} and \citeay{olshausen_neurobiological_1993}.
 
 
 \subsection{Feedback to \emph{S1}}

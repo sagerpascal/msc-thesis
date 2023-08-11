@@ -1,5 +1,5 @@
 \section{Discussion}\seclbl{discussion}
-In \secref{intro_motivation} is discussed that the human brain can recognise the ``Gestalt'' (the entire structure) of an object within a very short time \sidecite{ellis_source_1938, kohler_gestalt_1992, wagemans_century_2012, hamlyn_psychology_2017} because it prevents early commitment \sidecite{marr_vision_2010}.
+In \secref{intro_motivation} is discussed that the human brain can recognise the ``Gestalt'' (the entire structure) of an object within a very short time \cite{ellis_source_1938, kohler_gestalt_1992, wagemans_century_2012, hamlyn_psychology_2017} because it prevents early commitment \cite{marr_vision_2010}.
 This capability is absent in current deep learning systems.
 Although deep networks have demonstrated their exceptional capabilities as feature extractors and recent advancements in scaling have brought them to a level where they hold the potential for widespread applicability across various tasks in our everyday lives, these networks still have intrinsic limitations, and the prospect of overcoming these barriers remains uncertain (c.f. \secref{limitationsDL}).
 
@@ -98,7 +98,7 @@ Another solution is alternative cells: If two patterns have a positive correlati
 \subsubsection{Refine \emph{S2}}
 An important task for future work is the empirical improvement of \emph{S2}, which has only been theoretically developed based on identified neuroscientific findings. The current blueprint describing its implementation has to be further refined by conducting experiments.
 
-In the first phase, the integration and evaluation of projection fibres based on shifter circuits \sidecite{anderson_shifter_1987, olshausen_neurobiological_1993} should be done and explored within the proposed framework.
+In the first phase, the integration and evaluation of projection fibres based on shifter circuits \cite{anderson_shifter_1987, olshausen_neurobiological_1993} should be done and explored within the proposed framework.
 Afterwards, also different object views should be explored (provided by the medium processing loop). Currently, these views are only used during evaluation, but once \emph{S2} is implemented, they can be crucial in learning to associate different views to the same prototype, encouraging transformation-invariant mappings.
 
 
@@ -117,7 +117,7 @@ Moreover, these transformations are an integral part of the proposed processing 
 
 
 \subsection{Multi-Modality}\seclbl{framework_multi_modality}
-This work focuses on a framework for computer vision. However, the architecture has broader applicability and can be used for processing different sensor signals and be used in multimodal settings \cite{ngiam_multimodal_2011, liu_learn_2018, baltrusaitis_multimodal_2019}.
+This work focuses on a framework for computer vision. However, the architecture has broader applicability and can be used for processing different sensor signals and be used in multimodal settings \sidecite{ngiam_multimodal_2011, liu_learn_2018, baltrusaitis_multimodal_2019}.
 Having similar cell architectures processing different kinds of signals is also in line with findings from neuroscience \sidecite{mountcastle_organizing_1978, mountcastle_columnar_1997}.
 
 In the case of images, net fragments in \emph{S1} represent learned visual patterns that are part of an object's surface and are mapped with protection fibres to object prototypes that describe the visual appearance of objects. 
