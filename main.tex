@@ -11,10 +11,11 @@
 \usepackage[thmmarks]{ntheorem}
 \usetikzlibrary{fit,calc,positioning}
 \usetikzlibrary{3d}
-\subimport{layers/}{init}
+%\subimport{layers/}{init}
 \usepackage{amsmath}
 \usepackage{textcomp}
 \usepackage{fontawesome}
+\usepackage{comment}
 
 \usepackage{styles/phdbibliobyphd}
 %\addbibresource{main.bib}
@@ -29,27 +30,26 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Plotting neural networks
-\def\ConvColor{rgb:yellow,5;red,2.5;white,5}
-\def\ConvReluColor{rgb:yellow,5;red,5;white,5}
-\def\PoolColor{rgb:red,1;black,0.3}
-\def\UnpoolColor{rgb:blue,2;green,1;black,0.3}
-\def\FcColor{rgb:blue,5;red,2.5;white,5}
-\def\FcReluColor{rgb:blue,5;red,5;white,4}
-\def\SoftmaxColor{rgb:magenta,5;black,7}   
-\def\SumColor{rgb:blue,5;green,15}
+%\def\ConvColor{rgb:yellow,5;red,2.5;white,5}
+%\def\ConvReluColor{rgb:yellow,5;red,5;white,5}
+%\def\PoolColor{rgb:red,1;black,0.3}
+%\def\UnpoolColor{rgb:blue,2;green,1;black,0.3}
+%\def\FcColor{rgb:blue,5;red,2.5;white,5}
+%\def\FcReluColor{rgb:blue,5;red,5;white,4}
+%\def\SoftmaxColor{rgb:magenta,5;black,7}   
+%\def\SumColor{rgb:blue,5;green,15}
 
-\newcommand{\copymidarrow}{\tikz \draw[-Stealth,line width=0.8mm,draw={rgb:blue,4;red,1;green,1;black,3}] (-0.3,0) -- ++(0.3,0);}
+%\newcommand{\copymidarrow}{\tikz \draw[-Stealth,line width=0.8mm,draw={rgb:blue,4;red,1;green,1;black,3}] (-0.3,0) -- ++(0.3,0);}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Theorems
-\theoremstyle{plain}
-\newtheorem{theorem}{Theorem}
-\newtheorem{claim}{Claim}
+%\theoremstyle{plain}
+%\newtheorem{theorem}{Theorem}
+%\newtheorem{claim}{Claim}
 %\newtheorem{claim}{Claim}[theorem]
-\newtheorem{implementation}{Implementation}[claim]
+%\newtheorem{implementation}{Implementation}[claim]
 
-\usepackage{comment}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Math
 \DeclareMathOperator*{\argmax}{arg\,max}
@@ -86,17 +86,7 @@
 \pagenumbering{Alph}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\titlehead{Master of Science in Engineering with Specialisation in Data Science}
-
-\subject{Master Thesis}
-\title[Self-Organisation in a Biologically Inspired Novel Learning Framework Based on Bernoulli Neurons]{Self-Organisation in a Biologically Inspired Novel Learning Framework Based on Bernoulli Neurons}
-\subtitle{Incorporating Findings from Neuroscience about Natural Intelligence into a Computational Framework}
-
-\author[Pascal Sager]{{\small written by}\\Pascal Sager\\[1ex]  {\small supervised by}\\{\large Prof. Dr. Thilo Stadelmann}\\{\large Dr. Jan Milan Deriu}\\{\large Prof. Dr. Christoph von der Malsburg}\\[4ex]}
-
-\date{\today}
-
-\publishers{Zurich University of Applied Sciences\\Centre for Artificial Intelligence}
+\input{tex/title_page}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \frontmatter
@@ -149,8 +139,8 @@
     \let\cleardoublepage\bigskip
     \let\clearpage\bigskip
 	
-	\pagebreak  % TODO added because list of Figures almost fills entire page
-    \listoftables
+	%\pagebreak  % TODO added because list of Figures almost fills entire page
+    %\listoftables
 
     %\afterpage{\blankpage}
 

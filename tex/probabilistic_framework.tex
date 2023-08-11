@@ -7,7 +7,7 @@ Incorporating further stages that implement the long-term vision described in \s
 Thus, while the ideas and principles are based on previous research, the following section describes a novel computational framework that is considered the main scientific contribution of this thesis.
 
 \section{3-Staged Model}\seclbl{framework_3_staged_model}
-Some of the neuroscientific principles described in \secref{\secref{neuroscience_findings}} have been explored in the theory of self-organising projection fibres (c.f. \secref{projection_fibres}). However, these approaches do not yet scale to natural images except for human faces \cite{wolfrum_recurrent_2008}. This could be due to the fact that most work in this area has neglected so far to model the learning and the dynamics of rich sets of net fragments in the visual cortex.
+Some of the neuroscientific principles described in \secref{neuroscience_findings} have been explored in the theory of self-organising projection fibres (c.f. \secref{projection_fibres}). However, these approaches do not yet scale to natural images except for human faces \cite{wolfrum_recurrent_2008}. This could be due to the fact that most work in this area has neglected so far to model the learning and the dynamics of rich sets of net fragments in the visual cortex.
 
 This section describes a completely different system based on binary neurons with the potential to scale to natural images since it extends the projection fibres with other concepts.
 The proposed system comprises three main components: A first stage \emph{S0} that extracts features from the image, a stage \emph{S1} that builds an overlay of net fragments, and a stage \emph{S2} that uses projection fibres to map them to object prototypes.
@@ -46,7 +46,7 @@ In the object recognition process, corresponding net fragments in \emph{S1} are 
 The projection fibres between \emph{S1} and \emph{S2} are grouped in maplets, whereby a maplet comprises a collection of fibres that establish one-to-one connections between all neurons in a small patch of \emph{S1} and all neurons in a small patch of \emph{S2} in a topological manner. These topological connections link neighbouring neurons in \emph{S1} to neighbouring neurons in \emph{S2}. Both \emph{S1} and \emph{S2} are divided into overlapping patches, and for each pair of patches — one in \emph{S1} and one in \emph{S2} — a corresponding maplet exists.
 
 Control units initiate activation of a maplet when they observe a high pattern correlation between the signals carried by its fibres from \emph{S1} and the signals on their target neurons in \emph{S2}. They inhibit competing control units: Many projection fibres can initially be activated, but only those activated S2 neurons with sufficient lateral support can remain active.
-Consequently, the activated projection achieves a homeomorphism, where neurons of a particular feature type in \emph{S1} are connected to neurons of the same type in \emph{S2}.
+Consequently, the activated projection achieves a homeomorphism, where neurons of a particular feature type in \emph{S1} are connected to neurons of the same type in \emph{S2} and neurons connected in \emph{S1} activate neurons connected in \emph{S2}.
 
 \paragraph{Bernoulli Neuron.} The aforementioned components are implemented using a novel type of neuron I call the Bernoulli neuron (c.f. \secref{bernoulli_neuron}). This neuron interprets the incoming activity as an activation probability and samples a binary signal from a Bernoulli distribution based on this probability. Utilising Bernoulli neurons lead to sparse and distributed binary network activities, which possess properties that enhance robustness to noise within a network \sidecite{ahmad_properties_2015}.
 
@@ -89,6 +89,7 @@ Furthermore, the projection fibres map neurons from \emph{S1} to neurons in \emp
 The proposed framework can refine its predictions until it reaches a consensus about its final output: The activated prototypes in \emph{S2} can be interpreted as hypotheses, which are refined until consistency, i.e. an attractor state, is reached. This happens relatively fast if the fragments in \emph{S1} can be unambiguously mapped to one of the prototypes and requires more iteration between \emph{S1} and \emph{S2} if it is unclear to which prototype the local features belong to or if the input is ambiguous. Thus, the processing duration can be automatically adjusted to the input data.
 
 \paragraph{Object-Independent Transformations.} The same projection fibres are applied to all object prototypes, allowing the model to learn object-independent transformations. For example, an object might be slightly stretched, rotated, or deformed compared to the stored prototypes. The projection fibres learn to ignore slight deformations independent of the object type. This allows the architecture to learn transformation invariance and to transfer this capability to new objects that have not been transformed in the training data.
+
 
 
 \section{Bernoulli Neuron}\seclbl{bernoulli_neuron}
@@ -152,8 +153,8 @@ At each timestep, the innermost loop executes a step. Once the innermost loop is
 
 \paragraph{Slow Loop.} The dataset comprises multiple images. Each image in the dataset is processed one after the other, building the outermost loop. \figref{lateral_loops} depicts an outer loop with a dataset containing vertical and horizontal lines, similar to the experiments conducted in this thesis (c.f. \secref{exp_dataset}). However, depending on the application, different datasets could be used.
 
-\paragraph{Medium Loop.} For each image in the dataset, different views are sampled using data augmentation. In the experiments conducted in this thesis (c.f. \secref{exp_dataset}), a trajectory strategy is implemented that moves the line continuously from an initial position to a target position. This generates distinct yet closely related images, fostering activations that slowly change over time. Consequently, the cells can provide lateral support over successive time steps.
-Similar to our visual system, which captures multiple frames of an object before moving on to the next, this loop allows the model to perceive objects from various viewpoints. Furthermore, it can be used to encourage the network to map different views to the same object prototype. This enhances the model's ability to build transformation invariant features in \emph{S2}.
+\paragraph{Medium Loop.} For each image in the dataset, different views are sampled using data augmentation. In the experiments conducted in this thesis (c.f. \secref{exp_dataset}), a trajectory strategy is implemented that moves the line continuously from an initial position to a target position.
+However, continuous movement is not mandatory, and random data augmentation can also be applied. The network must be informed that the same object with an identical inner structure is shown multiple times during the median loop so that it can learn to map it to the same object prototype despite different transformations and viewpoints.
 
 \paragraph{Fast Loop.} From each view, the sensory system creates neural activity that the network processes for $T$ timesteps. During these timesteps, inhibition increases, and active cells that do not get lateral support from other cells are turned off. 
 The activations of the sensory system can be fed into \emph{S1} only at $T=0$ or at all timesteps $T=[0, ..., t]$. The processing aims to iteratively improve the features based on the features from the previous timestep and the corresponding object prototypes. Therefore, the previous net fragments and the object prototypes are required at every timestep and fed into \emph{S1} at $T=[1, ..., t]$.
@@ -183,7 +184,7 @@ These three types of input serve the following purposes:
     \item \textbf{Object prototypes}: The net fragments are mapped to object prototypes in \emph{S2} using maplets. An inverse function is employed afterwards to map the object prototypes back to local features to provide information about detected objects to \emph{S1}.
 \end{itemize}
 
-There exist various ways of combining these three types of input signals. For example, the three arrays can be stacked (i.e., all input signals can be fed into the network).
+There exist various ways of combining these three types of input signals. For example, the three arrays can be stacked\sidenote{Stacking arrays refers to the process of combining multiple arrays along a specified axis to create a new multidimensional array, e.g. create an array of size $2 \times 2$ out of two arrays with size $1 \times 2$.} to held all arrays available.
 However, stacking all three arrays would lead to a very high-dimensional input.
 A more sophisticated approach is to aggregate (some of) the matrices.
 In the experiments of this thesis (c.f. \secref{exp_s1}), a straightforward approach is used: The previous net fragments are overridden by the feedback from the object prototypes.
@@ -211,7 +212,7 @@ A single output cell in \emph{S1} is denoted as $x_{c,w,h}$, where $c \in \{0, .
 
 The lateral connections are limited to a distance of $n_{l}$ cells along the vertical and horizontal axes but are not limited along the input feature channels.
 Therefore, an output cell $x_{c,w,h}$ has lateral connections to all inputs within the range $(0, ..., C_{\text{in}} \times w - n_l, ..., w+n_l \times h - n_l, ..., h+n_l)$.
-Please note that a single output cell $c \in \{0, ..., C_{\text{out}}\}$ is connected to all input channels $\{0, ..., C_{\text{in}}\}$ in a spatial neighbourhood. An input channel contains either feature extracted by the sensory system or the previous net fragments (c.f. \figref{s1_input}). Thus, it can access all features detected by the sensory system or the previous cell state (recurrent connection) in its neighbourhood.
+Please note that a single output cell $x \in \{0, ..., C_{\text{out}}\}$ is connected to all input channels $\{0, ..., C_{\text{in}}\}$ in a spatial neighbourhood. An input channel contains either feature extracted by the sensory system or the previous net fragments (c.f. \figref{s1_input}). Thus, it can access all features detected by the sensory system or the previous cell state (recurrent connection) in its neighbourhood.
 Furthermore, according to this definition, the cell is also connected to itself.
 This type of connection is called self-support and allows a cell to remain active as long as the inhibitory signal is weak, i.e. at the beginning of training.
 Self-support is crucial to initialise the network properly (c.f. \secref{lateral_init}).
@@ -245,6 +246,7 @@ Therefore, the update of a connection depends not only on two cells but on multi
 \end{align}
 %
 In this formula, $\eta$ is the learning rate, and $k_w \in \{0, ..., 2n_l+1\}$ and $k_h\in \{0, ..., 2n_l+1 \}$ is the kernel index along the horizontal and vertical axis\sidenote{For example, $w_{1, 2,3,4}$ represents the weight between output channel $1$ and input channel $2$, located in the kernel's third column and fourth row.}.
+Please note that the weight between two laterally connected cells is increased if both are active simultaneously, whereby one cell is considered as source cell (denoted as input channel $c'$) of the as target cell (denoted as output channel $c$).
 
 During training, the network may encounter similar patterns multiple times, leading to strong connections between specific cells. Therefore, weight must be normalised so that these lateral connection strengths and the post-synaptic activity cannot grow towards infinite. After calculating the weight update and adding it to the weight matrix $W$, the weights can be normalised per output channel by dividing each channel by its Euclidean norm. This ensures that the weights are roughly in the range $0, ..., +1$.
 Therefore, one cell can only provide limited support to another cell, and it is important that multiple cells provide support to a cell to remain active.
@@ -324,7 +326,7 @@ The result of the function described in \eqref{norm_2} is shown in \figref{norm_
 
 
 \subsection{Alternative Cells}\seclbl{framework_alt_cells}
-As described in \secref{framework_neuroscience}, alternative cells and pathways are necessary to deal with different patterns that activate similar cells.
+As described in \secref{neuroscience_findings_alt_cells}, alternative cells and pathways are necessary to deal with different patterns that activate similar cells.
 ``Alternative'' in this context means that only one cell among the alternatives is active, i.e. these cells are mutually exclusive.
 At the beginning of training, alternative cells are copies of an initial cell.
 However, after training, these cells contribute to different patterns and have different behaviour.
@@ -478,9 +480,8 @@ However, such an object-dependent mapping would not scale as each object require
 Instead, the mapping must be object-independent and focus on local features.
 In this context, ``object-independent'' still means that the feature similarity has to be calculated per object but that not each different object requires a unique set of projection fibres.
 Shifter circuits \sidecite{anderson_shifter_1987, olshausen_neurobiological_1993} are a kind of hierarchical mapping that implement such an object-independent mapping focusing on local features.
-Shifter circuits define different hierarchical levels, whereby each level is responsible for a specific operation, such as a rotation, shift, or translation. 
-Competing maplets on the same hierarchical level decide how much each local feature should be rotated, shifted, or translated.
-Thus, many local features from \emph{S1} are mapped at various positions in \emph{S2}.
+Shifter circuits define different hierarchical levels, whereby each level is responsible for a specific operation, such as a rotation, shift, or translation.
+During the fast loop when the input is fixed, very fast Hebbian plasticity can be used to create a topographical projection, i.e. to connect neighbouring cells in \emph{S1} with neighbouring cells in \emph{S2} as shown by \sideciteay{fernandes_self-organization_2015}.
 
 Each projection fibre calculates the similarity between the neurons it connects when processing an image.
 Afterwards, the average similarity is calculated per maplet, and this similarity is used as the activation probability of a Bernoulli neuron that can turn on the corresponding control unit.
@@ -514,6 +515,3 @@ To measure the quality of the feedback, the prototypes are mapped back, and simi
 
 Please note that \emph{S2} highly depends on \emph{S1}. To evaluate the performance \emph{S2} independently, it has to be encapsulated from \emph{S1}.
 This can be achieved using strongly augmented reference objects from \emph{S2} as input instead of actual net fragments from \emph{S1}.
-
-
-

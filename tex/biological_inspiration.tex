@@ -88,7 +88,7 @@ As the processing progresses, increasing inhibition causes cells without suffici
 Thus, the network consists of a hierarchy of net fragments, which can be interpreted as a larger net fragment, i.e. a multitude of cells supporting each other.
 The size of a net fragment cannot be defined; the smallest possible net fragment is a single cell with its local neighbourhood, while the largest net fragment can span all active cells that are laterally connected.
 
-\subsubsection{Alternative Cells and Pathways.}
+\subsubsection{Alternative Cells and Pathways}\seclbl{neuroscience_findings_alt_cells}
 In a given spatial location, different patterns can occur.
 However, the capacity of a net fragment is limited to represent a single pattern.
 For example, cell $A$ may often fire with cells $B$ and $C$ in close proximity, exhibiting a high mutual lateral support with these cells.
@@ -135,13 +135,12 @@ Please note that the line on the left is translated and stretched. However, the 
 
 Projection fibres thus provide generalisation, i.e. different, transformed versions of an object are recognised and mapped to a reference frame. This explains the ability of humans to see a new object once and immediately recognise it in a transformed version.
 
-\section{Vision}\seclbl{biologial_inspiration_vision}
-The aforementioned neuroscientific findings serve as the foundation to build a novel image-processing framework\sidenote{Much of this vision is inspired by self-organising projection fibres (c.f. \secref{projection_fibres}) and inputs by leading experts from the field that supervise this thesis.}.
-The core behind this vision is based on two stages and projection fibres connecting them.
+\section{Objective}\seclbl{biologial_inspiration_vision}
+The aforementioned neuroscientific findings serve as the foundation to build a novel image-processing framework.
+The core behind this framework is based on two stages and projection fibres connecting them.
 The first stage builds net fragments reassembling a visual scene captured with a sensory system (the eyes). The lateral reach within this stage is limited since many pattern combinations can be experienced in the real world. However, scenes are dominated by locally similar-looking patterns that can be captured with net fragments.
 The second stage contains not entire visual scenes but reference frames representing specific objects. These objects are centred and transformation-invariant and can thus afford longer-reaching lateral connections.
 Multiple 2D reference frames must exist for each object to represent an object from various viewpoints.
-If, for example, for each object rotated by 30°, a different reference frame exists, information about the object's rotation is still available in the second stage but with a lower resolution than in the first stage.
 
 Projection fibres connect these two stages, mapping objects within a visual scene to object prototypes.
 This mapping serves as a scene interpretation layer by describing which objects are located where in the observed scene.
@@ -156,14 +155,18 @@ This memory stage contains multiple instances for each object and provides disti
 
 The human brain has cells representing instances of objects \sidecite{gross_genealogy_2002}.
 Therefore, memory is assumed to consist of one or a few cells, while reference frames consist of many cells.
-This allows to store many object instances while not requiring a vast amount of cells.
+This allows to store many object instances while not requiring a vast number of cells.
 
 
 \subsection{Scene Interpretation}
-As described in \secref{neuroscience_findings_local_learning_principle}, the human brain optimises consistency at every point in the network.
-This crucial principle must be integrated into a computational framework: Consistency is optimised between the cells within the two stages to build net fragments and between the projection fibres connection net fragments to obtain a valid mapping.
+On a very abstract level, I envision the mapping process as having a big canvas with the observed visual scene in the middle and arrows going away from each object in the image and pointing to the corresponding prototype. Thus, the projection fibres (the arrows) implement object segmentation and identification.
+In addition, the position of each object is known, as well as the differences in position between the objects.
+Such a canvas provides a mental description of a perceived scene. However, such a description is not sufficient to interpret a scene. For scene interpretation, all objects in the scene must be put into context.
 
-This thesis only investigates these two stages and describes how building consistency could initiate a mapping between them. In the long term, more components could be added, allowing to build consistency between memories and reference frames.
+As described in \secref{neuroscience_findings_local_learning_principle}, the human brain optimises consistency at every point in the network: Consistency is optimised between the cells within the two stages to build net fragments and between the projection fibres connection net fragments to obtain a valid mapping.
+However, building consistency between these two stages is not enough to interpret visual scenes.
+
+In the long term, more components must be added, allowing to build consistency between memories and reference frames.
 For instance, projection fibres could map one object in the scene to a person while mapping another object in close spatial proximity of this person's foot to a ball. By building consistency between these two objects, one could conclude that this person is most likely playing football (soccer). Synaptic connections between these references could be formed if such scenes are observed several times, allowing for scene interpretation.
 Furthermore, memories could be integrated that either confirms or rejects this hypothesis. If, for example, the person is identified as a soccer player such as Ronaldo, it would further strengthen this hypothesis.
 
@@ -175,24 +178,20 @@ I speculate that having a system that can build consistency of completely unseen
 As described in the previous section, deep learning models are prone to early commitment \sidecite{marr_vision_2010}.
 The brain's solution to prevent early commitment are net fragments.
 A single layer with lateral connections that forms net fragments can represent local and global features at the same time\sidenote{This way of thinking about features can be hard to comprehend, especially for computer scientists familiar with deep learning.}.
-Each set of active and laterally connected neurons can be considered a net fragment. Net fragments with a few cells depict local features, while fragments containing many features represent global features.
+Each set of active and laterally connected neurons can be considered a net fragment. Net fragments with a few cells depict local features, while fragments containing many features represent more global features.
 
 A system that avoids the fallacy of early commitment should solve the conundrum that local decisions are taken based on plausibility in the light of high-level patterns, while high-level patterns can only be defined based on low-level features.
 The most fundamental local decision is whether a single cell should be active. Since a single cell receives support from all laterally connected cells, a high-level pattern (i.e. the activity of all directly or indirectly laterally connected cells) is used to make this decision. Therefore, local decisions are taken based on high-level patterns. The high-level pattern used to make this decision is defined by the sum of individual cells (i.e. low-level features). Hence, the human brain solves the conundrum within every single layer.
 
 
 \subsection{Hierarchical Features}
-One of the strengths of deep networks is that they build features hierarchically \sidecite{prince_understanding_2023}. Hierarchical processing allows a step-wise mapping of specific data, such as visual scenes, to more abstract representations, such as labels or segmentation masks.
-The fact that deep networks consist of multiple layers suggests that such a hierarchical layer-wise mapping is required and simplifies data processing.
-Otherwise, having one network layer would be sufficient.
+Neuroscientific findings indicate that the human brain does not rely on a sequence of layers to build feature hierarchies as often done in deep networks.
+In the biological context, layers have other connotations, and evidence suggests that layers in cortical columns deal with depth rotations \sidecite{iamshchinina_perceived_2021}.
+In the proposed framework, feature hierarchies are implicitly stored in net fragments whereby a larger fragment represents a more global feature, and smaller fragments have more local features.
+Consequently, sequences of layers are not necessary to represent feature hierarchies.
 
-As described in \secref{neuroscience_findings}, cortical columns also consist of multiple layers.
-However, to the best of the author's knowledge, there is no proof of what these layers represent and, thus, are not necessarily used to process input layer-wise to extract hierarchical features.
-Some evidence suggests that the layers in cortical columns could deal with depth rotations \sidecite{iamshchinina_perceived_2021}, implementing hierarchical processing in different stages \sidecite{felleman_distributed_1991}.
-Therefore, it is considered biologically plausible that the brain does not leverage multiple stacked layers to process features but implements this capability differently.
+However, multiple stages are required to build abstractions of input signals, i.e. to generalise features.
+In the human brain, several regions interact with each other to generate abstractions \sidecite{felleman_distributed_1991}.
+In fact, the visual cortex builds net fragments based on the signal from the eyes, projection fibres map the object to prototypes, and other fibres map the prototypes to memories and interpret them. Thus, various stages are involved in processing images.
+Furthermore, processing takes place over a short amount of time until all stages reach a consensus. Thus, no layer-wise processing is required as in deep, but multiple stages interact with each other to build feature abstractions.
 
-Instead, I hypothesise hierarchical feature processing is implemented with net fragments and projection fibres.
-First, net fragments are built over time and cells without insufficient support turn off, while deactivated cells might even turn on.
-This process discards unimportant and noisy activations, thus mapping very specific activations to more general features.
-Second, projection fibres are responsible for mapping specific scenes to general reference frames, implementing the process that deep networks achieve through layer-wise forward propagation. These fibres are hierarchically organised as outlined in work about shifter circuits \sidecite{anderson_shifter_1987, olshausen_neurobiological_1993}. 
-Thus the proposed framework implements hierarchical processing and can analyse complex patterns while still relying on building consistency locally in a self-organising manner.

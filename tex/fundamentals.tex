@@ -53,7 +53,7 @@ Thus, among the most important differences between biological and artificial neu
 
 Biological findings highly inspire the proposed vision framework.
 Since biological systems still have many advantages compared to their artificial counterpart, especially the differences between these systems are of interest and could be promising in developing novel architectures.
-Therefore, \secref{framework_neuroscience} dives deeper into biological principles, identifies central concepts of the human's vision system, and transfers them to a computational framework.
+Therefore, \secref{neuroscience_findings} dives deeper into biological principles, identifies central concepts of the human's vision system, and transfers them to a computational framework.
 
 \section{Artificial Neural Networks}\seclbl{ann}
 McCulloch and Pitts \sidecite{mcculloch_logical_1943} proposed the first model of a neuron that can be connected to other neurons.
@@ -71,7 +71,7 @@ The mapping from the input to the output is done by using an aggregation functio
 %
 The formula is often rewritten by using a positive  bias $b$ term instead of the  threshold $\theta$
 %
-\begin{align}\eqlbl{McCulloch_Pitts_agg}%
+\begin{align}\eqlbl{McCulloch_Pitts_agg2}%
 	z &= g(\boldsymbol{x}) = g(x_1, ..., x_n) = \sum_{i=1}^{n}x_i + b\\
 		\hat{y} &= f(z) = \begin{cases}
       		1, & \text{if}\ z \geq 0 \\

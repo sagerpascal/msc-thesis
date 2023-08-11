@@ -97,7 +97,7 @@ This support strength is normalised as described in \secref{framework_norm} usin
 However, at the end of the normalisation procedure, each output channel is divided by its highest value to ensure that the support strength is in the range $(0, ..., 1)$ and the highest activation has an activation probability of $1$.
 %
 \begin{align}\eqlbl{exp_norm}
-	x_{c_{\text{out}},w,h} := \frac{x_{c_{\text{out}},w,h}}{max_{c=0}^{C_{\text{out}} x_{c,w,h}}
+	x_{c_{\text{out}},w,h} := \frac{x_{c_{\text{out}},w,h}}{max_{c=0}^{C_{\text{out}} x_{c,w,h}}}
 \end{align}
 %
 The input is processed over $6$ timesteps, and the Hebbian update is calculated between the input and the median activation during these timesteps to increase training stability.
@@ -114,7 +114,6 @@ However, this approach is limited and does not provide the flexibility needed to
 
 This thesis proposes a different implementation that comes with a slight memory overhead but is very efficient and does not rely on backpropagation. The proposed method is based on two convolutional layers: The first layer is a fixed, binary convolution that restructures each input patch into a single-column vector. This is followed by a $1\times1$ convolution containing the actual weights. Specifically, we can pass the input through a fixed convolution with an input size of $C_{in} \times 2n_l+1 \times 2n_l+1$ and $C_{in} 2(2n_l+1)$ output channels. The weight vector for this convolution is set to $1$ for the connections linking input $c_i,w,h$ to output $c_iwh$ (where $c_i$ $w$, and $h$ range from 1 to $C_{in}$, $2n+1$, and $2n+1$, respectively), and it is set to 0 everywhere else. This process reorganises the values of each input patch from the original convolution into non-overlapping column vectors, effectively duplicating them. Next, the actual weights of the original convolution using can be applied using a simple $1\times1$ convolution. This can be achieved by performing a tensor product with appropriate broadcasting.
 Thus, the proposed method allows calculating Hebbian updates while fully leveraging the computational capabilities of current deep learning hardware.
-
 
 
 
@@ -140,7 +139,7 @@ Thus, a feedback signal is provided without implementing \emph{S2}.
 
 \subsection{Implementation}
 The mockup should map net fragments in \emph{S1} denoted as $\boldsymbol{a}$ to a hidden memory state $\boldsymbol{h}$ and vice versa. The mapping processes can be described as conditional probabilities $P(\boldsymbol{h}|\boldsymbol{a})$ and $P(\boldsymbol{a}|\boldsymbol{h})$.
-Restricted Boltzmann machines (RBMs) \sidecite{smolensky_chapter_1986, hinton_training_2002} are generative stochastic networks that can learn such a probability distribution.
+Restricted Boltzmann machines (RBMs) \sidecite{smolensky_information_1986, hinton_training_2002} are generative stochastic networks that can learn such a probability distribution.
 They use a linear transformation to map from $\boldsymbol{a}$ to $\boldsymbol{h}$ and the inverse linear transformation to map backwards from $\boldsymbol{h}$ to $\boldsymbol{a}$.
 
 First, the 3D activation map containing the net fragments is flattened and multiplied with a weight matrix $\boldsymbol{W}_{S2}$ of size $C_{out}\cdot W\cdot H \times Z$. This results in a one-dimensional vector $h$ of length $Z$, whereby $Z$ is a hyperparameter and defines the memory's capacity.
@@ -161,12 +160,10 @@ Similar to \emph{S1}, we treat the activity of these neurons as probability and 
 	\boldsymbol{a}_{out} \thicksim \text{Bernoulli}(P(\boldsymbol{a} | \boldsymbol{h}))
 \end{align}
 
-The parameters $\boldsymbol{W}_{S2}$, $a$, and $b$ are updated by minimising the difference of the free energy function $F(\cdot)$ \sidecite{hinton_training_2002} between $\boldsymbol{a}_{in}$ and $\boldsymbol{a}_{out}$ (i.e. $F(\boldsymbol{a}_{in}) - F(\boldsymbol{a}_{out})$)\sidenote{Interested readers are referred to the publication by \citeay{\sidecite{hinton_training_2002}} or a well-written blog-post by \sideciteay{hui_machine_2017}.}.
-The free energy function is minimised using the Adam \sidecite{kingma_adam_2017} optimiser with a learning rate of $0.05$, and the parameters $\beta_1=0.9$, $\beta_2=0.999$, and $\epsilon=1\cdot10^{-8}$.
-During training, the learning rate is reduced by a factor of $0.1$ if the free energy does not reduce further for more than $2$ epochs until a final learning rate of $1\cdot10^{-6}$ is reached.
+The parameters $\boldsymbol{W}_{S2}$, $a$, and $b$ are updated by minimising the difference of the free energy function $F(\cdot)$ \sidecite{hinton_training_2002} between $\boldsymbol{a}_{in}$ and $\boldsymbol{a}_{out}$ (i.e. $F(\boldsymbol{a}_{in}) - F(\boldsymbol{a}_{out})$). For more details, interested readers are referred to the publication by \citeay{hinton_training_2002} or a well-written blog-post by \sideciteay{hui_machine_2017}.
+The free energy function is minimised using the Adam \sidecite{kingma_adam_2017} optimiser with a learning rate of $0.05$, and the parameters $\beta_1=0.9$, $\beta_2=0.999$, and $\epsilon=1\cdot 10^{-8}$.
+During training, the learning rate is reduced by a factor of $0.1$ if the free energy does not reduce further for more than $2$ epochs until a final learning rate of $1\cdot 10^{-6}$ is reached.
 The batch size is set to $256$, and the model is trained for $10$ epochs (similar to \emph{S1}).
-
-
 
 By minimising the free energy function, the memory decides by itself which representation should be stored.
 When observing cell activity $\boldsymbol{a}$ in \emph{S1}, $P(\boldsymbol{h}|\boldsymbol{a})$ defines the probability for the cell activity in the memory. Since we sample $\boldsymbol{h}_{out} \thicksim \text{Bernoulli}(P(\boldsymbol{h} | \boldsymbol{a}) )$, $\boldsymbol{h}_{out}$ becomes binary, whereby cells with a low probability tend to be turned off, while cells with a high probability tend to fire.

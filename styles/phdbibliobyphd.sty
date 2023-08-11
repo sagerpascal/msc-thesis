@@ -38,15 +38,27 @@
 \AtEveryBibitem{
     \clearfield{note}
     \clearlist{language}
-    \clearfield{urldate}
 	%\clearfield{issn}
 	%\clearfield{isbn}
 	\clearfield{archivePrefix}
 	\clearfield{arxivId}
 	\clearfield{pmid}
 	\clearfield{eprint}
+    \clearfield{pagetotal}
 	\ifentrytype{online}{}{\ifentrytype{misc}{}{\clearfield{url}}}
+    \ifentrytype{online}{}{\ifentrytype{misc}{}{\clearfield{urlyear}}}
+    \ifentrytype{online}{}{\ifentrytype{misc}{}{\clearfield{urlmonth}}}
+    \ifentrytype{online}{}{\ifentrytype{misc}{}{\clearfield{urlday}}}
 	\ifentrytype{book}{\clearfield{doi}}{}
+}
+
+% Ignore editor
+\DeclareSourcemap{
+  \maps[datatype=bibtex, overwrite]{
+    \map{
+      \step[fieldset=editor, null]
+    }
+  }
 }
 
 
