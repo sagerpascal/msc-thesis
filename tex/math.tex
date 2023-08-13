@@ -6,12 +6,12 @@ Depending on the context, a variable can be a scalar value, a vector, or a matri
 \begin{tabular}{ p{5cm} p{2cm} p{7cm} }
 	\textbf{Formatting} & \textbf{Example} & \textbf{Meaning}\\
 	\hline
-  	No formatting, lower case & $a$ & A scalar value\\
-  	Bold, lower case & $\boldsymbol{a}$ & A vector\\
-  	Bold, upper case & $\boldsymbol{A}$ & A matrix\\
-  	Curved brackets & $a(\cdot)$ & A function, where $(\cdot)$ is a placeholder for a variable\\
-  	Rectangular brackets & $a[t]$ & Variable $a$ at time $t$\\
-   Superscript rectangular brackets & $a^{[l]}$ & Layer index: $l$ is the index of the layer, e.g. $\boldsymbol{W}^{[l]}$ is the weight matrix of layer $l$\\
+  	No formatting, lower case & $a$ & A scalar value.\\
+  	Bold, lower case & $\boldsymbol{a}$ & A vector.\\
+  	Bold, upper case & $\boldsymbol{A}$ & A matrix.\\
+  	Curved brackets & $a(\cdot)$ & A function, where $(\cdot)$ is a placeholder for a variable.\\
+  	Rectangular brackets & $a[t]$ & Variable $a$ at time $t$.\\
+   Superscript rectangular brackets & $a^{[l]}$ & $l$ is the index of the layer, e.g. $\boldsymbol{W}^{[l]}$ is the weight matrix of layer $l$.\\
 \end{tabular}
 
 \section{Variables}
@@ -20,8 +20,11 @@ Depending on the context, a variable can be a scalar value, a vector, or a matri
 	\textbf{Variable} & \textbf{Meaning}\\
 	\hline
 	$\eta$ & The learning rate of an optimisation algorithm.\\
+    $\psi$ & Estimated pre- or post-synaptic activity of a cell, required for Hebbian learning (c.f. \eqref{hebb_2}).\\
 	$\boldsymbol{a} = (a_1, ..., a_k)$ & The output of an intermediate layer of a multi-layer network with $k$ neurons, the output of the last layer is typically denoted as $\boldsymbol{\hat{y}}$. $a_i$ is the output of an activation function of a single neuron.\\
-	$\boldsymbol{b} = (b_1, ..., b_k)$ & The bias of a network layer with $k$ neurons. $b_i$ is the bias of a single neuron.\\
+	$\boldsymbol{b} = (b_1, ..., b_k)$ & The bias of a network layer with 
+    $k$ neurons. $b_i$ is the bias of a single neuron.\\
+    $C$ & The capacity of a Hopfield network, i.e. the number of patterns that can be stored.\\
     $k$ & The number of neurons within a layer.\\
     $L$ & The number of layers of a network.\\
     $n$ & The length (size) of a vector, for example, an input of length $n$ is defined as $\boldsymbol{x} = (x_1, ..., x_n)$.\\
@@ -45,8 +48,9 @@ Depending on the context, a variable can be a scalar value, a vector, or a matri
 \begin{tabular}{ p{3cm} p{11cm} }
 	\textbf{Function} & \textbf{Meaning}\\
 	\hline
-	$f(\cdot)$ & An activation function such as $\sigma(\cdot)$, $(\cdot)^{+}$, or $\tanh(\cdot)$ (c.f. \eqref{act_functions})\\
-	$g(\cdot)$ & The aggregation function that calculates the scalar value that is fed into the activation function $f(\cdot)$ (c.f. \eqref{McCulloch_Pitts_agg},  \eqref{nn})\\
+	$f(\cdot)$ & An activation function such as $\sigma(\cdot)$, $(\cdot)^{+}$, or $\tanh(\cdot)$ (c.f. \eqref{act_functions}).\\
+	$g(\cdot)$ & The aggregation function that calculates the scalar value that is fed into the activation function $f(\cdot)$ (c.f. \eqref{McCulloch_Pitts_agg},  \eqref{nn}).\\
+    $\mathcal{L}(\cdot)$ & A loss function to calculate the quality of the model output, typically comparing a prediction $\boldsymbol{\hat{y}}$ with a teaching signal $\boldsymbol{y}$, i.e. $\mathcal{L}(\boldsymbol{\hat{y}}, \boldsymbol{y})$\\
 \end{tabular}
 \renewcommand{\arraystretch}{1}
 
