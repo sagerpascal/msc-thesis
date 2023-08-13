@@ -214,10 +214,10 @@ Each layer receives input from such a buffer instead of the previous layer, elim
 
 Proxy objective functions are the only known alternative to backpropagation of error that scales well to large neural networks and large datasets \sidecite{bartunov_assessing_2018, duan_modularizing_2022}.
 However, training is typically slower than end-to-end backpropagation, even with synchronous or asynchronous training strategies  \cite{belilovsky_decoupled_2020}.
-In addition, layer-by-layer training of a network for the sole purpose of biological plausibility using the same loss function as the global objective function seems unnecessary. Instead, a more promising approach might be to train layers in parallel and use a voting mechanism to reach a consensus and realise the full potential of proxy objective functions. However, such strategies have not yet been explored.
+In addition, layer-by-layer training of a network for the sole purpose of biological plausibility using the same loss function as the global objective function seems unnecessary.
 
 \paragraph{Forward Forward Algorithm.}
-Recently, Hinton \sidecite{hinton_forward-forward_2022} introduced the \emph{forward-forward (FF) algorithm}, which is considered a special instance of proxy objective functions.
+Recently, Hinton \sidecite{hinton_forward-forward_2022} introduced the forward-forward \emph{(FF)} algorithm, which is considered a special instance of proxy objective functions.
 This algorithm uses two forward passes, one with positive (i.e. real) data and one with negative data.
 Positive data consists of an input vector and the correct label, and negative data consists of an input vector with the wrong label.
 Each layer has its objective function that aims to have a high ``goodness'' for positive data and a low ``goodness'' for negative data. 
@@ -227,9 +227,9 @@ During inference, the data is fed with each label through the network, and the o
 The same input is fed into the model over multiple timesteps to obtain hierarchical features \sidecite{hinton_how_2021}.
 The trick is to feed the input into the network from one side and the label into the network from the other. A layer receives as input the activity vector of the previous layer and the activity vector of the subsequent layer at the previous timestep. By enforcing high goodness when the input and label match, information must flow in both directions. Thus, hierarchical features can be learned without a backward pass.
 
-The FF algorithm did not yet scale to large datasets. Furthermore, inference is very slow for datasets with many labels, as each sample is compared with all existing labels. Overall, feeding specific information (e.g. images) into one end of the network and general information (e.g. labels) into the other end and effectively merging these inputs to extract hierarchical features seems very promising.
+The FF algorithm did not yet scale to large datasets. Furthermore, inference is very slow for datasets with many labels, as each sample is compared with all existing labels. However, feeding specific information (e.g. images) into one end of the network and general information (e.g. labels) into the other end and effectively merging these inputs to extract hierarchical features seems very promising.
 
-\paragraph{Target Propagation.} \emph{Target propagation} methods compute targets\sidenote{A target can be interpreted as the value that a layer should predict.} rather than gradients at each layer \sidecite{bengio_how_2014, appice_difference_2015, meulemans_theoretical_2020}.
+\paragraph{Target Propagation.} Target propagation methods compute targets\sidenote{A target can be interpreted as the value a layer should predict.} rather than gradients at each layer \sidecite{bengio_how_2014, appice_difference_2015, meulemans_theoretical_2020}.
 Each layer is trained to minimise the difference between its activations and its received target values.
 In the context of target propagation, each layer is considered an encoder that maps its input to an output. Besides an encoder, a decoder is trained per layer, implementing the inverse mapping from the layers' output to its input.
 During a forward pass, an input vector $\boldsymbol{x}$ is fed through all encoders to obtain a prediction $\boldsymbol{\hat{y}}$. For the backward pass, the target value $\boldsymbol{y}$ is fed through all decodes to obtain a target per layer\sidenote{If each layer would predict this target, the output would be $\boldsymbol{y}$.}.
@@ -241,8 +241,8 @@ Furthermore, this approach does not scale well in praxis as the decoder cannot p
 Thus, the learning process is rather unstable as the target is approximated per layer and might steer the learning process in the wrong direction.
 
 
-\paragraph{Synthetic Gradients.} \emph{Synthetic gradients} methods \sidecite{jaderberg_decoupled_2017, czarnecki_understanding_2017} replace the gradients of backward passes with approximated local gradients, estimated with auxiliary models, and utilise gradient-based optimisation algorithms such as stochastic gradient descent to update the weights locally.
-The auxiliary models are usually fully-connected networks that are trained to regress a layer's gradients when given the layer's activations.
+\paragraph{Synthetic Gradients.} Synthetic gradients methods \sidecite{jaderberg_decoupled_2017, czarnecki_understanding_2017} replace the gradients of backward passes with approximated local gradients, estimated with auxiliary models, and utilise gradient-based optimisation algorithms such as stochastic gradient descent to update the weights locally.
+The auxiliary models are usually fully-connected networks trained to regress a layer's gradients when given the layer's activations.
 End-to-end backward passes are only performed occasionally to acquire actual gradients that can be used to train the gradient approximation models.
 Thus, the frequency of end-to-end backward passes is reduced.
 When additional auxiliary input models are used to predict the layer's input, the frequency of the forward pass can also be reduced in the same manner as for the backward pass \cite{jaderberg_decoupled_2017}.
@@ -251,7 +251,7 @@ It is also possible to eliminate the backward pass by training the auxiliary gra
 However, the synthetic gradients method works significantly worse than when actual gradients are used to train auxiliary models.
 An advantage of synthetic gradient methods is that they can approximate backpropagation through time (BTT) for unlimited timesteps \cite{jaderberg_decoupled_2017}.
 
-\paragraph{Feedback Alignment.} \emph{Feedback alignment} algorithms use fixed, random weights during the backward pass \sidecite{lillicrap_random_2016}.
+\paragraph{Feedback Alignment.} Feedback alignment algorithms use fixed, random weights during the backward pass \sidecite{lillicrap_random_2016}.
 The gradients are calculated similarly to stochastic gradient descent but with random weights.
 Thus the symmetry between the weights used during the forward and the backward pass is broken.
 The network still learns to make the feedback useful even though the weights during forward and backward passes are different. 
