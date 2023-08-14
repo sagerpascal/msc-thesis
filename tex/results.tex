@@ -106,7 +106,7 @@ Remarkably, the \emph{S1} consistently succeeds in reconstructing the original t
 The extent to which the network can reconstruct discontinuous lines depends on the range of lateral connections $n_l$. As expected, increasing the value of $n_l$ allows \emph{S1} to reconstruct lines with more missing pixels, improving its performance in recovering objects.
 However, $n_l$ should not be too large so that \emph{S1} build net fragments based on local features (c.f. \secref{neuroscience_findings_net_fragments}).
 
-In the conducted experiments, the lateral reach is set to $n_l=11$.
+In the conducted experiments, the lateral range is set to $n_l=11$.
 The impressive ability to reconstruct up to $8$ missing pixels with this setting suggests that recreating occluded patterns works effectively.
 
 
@@ -126,7 +126,7 @@ Therefore, it only works for the examples the network encountered during the tra
 \figref{s2_feedback_heatmap} visualises the activation probabilities for all cells across the four output channels for a vertical line with $20$ missing pixels.
 The top row shows the probabilities when no feedback form \emph{S2} is incorporated, and the bottom row the probabilities after the feedback is incorporated.
 
-As visible in the top row of \figref{s2_feedback_heatmap}, without incorporating feedback from \emph{S2}, the line cannot be fully reconstructed using lateral connections in \emph{S1}, as $20$ of missing pixels exceeds the reach of lateral connections. However, \emph{S2} is still able to map the line with missing pixels to the correct prototype and provide appropriate feedback. After the feedback is incorporated, the activation probabilities for the entire vertical line increase significantly. Especially in the middle section, where the pixels have been removed, the activation probabilities increase from $0\%$ to approximately $65\%$.
+As visible in the top row of \figref{s2_feedback_heatmap}, without incorporating feedback from \emph{S2}, the line cannot be fully reconstructed using lateral connections in \emph{S1}, as $20$ of missing pixels exceeds the range of lateral connections. However, \emph{S2} is still able to map the line with missing pixels to the correct prototype and provide appropriate feedback. After the feedback is incorporated, the activation probabilities for the entire vertical line increase significantly. Especially in the middle section, where the pixels have been removed, the activation probabilities increase from $0\%$ to approximately $65\%$.
 
 When a continuous vertical line is fed into the system, the activation probability in the middle section of the line is above $90\%$.
 This high probability aligns with the fact that the sensory signal and the memory's feedback are consistent.
