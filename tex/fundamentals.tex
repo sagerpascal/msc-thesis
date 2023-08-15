@@ -340,15 +340,11 @@ To transmit information, especially the firing rate (i.e. the number of spikes p
 The amplitude and duration of the spike matter less.
 So-called spiking neural networks (SNNs) incorporate the concept of time into a computational model \sidecite{maass_networks_1997}.
 SNNs do not transmit information in each forward pass but rather send a signal when the membrane potential reaches a threshold value\sidenote{The membrane potential is related to the electrical charge of the membrane of a biological neuron.}. 
-The most prominent model of a spiking neuron is the leaky integrate-and-fire (LIF) neuron \sidecite{abbott_lapicques_1999}.
-Incoming spikes can either increase or decrease the membrane potential.
-The membrane potential either decays over time or is reset to a lower value if a threshold value is reached and the neuron has fired.
-There exist different integrate-and-fire (IF) neurons models such as the Izhikevich quadratic IF \sidecite{izhikevich_simple_2003} or the adaptive exponential IF \sidecite{brette_adaptive_2005}.
-While each model has different mathematical properties, the concept remains the same: Each neuron has a membrane potential that is increased or decreased through spikes from other neurons and decays over time or is reset by emitting a spike on its own.
+The most prominent models of spiking neurons are different integrate-and-fire (IF) neurons \sidecite{abbott_lapicques_1999, izhikevich_simple_2003, brette_adaptive_2005}.
+While each model has different mathematical properties, the concept remains the same: Each neuron has a membrane potential that is increased or decreased through spikes from other neurons and decays over time or is reset when the cell emits a spike.
 
-The synaptic plasticity can be learned with an adapted version of Hebbian learning (c.f. \secref{hebbian}).
-The spike-timing dependent (STDP) plasticity rule \sidecite{bi_synaptic_2001} distinguishes the firing behaviour of presynaptic and postsynaptic neurons.
-If the presynaptic neurons fire before the postsynaptic neuron, the connection is strengthened; otherwise, it is weakened.
+The synaptic plasticity can be learned with an adapted version of Hebbian learning, called the spike-timing-dependent (STDP) plasticity rule \sidecite{bi_synaptic_2001}.
+This rule strengthens connections if the presynaptic neurons fire before the postsynaptic neuron and weakens the connection otherwise.
 
 For a long time, SNN only worked for very shallow networks.
 In 2018, \sideciteay{kheradpisheh_stdp-based_2018} proposed a deep spiking convolutional network inspired by CNNs to overcome this limitation.
