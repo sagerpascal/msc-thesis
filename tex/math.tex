@@ -11,7 +11,7 @@ Depending on the context, a variable can be a scalar value, a vector, or a matri
   	Bold, upper case & $\boldsymbol{A}$ & A matrix.\\
   	Curved brackets & $a(\cdot)$ & A function, where $(\cdot)$ is a placeholder for a variable.\\
   	Rectangular brackets & $a[t]$ & Variable $a$ at time $t$.\\
-   Superscript rectangular brackets & $a^{[l]}$ & $l$ is the index of the layer, e.g. $\boldsymbol{W}^{[l]}$ is the weight matrix of layer $l$.\\
+   Superscript rectangular brackets & $a^{[l]}$ & A variable within a neuronal layer $l$, e.g. $\boldsymbol{W}^{[l]}$ is the weight matrix of layer $l$.\\
 \end{tabular}
 
 \section{Variables}
@@ -27,7 +27,7 @@ Depending on the context, a variable can be a scalar value, a vector, or a matri
 	$\boldsymbol{b} = (b_1, ..., b_k)$ & The bias of a network layer with 
     $k$ neurons. $b_i$ is the bias of a single neuron.\\
     $C$ & The capacity of a Hopfield network, i.e. the number of patterns that can be stored or the number if channels from an input matrix.\\
-    $h$ & Hidden state of the memory, storing object prototypes.\\
+    $h$ & Hidden state of the memory storing object prototypes.\\
     $H$ & The height of an image.\\
     $J$ & The Jaccard similarity between two binary vectors (c.f. \eqref{jaccard}).\\
     $k$ & The number of neurons within a layer or kernel.\\
@@ -41,7 +41,6 @@ Depending on the context, a variable can be a scalar value, a vector, or a matri
 	\textbf{Variable} & \textbf{Meaning}\\
 	\hline
     $o$ & A single neuronal cell.\\
-    $P$ & The probability of observing a variable.\\
     $t$ & The current timestep.\\
      $T$ & The total number of timesteps.\\
     $w_{ij}$ & The weight between neuron $i$ and neuron $j$.\\
@@ -65,6 +64,7 @@ Depending on the context, a variable can be a scalar value, a vector, or a matri
     $F(\cdot)$ & The free energy function.\\
 	$g(\cdot)$ & The aggregation function that calculates the scalar value that is fed into the activation function $f(\cdot)$ (c.f. \eqref{McCulloch_Pitts_agg},  \eqref{nn}).\\
     $\mathcal{L}(\cdot)$ & A loss function to calculate the quality of the model output, typically comparing a prediction $\boldsymbol{\hat{y}}$ with a teaching signal $\boldsymbol{y}$, i.e. $\mathcal{L}(\boldsymbol{\hat{y}}, \boldsymbol{y})$\\
+    $P(\cdot)$ & The probability of observing a variable.\\
 \end{tabular}
 \renewcommand{\arraystretch}{1}
 
