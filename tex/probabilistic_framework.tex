@@ -1,3 +1,4 @@
+%% probabilistic_framework.tex
 The introduction in \secref{intro_motivation} describes that preventing early commitment \cite{marr_vision_2010} is considered a fundamental property of the human visual system that is absent in current deep learning frameworks.
 The previous chapter introduced neuroscientific findings (\secref{neuroscience_findings}) that could explain why this problem is absent in the human brain and that are considered the principles implementing the findings of the Gestalt psychology \cite{ellis_source_1938, kohler_gestalt_1992, wagemans_century_2012, hamlyn_psychology_2017}.
 
@@ -7,13 +8,13 @@ Incorporating further stages required for object classification and scene interp
 While the inspiration and principles are based on previous research, this chapter describes a novel computational framework that is considered the main scientific contribution of this thesis.
 
 \section{3-Staged Model}\seclbl{framework_3_staged_model}
-Some of the neuroscientific principles described in \secref{neuroscience_findings} have been explored in the theory of self-organising projection fibres \sidecite{wiskott_face_1996, wiskott_face_1997, fernandes_self-organization_2015} (c.f. \secref{projection_fibres}). However, these approaches do not yet scale to natural images except for human faces \cite{wolfrum_recurrent_2008}. This is because most work in this area has neglected to model the learning and the dynamics of rich sets of net fragments in the visual cortex, which are fundamental according to the theory of natural intelligence \sidecite{von_der_malsburg_theory_2022}.
+Some of the neuroscientific principles described in \secref{neuroscience_findings} have been explored in the theory of self-organising projection fibres \sidecite{wiskott_face_1996, wiskott_face_1997, fernandes_self-organization_2015} (c.f. \secref{projection_fibres}). However, these approaches do not yet scale to natural images except for human faces \sidecite{wolfrum_recurrent_2008}. This is because most work in this area has neglected to model the learning and the dynamics of rich sets of net fragments in the visual cortex, which are fundamental according to the theory of natural intelligence \sidecite{von_der_malsburg_theory_2022}.
 
 This section describes a novel system based on binary neurons with the potential to scale to natural images since it extends the projection fibres with net fragments.
 The proposed system comprises three main components: A first stage \emph{S0} that extracts features from the image, a stage \emph{S1} that builds an overlay of net fragments, and a stage \emph{S2} that uses projection fibres to map them to object prototypes.
 I call the stage \emph{S0} the sensory system, \emph{S1} the feature building stage, and \emph{S2} the prototype stage.
-In the context of biology, the sensory stage \emph{S0} could stand for the eyes translating visual information into neuronal activity \sidecite{grill-spector_human_2004}, \emph{S1} could stand for the primary visual cortex \sidecite{tong_primary_2003, grill-spector_human_2004}, and \emph{S2} for the ventral stream \sidecite{goodale_separate_1992} and an area in the temporal cortex \sidecite{miyashita_inferior_1993, conway_organization_2018}.
-In the following, an overview of these three building blocks is given from a computational perspective and the components are put into the context of the theory of natural intelligence by \sideciteay{von_der_malsburg_theory_2022}.
+In the context of biology, the sensory stage \emph{S0} could stand for the eyes translating visual information into neuronal activity \sidecite{grill-spector_human_2004}, \emph{S1} could stand for the primary visual cortex \sidecite{tong_primary_2003}, and \emph{S2} for the ventral stream \sidecite{goodale_separate_1992} and an area in the temporal cortex \cite{miyashita_inferior_1993}.
+In the following, an overview of these three building blocks is given from a computational perspective, and the components are put into the context of the theory of natural intelligence by \citeay{von_der_malsburg_theory_2022}.
 Afterwards, more implementation details are provided, making the framework more concrete.
 
 \subsection{Building Blocks}\seclbl{framework_building_blocks}
@@ -30,16 +31,16 @@ Afterwards, more implementation details are provided, making the framework more 
 The sensory system extracts multiple features by considering a spatial neighbourhood, thereby increasing the number of features at each location.
 For example, a sensory system can be a set of hand-crafted or Gabor filters \sidecite{gabor_theory_1946, granlund_search_1978} applied at all image positions or the first layer of a pre-trained CNN \sidecite{lecun_backpropagation_1989}.
 
-\paragraph{Feature Building Stage \emph{S1}.} The feature building stage is a single layer with lateral connections \sidecite{gilbert_lateral_1990} that builds an overlay of net fragments. Input from the sensory system activates some feature neurons in \emph{S1}. However, their continued firing relies on receiving support from a sufficient number of other activated neurons that are laterally connected to them \sidecite{von_der_malsburg_concerning_2018}. Initially activated neurons that do not receive enough lateral support deactivate after a short period due to inhibition \sidecite{coombs_specific_1955, vogels_inhibitory_2011}.
+\paragraph{Feature Building Stage \emph{S1}.} The feature building stage is a single layer with lateral connections \sidecite{gilbert_lateral_1990} that builds an overlay of net fragments. Input from the sensory system activates some feature neurons in \emph{S1}. However, their continued firing relies on receiving support from a sufficient number of other activated neurons that are laterally connected to them \sidecite{von_der_malsburg_concerning_2018}. Initially activated neurons that do not receive enough lateral support deactivate after a short period due to inhibition \sidecite{vogels_inhibitory_2011}.
 
-The lateral connections are learned through self-organisation \sidecite{hebb_organization_1949}. Patterns occurring repeatedly in the training data will constantly activate the same cells simultaneously. Using Hebbian learning \cite{hebb_organization_1949} strengthens the connection between these cells, and the pattern is ``stored'' in a net fragment \cite{von_der_malsburg_concerning_2018}. The inhibition strength increases during training to account for the increasing numbers of lateral connections so that cells with fewer connections can be suppressed in favour of those with more connections, allowing the latter to acquire even more lateral connections.
+The lateral connections are learned through self-organisation \cite{hebb_organization_1949}. Patterns occurring repeatedly in the training data will constantly activate the same cells simultaneously. Using Hebbian learning \cite{hebb_organization_1949} strengthens the connection between these cells, and the pattern is ``stored'' in a net fragment \cite{von_der_malsburg_concerning_2018}. The inhibition strength increases during training to account for the increasing numbers of lateral connections so that cells with fewer connections can be suppressed in favour of those with more connections, allowing the latter to acquire even more lateral connections.
 
 Consequently, many neurons might be activated by the sensory stage, but only the ones supporting each other remain active.
 Therefore, it is essential to view the process from the perspective that active neurons are integral parts of consistent global net fragments, and only the support from neurons within the same net fragments enables them to persist.
 
 To facilitate a wide variety of patterns and the coherent networks underlying them, neurons require many excitatory connections. To prevent cross-talk between net fragments (where a neuron receives support from a network it does not belong to), a sustained-firing condition is required in the form of a minimum number of connections that must be activated.
 
-\paragraph{Object Prototype Stage \emph{S2}.} Stage \emph{S2} has the same structure as \emph{S1}. However, it has a smaller coverage area, focusing specifically on object-centred representations rather than encompassing the entire visual field. It allows lateral connections with a greater range \sidecite{pessoa_understanding_2014, stettler_lateral_2002}, essential to represent larger-scale structures like an object. 
+\paragraph{Object Prototype Stage \emph{S2}.} Stage \emph{S2} has the same structure as \emph{S1}. However, it has a smaller coverage area, focusing on object-centred representations rather than encompassing the entire visual field. It allows lateral connections with a greater range \sidecite{stettler_lateral_2002, pessoa_understanding_2014}, essential to represent larger-scale structures like objects. 
 Thus, this stage contains isolated net fragments that can be considered object prototypes invariant to translation, scale, and orientation.
 
 In the object recognition process, corresponding net fragments in \emph{S1} are mapped to object prototypes in \emph{S2} through active projection fibres. Here, ``corresponding'' refers to neurons relating to the same point on the object's surface.
@@ -53,8 +54,8 @@ Consequently, the activated projection achieves a homeomorphism, where neurons o
 Bernoulli neurons allow the modelling of net fragments with lateral support. Preliminary experiments have indicated that using non-binary artificial neurons is not well suited for learning net fragments. For instance, dealing with weak or strong positive activations poses challenges when employing Hebbian updates. In contrast, the Bernoulli neuron tends to turn off negative or very weak activations, while strong activations tend to become $1$. This behaviour prevents the establishment of connections between weakly activated neurons. Furthermore, sampling from a Bernoulli distribution introduces a small amount of randomness to the network, encouraging parallel paths and increasing robustness (c.f. \secref{bernoulli_neuron}). This is especially important to train lateral connections of alternative cells (c.f. \secref{framework_alt_cells}).
 
 \subsection{Theory of Natural Intelligence}
-The proposed architecture is based on a correspondence-based system \sidecite{zhu_maplets_2004} that achieves invariance by routing signals through rapidly changing connections. Such systems not only transmit information about the type of features but also about their spatial arrangement by mapping net fragments to a prototype \sidecite{olshausen_neurobiological_1993, wiskott_face_1996, arathorn_map-seeking_2002}.
-Based on the neuroscientific findings summarised in \secref{neuroscience_findings_correspondence_finding}, I argue that the mapping between input data and stored object prototypes is closely related to the human brain's functionality and in line with findings from neuroscience \sidecite{kandel_principles_2013, olshausen_emergence_1996, vogels_inhibitory_2011, payeur_burst-dependent_2021} and psychology \sidecite{ellis_source_1938, kohler_gestalt_1992, wagemans_century_2012, hamlyn_psychology_2017}.
+The proposed architecture is based on a correspondence-based system \sidecite{zhu_maplets_2004} that achieves invariance by routing signals through rapidly changing connections. Such systems not only transmit information about the type of features but also about their spatial arrangement by mapping net fragments to a prototype \sidecite{wiskott_face_1996, olshausen_neurobiological_1993, arathorn_map-seeking_2002}.
+Based on the neuroscientific findings summarised in \secref{neuroscience_findings_correspondence_finding}, I argue that the mapping between input data and stored object prototypes is closely related to the human brain's functionality and in line with findings from neuroscience \sidecite{vogels_inhibitory_2011, kandel_principles_2013, olshausen_emergence_1996, payeur_burst-dependent_2021} and psychology \sidecite{ellis_source_1938, kohler_gestalt_1992, wagemans_century_2012, hamlyn_psychology_2017}.
 
 This argumentation is backed by the theory of natural intelligence \cite{von_der_malsburg_theory_2022}.
 As this theory serves as inspiration for this thesis, the relationship between their theoretical concepts and the proposed framework is discussed in the following.
@@ -62,14 +63,14 @@ The theory of natural intelligence describes how the brain develops an overlay o
 This behaviour is implemented in the feature building stage \emph{S1}: The sensory signal from \emph{S0} activates many neurons from which only the ones receiving enough lateral support remain active. Furthermore, it is implemented in the control units of the maplets. Initially, many maplets can be active, allowing various active fibres between \emph{S1} and \emph{S2}. However, an inhibitory signal serves as competition between these maplets, allowing only the most consistent to remain active after a short transient phase.
 
 The theory also describes that an object is represented by multiple net fragments, whereby each net fragment represents a part of the surface of that object.
-As described above, an object is represented in \emph{S1} and \emph{S2} as an overlay of net fragments. Furthermore, projection fibres map net fragments built in \emph{S1} to object prototypes in \emph{S2}.
+As described above, an object is represented in \emph{S1} and \emph{S2} as an overlay of net fragments. Furthermore, projection fibres map net fragments formed in \emph{S1} to object prototypes in \emph{S2}.
 Thus, a hierarchy of attractor networks represents an object, as suggested in the theory of natural intelligence.
 
 Furthermore, it is postulated in the theory that self-organisation is the key algorithm to form such fragments and the learning mechanism loops between activity and connectivity for a short time until an attractor state is reached.
-In the context of this work, self-organisation is used to organise lateral connections and projection fibres. In fact, local Hebbian learning \sidecite{hebb_organization_1949} is applied to learn the support strength between neurons, allowing the network to turn off neurons that are not part of the dominating net fragments.
-Furthermore, Hebbian plasticity initiates the mapping process by triggering control units \sidecite{anderson_shifter_1987}.
+In the context of this work, self-organisation is used to organise lateral connections and projection fibres. In fact, local Hebbian learning \cite{hebb_organization_1949} is applied to learn the support strength between neurons, allowing the network to turn off neurons that are not part of the dominating net fragments.
+Furthermore, Hebbian plasticity initiates the mapping process by triggering control units \cite{anderson_shifter_1987}.
 Looping between activity and connectivity is implemented with projection fibres. 
-Each prototype in \emph{S2} is considered a hypothesis of what object is present in the input. A net fragment in \emph{S1} can be mapped to multiple prototypes, and each active fragment supports specific hypotheses in \emph{S2}. The hypotheses act back on \emph{S1} and, in turn, provide support to them in \emph{S1}. Thus, the activity part is realised by \emph{S1} when supporting or turning off cells and the connectivity part is realised by projection fibres mapping the net fragments to \emph{S2}, thereby providing feedback to \emph{S1}.
+Each prototype in \emph{S2} is considered a hypothesis of what object is present in the input. A net fragment in \emph{S1} can be mapped to multiple prototypes, and each active fragment supports specific hypotheses in \emph{S2}. The hypotheses act back on \emph{S1} and support its fragments. Thus, the activity part is realised by \emph{S1} when supporting or turning off cells and the connectivity part is realised by projection fibres mapping the net fragments to \emph{S2}, thereby providing feedback to \emph{S1}.
 
 Overall, I argue that the proposed framework is an implementation following strictly the theory of natural intelligence \sidecite{von_der_malsburg_theory_2022}. Thus, according to leading experts in the field, this framework has the ability to make a step towards natural intelligence and emergence. 
 
@@ -86,7 +87,7 @@ Furthermore, the model builds consistency at every point in the network, making 
 Furthermore, it allows adding objects dynamically to static reference frames, implementing lifelong learning \sidecite{parisi_continual_2019} without the risk of catastrophic forgetting \sidecite{kirkpatrick_overcoming_2017, liu_overcoming_2021}.
 
 \section{Bernoulli Neuron}\seclbl{bernoulli_neuron}
-The previous section provided an overview of the inspiration, the building blocks, and the advantages of the proposed framework. In the following, the building blocks are described in more detail, starting with the Bernoulli neuron.
+The previous section provided an overview of the proposed framework's inspiration, building blocks, and advantages. In the following, the building blocks are described in more detail, starting with the Bernoulli neuron.
 In traditional neural networks, neurons exhibit dense activity, meaning that even with applying the rectified linear unit (ReLU) activation function (c.f. \eqref{act_functions}), many neurons remain active (above zero) \sidecite{rhu_compressing_2018}. However, biological neurons have different characteristics than artificial neural networks \sidecite{kandel_principles_2013}.
 This suggests that implementing net fragments \sidecite{von_der_malsburg_concerning_2018}, similar to the human brain, requires using different principles than the ones used in classical neural networks. Inspired by neuroscientific findings, a probabilistic neuron that samples its activation from a Bernoulli distribution is introduced.
 Such a neuron is a binary neuron that does not fire when a certain threshold is reached but uses its internal state as a firing probability. A probabilistic neuron $a_i$ in the context of net fragments is modelled as a probability density function of the form:
@@ -110,7 +111,7 @@ Moreover, flipping neurons help to implement alternative pathways and cells: At 
 However, a single cell could be part of two mutually exclusive net fragments, requiring an alternative cell with alternative activation characteristics \sidecite{von_der_malsburg_neural_1987}.
 The activation of alternative cells must be stochastic:
 When alternative cells are always active simultaneously, they cannot be part of mutually exclusive net fragments.
-Having cells that implement a stochastic process can break this symmetry at the beginning, allowing the network to learn lateral connections between exclusive alternative cells.
+Cells that implement a stochastic process can break this symmetry at the beginning, allowing the network to learn lateral connections between exclusive alternative cells.
 
 \subsection{Practical Considerations}
 To prevent the network from being dominated by noise, it is crucial that most of the activation probabilities do not cluster around a mean value of $\mu = 0.5$. Otherwise, a significant proportion of neurons would have high uncertainty about whether they should fire, leading to random firing patterns. This uncertainty problem occurs mainly in the initial phase of training when the network is not yet trained and therefore dominated by uncertainty.
@@ -135,19 +136,19 @@ At each timestep, the innermost loop executes a step. Once the innermost loop is
 \paragraph{Slow Loop.} The dataset comprises multiple images. Each image in the dataset is processed one after the other, building the outermost loop. \figref{lateral_loops} depicts an outer loop with a dataset containing vertical and horizontal lines, similar to the experiments conducted in this thesis (c.f. \secref{exp_dataset}). However, depending on the application, different datasets could be used.
 
 \paragraph{Medium Loop.} For each image in the dataset, different views are sampled using data augmentation. In the experiments conducted in this thesis (c.f. \secref{exp_dataset}), a trajectory strategy is implemented that moves the line continuously from an initial position to a target position.
-However, continuous movement is not mandatory, and random data augmentation can also be applied. Thereby, it is important to inform the network that the same object with an identical inner structure is shown multiple times during the median loop so that it can learn to map it to the same object prototype despite different transformations and viewpoints.
+However, continuous movement is not mandatory, and random data augmentation can also be applied. It is important to inform the network that the same object with an identical inner structure is shown multiple times during the median loop so that it can learn to map it to the same object prototype despite different transformations and viewpoints.
 
 \paragraph{Fast Loop.} From each view, the sensory system creates neural activity that the network processes for $T \geq 1$ timesteps. During these timesteps, inhibition increases, and active cells that do not get lateral support from other cells are turned off. 
 The processing aims to iteratively improve the features and the corresponding object prototypes over time. Therefore, the previous state in the form of a net fragment and an object prototype is required at every timestep and is fed into \emph{S1} together with the sensory signal at every timestep.
 
 
 \section{Sensory System \emph{S0}}\seclbl{framework_s0}
-The goal of the sensory system is to perceive an input and extract multiple different features in spatial neighbourhoods that can be used to build net fragments \sidecite{von_der_malsburg_concerning_2018, von_der_malsburg_theory_2022} in the next stage.
+The goal of the sensory system is to perceive an input and extract multiple different features in spatial neighbourhoods that can be used to build net fragments \sidecite{von_der_malsburg_theory_2022, von_der_malsburg_concerning_2018} in the next stage.
 In the case of images, the input has a shape of size $[C_{\text{in}} \times W \times H]$ where $C_{\text{in}}$ is the number of input channels, $W$ the image width and $H$ the image height.
 The output of this stage is of shape $[C_{\text{sensor}} \times W \times H]$, where $C_{\text{sensor}}$ is the number of output channels. Typically, $C_{\text{sensor}}$ is much larger than $C_{\text{in}}$, i.e. $C_{\text{sensor}} \gg C_{\text{in}}$.
-Each output channel represents a feature. Thus the sensory system extracts at each pixel location multiple features based on a local neighbourhood.
+Each output channel represents a feature. Thus, the sensory system extracts multiple features based on a local neighbourhood at each pixel location.
 
-As described in \secref{framework_building_blocks}, a sensory system can be implemented with hand-crafted filters, Gabor filters \sidecite{gabor_theory_1946, granlund_search_1978}, or by training a convolutional network in an autoencoding setting \sidecite{rumelhart_learning_1986}. The advantage of using learned filters over fixed Gabor filters is that they can be tweaked to the source data. However, this comes with the cost of additional filter training.
+As described in \secref{framework_building_blocks}, a sensory system can be implemented with hand-crafted filters, Gabor filters \cite{gabor_theory_1946, granlund_search_1978}, or by training a convolutional network \sidecite{lecun_backpropagation_1989} in an autoencoding setting \sidecite{rumelhart_learning_1986}. The advantage of using learned filters over fixed Gabor filters is that they can be tweaked to the source data. However, this comes with the cost of additional filter training.
 
 A difficulty is that sensory inputs are typically in continuous space and must be converted into a binary activation potential.
 One option is to normalise the sensor signal in the range $(0, .., 1)$ and to use this value as a probability to sample from a Bernoulli distribution, similar to the proposed Bernoulli neurons (c.f. \secref{bernoulli_neuron}).
@@ -169,7 +170,7 @@ There exist various ways of combining these three types of input signals. For ex
 However, stacking all three arrays would lead to a very high-dimensional input.
 A more sophisticated approach is to aggregate (some of) the matrices.
 In the experiments conducted in this thesis (c.f. \secref{exp_s1}), a straightforward approach is used: The previous net fragments can be overridden by the feedback from the object prototypes.
-Only one of these two arrays is used, as these arrays are typically very similar and provide redundant information. The mapping from fragments to object prototypes and back reduces noise, as the feedback of \emph{S2} is not a reconstructed version of the input but rather a reconstruction of an optimised object prototype. Consequently, the feedback of \emph{S2} is typically less noisy and therefore preferred.
+Only one of these two arrays is used, as these arrays are typically very similar and provide redundant information. The mapping from fragments to object prototypes and back reduces noise, as the feedback of \emph{S2} is not a reconstructed version of the input but rather a reconstruction of an optimised object prototype. Consequently, the feedback of \emph{S2} is typically less noisy and, therefore, preferred.
 
 Nevertheless, the feedback from \emph{S2} is not always correct and, therefore, only incorporated if it is highly similar to the net fragments formed in \emph{S1}. Especially at the beginning of training or when observing unknown objects, the feedback of \emph{S2} should not be incorporated as it can be wrong.
 Such invalid feedback can be detected by measuring the similarity between net fragments and feedback, for example, using the mean square error (MSE). Thus, the net fragments are only overridden if the error is below a pre-defined threshold and overriding most likely improves results.
@@ -183,7 +184,7 @@ Such invalid feedback can be detected by measuring the similarity between net fr
 
 
 In the following, the number of input channels is denoted as $C_{\text{in}}$ and the number of output channels is denoted as $C_{\text{out}}$.
-Note that the feedback matrix from \emph{S2} has the same shape as the net fragments built in \emph{S1}.
+Note that the feedback matrix from \emph{S2} has the same shape as the net fragments formed in \emph{S1}.
 Since the previous net fragments or the feedback from \emph{S2} is combined with the sensory signal and used as input, the number of input channels is larger than the number of output channels and defined as $C_{\text{in}} = C_{\text{sensor}} + C_{\text{out}}$.
 An overview about the input and output of \emph{S1} is depicted in \figref{s1_input}:
 The output of \emph{S1} is optionally replaced by the feedback of \emph{S2}. In both cases, this array has a size of $[C_{\text{out}} \times W \times H]$ and is stacked with the output from the sensory system of size $[C_{\text{Sensor}} \times W \times H]$, resulting in an input of size $[C_{\text{in}} \times W \times H]$.
@@ -271,7 +272,7 @@ However, after applying the Hebbian learning rule, the weights are updated to ca
 
 \subsection{Inhibition}\seclbl{framework_norm}
 A continuous value representing the support strength is obtained after applying the convolutional operation to the binary input signal.
-The support strength has to be normalised into the range of $(0, ..., 1)$ so that it can be used as an activation probability of a Bernoulli neuron.
+The support strength has to be normalised into the range of $(0, ..., 1)$ to be used as an activation probability of a Bernoulli neuron.
 In the context of neuroscience, this normalisation is interpreted as the brain's inhibitory signal \sidecite{coombs_specific_1955, vogels_inhibitory_2011}:
 After initialisation of the weight matrix $\boldsymbol{W}$, the highest possible support strength per cell is $1$ as only self-support exists. During training, the maximum support strength increases significantly (up to $2n_l + 1$) as other cells start supporting a given cell.
 Consequently, the support required to remain active increases during training.
@@ -280,7 +281,7 @@ However, the support strength does not only change during training. It also vari
 Besides being time-dependent, the support strength also changes depending on the data:
 Some images generally contain more features, leading to more active cells and higher lateral support. Furthermore, support varies across different spatial locations, as some image regions typically contain more features than others. Therefore, cells in such regions typically receive more support than those in regions with fewer features and fewer activated cells.
 
-To cope with such dynamically changing support strength, the inhibition strength must be highly adaptive.
+The inhibition strength must be highly adaptive to cope with such dynamically changing support strength.
 A solution to deal with varying support strength due to the timestep, input data, and spatial location can be found in the human brain.
 Neuroscience findings suggest an upper limit of concurrently active incoming synapses for active cells \sidecite{kandel_principles_2013}. Thus, each cell has not only a lower limit of lateral support but also an upper limit.
 The support is reduced if a cell's support is above a pre-defined threshold $\rho$.
@@ -328,7 +329,7 @@ Thus, the weight $\boldsymbol{W}$ with alternative cells is of shape $\left[(\ka
 \figref{lateral_init_weights_alt} visualises how the weight $\boldsymbol{W}$ with a duplication factor of $\kappa=2$ are initialised.
 In that case, $\kappa=2$ output channels are mutually exclusive, leading to activation in only one of these channels.
 Implementing mutually exclusive cells requires competition between alternative cells \sidecite{von_der_malsburg_neural_1987} so that only the most suitable cell can remain active if multiple exclusive cells are active.
-For example, such competition can be implemented by comparing how well a specific activation pattern fits the already learned lateral support \sidecite{vogels_inhibitory_2011, joshi_rules_2009, teichmann_intrinsic_2015}.
+For example, such competition can be implemented by comparing how well a specific activation pattern fits the already learned lateral support \cite{vogels_inhibitory_2011, joshi_rules_2009, teichmann_intrinsic_2015}.
 Another option is implementing inhibition between the competing channels so that the dominant channel turns off the other channels.
 
 
@@ -348,7 +349,7 @@ Therefore, as a second metric, we can add noise to the input image and measure h
 
 \section{Prototype Stage \emph{S2}}\seclbl{framework_s2}
 In stage \emph{S2}, the net fragments are mapped to idealised reference objects.
-This mapping is implemented by projection fibres \sidecite{tanigawa_organization_2005, greig_molecular_2013}, which are grouped into maplets \sidecite{zhu_maplets_2004}.
+This mapping is implemented by projection fibres \cite{tanigawa_organization_2005, greig_molecular_2013}, which are grouped into maplets \sidecite{zhu_maplets_2004}.
 As soon as a control unit of a maplet detects a strong correlation between the neurons it connects in \emph{S1} and \emph{S2}, it initialises the mapping by turning on its fibres.
 
 This mapping from fragments to reference representations seems to be one of the core algorithms of the biological visual system as it can solve the binding problem \sidecite{revonsuo_binding_1999, feldman_neural_2013}, i.e. answers the questions of how visually perceived objects are bound together based on their properties such as shape, texture, colour, contour, or motion.
@@ -356,7 +357,7 @@ This mapping from fragments to reference representations seems to be one of the 
 Implementing such a mapping poses various challenges.
 In the following, some simplifications are assumed that are ignored in the proposed framework and have to be solved in future work.
 \begin{itemize}
-    \item \textbf{Storing object prototypes in \emph{S2}}: It is assumed that the reference representations are already stored in \emph{S2}. Consequently, the mapping process is reduced to finding the most suitable projection, disregarding the case that the object prototype might not be stored yet. Nevertheless, it would be desirable that the network can, for example, when encountering high uncertainty, autonomously recognise the absence of a proper object prototype and create one.
+    \item \textbf{Storing object prototypes in \emph{S2}}: It is assumed that the reference representations are already stored in \emph{S2}. Consequently, the mapping process is reduced to finding the most suitable projection, disregarding that the object prototype might not be stored yet. Nevertheless, it would be desirable that the network can, for example, when encountering high uncertainty, autonomously recognise the absence of a proper object prototype and create one.
     \item \textbf{Enhancing object prototypes in \emph{S2}}: It is assumed that the object prototypes are idealised, can remain static, and do not require further updates. 
     Findings from psychology suggest that our brain is highly structured and might contain such prototypes from birth \sidecite{simion_face_2015}. However, these prototypes are also known to be optimised with increasing experience over time \cite{simion_face_2015}.
     Moreover, updating prototypes is important when novel prototypes are stored, as an optimised form of such a reference object cannot be derived from a single sample.
@@ -428,7 +429,7 @@ The Jaccard similarity between two vectors that consider the local neighbourhood
 	J_{x,y} = J(\boldsymbol{A}_{S1,(x,y)}, \boldsymbol{A}_{S2,(x,y)})
 \end{align}
 %
-Considering a local neighbourhood can be likened to having local support, as is the case for net fragments. Multiple cells must support the mapping in order to be activated by the corresponding control unit. For example, the similarity between two dissimilar vectors can still be high if their context is similar. This is helpful in dealing with noise in the data.
+Considering a local neighbourhood can be likened to having local support, as is the case for net fragments. Multiple cells must support the mapping to be activated by the corresponding control unit. For example, the similarity between two dissimilar vectors can still be high if their context is similar, which helps deal with noise in the data.
 Furthermore, the similarity between two identical vectors is low if their context is dissimilar and therefore does not match.
 Such local support thus increases robustness and provides higher similarity for spatially correctly arranged features.
 
@@ -443,7 +444,7 @@ In the following, it is described how projection fibres can be wired.
     \caption[Operations applied to a prototype]{Different operations applied to a prototype.}
     \figlbl{prototype_operations}
 \end{figure}
-A straightforward approach is to apply different operations such as translation, rotation, and deformation to a reference frame as shown in \figref{prototype_operations}. These operations can be used individually or in combination, resulting in multiple augmented versions of the prototype.
+A straightforward approach is to apply different operations such as translation, rotation, and deformation to a reference frame as shown in \figref{prototype_operations}. These operations can be used individually or in combination, resulting in multiple augmented prototype versions.
 Thereby, the shift of each neuron is tracked, and a projection fibre is used to map a neuron from the prototype to the corresponding neuron in the augmented version.
 
 However, such an object-dependent mapping would not scale as each object requires a multitude of fibres.
