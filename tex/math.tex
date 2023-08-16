@@ -41,6 +41,7 @@ Depending on the context, a variable can be a scalar value, a vector, or a matri
 	\textbf{Variable} & \textbf{Meaning}\\
 	\hline
     $o$ & A single neuronal cell.\\
+    $s$ & A power factor to push most activation probabilities towards $0$ and only permit high activations to remain high (i.e. $\boldsymbol{a} := \boldsymbol{a}^s$).\\
     $t$ & The current timestep.\\
      $T$ & The total number of timesteps.\\
     $w_{ij}$ & The weight between neuron $i$ and neuron $j$.\\
@@ -60,6 +61,7 @@ Depending on the context, a variable can be a scalar value, a vector, or a matri
 \begin{tabular}{ p{3cm} p{11cm} }
 	\textbf{Function} & \textbf{Meaning}\\
 	\hline
+    $B(\cdot)$ & A Bernoulli probability distribution.\\
 	$f(\cdot)$ & An activation function such as $\sigma(\cdot)$, $(\cdot)^{+}$, or $\tanh(\cdot)$ (c.f. \eqref{act_functions}).\\
     $F(\cdot)$ & The free energy function.\\
 	$g(\cdot)$ & The aggregation function that calculates the scalar value that is fed into the activation function $f(\cdot)$ (c.f. \eqref{McCulloch_Pitts_agg},  \eqref{nn}).\\
