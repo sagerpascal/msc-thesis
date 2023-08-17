@@ -3,7 +3,7 @@ In \secref{intro_motivation} is discussed that the human brain can recognise the
 This capability is absent in current deep learning systems.
 Although deep networks have demonstrated their exceptional capabilities as feature extractors and recent advancements in scaling have brought them to a level where they hold the potential for widespread applicability across various tasks in our everyday lives, these networks still have intrinsic limitations \cite{akhtar_threat_2018, long_survey_2022, madan_when_2022, marcus_deep_2018, smith_using_2022, garcia-martin_estimation_2019, kirkpatrick_overcoming_2017, rosenbloom_defining_2023, mitchell_debate_2023}, and the prospect of overcoming these barriers remains uncertain (c.f. \secref{limitationsDL}).
 
-In \secref{neuroscience_findings}, important neuroscientific findings are identified, responsible for the effectiveness of the biological vision system that does not have these drawbacks of deep networks.
+In \secref{neuroscience_findings}, important neuroscientific findings responsible for the effectiveness of the biological vision system are identified, since the biological system does not suffer from these drawbacks.
 It is described that the human brain uses lateral connections \sidecite{gilbert_lateral_1990, liang_interactions_2017, stettler_lateral_2002} to build net fragments \sidecite{von_der_malsburg_theory_2022, von_der_malsburg_concerning_2018} that are mapped to reference frames using projection fibres \sidecite{tanigawa_organization_2005, greig_molecular_2013}.
 Such fibres allow object-independent mapping \sidecite{wolfrum_recurrent_2008, fernandes_self-organization_2015}, making the system highly efficient.
 
@@ -38,7 +38,7 @@ I argue that this is a different way of thinking about artificial learning and p
 
 \section{Future Work}
 In this thesis, a novel vision framework is proposed. 
-However, numerous avenues exist for future work to improve the proposed framework.
+However, numerous avenues exist for future work to further improve the framework.
 These improvements can focus on various dimensions, such as
 \begin{itemize}
     \item extending the theoretical foundations of the framework with a memory layer or scene interpretation according to the vision outlined in \secref{biologial_inspiration_vision},
@@ -70,7 +70,7 @@ These tasks are discussed in the following.
 \subsubsection{Alternative Cells in \emph{S1}}\seclbl{future_alt_cells}
 In the context of \emph{S1}, individual cells represent distinct features that are localised in a specific spatial location. These cells support each other's neuronal activity. As outlined in \secref{neuroscience_findings_alt_cells}, these cells can contribute to mutually exclusive net fragments. For example, cell $A$ may participate in a fragment with cell $B$ and another fragment with cell $C$, while cell $B$ and $C$ avoid simultaneous activation. This exceeds the functional capacity of cell $A$, and a copy of $A$ is needed to establish separate lateral connections with cell $B$ and $C$.
 
-In \secref{framework_alt_cells}, it is describds that alternative cells could be implemented by duplicating the output channels of the weight matrix $\boldsymbol{W}$ of \emph{S1}.
+In \secref{framework_alt_cells}, it is described that alternative cells could be implemented by duplicating the output channels of the weight matrix $\boldsymbol{W}$ of \emph{S1}.
 Alternative cells contribute to different net fragments and are mutually exclusive.
 Consequently, competition between these alternative cells is required to ensure that only a winning cell can become active and that activity in alternative cells is suppressed\sidenote{Activity can be suppressed by inhibition, as it is already implemented in \emph{S1}.}.
 Well-known competition strategies are winner-take-all competition, providing an external competitive signal, anti-Hebbian learning \sidecite{vogels_inhibitory_2011}, or adapting the activation function of the neurons to enforce a specific activity distribution \sidecite{joshi_rules_2009, teichmann_intrinsic_2015} (c.f. \secref{hebbian}).
