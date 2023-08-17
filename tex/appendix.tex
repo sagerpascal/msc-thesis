@@ -22,7 +22,7 @@ QR codes linking to these URLs are provided in \figref{qr_links} for convenient 
 \end{figure}
 %
 In the following, the video visualisations accessible at \href{https://sagerpascal.github.io/lateral-connections/results/final_results.html}{sagerpascal.github.io\\/lateral-connections/results/final\_results} are explained.
-However, the explanations are limited to an overview of which components are shown in each video.
+These explanations are limited to an overview of which components are shown in each video.
 An interpretation of the video contents is provided in the corresponding result section.
 
 Two video versions are shown for each experiment, both produced by the same model using the same parameter weights.
@@ -39,9 +39,9 @@ By doing so, viewers have time to analyse the network's activations during this 
 \figref{video_overview} shows a single video frame, providing an overview of the components displayed in each video:
 \begin{enumerate}
     \item The left part of the video displays the input image fed into the sensory system. It is a binary image with one colour channel, whereby active pixels are depicted in white and inactive pixels are depicted in black.
-    \item The activations of the sensory system are shown in the middle of the video. The sensory system extracts $4$ features at each location. Each feature combination is visualised in a different colour, and areas without activations are depicted in black.
+    \item The activations of the sensory system \emph{S0} are shown in the middle of the video. The sensory system extracts $4$ features at each location. Each feature combination is visualised in a different colour, and areas without activations are depicted in black.
     \item \emph{S1} is visualised in the top right corner. It uses the same colours as the sensory system. However, the activations might differ since neurons with insufficient lateral support are turned off, or other neurons might switch on.
-    \item \emph{S2} is shown in the bottom right corner. It uses the same colours as the sensory system and \emph{L1}. The visualisation depicts the reconstructed version, i.e., the feedback provided to \emph{S1} after mapping \emph{S1}' activities to the latent variables.
+    \item \emph{S2} is shown in the bottom right corner. It uses the same colours as the sensory system and \emph{L1}. The visualisation depicts the returned prototype, i.e., the feedback provided to \emph{S1} after mapping \emph{S1}' activities to the latent variables.
     \item The latent variables of \emph{S2} are shown at the center bottom of the video as $16$ circles. Each circle represents a cell, with green indicating an active cell and red indicating an inactive one. 
 \end{enumerate}
 
@@ -57,17 +57,17 @@ For a detailed explanation of the content and observations in each video, please
 \end{figure}
 %
 This section examines the concept of negative Hebbian Learning in \emph{S1}, a learning paradigm designed to allow neural networks to forget unimportant or inconsistent features. 
-In the conducted experiments, positive Hebbian learning is used exclusively to strengthen connections between active cells.
+In the conducted experiments, only positive Hebbian learning \sidecite{hebb_organization_1949} is used to strengthen connections between active cells.
 Conversely, negative Hebbian learning additionally reduces the connection strength between cells that fire disjointly\sidenote{I.e. one cell is active while the other is inactive.}.
 While negative Hebbian learning facilitates eliminating previously learned but inconsistent connections, it also poses challenges in maintaining desired lateral connections that are needed to provide support between feature cells.
 
 
 \figref{neg_hebb_learning} visualises the weight matrix of a model trained with negative Hebbian updates and the activation probabilities if a vertical line fed is into the model.
-Despite the divergence of the activation probabilities compared to those of positive Hebbian learning, these activations are still considered valid representations of lines.
-However, the major issue is that the output channels do not rely on distinct features.
+Despite the divergence of the activation probabilities compared to those of positive Hebbian learning (c.f. \figref{S1_weight_analysis}), these activations are still considered valid representations of lines.
+However, the major issue is that the output channels do not rely on multiple distinct features.
 
 For instance, the output channel $A$ representing vertical lines only considers the input channels $1$ and $5$, whereby channel $1$ contains the ``vertical lines features'' from the sensory system, and channel $5$ is its own recurrent connection.
-Regrettably, input channels $2$-$4$, which contain additional sensory signals, are disregarded by output channel $A$. Consequently, only cells representing vertical line features support this output channel.
+Regrettably, input channels $2$-$4$, which contain additional sensory signals, are disregarded by output channel $A$. Therefore, only cells representing vertical line features support this output channel.
 In contrast, positive Hebbian learning considers all input channels, resulting in different features supporting each other.
 
 Consequently, negative Hebbian learning leads to lower lateral support within the network.
@@ -81,7 +81,6 @@ Negative Hebbian learning, while facilitating the filtering out of irrelevant fe
     \figlbl{correlations_hebb_learning}
 \end{figure}
 %
-Subsequently, it is discussed why the features become mutually exclusive.
 The primary issue is that, except for one input channel, there are more negative correlations between the input channels and a single output channel, as illustrated in \figref{correlations_hebb_learning}.
 In this context, ``negative correlation'' refers to disjointly active cells, while ``positive correlation'' refers to cells that fire together.
 In the case of the vertical line, the output channel $A$ is expected to reassemble the line roughly.
