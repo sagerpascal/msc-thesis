@@ -97,7 +97,7 @@ The noise that is not removed is the noise that is very close to the actual line
 %
 Net fragments \sidecite{von_der_malsburg_theory_2022, von_der_malsburg_concerning_2018} can not only reduce noise but also recreate occluded objects.
 This phenomenon is demonstrated by analysing the network's behaviour if a discontinuous line is fed into the network.
-\figref{r4_overview} contains a QR code linking to a video demonstrating that \emph{S1} is able to reconstruct lines that are interrupted by up to $8$ pixels.
+In \figref{r4_overview}, a QR code is contained linking to a video demonstrating that \emph{S1} is able to reconstruct lines that are interrupted by up to $8$ pixels.
 
 In the experimental setup, the centre of the line is detected, and a varying number of pixels starting from the centre are intentionally switched off.
 The feedback from \emph{S2} is switched off so that only the reconstruction based on net fragments within \emph{S1} is tested.
@@ -118,11 +118,11 @@ Therefore, it only works for the examples the network encountered during the tra
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.99\textwidth]{s2_feedback_heatmap}
-    \caption[Activation probabilities with/without \emph{S2} feedback]{The activation probabilities per cell across all four channels with and without feedback from \emph{S2}. The input is a discontinuous vertical line with $20$ pixels missing.}
+    \caption[Activation probabilities with and without \emph{S2} feedback]{The activation probabilities per cell across all four channels with and without feedback from \emph{S2}. The input is a discontinuous vertical line with $20$ pixels missing.}
     \figlbl{s2_feedback_heatmap}
 \end{figure}
 %
-\figref{s2_feedback_heatmap} visualises the activation probabilities for all cells across the four output channels for a vertical line with $20$ missing pixels.
+In \figref{s2_feedback_heatmap}, the activation probabilities for all cells across the four output channels for a vertical line with $20$ missing pixels are visualised.
 The top row shows the probabilities when no feedback form \emph{S2} is incorporated, and the bottom row the probabilities after the feedback is incorporated.
 
 As visible in the top row of \figref{s2_feedback_heatmap}, without incorporating feedback from \emph{S2}, the line cannot be fully reconstructed using lateral connections in \emph{S1}, as $20$ of missing pixels exceeds the range of lateral connections. However, \emph{S2} is still able to map the line with missing pixels to the correct prototype and provide appropriate feedback. After the feedback is incorporated, the activation probabilities for the entire vertical line increase significantly. Especially in the middle section of the first channel, the activation probabilities increase from $0\%$ to approximately $65\%$.
@@ -145,8 +145,8 @@ It helps to deal with occluded objects and creates stability in net fragments, e
     \figlbl{S1_weight_matrix}
 \end{figure}
 %
-The following section discusses the weight matrix of \emph{S1}, which contains the strength of the learned lateral connections.
-\figref{S1_weight_matrix} visualises the learned weights. 
+The weight matrix of \emph{S1}, which contains the strength of the learned lateral connections, is discussed in the following section.
+In \figref{S1_weight_matrix}, the learned weights are visualised. 
 The input of \emph{S1} consists of four channels from the sensory stage (rows labelled as $1$-$4$) and four channels from recurrent connections (labelled as $5$-$8$).
 \emph{S1} produces four output channels, and the kernels contributing to each output channel are depicted in columns labelled from $A$ to $D$.
 Each output channel specialises in a different type of line: Output channel $A$ focuses on vertical lines, channel $B$ on diagonal lines with a positive slope, channel $C$ on horizontal lines, and channel $D$ on diagonal lines with a negative slope.
@@ -161,7 +161,7 @@ However, it is important to note that the four output channels have similar char
     \figlbl{S1_weight_analysis}
 \end{figure}
 %
-\figref{S1_weight_analysis} visualises the features processed when a horizontal line is fed into the system.
+In \figref{S1_weight_analysis}, the features processed when a horizontal line is fed into the system are visualised.
 First, the sensory system extracts four features from the input (visualised in the box named ``output sensory system'').
 Channel $1$ contains ``vertical-line features'', spanning the entire vertical length of the image. 
 The channels $2$-$4$ contain features of diagonal and horizontal lines. However, the sensory system recognises these features only at the ends of the lines.
@@ -195,7 +195,7 @@ Normalising the weights is crucial for the proper functioning of the network. Wi
 
 After $10$ epochs without weight normalisation, some lateral connections reach a weight above $74$ and dominate the decision process of whether neighbouring cells should remain active.
 This leads to undesired activations and weight updates. 
-\figref{weights_no_norm} depicts the weight matrix after $10$ epochs if trained without weight normalisation.
+In \figref{weights_no_norm}, the weight matrix after training for $10$ epochs without weight normalisation is depicted.
 No clear structure is visible within the weights, and the support provided within the network appears somewhat random. 
 Thus, normalisation is not only biologically more plausible but also a necessity to obtain meaningful lateral weights.
 
@@ -203,7 +203,7 @@ Thus, normalisation is not only biologically more plausible but also a necessity
 
 \subsection{Initialisation}
 In this section, the crucial aspect of weight initialisation is discussed.
-\secref{lateral_init} describes that initialising the weight with self-support is essential for the proper functioning of the network.
+In \secref{lateral_init}, it is described that initialising the weight with self-support is essential for the proper functioning of the network.
 Two different approaches exist to initialise weights with self-support, as shown in \figref{init_weight_self_support}.
 Regardless of the strategy chosen, both approaches lead to identical weight matrices after the training process.
 \begin{figure}[h]
@@ -220,7 +220,7 @@ Regardless of the strategy chosen, both approaches lead to identical weight matr
 \end{figure}
 
 However, it is important to note that not all weight initialisation strategies lead to good results. 
-\figref{init_weight_not_working} show two other strategies and the resulting weight matrix after training:
+In \figref{init_weight_not_working}, two other strategies and the resulting weight matrix after training is shown:
 Initialising the weights randomly leads to support between cells that should not support each other.
 Consequently, this results in unwanted network activations, and the network converges towards weight parameters where the weights are almost identical across all output channels and do not provide lateral support in the desired manner.
 If, on the other hand, the weights are initialised with zeros, the network has no active outputs. Consequently, all cells are immediately deactivated, and the weights remain unchanged during Hebbian learning.
@@ -236,7 +236,7 @@ In conclusion, using one of the two self-support weight initialisation strategie
     \figlbl{support_strength}
 \end{figure}
 %
-\figref{support_strength} presents the support strength received by active and inactive cells during training before the activation strength is normalised and translated into an activation probability.
+In \figref{support_strength}, the support strength received by active and inactive cells during training is presented, before the activation strength is normalised and translated into an activation probability.
 The green interval depicts the support with inhibition and the blue interval without inhibition.
 
 Before training, only self-support exists, i.e. the received support for active cells is $1$.
@@ -252,7 +252,7 @@ The support active cells receive is limited by the inhibitory strength $\rho = 1
 When a cell exceeds this threshold $\rho$, its activation probability is linearly reduced.
 This effect is visible when comparing the blue interval (without inhibition) with the green interval (with inhibition). With inhibition, the support strength for each cell is pushed below $\rho$, depicted as the red dotted line.
 
-\figref{support_strength} show that cells can receive lateral support strengths of up to $21$ when no inhibitory signals are present in the network (see the max. values of the blue interval).
+In \figref{support_strength}, it is shown that cells can receive lateral support strengths of up to $21$ when no inhibitory signals are present in the network (see the max. values of the blue interval).
 However, such strong support leads to undesired effects, as discussed in the next section.
 
 The results depicted in \figref{support_strength} demonstrate that \emph{S1} builds net fragments as expected. The gap between the support strength of active and inactive cells becomes bigger during training, ensuring that only cells representing known patterns remain active.
@@ -262,7 +262,7 @@ The results depicted in \figref{support_strength} demonstrate that \emph{S1} bui
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.79\textwidth]{inhibition_heatmap}
-    \caption[Activation heatmap with/without inhibition]{The activation heatmap indicates the activation probability for all cells across the four channels. The upper row shows the probability without inhibition and the lower row with inhibition.}
+    \caption[Activation heatmap with and without inhibition]{The activation heatmap indicates the activation probability for all cells across the four channels. The upper row shows the probability without inhibition and the lower row with inhibition.}
     \figlbl{inhibition_heatmap}
 \end{figure}
 %

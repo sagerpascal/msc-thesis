@@ -36,7 +36,7 @@ Each video visualises the processing of the input over time.
 The first six video frames show how the video is processed over the $T=6$ timesteps of the fast loop, followed by five additional frames depicting the final prediction after the fast loop.
 By doing so, viewers have time to analyse the network's activations during this short interruption before the next input is fed into the model, and the process repeats.
 
-\figref{video_overview} shows a single video frame, providing an overview of the components displayed in each video:
+In \figref{video_overview}, a single video frame is shown, providing an overview of the components displayed in each video:
 \begin{enumerate}
     \item The left part of the video displays the input image fed into the sensory system. It is a binary image with one colour channel, whereby active pixels are depicted in white and inactive pixels are depicted in black.
     \item The activations of the sensory system \emph{S0} are shown in the middle of the video. The sensory system extracts $4$ features at each location. Each feature combination is visualised in a different colour, and areas without activations are depicted in black.
@@ -56,13 +56,13 @@ For a detailed explanation of the content and observations in each video, please
     \figlbl{neg_hebb_learning}
 \end{figure}
 %
-This section examines the concept of negative Hebbian Learning in \emph{S1}, a learning paradigm designed to allow neural networks to forget unimportant or inconsistent features. 
+In this section, the concept of negative Hebbian Learning in \emph{S1} is examined, a learning paradigm designed to allow neural networks to forget unimportant or inconsistent features. 
 In the conducted experiments, only positive Hebbian learning \sidecite{hebb_organization_1949} is used to strengthen connections between active cells.
 Conversely, negative Hebbian learning additionally reduces the connection strength between cells that fire disjointly\sidenote{I.e. one cell is active while the other is inactive.}.
 While negative Hebbian learning facilitates eliminating previously learned but inconsistent connections, it also poses challenges in maintaining desired lateral connections that are needed to provide support between feature cells.
 
 
-\figref{neg_hebb_learning} visualises the weight matrix of a model trained with negative Hebbian updates and the activation probabilities if a vertical line fed is into the model.
+In \figref{neg_hebb_learning}, the weight matrix of a model trained with negative Hebbian updates and the activation probabilities of a vertical line fed into the model is visualised.
 Despite the divergence of the activation probabilities compared to those of positive Hebbian learning (c.f. \figref{S1_weight_analysis}), these activations are still considered valid representations of lines.
 However, the major issue is that the output channels do not rely on multiple distinct features.
 

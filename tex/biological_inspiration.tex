@@ -6,8 +6,8 @@ Consequently, the neuroscientific literature is studied, and promising findings 
 Thus, this chapter can be considered a survey of existing neuroscientific findings.
 However, compared to the related work section, it contains more interpretations and introduces a unified vocabulary compatible with both fields, neuroscience and deep learning.
 
-In the following, \secref{neuroscience_findings} presents important neuroscientific findings, describing lateral connections (\secref{neuroscience_findings_lateral_connections}), net fragments (\secref{neuroscience_findings_net_fragments}), the local learning principle (\secref{neuroscience_findings_local_learning_principle}), and projection fibres (\secref{neuroscience_findings_projection_fibres}).
-Finally, \secref{biologial_inspiration_vision} describes how these biological findings could improve current systems.
+In the following, important neuroscientific findings are presented in \secref{neuroscience_findings}, describing lateral connections (\secref{neuroscience_findings_lateral_connections}), net fragments (\secref{neuroscience_findings_net_fragments}), the local learning principle (\secref{neuroscience_findings_local_learning_principle}), and projection fibres (\secref{neuroscience_findings_projection_fibres}).
+Finally, in \secref{biologial_inspiration_vision}, it is described how these biological findings could improve current systems.
 
 
 
@@ -56,7 +56,7 @@ Notably, such a neuron not only establishes connections to neurons in the preced
 \end{figure}
 
 According to \sideciteay{von_der_malsburg_theory_2022}, these lateral connections are used for \emph{lateral support}. ``Lateral support'' means that neurons from the same layer support each other's activity:
-Neurons from the preceding layer can activate the red cell in \figref{lateral_connections} through the orange connections.
+Neurons from the preceding layer can activate the red cell depicted in \figref{lateral_connections} through the orange connections.
 However, inhibitory signals can suppress the activity \sidecite{coombs_specific_1955} of the red neuron before it can fire a spike to the subsequent layer via the green connections. The neuron can only transmit a spike to the subsequent layers if it ``survives'' an inhibition phase \sidecite{vogels_inhibitory_2011}, which is only possible if it receives sufficient lateral support \sidecite{stettler_lateral_2002} from laterally connected neurons.
 Suppose the preceding layer activates several neurons within the same layer as the red neuron, and these activated neurons exhibit lateral connections. In that case, they can send spikes to each other, thereby providing mutual support. This allows them to maintain their action potential and remain active during the inhibition phase.
 
@@ -77,7 +77,7 @@ Net fragments represent patterns that can be distinguished between local pattern
 The number of possible patterns increases exponentially with the considered pattern size. Thus, local patterns occur more frequently.
 To capture frequently occurring patterns, the visual cortex limits the range of lateral connections to a \emph{local neighbourhood} \sidecite{liang_interactions_2017, stettler_lateral_2002}.
 Capturing global patterns would require exponentially more cells, and therefore, limiting the range of lateral connections to local neighbourhoods is crucial.
-\figref{local_neighbourhood2} illustrates such limited lateral connections: The lateral connections from the red cell do not encompass the entire image but are only connected to cells in close proximity.
+In \figref{local_neighbourhood2}, such limited lateral connections are illustrated: The lateral connections from the red cell do not encompass the entire image but are only connected to cells in close proximity.
 
 The size of the local neighbourhood in the human brain varies \sidecite{pessoa_understanding_2014}.
 The primary visual cortex captures the input signal with a high variance and therefore has a strongly limited local neighbourhood size \sidecite{von_der_malsburg_concerning_2018}. The temporal cortex contains transformation-independent object representations and can afford larger neighbourhood sizes as fewer distinct global patterns exist \cite{von_der_malsburg_concerning_2018}.
@@ -129,9 +129,9 @@ Such sets of projection fibres that are frequently activated simultaneously are 
 A control unit in the human brain is a unipolar neuron, a kind of neuron with extensions (so-called processes) that end in synapses and can conduct signals in both directions - from the synapse to the neuron and from the neuron to the synapse \sidecite{byrne_oxford_2019}.
 Control units trigger a mapping when a net fragment in the visual cortex matches another fragment in the temporal cortex, i.e. when these two fragments have a high correlation \cite{zhu_maplets_2004}. However, they only remain active if numerous other projection fibres confirm the decision and map their respective fragments in the visual cortex to the same object prototype in a topological manner \sidecite{von_der_malsburg_concerning_2018}. By doing so, the human brain generates numerous hypotheses about observations, but inhibitory signals quickly deactivate most projections, leaving only the plausible ones active.
 
-\figref{maplets} visualises such a projection between net fragments and an object prototype of a line. A vast amount of projection fibres (grey) run between these two areas, but only the most suitable ones are activated by the control unit of a maplet (red).
+In \figref{maplets}, such a projection between net fragments and an object prototype of a line is visualised. A vast amount of projection fibres (grey) run between these two areas, but only the most suitable ones are activated by the control unit of a maplet (red).
 Please note that the line on the left is translated and stretched. Nevertheless, projection fibres still map such a transformed object to an idealised prototype.
-\figref{maplets} shows a direct mapping from net fragments to prototypes for better clarity. In contrast, the mapping in the brain is done over several hierarchical levels, saving many projection fibres \sidecite{anderson_shifter_1987}.
+In \figref{maplets}, a direct mapping from net fragments to prototypes is shown for better clarity. In contrast, the mapping in the brain is done over several hierarchical levels, saving many projection fibres \sidecite{anderson_shifter_1987}.
 
 Projection fibres thus provide generalisation, i.e. different, transformed versions of an object are recognised and mapped to a reference frame. This explains the ability of humans to see a new object once and immediately recognise it in a transformed version.
 

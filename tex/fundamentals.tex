@@ -1,9 +1,9 @@
 %% fundamentals.tex
 The biological neuronal system not only initially inspired neural networks but also this thesis.
-Accordingly, \secref{neurons} explains how biological neurons and learning work and relates them to their artificial counterparts.
-Next, \secref{ann}  describes artificial neural networks, connecting many artificial neurons.
+Accordingly, in \secref{neurons}, it is explained how biological neurons work and are related to their artificial counterparts.
+Next, artificial neural networks, connecting many artificial neurons, are described in \secref{ann}.
 In \secref{limitationsDL}, the limitations of such artificial neural networks are pointed out.
-Finally, \secref{neurocomputing} explores biologically more plausible learning methods related to this thesis.
+Finally, in \secref{neurocomputing}, biologically more plausible learning methods related to this thesis are explored.
 
 \section{Human Brain}\seclbl{neurons}
 \begin{figure}[h]
@@ -54,7 +54,7 @@ Thus, among the most important differences between biological and artificial neu
 
 Biological findings strongly inspire the proposed vision framework.
 Since biological systems still have many advantages compared to their artificial counterpart, the differences between these systems are of interest and could be promising in developing novel architectures.
-Therefore, \secref{neuroscience_findings} dives deeper into biological principles, identifies central concepts of the human's vision system, and transfers them to a computational framework.
+Therefore, in \secref{neuroscience_findings}, we dive deeper into biological principles, identify central concepts of the human's vision system, and transfer them to a computational framework.
 
 \section{Artificial Neural Networks}\seclbl{ann}
 McCulloch and Pitts \sidecite{mcculloch_logical_1943} proposed the first model of a neuron that can be connected to other neurons.
@@ -270,7 +270,7 @@ Well-known approaches are winner-take-all competition, using a recurrent circuit
 
 Hebbian learning can be considered an alternative to backpropagation of error \cite{rosenblatt_principles_1962, linnainmaa_taylor_1976}.
 Hebbian learning does not propagate error signals backwards but relies on a self-organisation process.
-This thesis leverages Hebbian learning as it allows to prevent early commitment, even though self-organising processes are more complex to train than global error correction algorithms \sidecite{risi_future_2021}.
+In this thesis, Hebbian learning is leveraged as it allows to prevent early commitment, even though self-organising processes are more complex to train than global error correction algorithms \sidecite{risi_future_2021}.
 
 
 \subsection{Hopfield Networks}\seclbl{hopfield}
@@ -301,7 +301,7 @@ Thus, a cell can either keep its state ($a_i[t+1] = a_i[t]$) or flip ($a_i[t+1] 
 A flipping state influences all other neurons and may encourage them to flip as well.
 There exists formal proof that after a finite number of timesteps, an attractor state is reached, and the neurons do not flip anymore \sidecite{hopfield_neural_1982}.
 An input pattern is attracted to the closest stable pattern.
-Hebbian learning (c.f. Section \secref*{hebbian}) can be used to define what the stable patterns are:
+Hebbian learning (c.f. \secref{hebbian}) can be used to define what the stable patterns are:
 With a single iteration over the training patterns, the weights $w_{ij}$ and biases $b_i$ are updated so that these patterns become attractor states \sidecite{hopfield_unlearning_1983}.
 This allows using the network as an associative memory, i.e. to map an input pattern to the most similar predefined stable pattern.
 

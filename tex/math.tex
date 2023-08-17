@@ -26,21 +26,18 @@ Depending on the context, a variable can be a scalar value, a vector, or a matri
 	$\boldsymbol{a} = (a_1, ..., a_k)$ & The output of an intermediate layer of a multi-layer network with $k$ neurons, the output of the last layer is typically denoted as $\boldsymbol{\hat{y}}$. $a_i$ is the output of an activation function of a single neuron.\\
 	$\boldsymbol{b} = (b_1, ..., b_k)$ & The bias of a network layer with 
     $k$ neurons. $b_i$ is the bias of a single neuron.\\
-    $C$ & The capacity of a Hopfield network, i.e. the number of patterns that can be stored or the number of channels from an input matrix.\\
-    $h$ & Hidden state of the memory storing object prototypes.\\
+    $C$ & Either the capacity of a Hopfield network (the number of patterns that can be stored) or the number of channels from an input matrix.\\
+    $\boldsymbol{h} = (h_1, ..., h_k)$ & Hidden state of the memory storing object prototypes.\\
     $H$ & The height of an image.\\
-    $J$ & The Jaccard similarity between two binary vectors (c.f. \eqref{jaccard}).\\
     $k$ & The number of neurons within a layer or kernel.\\
     $L$ & The number of layers of a network.\\
     $n$ & The length (size) of a vector, for example, an input of length $n$ is defined as $\boldsymbol{x} = (x_1, ..., x_n)$. $n_l$ is also used for the support distance of lateral connections.\\
-
-
+    $o$ & A single neuronal cell.\\
  \end{tabular}
  
  \begin{tabular}{ p{3cm} p{11cm} }
 	\textbf{Variable} & \textbf{Meaning}\\
 	\hline
-    $o$ & A single neuronal cell.\\
     $s$ & A power factor to push most activation probabilities towards $0$ and only permit high activations to remain high (i.e. $\boldsymbol{a} := \boldsymbol{a}^s$).\\
     $t$ & The current timestep.\\
      $T$ & The total number of timesteps.\\
@@ -65,6 +62,7 @@ Depending on the context, a variable can be a scalar value, a vector, or a matri
 	$f(\cdot)$ & An activation function such as $\sigma(\cdot)$, $(\cdot)^{+}$, or $\tanh(\cdot)$ (c.f. \eqref{act_functions}).\\
     $F(\cdot)$ & The free energy function.\\
 	$g(\cdot)$ & The aggregation function that calculates the scalar value that is fed into the activation function $f(\cdot)$ (c.f. \eqref{McCulloch_Pitts_agg},  \eqref{nn}).\\
+    $J(\cdot)$ & The Jaccard similarity between two binary vectors (c.f. \eqref{jaccard}).\\
     $\mathcal{L}(\cdot)$ & A loss function to calculate the quality of the model output, typically comparing a prediction $\boldsymbol{\hat{y}}$ with a teaching signal $\boldsymbol{y}$, i.e. $\mathcal{L}(\boldsymbol{\hat{y}}, \boldsymbol{y})$\\
     $P(\cdot)$ & The probability of observing a variable.\\
 \end{tabular}

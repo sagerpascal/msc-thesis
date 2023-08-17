@@ -2,7 +2,7 @@ The following sections describe preliminary experiments conducted to assess the 
 The experiments' primary focus is on the first stage \emph{S1}, as it is the foundation to develop the second stage \emph{S2}. Furthermore, no work exists about implementing stage \emph{S1}, in contrast to self-organising projection fibres, which are the central element of \emph{S2}.
 However, to demonstrate the effectiveness of incorporating feedback from the second into the first stage, a simple mockup is used to simulate \emph{S2}.
 
-In the remainder of this chapter, a simple dataset is introduced in \secref{exp_dataset}. Next, the implementation of the sensory system is presented in \secref{exp_s0}, the feature extracting stage in \secref{exp_s1}, and the prototype stage in \secref{exp_s2}. The results obtained from these experiments are presented in the \chref{results}.
+In the remainder of this chapter, a simple dataset is introduced in \secref{exp_dataset}. Next, the implementation of the sensory system is presented in \secref{exp_s0}, the feature extracting stage in \secref{exp_s1}, and the prototype stage in \secref{exp_s2}. The results obtained from these experiments are presented in \chref{results}.
 
 
 \section{Dataset}\seclbl{exp_dataset}
@@ -73,14 +73,14 @@ This means the initial activation is used as a probability value, and its binary
     \figlbl{result_filter}
 \end{figure}
 
-\figref{result_filter} shows the filter response of these four filters applied to the images from the training dataset.
+In \figref{result_filter}, the filter response of these four filters applied to the images from the training dataset is shown.
 Please note that a fixed threshold of $0.5$ instead of a Bernoulli neuron is used to make this figure appear visually less noisy.
 For each type of line, one filter specialising in this line has a strong response, almost reassembling the input image (except extending the line by a few pixels).
 The other filters primarily activate around the endpoints of the lines.
 
 
 \section{Feature Extracting Stage \emph{S1}}\seclbl{exp_s1}
-The feature-extracting stage further processes the sensory signal of shape $[4 \times 32 \times 32]$ to build net fragments. In the conducted experiments, no alternative cells were used. As described in \secref{framework_s1}, the input of \emph{S1} consists not only of the signal from the sensory system but also of the previous net fragments that can be overridden by the feedback from the object prototypes.
+The feature-extracting stage further processes the sensory signal of shape $[4 \times 32 \times 32]$ to build net fragments. In the conducted experiments, no alternative cells are used. As described in \secref{framework_s1}, the input of \emph{S1} consists not only of the signal from the sensory system but also of the previous net fragments that can be overridden by the feedback from the object prototypes.
 These inputs are stacked along the first dimension, resulting in an input matrix of shape $[8 \times 32 \times 32]$ and an output of shape $[4 \times 32 \times 32]$.
 Thereby, the first four channels (i.e. the input with index $[(1, ..., 4) \times H \times W]$) are the output of the sensory system, and the last four channels (i.e. input with index $[(5, ..., 8) \times H \times W]$) are the previous net fragments.
 The previous net fragments are overridden by the feedback of \emph{S2} if the mean square error between the net fragments and the \emph{S2} feedback is below a threshold value of $0.05$, and thus, the feedback is considered credible.

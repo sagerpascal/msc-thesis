@@ -5,7 +5,7 @@ The previous chapter introduced neuroscientific findings (\secref{neuroscience_f
 In the following, a novel framework incorporating these identified principles is proposed.
 The focus is on translating the two stages described in \secref{neuroscience_findings} into a computational framework.
 Incorporating further stages required for object classification and scene interpretation as described in \secref{biologial_inspiration_vision} remains an open task for future research.
-While the inspiration and principles are based on previous research, this chapter describes a novel computational framework that is considered the main scientific contribution of this thesis.
+While the inspiration and principles are based on previous research, a novel computational framework is described in this chapter, that is considered the main scientific contribution of this thesis.
 
 \section{3-Staged Model}\seclbl{framework_3_staged_model}
 Some of the neuroscientific principles described in \secref{neuroscience_findings} have been explored in the theory of self-organising projection fibres \sidecite{wiskott_face_1996, wiskott_face_1997, fernandes_self-organization_2015} (c.f. \secref{projection_fibres}). However, these approaches do not yet scale to natural images except for human faces \sidecite{wolfrum_recurrent_2008}. This is because most work in this area has neglected to model the learning and the dynamics of rich sets of net fragments in the visual cortex, which are fundamental according to the theory of natural intelligence \sidecite{von_der_malsburg_theory_2022}.
@@ -25,7 +25,7 @@ Afterwards, more implementation details are provided, making the framework more 
     \figlbl{system_overview}
 \end{figure}
 
-\figref{system_overview} provides an overview of the building blocks of the proposed framework. After the sensory stage extracted features and some initial net fragments have been built in \emph{S1}, an inhibition phase \sidecite{coombs_specific_1955, vogels_inhibitory_2011} lasting multiple timesteps turns off cells that do not receive sufficient lateral support. Furthermore, the project fibres \sidecite{greig_molecular_2013} between \emph{S1} and \emph{S2} run in both directions, not only mapping net fragments to reference frames but also providing feedback to \emph{S1} in the form of additional support for well-known objects.
+In \figref{system_overview}, an overview of the building blocks of the proposed framework is provided. After the sensory stage extracted features and some initial net fragments have been built in \emph{S1}, an inhibition phase \sidecite{coombs_specific_1955, vogels_inhibitory_2011} lasting multiple timesteps turns off cells that do not receive sufficient lateral support. Furthermore, the project fibres \sidecite{greig_molecular_2013} between \emph{S1} and \emph{S2} run in both directions, not only mapping net fragments to reference frames but also providing feedback to \emph{S1} in the form of additional support for well-known objects.
 
 \paragraph{Sensors System \emph{S0}.} A typical input to the sensory stage is an image having one (grey-scale) or three (RGB) colour channels. Therefore, such an image can be interpreted as having one or three features at every spatial location.
 The sensory system extracts multiple features by considering a spatial neighbourhood, thereby increasing the number of features at each location.
@@ -133,7 +133,7 @@ At each timestep, the innermost loop executes a step. Once the innermost loop is
     \figlbl{lateral_loops}
 \end{figure}
 
-\paragraph{Slow Loop.} The dataset comprises multiple images. Each image in the dataset is processed one after the other, building the outermost loop. \figref{lateral_loops} depicts an outer loop with a dataset containing vertical and horizontal lines, similar to the experiments conducted in this thesis (c.f. \secref{exp_dataset}). However, depending on the application, different datasets could be used.
+\paragraph{Slow Loop.} The dataset comprises multiple images. Each image in the dataset is processed one after the other, building the outermost loop. In \figref{lateral_loops}, an outer loop with a dataset containing vertical and horizontal lines is depicted, similar to data used in the conducted experiments (c.f. \secref{exp_dataset}). However, depending on the application, different datasets could be used.
 
 \paragraph{Medium Loop.} For each image in the dataset, different views are sampled using data augmentation. In the experiments conducted in this thesis (c.f. \secref{exp_dataset}), a trajectory strategy is implemented that moves the line continuously from an initial position to a target position.
 However, continuous movement is not mandatory, and random data augmentation can also be applied. It is important to inform the network that the same object with an identical inner structure is shown multiple times during the median loop so that it can learn to map it to the same object prototype despite different transformations and viewpoints.
@@ -217,13 +217,13 @@ Please note that the target cell represents a cell's state at time $t$ (denoted 
 
 \subsection{Hebbian Updates}\seclbl{framework_hebb_updates}
 The previous section introduces how a convolutional kernel $\boldsymbol{W}$ can be used to model the lateral support of neighbouring cells.
-This section describes how the support strength, i.e. the weights of $\boldsymbol{W}$, can be learned.
+In this section, it is described how the support strength, i.e. the weights of $\boldsymbol{W}$, can be learned.
 The human brain's learning algorithm is based on local self-organisation and unsupervised (or self-supervised) learning \sidecite{von_der_malsburg_theory_2022}. The biologically most plausible learning algorithm is Hebbian learning.
 
 Hebbian learning evaluates consistency at each synapse and is well suited for learning lateral connections: If two cells are active together (``fire together''), their weight increases (``wire together'') - this plasticity principle corresponds to the definition of lateral support. During training, the cells are activated in a specific pattern based on the sensory input. Hebbian learning strengthens the connections between the active cells, i.e., increasing the lateral support between cells that are often active together. Additionally, by using negative Hebbian learning, the strength of the lateral support can be reduced between cells that fire in disparity (one of the cells is firing while the other is not).
 
 Hebbian learning is introduced in \secref{hebbian}, and it is described how the weight between two cells changes if they fire together (c.f. \eqref{hebb_1}).
-However, this thesis implements lateral support as a convolutional kernel applied at all input positions.
+However, lateral support is implemented as a convolutional kernel that is applied at all input positions.
 Since the same weight is applied at different positions, the update of a connection depends not only on two cells but on multiple cells:
 %
 \begin{align}\eqlbl{hebbu_1}
@@ -254,7 +254,7 @@ Therefore, one cell can only provide limited support to another cell, and multip
     \figlbl{lateral_init_weights}
 \end{figure}
 The previous sections explain that lateral support can be implemented with convolutional kernels and that the weights are learned using the Hebbian rule.
-This section discusses how these kernels should be initialised.
+In this section, it is discusses how these kernels should be initialised.
 If the kernels are not properly initialised, the activations are unstable and typically converge to weights that activate all or no cells.
 A proper initialisation should fulfil the following criteria:
 
@@ -322,11 +322,11 @@ Thus, the weight $\boldsymbol{W}$ with alternative cells is of shape $\left[(\ka
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.99\textwidth]{lateral_init_weights_alt}
-    \caption[Initialisation of the lateral weight matrix with alternative cells]{Initialisation of the lateral weight matrix with alternative cells. The initialisation is similar to \figref{lateral_init_weights}, except each channel is duplicated $\kappa=2$ times.}
+    \caption[Initialisation of the lateral weight matrix with alternative cells]{Initialisation of the lateral weight matrix with alternative cells. The initialisation is similar to the one shown in \figref{lateral_init_weights}, except each channel is duplicated $\kappa=2$ times.}
     \figlbl{lateral_init_weights_alt}
 \end{figure}
 
-\figref{lateral_init_weights_alt} visualises how the weight $\boldsymbol{W}$ with a duplication factor of $\kappa=2$ are initialised.
+In \figref{lateral_init_weights_alt}, it is visualised how the weight $\boldsymbol{W}$ with a duplication factor of $\kappa=2$ are initialised.
 In that case, $\kappa=2$ output channels are mutually exclusive, leading to activation in only one of these channels.
 Implementing mutually exclusive cells requires competition between alternative cells \sidecite{von_der_malsburg_neural_1987} so that only the most suitable cell can remain active if multiple exclusive cells are active.
 For example, such competition can be implemented by comparing how well a specific activation pattern fits the already learned lateral support \cite{vogels_inhibitory_2011, joshi_rules_2009, teichmann_intrinsic_2015}.
@@ -377,7 +377,7 @@ So far, the problem is described as mapping entire net fragments to object proto
 However, this is a somewhat simplified view, as many similar objects only differ slightly.
 Therefore, one cannot just compare objects but rather multiple features that define an object.
 This problem of mapping features extracted from an input image to features from a reference object is known as the correspondence problem.
-\sideciteay{wolfrum_recurrent_2008} motivate the correspondence problem based on \figref{correspondence_recognition}. This figure contains two stick figures where the input's features, such as the head or neck, must be linked to the corresponding model's features.
+\sideciteay{wolfrum_recurrent_2008} motivate the correspondence problem based on \figref{correspondence_recognition}. This figure depicts two stick figures where the input's features, such as the head or neck, must be linked to the corresponding model's features.
 There exist various mappings, symbolised as grey lines.
 The correspondence problem is to find a subset of these links that are the correct correspondences (visualised as black lines in example $\boldsymbol{A}$). 
 
@@ -390,9 +390,9 @@ Unfortunately, it is not sufficient to calculate the similarity between features
     \caption[Different projection operation]{Different projection operations that must be implemented with projection fibres. Projection fibres should make the mapping process invariant to translation, rotation, and deformation.}
     \figlbl{projection_operations}
 \end{figure}
-\figref{projection_operations} visualises the operation needed to deal with different spatial arrangements.
+In \figref{projection_operations}, the operations needed to deal with different spatial arrangements are visualised.
 Projection fibres must be invariant to translation, rotation, and deformation. However, such transformation can occur not only globally, as depicted in \figref{projection_operations}, but also locally.
-In the following, \secref{framework_s2_sim} describes how the similarity between local areas connected by a projection fibre can be measured. This statistic is needed to decide whether a control unit should switch on. Subsequently, \secref{framework_s2_mapping} describes how the projection fibres can be wired.
+In the following, in \secref{framework_s2_sim} is described how the similarity between local areas connected by a projection fibre can be measured. This statistic is needed to decide whether a control unit should switch on. Subsequently, in \secref{framework_s2_mapping} is described how the projection fibres can be wired.
 
 \subsection{Measuring Similarity}\seclbl{framework_s2_sim}
 Correspondence-based mapping requires measuring feature similarity.
@@ -435,7 +435,7 @@ Such local support thus increases robustness and provides higher similarity for 
 
 
 \subsection{Mapping Process}\seclbl{framework_s2_mapping}
-The previous section discusses how the similarity between activity patterns of neurons connected by projection fibres can be calculated.
+In the previous section, it is discussed how the similarity between activity patterns of neurons connected by projection fibres can be calculated.
 In the following, it is described how projection fibres can be wired.
 
 \begin{figure}[h]
