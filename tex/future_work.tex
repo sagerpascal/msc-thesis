@@ -1,33 +1,32 @@
 \section{Discussion}\seclbl{discussion}
-In \secref{intro_motivation} is discussed that the human brain can recognise the ``Gestalt'' (the entire structure) of an object within a very short time \cite{ellis_source_1938, kohler_gestalt_1992, wagemans_century_2012, hamlyn_psychology_2017} because it prevents early commitment \cite{marr_vision_2010}.
+In \secref{intro_motivation}, it is discussed that the human brain can recognise the ``Gestalt'' (the entire structure) of an object within a very short time \cite{ellis_source_1938, kohler_gestalt_1992, wagemans_century_2012, hamlyn_psychology_2017} because it prevents early commitment \cite{marr_vision_2010}.
 This capability is absent in current deep learning systems.
-Although deep networks have demonstrated their exceptional capabilities as feature extractors and recent advancements in scaling have brought them to a level where they hold the potential for widespread applicability across various tasks in our everyday lives, these networks still have intrinsic limitations \cite{akhtar_threat_2018, long_survey_2022, madan_when_2022, marcus_deep_2018, smith_using_2022, garcia-martin_estimation_2019, kirkpatrick_overcoming_2017, rosenbloom_defining_2023, mitchell_debate_2023}, and the prospect of overcoming these barriers remains uncertain (c.f. \secref{limitationsDL}).
-
-In \secref{neuroscience_findings}, important neuroscientific findings responsible for the effectiveness of the biological vision system are identified, since the biological system does not suffer from these drawbacks.
+Since the biological system does not suffer from this issue, important neuroscientific findings responsible for the effectiveness of the biological vision system are identified in \secref{neuroscience_findings}.
 It is described that the human brain uses lateral connections \sidecite{gilbert_lateral_1990, liang_interactions_2017, stettler_lateral_2002} to build net fragments \sidecite{von_der_malsburg_theory_2022, von_der_malsburg_concerning_2018} that are mapped to reference frames using projection fibres \sidecite{tanigawa_organization_2005, greig_molecular_2013}.
 Such fibres allow object-independent mapping \sidecite{wolfrum_recurrent_2008, fernandes_self-organization_2015}, making the system highly efficient.
 
 Based on these findings, a novel computational framework is proposed.
-It encompasses three building blocks, all using binary Bernoulli neurons.
+It encompasses three building blocks, all using novel binary neurons, called Bernoulli neurons.
 These biologically inspired neurons allow net fragments to be implemented and improve robustness.
 The sensory stage \emph{S0} corresponds in the biological context to the eyes and extracts features from images.
 The feature building stage \emph{S1}, inspired by the primary visual cortex \cite{tong_primary_2003, grill-spector_human_2004}, leverages lateral connections to form net fragments, groups of neurons that support each other's activity.
 This stage is well examined in this thesis and iteratively refined based on empirical investigations.
 The experiments confirm the usefulness of lateral connections in tasks such as occluded object reconstruction and noise reduction.
 The prototype stage \emph{S2} takes inspiration from the ventral visual stream \cite{goodale_separate_1992} and the temporal cortex \cite{miyashita_inferior_1993, conway_organization_2018}.
-It uses projection fibres to map network fragments onto object prototypes. While this aspect is well explained theoretically in this thesis, it lags behind \emph{S1} in empirical validation and refinement.
+It uses projection fibres to map network fragments onto object prototypes.
 
 At its core, the entire network is based on self-organisation, locality and cell consistency principles.
 Network fragments arise from cells communicating with their spatial neighbours, while projection fibres connect neighbouring cells in \emph{S1} and \emph{S2} and seek consistency with neighbouring fibres.
 In addition, the network incorporates constraints aimed at reducing early commitment and increasing robustness. The iterative process of assembling net fragments and mapping them to object prototypes leads to efficient transformation-invariant feature processing independent of specific objects.
 
-In \secref{limitationsDL}, some of the most pressing limitations of deep networks are pointed out.
-I speculate that the proposed framework can potentially mitigate some of these issues. Properly implemented projection fibres can map net fragments to object prototypes even when transformed. Projection fibres allow to transfer knowledge \sidecite{wolfrum_recurrent_2008, fernandes_self-organization_2015} much more efficiently between objects, could increase computational efficiency and allow better extrapolation of the data distribution. Furthermore, prototypes are stored in \emph{S2} in separate reference frames, thereby reducing the risk of catastrophic forgetting \sidecite{kirkpatrick_overcoming_2017} as newly acquired knowledge cannot overwrite previously learned knowledge.
+Although deep networks have demonstrated their exceptional capabilities as feature extractors and recent advancements in scaling have brought them to a level where they hold the potential for widespread applicability across various tasks in our everyday lives, these networks still have intrinsic limitations \cite{akhtar_threat_2018, long_survey_2022, madan_when_2022, marcus_deep_2018, smith_using_2022, garcia-martin_estimation_2019, kirkpatrick_overcoming_2017, rosenbloom_defining_2023, mitchell_debate_2023}, and the prospect of overcoming these barriers remains uncertain (c.f. \secref{limitationsDL}).
+I speculate that the proposed framework can mitigate some of these issues. Properly implemented projection fibres can map net fragments to object prototypes even when transformed. Projection fibres allow the transfer of knowledge \sidecite{wolfrum_recurrent_2008, fernandes_self-organization_2015} much more efficiently between objects, could increase computational efficiency and allow better extrapolation of the data distribution. Furthermore, prototypes are stored in \emph{S2} in separate reference frames, thereby reducing the risk of catastrophic forgetting \sidecite{kirkpatrick_overcoming_2017} as newly acquired knowledge cannot overwrite previously learned knowledge.
 
 A significant difference between the proposed system and deep networks lies in the mechanism of building consistency:
 Deep networks optimise consistency at a single point in the network by comparing its prediction with a teaching signal.
 A global error correction algorithm such as backpropagation adjusts all components in the network to minimise inconsistencies at a single point.
 The error signal propagates layer-wise backwards, making the learning algorithm biologically implausible and leading to a sequential feature processing that commits early commitment \sidecite{marr_vision_2010} by design.
+Nevertheless, training all neurons in a way to optimise consistency at a specific point works exceptionally well for very specific tasks and can outperform human experts \sidecite{buetti-dinh_deep_2019}. Therefore, despite its drawbacks, this algorithm probably remains state-of-the-art for such specialised tasks, while the proposed framework aims to improve generalisation capability and data efficiency, and to approach a human-like understanding of objects.
 
 In contrast, the proposed framework implements a model that optimises consistency between each neuron, akin to the human brain.
 As outlined in the vision presented in \secref{biologial_inspiration_vision}, such a system could interpret entire visual scenes meaningfully without requiring a teaching signal.
@@ -63,12 +62,12 @@ Second, a scene interpretation stage needs to be included. While the projection 
 \subsection{Refining Theory}
 The stage \emph{S1} is well developed, and it has been demonstrated in experiments that Bernoulli neurons trained with Hebbian learning can form net fragments. Nevertheless, adding alternative cells and negative Hebbian learning seems crucial to scale to different datasets.
 
-The stage \emph{S2} has only been explored from a theoretical viewpoint within this thesis. It is crucial to conduct experiments to refine the proposed theoretical foundations and to demonstrate their efficiency.
+The stage \emph{S2} has only been explored from a theoretical viewpoint within this thesis. Conducting experiments to refine the proposed theoretical foundations and demonstrate their efficiency is crucial.
 These tasks are discussed in the following.
 
 
 \subsubsection{Alternative Cells in \emph{S1}}\seclbl{future_alt_cells}
-In the context of \emph{S1}, individual cells represent distinct features that are localised in a specific spatial location. These cells support each other's neuronal activity. As outlined in \secref{neuroscience_findings_alt_cells}, these cells can contribute to mutually exclusive net fragments. For example, cell $A$ may participate in a fragment with cell $B$ and another fragment with cell $C$, while cell $B$ and $C$ avoid simultaneous activation. This exceeds the functional capacity of cell $A$, and a copy of $A$ is needed to establish separate lateral connections with cell $B$ and $C$.
+In the context of \emph{S1}, individual cells represent distinct features localised in a specific spatial location. These cells support each other's neuronal activity. As outlined in \secref{neuroscience_findings_alt_cells}, these cells can contribute to mutually exclusive net fragments. For example, cell $A$ may participate in a fragment with cell $B$ and another fragment with cell $C$, while cell $B$ and $C$ avoid simultaneous activation. This exceeds the functional capacity of cell $A$, and a copy of $A$ is needed to establish separate lateral connections with cell $B$ and $C$.
 
 In \secref{framework_alt_cells}, it is described that alternative cells could be implemented by duplicating the output channels of the weight matrix $\boldsymbol{W}$ of \emph{S1}.
 Alternative cells contribute to different net fragments and are mutually exclusive.

@@ -5,7 +5,7 @@ The previous chapter introduced neuroscientific findings (\secref{neuroscience_f
 In the following, a novel framework incorporating these identified principles is proposed.
 The focus is on translating the two stages described in \secref{neuroscience_findings} into a computational framework.
 Incorporating further stages required for object classification and scene interpretation as described in \secref{biologial_inspiration_vision} remains an open task for future research.
-While the inspiration and principles are based on previous research, a novel computational framework is described in this chapter, that is considered the main scientific contribution of this thesis.
+While the inspiration and principles are based on previous research, a novel computational framework is described in this chapter, which is considered this thesis's main scientific contribution.
 
 \section{3-Staged Model}\seclbl{framework_3_staged_model}
 Some of the neuroscientific principles described in \secref{neuroscience_findings} have been explored in the theory of self-organising projection fibres \sidecite{wiskott_face_1996, wiskott_face_1997, fernandes_self-organization_2015} (c.f. \secref{projection_fibres}). However, these approaches do not yet scale to natural images except for human faces \sidecite{wolfrum_recurrent_2008}. This is because most work in this area has neglected to model the learning and the dynamics of rich sets of net fragments in the visual cortex, which are fundamental according to the theory of natural intelligence \sidecite{von_der_malsburg_theory_2022}.
@@ -391,7 +391,7 @@ Unfortunately, it is not sufficient to calculate the similarity between features
     \figlbl{projection_operations}
 \end{figure}
 In \figref{projection_operations}, the operations needed to deal with different spatial arrangements are visualised.
-Projection fibres must be invariant to translation, rotation, and deformation. However, such transformation can occur not only globally, as depicted in \figref{projection_operations}, but also locally.
+Projection fibres must be invariant to translation, rotation, and deformation. However, such transformation can occur globally, as depicted in \figref{projection_operations}, and locally.
 In \secref{framework_s2_sim}, it is described how the similarity between local areas connected by a projection fibre can be measured. This statistic is needed to decide whether a control unit should switch on. Subsequently, in \secref{framework_s2_mapping}, it is described how the projection fibres can be wired.
 
 \subsection{Measuring Similarity}\seclbl{framework_s2_sim}
