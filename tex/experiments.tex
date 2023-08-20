@@ -83,7 +83,7 @@ The other filters primarily activate around the endpoints of the lines.
 The feature-extracting stage further processes the sensory signal of shape $[4 \times 32 \times 32]$ to build net fragments. In the conducted experiments, no alternative cells are used. As described in \secref{framework_s1}, the input of \emph{S1} consists not only of the signal from the sensory system but also of the previous net fragments that can be overridden by the feedback from the object prototypes.
 These inputs are stacked along the first dimension, resulting in an input matrix of shape $[8 \times 32 \times 32]$ and an output of shape $[4 \times 32 \times 32]$.
 Thereby, the first four channels (i.e. the input with index $[(1, ..., 4) \times H \times W]$) are the output of the sensory system, and the last four channels (i.e. input with index $[(5, ..., 8) \times H \times W]$) are the previous net fragments.
-The previous net fragments are overridden by the feedback of \emph{S2} if the mean square error between the net fragments and the \emph{S2} feedback is below a threshold value of $0.05$, and thus, the feedback is considered credible.
+The previous net fragments are overridden by the feedback of \emph{S2} if the Jaccard similarity between the net fragments and the \emph{S2} feedback is above a threshold value of $0.85$, and thus, the feedback is considered credible.
 
 The lateral support distance of a single cell is defined as $n_l=5$. Consequently, a cell can get lateral support by all cells not further away than $5$ cells in each direction or from $2n_l+1=11$ cells per input channel.
 The lateral support is implemented with a convolutional kernel $\boldsymbol{W}$ of size $[4 \times 8 \times 11 \times 11]$, that maps the $8$ input channels to $4$ output channels.

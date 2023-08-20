@@ -46,7 +46,7 @@ A 3D reconstruction of five cortical columns is shown in \figref{cortical_column
 Information in the cerebral cortex is propagated forward from one layer to the next and has inspired layer-wise processing in deep learning architectures \sidecite{prince_understanding_2023}.
 However, a closer look at the human brain reveals that there are also connections between neurons within the same layer that process information locally \sidecite{gilbert_lateral_1990}.
 These intra-layer connections are called \emph{lateral connections} \sidecite{liang_interactions_2017, stettler_lateral_2002} and are visualised in a simplified manner in \figref{lateral_connections} for a single neuron.
-Notably, such a neuron not only establishes connections to neurons in the preceding and subsequent layers (marked in orange and green) but also lateral connections to neurons within its own layer (marked in red).
+The red neuron not only establishes connections to neurons in the preceding and subsequent layers (marked in orange and green) but also lateral connections to neurons within its own layer (marked in red).
 
 \begin{figure}[h]
     \centering
@@ -58,7 +58,7 @@ Notably, such a neuron not only establishes connections to neurons in the preced
 According to \sideciteay{von_der_malsburg_theory_2022}, these lateral connections are used for \emph{lateral support}. ``Lateral support'' means that neurons from the same layer support each other's activity:
 Neurons from the preceding layer can activate the red cell depicted in \figref{lateral_connections} through the orange connections.
 However, inhibitory signals can suppress the activity \sidecite{coombs_specific_1955} of the red neuron before it can fire a spike to the subsequent layer via the green connections. The neuron can only transmit a spike to the subsequent layers if it ``survives'' an inhibition phase \sidecite{vogels_inhibitory_2011}, which is only possible if it receives sufficient lateral support \sidecite{stettler_lateral_2002} from laterally connected neurons.
-Suppose the preceding layer activates several neurons within the same layer as the red neuron, and these activated neurons exhibit lateral connections. In that case, they can send spikes to each other, thereby providing mutual support. This allows them to maintain their action potential and remain active during the inhibition phase.
+For instance, suppose the preceding layer activates several neurons within the same layer as the red neuron, and these activated neurons exhibit lateral connections. In that case, they can send spikes to each other, thereby providing mutual support. This allows them to maintain their action potential and remain active during the inhibition phase.
 
 \subsection{Net Fragments}\seclbl{neuroscience_findings_net_fragments}
 Lateral connections grow between cells that are often active together \sidecite{hebb_organization_1949}.
@@ -92,7 +92,7 @@ Furthermore, a single layer represents local and global features at the same tim
 Thus, net fragments form a feature hierarchy within a layer \cite{von_der_malsburg_theory_2022}.
 
 \subsubsection{Alternative Cells and Pathways}\seclbl{neuroscience_findings_alt_cells}
-In a given spatial location, different patterns can occur.
+At a given spatial location, different patterns can occur.
 However, the capacity of a net fragment is limited to represent a single pattern \sidecite{von_der_malsburg_theory_2022}.
 For example, cell $A$ may often fire with cells $B$ and $C$ in close proximity, exhibiting a high mutual lateral support with these cells.
 However, cells $B$ and $C$ might not fire together. Consequently, cell $A$ is involved in two distinct and mutually exclusive net fragments, once with cell $B$ and once with cell $C$.
@@ -114,8 +114,7 @@ In the human brain, object detection occurs in the temporal cortex \cite{miyashi
 The brain's solution to transmit information over such long distances are \emph{projection fibres} (a type of axons) \cite{tanigawa_organization_2005, greig_molecular_2013}.
 Projection fibres are links between neurons in the visual cortex and object prototypes (so-called reference frames) in the temporal cortex \cite{goodale_separate_1992}.
 
-Object prototypes in the temporal cortex are net fragments similar to those in the visual cortex. However, the visual cortex captures an overlay of fragments comprising cells activated by electrical pulses from the eyes.
-This overlay of fragments describes a captured visual scene \cite{von_der_malsburg_theory_2022}, whereby it is unclear which sub-fragments represent distinct objects and how they are related.
+Object prototypes in the temporal cortex are net fragments similar to those in the visual cortex. However, the visual cortex captures an overlay of fragments that describe a captured visual scene \cite{von_der_malsburg_theory_2022}, whereby it is unclear which fragments represent distinct objects and how they are related.
 On the other hand, the fragments in the temporal cortex depict one object, whereby these objects are position and transformation-invariant.
 
 Projection fibres map neurons within the captured scene (in the primary visual cortex) to object prototypes (in the temporal cortex) with one-to-one connections \sidecite{anderson_shifter_1987}, where pairs of neurons connected in the visual cortex project to pairs of neurons connected in the temporal cortex topologically. The projection fibres have some flexibility, allowing for local distortions and enabling transformation- and position-invariant mapping \sidecite{wiskott_face_1996, wolfrum_recurrent_2008}. This mapping allows the recognition of one or more objects within a scene and their relationships to each other, facilitating object recognition and scene interpretation.
@@ -131,7 +130,7 @@ Control units trigger a mapping when a net fragment in the visual cortex matches
 
 Such a projection between net fragments and an object prototype of a line is visualised in \figref{maplets}. A vast amount of projection fibres (grey) run between these two areas, but only the most suitable ones are activated by the control unit of a maplet (red).
 Please note that the line on the left is translated and stretched. Nevertheless, projection fibres still map such a transformed object to an idealised prototype.
-A direct mapping from net fragments to prototypes is shown in \figref{maplets} for better clarity. In contrast, the mapping in the brain is done over several hierarchical levels, saving many projection fibres \sidecite{anderson_shifter_1987}.
+In \figref{maplets}, a direct mapping is shown for better clarity. In contrast, the mapping in the brain is done over several hierarchical levels, saving many projection fibres \sidecite{anderson_shifter_1987}.
 
 Projection fibres thus provide generalisation, i.e. different, transformed versions of an object are recognised and mapped to a reference frame. This explains the ability of humans to see a new object once and immediately recognise it in a transformed version.
 
@@ -144,7 +143,7 @@ These findings suggest that projection fibres self-organise within a short time 
 
 
 \subsection{Local Learning Principle}\seclbl{neuroscience_findings_local_learning_principle}
-In the brain, consistency is evaluated at the level of individual synapses between each connected cell-pair \sidecite{hebb_organization_1949}. Each synapse is established if the firing of its source neuron and its target neuron are consistent, allowing the source neuron to predict the activity of the target neuron. This process is crucial for establishing net structures, where each neuron within a net fragment can predict the firing of other neurons with a high probability \sidecite{widrow_natures_2019}.
+In the brain, consistency is evaluated at the level of synapses between connected cell pairs \sidecite{hebb_organization_1949}. Each synapse is established if the firing of its source and target neurons is consistent. This process is crucial for establishing net structures, where each neuron within a net fragment can predict the firing of other neurons with a high probability \sidecite{widrow_natures_2019}.
 
 Such consistency is built between cells within the same layer connected by lateral connections \sidecite{stettler_lateral_2002} and between cells in different brain regions connected by projection fibres \cite{greig_molecular_2013, liang_interactions_2017}.
 Building consistency means that the cells reach a consensus on what they represent \cite{von_der_malsburg_theory_2022}: Features trigger cells belonging to specific net fragments and only remain active if other laterally connected cells contribute to the same fragment and provide mutual support \sidecite{vogels_inhibitory_2011}. Cells that do not receive sufficient support are deactivated by inhibition \sidecite{coombs_specific_1955}.
@@ -153,7 +152,7 @@ Consistency is achieved similarly between cells connected through projection fib
 Thus, every active cell votes for net fragments and either remains active or is deactivated by inhibition until the entire network becomes consistent by agreeing on what features and objects are observed in the input \cite{von_der_malsburg_concerning_2018, von_der_malsburg_theory_2022}.
 
 This local learning is a key difference between natural (animal or human) learning and the frequently used backpropagation of error \cite{rosenblatt_principles_1962, linnainmaa_taylor_1976}. With backpropagation, consistency is optimised at a single point \cite{crick_recent_1989, wang_comprehensive_2022}, specifically between the system's output and a teacher signal. All synapses, including those that are distantly connected (the ``deep'' connections), are guided by the consistency of this single point. Therefore, the human brain is dominated by local learning and self-organisation, while deep networks typically use a global learning rule that guides the learning process of the entire network.
-While global learning works exceptionally well on specific tasks \cite{bertolini_machine_2021}, it completely fails to generalise between tasks and data domains compared to humans.
+Since deep networks outperform humans on specific tasks \sidecite{bertolini_machine_2021, buetti-dinh_deep_2019}, I speculate that optimising consistency at a specific point, as done by deep learning, works exceptionally well for highly specialised tasks while optimising consistency between each neuron, as done in the human brain, improves knowledge transferability, object understanding and data efficiency (c.f. \secref{discussion}).
 
 \section{Long-Term Vision}\seclbl{biologial_inspiration_vision}
 The aforementioned neuroscientific findings serve as the foundation for building a novel image-processing framework.
@@ -166,7 +165,7 @@ This mapping serves as a scene interpretation layer by describing which objects 
 In \chref{probabilistic_framework}, a framework is proposed that implements these two stages linked with projection fibres.
 It is considered a computational implementation of the fundamentals of the biological visual system.
 However, in the long term, this framework can be further extended and is not limited to these two stages, enabling highly efficient scene processing.
-These extensions are discussed in the following.
+These extensions are discussed in the following to provide a long-term vision for the framework.
 
 \subsection{Object Classification}
 A classification layer maps an object to a specific instance \sidecite{schmarje_survey_2021}, for example, a person, to a person's name. Projection fibres do not provide such a classification as these fibres map the pattern to a more generalised view, i.e. transforming a person to a reference person. Instead, a subsequent memory stage (related to the brain's inferior cortex \sidecite{miyashita_inferior_1993}) is needed to map a reference object to an actual label.
@@ -190,7 +189,7 @@ After the pattern has been learned, cells can vote for it by providing lateral s
 Furthermore, memories \sidecite{liu_optogenetic_2012, miyashita_inferior_1993} could be integrated to confirm or reject this hypothesis. If, for example, the person is identified as a soccer player such as Ronaldo, it would further strengthen this hypothesis.
 
 A system building consistency between object prototypes, relative object positions, and memories could learn interpretations of visual scenes and might have the potential to ``understand'' how objects are related to each other. A pivotal difference to deep networks is that the model can build such consistency on its own, while deep learning systems require a teaching signal to learn consistency.
-I speculate that having a system that can build consistency of completely unseen scenes without teaching signals might be an important step towards emergence.
+I speculate that having a system that can build consistency of completely unseen scenes without teaching signals is an important step towards emergence.
 
 
 \subsection{Avoiding Early Commitment}\seclbl{biologial_inspiration_early_commitment}
@@ -200,12 +199,12 @@ A single layer with lateral connections that forms net fragments can represent l
 Each set of active and laterally connected neurons can be considered a net fragment. Net fragments with few cells depict local features, while fragments containing many features represent global features.
 
 A system that avoids the fallacy of early commitment should solve the conundrum that local decisions are taken based on plausibility in the light of high-level patterns, while high-level patterns can only be defined based on low-level features.
-The most fundamental local decision is whether a single cell should be active. Since a single cell receives support from all laterally connected cells, a high-level pattern (i.e. the activity of all directly or indirectly connected cells) is used to make this decision. Therefore, local decisions are taken based on high-level patterns. The high-level pattern used to make this decision is defined by the sum of individual cells (i.e. low-level features). Hence, the human brain solves the conundrum within every single layer.
+The most fundamental local decision is whether a single cell should be active. Since a single cell requires support from all laterally connected cells, a high-level pattern (i.e. the activity of all directly or indirectly connected cells) is used to make this decision. Therefore, local decisions are taken based on high-level patterns. The high-level pattern used to make this decision is defined by the sum of individual cells (i.e. low-level features). Hence, the human brain solves the conundrum within every single layer.
 
 
 \subsubsection{Hierarchical Features}
 Neuroscientific findings indicate that the human brain does not rely on a sequence of layers to build feature hierarchies as typically done in deep networks \sidecite{prince_understanding_2023}.
-In the biological context, layers have other connotations, and evidence suggests that layers in cortical columns deal with depth rotations \sidecite{iamshchinina_perceived_2021}.
+In the biological context, layers have other connotations, and evidence suggests that layers in cortical columns deal, for example, with depth rotations \sidecite{iamshchinina_perceived_2021}.
 In the proposed framework, feature hierarchies are implicitly stored in net fragments whereby a larger fragment represents a global feature, and smaller fragments represent local features.
 Consequently, sequences of layers are not necessary to represent feature hierarchies.
 

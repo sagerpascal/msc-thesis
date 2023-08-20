@@ -185,10 +185,6 @@ However, from a biological perspective, backpropagation of error seems not plaus
 Furthermore, it has technical shortcomings, such as vanishing or exploding gradients when propagating through too many layers \sidecite{zhang_why_2020} or non-optimal loss landscapes \sidecite{ioffe_batch_2015}.
 Despite these deficits, it is still considered the best error correction algorithm to optimise neural networks on a specific task and can even outperform human experts \sidecite{bertolini_machine_2021, buetti-dinh_deep_2019}.
 
-Using a global error correction algorithm such as backpropagation of error optimises consistency between the prediction $\boldsymbol{\hat{y}}$ and the teaching signal $\boldsymbol{y}$.
-In contrast, the human brain optimises consistency between each cell utilising a local learning principle \sidecite{hebb_organization_1949}. 
-Based on comparing deep networks and the human brain, I speculate that optimising consistency at a specific point, as done by deep learning works, exceptionally well for highly specialised tasks while optimising consistency between each neuron, as done in the human brain, improves object understanding and data efficiency (c.f. \secref{discussion}).
-
 \section{Limitations}\seclbl{limitationsDL}
 Deep learning systems have proven themselves as excellent feature extractors and are used to fulfil various tasks in our daily lives.
 Nevertheless, they have several limitations, with some of the most pressing ones elucidated below.
