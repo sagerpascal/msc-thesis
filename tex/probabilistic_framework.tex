@@ -79,7 +79,7 @@ Overall, I argue that the proposed framework is an implementation following stri
 \end{comment}
 
 \subsection{Advantages}\seclbl{framework_advantages}
-The proposed framework not only prevents early commitment \sidecite{marr_vision_2010}, but is expected to have various additional advantages compared to the typical deep learning framework. These are described in the following.
+The proposed framework not only prevents early commitment \sidecite{marr_vision_2010} but is expected to have various additional advantages compared to the typical deep learning framework. These are described in the following.
 
 \paragraph{Ambiguity.} The proposed framework permits the persistence of multiple net fragments, enabling the system to handle ambiguity effectively. For example, when presented with a face comprising distinct objects (c.f. \figref{sdp_mountain}), both the net fragments responsible for abstract faces and those associated with individual objects become concurrently active. Consequently, the model can simultaneously attend to these net fragments, utilising attention in its original sense rather than the conventional deep neural network (DNN) interpretation \sidecite{niu_review_2021}. I speculate that this represents a fundamental distinction from neural networks that are typically compelled to represent the entire scene within a single high-dimensional dense vector.
 
@@ -113,7 +113,7 @@ The presence of neurons that can flip encourages the network to learn multiple p
 Furthermore, using many binary neurons and sparse network activations increases the robustness of the network \sidecite{ahmad_properties_2015}.
 During inference, the stochastic process can be disabled using a fixed threshold of $0.5$, resulting in a more stable network.
 
-Moreover, flipping neurons help to implement alternative pathways and cells, required when a single cell is part of two mutually exclusive net fragments \sidecite{von_der_malsburg_neural_1987}.
+Moreover, flipping neurons help to implement alternative pathways and cells required when a single cell is part of two mutually exclusive net fragments \sidecite{von_der_malsburg_neural_1987}.
 Alternative cells are a set of cells with afferent connections. The stochastic property of Bernoulli neurons helps to solve the symmetry problem by encouraging each cell to undergo divergent connectivity changes during training so that it becomes part of mutually exclusive net fragments.
 
 \subsection{Practical Considerations}
@@ -265,7 +265,7 @@ Therefore, one cell can only provide limited support to another cell, and multip
     \figlbl{lateral_init_weights}
 \end{figure}
 The previous sections explain that lateral support can be implemented with convolutional kernels and that the weights are learned using the Hebbian rule.
-In this section, it is discusses how these kernels should be initialised.
+In this section, it is discussed how these kernels should be initialised.
 If the kernels are not properly initialised, the activations are unstable and typically converge to weights that activate all or no cells.
 A proper initialisation should fulfil the following criteria:
 

@@ -1,8 +1,9 @@
 The following sections describe preliminary experiments conducted to assess the feasibility of the proposed vision framework.
 The experiments' primary focus is on the first stage \emph{S1}, as it is the foundation to develop the second stage \emph{S2}. Furthermore, no work exists about implementing stage \emph{S1}, in contrast to self-organising projection fibres, which are the central element of \emph{S2}.
-However, to demonstrate the effectiveness of incorporating feedback from the second into the first stage, a simple mockup is used to simulate \emph{S2}.
+Therefore, the most pressing issue is demonstrating the effectiveness of \emph{S1} according to the proposed principles.
+To demonstrate the effectiveness of incorporating feedback from the second into the first stage, a simple mockup is used to simulate \emph{S2}.
 
-In the remainder of this chapter, a simple dataset is introduced in \secref{exp_dataset}. Next, the implementation of the sensory system is presented in \secref{exp_s0}, the feature extracting stage in \secref{exp_s1}, and the prototype stage in \secref{exp_s2}. The results obtained from these experiments are presented in \chref{results}.
+In the remainder of this chapter, a simple dataset is introduced in \secref{exp_dataset}. Next, the implementation of the sensory system is presented in \secref{exp_s0}, the implementation of the feature extracting stage in \secref{exp_s1}, and the implementation of the prototype stage in \secref{exp_s2}. The results obtained from these experiments are presented in \chref{results}.
 
 
 \section{Dataset}\seclbl{exp_dataset}
@@ -32,7 +33,7 @@ During \emph{testing}, different kinds of images are generated.
 First, an optional noise parameter is introduced. In this thesis, this parameter is set to $0.005$, letting each neuron with a probability of $0.5\%$ switch its activation from $0$ to $1$, or vice versa. Thus, on average, $5.12$ pixels in the image change their activation. Such images with noise are shown in the second row of \figref{straight_line_samples}.
 Second, the continuous line is interrupted in the middle, resulting in a discontinuous line. The length of the break is a hyperparameter and within a range of $0$ to $20$ pixels. Lines with a break of $5$ pixels are shown in the last row of \figref{straight_line_samples}.
 Third, a trajectory strategy generates different views of an image, as described in \secref{model_overview}. This trajectory strategy allows the specification of starting and ending coordinates and generates a set of lines encompassing all trajectories between these coordinates.
-The result of such a trajectory strategy is shown in \figref{straight_line_trajectories}, where a horizontal line is converted to a diagonal line with a positive slope. Note that this strategy is only utilised during testing, as the required components to learn from different views during the training process have not yet been implemented. Therefore, this trajectory strategy generates images during evaluation that the network has not seen during training. 
+The result of such a trajectory strategy is shown in \figref{straight_line_trajectories}, where a horizontal line is converted to a diagonal line with a positive slope. Note that these strategies are only utilised during testing to evaluate the behaviour of the network when encountering lines not seen during training. 
 
 \begin{figure}[h]
     \centering
@@ -55,20 +56,20 @@ Hand-crafted filters are sufficient and preferred for the conducted experiments 
     \figlbl{filters_feature_extractor}
 \end{figure}
 
-The hand-crafted filters are illustrated in \figref{filters_feature_extractor}.
-Four filters are used, each specialising in a different type of line.
+The hand-crafted filters used for the experiments are illustrated in \figref{filters_feature_extractor}.
+Four filters are applied, each specialising in a different type of line.
 These filters function similarly to a convolutional layer with frozen (non-trainable) weights and no bias term. 
-During processing, the filters are shifted with a stride of $1$ across the input image of size $[1 \times 32 \times 32]$ so that it is applied at all input positions. 
+During processing, the filters are shifted with a stride of $1$ across the input image of size $[1 \times 32 \times 32]$ so that they are applied at all input positions. 
 The borders are padded with $0$ values to keep the input and output sizes identical.
 After applying the four filters, the output has a shape of $[4 \times 32 \times 32]$. 
 However, the activations can be in the range of $(-1, ..., +1)$.
 In order to obtain binary activations, these activations are used as the firing probability of a Bernoulli neuron, whereby values $\leq 0$ are mapped to an activation probability of $0\%$.
-This means the initial activation is used as a probability value, and its binary activation is sampled from a Bernoulli distribution.
+Thus, the network's binary activation is sampled from a Bernoulli distribution.
 
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.99\textwidth]{results_filter}
+    \includegraphics[width=0.89\textwidth]{results_filter}
     \caption[Output of hand-crafted filters for straight lines]{Output of hand-crafted filters for the straight lines used during training. Each row shows the input image (on the left) and the responses of the four filters (on the right).}
     \figlbl{result_filter}
 \end{figure}
@@ -95,7 +96,7 @@ This support strength is normalised as described in \secref{framework_norm} usin
 However, at the end of the normalisation procedure, each output channel is divided by its highest value to ensure that the support strength is in the range $(0, ..., 1)$ and the highest activation has an activation probability of $1$.
 %
 \begin{align}\eqlbl{exp_norm}
-	x_{c_{\text{out}},w,h} := \frac{x_{c_{\text{out}},w,h}}{\max_{c=0} C_{\text{out}} x_{c,w,h}}
+	x_{c,w,h} := \frac{x_{c,w,h}}{\max_{w' \in \{0, ..., W\}, h' \in \{0, ..., H\}} x_{c,w',h'}}
 \end{align}
 %
 The input is processed over $T=6$ timesteps, and the Hebbian update is calculated between the input and the median activation during these timesteps to increase training stability.
@@ -107,7 +108,7 @@ The learning rate is set to $0.1$, the mini-batch size is $256$, and the model i
 In an efficient implementation of a convolutional layer, a circulant matrix is used so that all kernel updates can be calculated in parallel \cite{miconi_hebbian_2021}. However, by applying this operation, information about the cell's lateral influence is lost.
 
 This problem is solved using two convolutional operations, producing a slight memory overhead but increasing computation drastically compared to shifting kernels in a loop over the image.
-The first operation is a fixed, binary convolution that restructures each input patch into a single-column vector. This is followed by a $1\times1$ convolution containing the actual weights. Specifically, the input is passed through a fixed convolution with an input size of $\left[C_{in} \times (2n_l+1) \times (2n_l+1)\right]$ and $C_{in} 2(2n_l+1)$ output channels. The weight vector for this convolution is set to $1$ for the connections linking input $c_i,w,h$ to output $c_iwh$ (where $c_i$ $w$, and $h$ range from 1 to $C_{in}$, $2n+1$, and $2n+1$, respectively), and it is set to 0 everywhere else. This process reorganises the values of each input patch from the original convolution into non-overlapping column vectors, effectively duplicating them. Next, the actual weights of the original convolution can be applied using a simple $[1\times1]$ convolution. This can be achieved by performing a tensor product with appropriate broadcasting.
+The first operation is a fixed, binary convolution that restructures each input patch into a single-column vector. This is followed by a $[1\times1]$ convolution containing the actual weights. Specifically, the input is passed through a fixed convolution with an input size of $\left[C_{in} \times (2n_l+1) \times (2n_l+1)\right]$ and $C_{in} 2(2n_l+1)$ output channels. The weight vector for this convolution is set to $1$ for the connections linking input $c_i,w,h$ to output $c_iwh$ (where $c_i$ $w$, and $h$ range from 1 to $C_{in}$, $2n+1$, and $2n+1$, respectively), and it is set to 0 everywhere else. This process reorganises the values of each input patch from the original convolution into non-overlapping column vectors, effectively duplicating them. Next, the actual weights of the original convolution can be applied using a simple $[1\times1]$ convolution. This can be achieved by performing a tensor product with appropriate broadcasting.
 Thus, the proposed method allows calculating Hebbian updates \sidecite{hebb_organization_1949} while fully leveraging the computational capabilities of current deep learning hardware.
 
 
@@ -123,16 +124,18 @@ The mockup described in the following is inspired by the brain's memory system \
 In the context of our framework, such a memory system would be located after \emph{S2} and map the reference object to memories.
 A single memory can be considered a label, i.e., the projection fibres could initiate a mapping to a face while the memory is the person's name.
 
-Many neurons are active when we see a person for the first type.
+Many neurons are active when we see a person for the first time, indicating that it has not yet been stored by neuronal plasticity.
 However, after a short learning period, our brain is rewired to remember a frequently occurring object with one or a few single cells \sidecite{gross_genealogy_2002}.
-The proposed mockup implements this behaviour: It maps a 2D activation pattern to one or a few single cells in a self-organising manner and vice versa.
+The proposed mockup implements this behaviour: It maps a 2D activation pattern to one or a few cells in a self-organising manner and vice versa.
 This memory mapping is directly applied to \emph{S1}, mapping net fragments to memory cells and returning feedback, thereby ignoring projection fibres.
 Thus, a feedback signal is provided without implementing \emph{S2}.
+Therefore, all aspects from \emph{S1} can be evaluated, including incorporating feedback.
 
 
-
-\subsection{Implementation}
-The mockup should map net fragments in \emph{S1} denoted as $\boldsymbol{a}$ to a hidden memory state $\boldsymbol{h}$ and vice versa. The mapping processes can be described as conditional probabilities $P(\boldsymbol{h}|\boldsymbol{a})$ and $P(\boldsymbol{a}|\boldsymbol{h})$.
+\subsection{Implementation}\seclbl{exp_s2_mockup}
+The memory mockup should map net fragments in \emph{S1} denoted as $\boldsymbol{a}$ to a hidden memory state $\boldsymbol{h}$ and vice versa.
+Thereby, $\boldsymbol{h}$ represents the self-organised memory cells.
+The mapping processes can be described as conditional probabilities $P(\boldsymbol{h}|\boldsymbol{a})$ and $P(\boldsymbol{a}|\boldsymbol{h})$.
 Restricted Boltzmann machines (RBMs) \sidecite{hinton_training_2002, smolensky_information_1986} are generative stochastic networks that can learn such a probability distribution.
 They use a linear transformation to map from $\boldsymbol{a}$ to $\boldsymbol{h}$ and the inverse linear transformation to map backwards from $\boldsymbol{h}$ to $\boldsymbol{a}$.
 
@@ -160,7 +163,7 @@ During training, the learning rate is reduced by a factor of $0.1$ if the free e
 The batch size is set to $256$, and the model is trained for $10$ epochs (similar to \emph{S1}).
 
 By minimising the free energy function, the memory decides by itself which representation should be stored.
-After observing cell activity $\boldsymbol{a}$ in \emph{S1}, $\boldsymbol{a}$ is mapped to $\boldsymbol{a}{out}$, whereby $P(\boldsymbol{h}|\boldsymbol{a})$ defines the probability for the cell activity in the memory. Since we sample $\boldsymbol{h}_{out} \thicksim \text{Bernoulli}(P(\boldsymbol{h} | \boldsymbol{a}) )$, $\boldsymbol{h}_{out}$ becomes binary and cells with a low probability tend to be turned off, while cells with a high probability tend to fire.
+After observing cell activity $\boldsymbol{a}$ in \emph{S1}, $\boldsymbol{a}$ is mapped to $\boldsymbol{a}_{out}$, whereby $P(\boldsymbol{h}|\boldsymbol{a})$ defines the probability for the cell activity in the memory. Since we sample $\boldsymbol{h}_{out} \thicksim \text{Bernoulli}(P(\boldsymbol{h} | \boldsymbol{a}) )$, $\boldsymbol{h}_{out}$ becomes binary and cells with a low probability tend to be turned off, while cells with a high probability tend to fire.
 This can be interpreted as a filter against noise and slight deformations: A cell activity $\boldsymbol{a}$ is mapped to the closest known configuration of $\boldsymbol{h}$.
 To provide feedback to \emph{S1}, the returned vector $\boldsymbol{a}_{out}$ is calculated in a similar fashion and sampled from $P(\boldsymbol{a}|\boldsymbol{h})$. Thus, the memory is a probabilistic associative memory, mapping an input to a hidden state from which an output is sampled.
 This sampled output is not a reconstructed input but rather an optimised prototype stored in the memory and used to provide feedback to \emph{S1}.

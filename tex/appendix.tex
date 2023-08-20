@@ -3,7 +3,7 @@
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.79\textwidth]{qr_links}
-    \caption[QR-Codes with links to sources]{QR-Codes with links to sources. The first code directs to the GitHub repository containing the source code, the second code to the repository containing the \LaTeX files to build this documentation, and the third code points to video visualisations of the results.}
+    \caption[QR-Codes with links to sources]{QR-Codes with links to sources. The first code directs to the GitHub repository containing the source code, the second code to the repository containing the \LaTeX-files to build this documentation, and the third code points to video visualisations of the results.}
     \figlbl{qr_links}
 \end{figure}
 %
@@ -16,7 +16,7 @@ QR codes linking to these URLs are provided in \figref{qr_links} for convenient 
 %
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.99\textwidth]{video_overview}
+    \includegraphics[width=0.89\textwidth]{video_overview}
     \caption[Overview of components visualised in the videos]{An overview of the components visualised in the videos.}
     \figlbl{video_overview}
 \end{figure}
@@ -33,7 +33,7 @@ A threshold of $0.9$ is used for the \emph{S2} stage, visualising only activitie
 The second video shows the network activities when the Bernoulli neurons are used.
 
 Each video visualises the processing of the input over time.
-The first six video frames show how the video is processed over the $T=6$ timesteps of the fast loop, followed by five additional frames depicting the final prediction after the fast loop.
+The first six video frames show how the video is processed over $T=6$ timesteps of the fast loop, followed by five additional frames depicting the final prediction after the fast loop.
 By doing so, viewers have time to analyse the network's activations during this short interruption before the next input is fed into the model, and the process repeats.
 
 In \figref{video_overview}, a single video frame is shown, providing an overview of the components displayed in each video:
@@ -87,10 +87,10 @@ In the case of the vertical line, the output channel $A$ is expected to reassemb
 
 Hebbian learning compares this output with the input channels, strengthening the weights for positively correlated input-output pairs and weakening them for negatively correlated pairs.
 These correlations are visualised in the lower part of \figref{correlations_hebb_learning}.
-Input channel $1$ and output channel $A$ have high similarity. Therefore, the activations between input and output have a positive correlation, and the corresponding lateral connections undergo a positive Hebbian update.
+Input channel $1$ and output channel $A$ have high similarity. Therefore, the activations between input and output have a positive correlation, and the corresponding lateral connections defined by kernel $A1$ undergo a positive Hebbian update.
 However, all the other channels have a positive correlation only at the line ends and a negative correlation in the middle section of the line.
-Consequently, there is more negative than positive correlation, and these features undergo more negative than positive updates.
-This causes the lateral support learned at the line ends to be suppressed by the negative updates triggered by the negative correlation in the middle of the line.
+Consequently, there is more negative than positive correlation at the kernels $A2$-$A4$, and these features undergo more negative than positive updates.
+This causes the lateral support learned at the line ends to be suppressed by the negative updates.
 
 The resolution to this issue remains unclear and requires additional experiments. One potential approach is to use a significantly lower learning rate for negative updates than for positive updates; another solution could be to introduce alternative cells (c.f. \secref{future_alt_cells})
 
