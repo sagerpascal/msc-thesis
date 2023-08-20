@@ -16,10 +16,10 @@ Finally, in \secref{neurocomputing}, biologically more plausible learning method
 A biological neuron is a cell that communicates with other neurons through precisely timed electrical pulses called spikes or action potential.
 Biological neurons are electrically excitable by voltage changes across their membranes.
 The neuron generates an action potential if the changes are significant enough within a short interval.
-This action potential propagates along the axon to the terminal buttons, activating synaptic connections to the dendrites of other neurons.
+This action potential propagates along the axon to the terminal buttons, activating synaptic connections to the dendrites of other neurons \sidecite{diamond_identifying_2019}.
 These components of a neuron are illustrated in \figref{components_neuron}.
 The synaptic signal can be excitatory \sidecite{takagi_roles_2000} or inhibitory \sidecite{coombs_specific_1955}, making the postsynaptic neuron more or less likely to fire an action potential itself.
-However, biological neurons do not follow strict rules; they adapt their firing rate to constant inputs, may continue firing after an input signal disappears and can even fire when no input is active \sidecite{wilson_spontaneous_1981, diamond_identifying_2019}.
+However, biological neurons do not follow strict rules; they adapt their firing rate to constant inputs, may continue firing after an input signal disappears and can even fire when no input is active \sidecite{wilson_spontaneous_1981}, \cite{diamond_identifying_2019}.
 
 Biological neurons can be classified into sensory neurons, motor neurons, and interneurons.
 Sensory neurons respond to external stimuli such as light or sound and send signals to the spinal cord or the brain.
@@ -30,8 +30,8 @@ However, this classification is a simplification, as the human brain consists of
 Inspired by biological neurons, several variants of artificial neurons \sidecite{mcculloch_logical_1943, rosenblatt_perceptron_1958, fukushima_visual_1969} have been proposed and are discussed in \secref{ann}.
 Compared to their biological counterparts, artificial neurons are simplified models, ignoring much complexity. Like biological neurons, artificial neurons are usually connected to other neurons, forming an artificial neural network (ANN) \sidecite{prince_understanding_2023}. Although the neurons in the first layer of an artificial network could be considered sensory neurons, the neurons in the last layer could be considered motor neurons, and the neurons in the middle layer could be considered interneurons, this distinction is less meaningful because artificial neurons always have the same inner structure regardless of their position \sidecite{goodfellow_deep_2016}, except for variations in their activation function \cite{fukushima_visual_1969}.
 
-Furthermore, artificial neural networks have a simpler organisational structure than the human brain. ANNs typically consist of one or a few network parts, such as encoders, which map data to a latent space, and decoders, which convert data from the latent space into a target vector \cite{goodfellow_deep_2016}. ANNs are considered monolithic because they are hierarchical and typically trained in an end-to-end fashion with a single error correction signal \sidecite{glasmachers_limits_2017}. In contrast, the human brain consists of many interconnected organisational units, each responsible for a specific function \sidecite{felleman_distributed_1991}. For example, in the cerebral cortex, numerous small sub-units exist \cite{felleman_distributed_1991}, dedicated to specific tasks as illustrated in \figref{visual_cortext}.
-Furthermore, the human brain does not comprise an organisational hierarchy as ANNs \sidecite{mountcastle_organizing_1978, mountcastle_columnar_1997}. In the human brain, each unit applies similar deterministic functions to the information it receives \cite{mountcastle_organizing_1978, mountcastle_columnar_1997}. Furthermore, the biological neural network in the human brain is dynamic and subject to change through growth and reorganisation, known as neuroplasticity or neuronal plasticity \sidecite{costandi_neuroplasticity_2016}.
+Furthermore, artificial neural networks have a simpler organisational structure than the human brain. ANNs typically consist of one or a few network parts, such as encoders, which map data to a latent space, and decoders, which convert data from the latent space into a target vector \cite{goodfellow_deep_2016}. ANNs are considered monolithic because they are hierarchical and typically trained in an end-to-end fashion with a single error correction signal \sidecite{glasmachers_limits_2017}. In contrast, the human brain consists of many independent and interconnected organisational units, each responsible for a specific function \sidecite{felleman_distributed_1991}. For example, in the cerebral cortex, numerous small sub-units exist \cite{felleman_distributed_1991}, dedicated to specific tasks as illustrated in \figref{visual_cortext}.
+Furthermore, the human brain does not comprise an organisational hierarchy as ANNs \sidecite{mountcastle_organizing_1978, mountcastle_columnar_1997}. In the human brain, each unit applies similar deterministic functions to the information it receives \cite{mountcastle_organizing_1978, mountcastle_columnar_1997}. Furthermore, the biological neural network in the human brain is dynamic and subject to constant change through growth and reorganisation, known as neuroplasticity or neuronal plasticity \sidecite{costandi_neuroplasticity_2016}.
 
 Besides structural and functional differences, biological and artificial networks differ in their learning strategies.
 An artificial learning system requires a feedback signal from which it can learn.
@@ -40,7 +40,7 @@ Backpropagation of error \sidecite{rosenblatt_principles_1962, linnainmaa_taylor
 However, information in the brain flows only in one direction, from presynaptic to postsynaptic neurons.
 Therefore, backpropagation of error is not biologically plausible \sidecite{grossberg_competitive_1987, crick_recent_1989}.
 The brain relies on localised learning \sidecite{lillicrap_backpropagation_2020}, where each unit adapts its behaviour based on the information it receives.
-Evidence suggests that the brain learns by connecting cells that are active at the same time, known as Hebbian plasticity \sidecite{hebb_organization_1949}.
+Evidence suggests that the brain learns by connecting cells that are active at the same time, known as Hebbian plasticity \sidecite{hebb_organization_1949}, thereby not relying on an external teaching signal.
 
 \begin{figure}[h]
     \centering
@@ -86,7 +86,7 @@ In 1958, \sideciteay{rosenblatt_perceptron_1958} proposed the perceptron, which 
 	z = g(\boldsymbol{x}) = \boldsymbol{w} \cdot \boldsymbol{x} + b = \left( \sum_{i=1}^{n}w_i \cdot x_i \right) + b
 \end{align}
 %
-The weight vector $\boldsymbol{w}$ remains identical if the output $\\hat{y}$ corresponds to the desired output $y$ or is adjusted otherwise (c.f. \secref{learning_algorithm}). Later, the activation function \(f(z)\) was replaced with other functions so that the output can be a real number \(\hat{y} \in \mathbb{R}\) \sidecite{fukushima_visual_1969}. Often-used activation functions are
+The weight vector $\boldsymbol{w}$ remains identical if the output $\hat{y}$ corresponds to the desired output $y$ or is adjusted otherwise (c.f. \secref{learning_algorithm}). Later, the activation function \(f(z)\) was replaced with other functions so that the output can be a real number \(\hat{y} \in \mathbb{R}\) \sidecite{fukushima_visual_1969}. Often-used activation functions are
 %
 \begin{align}\eqlbl{act_functions}%
 		\text{Sigmoid: } & f(z) = \sigma(z) = \frac{1}{1+\mathrm{e}^{-z}}\\
@@ -99,7 +99,7 @@ To summarise, artificial neurons multiply incoming signals with learned weights 
 Unlike their biological counterparts, artificial neurons exhibit non-temporal behaviour and output continuous values instead of discrete binary spikes. Neurons with time-dependent spike patterns are discussed in \secref{spiking_networks}.
 
 \subsection{Fully Connected Layer}\seclbl{fully_connected_layer}
-Artificial neural networks consist of several neurons organised in a network. These neurons are arranged in layers \cite{prince_understanding_2023}. In a basic configuration, each neuron in one layer is connected to each neuron in the following layer, forming a so-called fully connected layer \sidecite{prince_understanding_2023, goodfellow_deep_2016}.
+Artificial neural networks consist of several neurons organised in a network. These neurons are typically arranged in layers \cite{prince_understanding_2023}. In a basic configuration, each neuron in one layer is connected to each neuron in the following layer, forming a so-called fully connected layer \sidecite{prince_understanding_2023, goodfellow_deep_2016}.
 
 In a fully connected layer with $k$ neurons, the input $\boldsymbol{x} \in \mathbb{R}^n$ is multiplied with a weight matrix $\boldsymbol{W} \in \mathbb{R}^{n\times k}$ and a bias $\boldsymbol{b} \in \mathbb{R}^k$ is added to obtain the layer's output $\boldsymbol{\hat{y}} \in \mathbb{R}^k$:
 \begin{align}\eqlbl{nn3}%
@@ -181,15 +181,13 @@ and
 The term $\left( \nabla_{\boldsymbol{W}^{[l]}} \mathcal{L}(\boldsymbol{\hat{y}}, \boldsymbol{y}) \right)$ is the gradient of the weights $\boldsymbol{W}^{[l]}$  with respect to the loss $\mathcal{L}(\boldsymbol{\hat{y}}, \boldsymbol{y})$ and the term $\left( \nabla_{\boldsymbol{b}^{[l]}} \mathcal{L}(\boldsymbol{\hat{y}}, \boldsymbol{y}) \right)$ is the gradient of the bias \(\boldsymbol{b}^{[l]}\)  with respect to $\mathcal{L}(\boldsymbol{\hat{y}}, \boldsymbol{y})$.
 The gradients of the weights can efficiently be calculated with backpropagation of error \sidecite{rosenblatt_principles_1962, linnainmaa_taylor_1976}, which is, in fact, just an intelligent implementation of the chain rule\sidenote{While a detailed discussion of backpropagation is out of scope for this thesis, we refer interested readers to the book ``Understanding Deep Learning'' by \citeay{prince_understanding_2023}.}.
 
-From a biological perspective, backpropagation of error seems not plausible \sidecite{grossberg_competitive_1987, crick_recent_1989}.
+However, from a biological perspective, backpropagation of error seems not plausible \sidecite{grossberg_competitive_1987, crick_recent_1989}.
 Furthermore, it has technical shortcomings, such as vanishing or exploding gradients when propagating through too many layers \sidecite{zhang_why_2020} or non-optimal loss landscapes \sidecite{ioffe_batch_2015}.
-However, despite these deficits, it is still considered the best error correction algorithm to optimise neural networks on a specific task and can even outperform human experts \sidecite{bertolini_machine_2021, buetti-dinh_deep_2019}.
+Despite these deficits, it is still considered the best error correction algorithm to optimise neural networks on a specific task and can even outperform human experts \sidecite{bertolini_machine_2021, buetti-dinh_deep_2019}.
 
 Using a global error correction algorithm such as backpropagation of error optimises consistency between the prediction $\boldsymbol{\hat{y}}$ and the teaching signal $\boldsymbol{y}$.
 In contrast, the human brain optimises consistency between each cell utilising a local learning principle \sidecite{hebb_organization_1949}. 
-As outlined in \secref{intro_motivation}, local learning and optimising consistency between all cells prevents early commitment \sidecite{marr_vision_2010}, a fundamental principle in the biological vision system \sidecite{von_der_malsburg_theory_2022}.
-Leveraging this principle, as done in this thesis, could help to overcome intrinsic issues of deep learning systems.
-Based on comparing deep networks and the human brain, I speculate that optimising consistency at a specific point as done by deep learning works exceptionally well for highly specialised tasks while optimising consistency between each neuron improves object understanding and data efficiency (c.f. \secref{discussion}).
+Based on comparing deep networks and the human brain, I speculate that optimising consistency at a specific point, as done by deep learning works, exceptionally well for highly specialised tasks while optimising consistency between each neuron, as done in the human brain, improves object understanding and data efficiency (c.f. \secref{discussion}).
 
 \section{Limitations}\seclbl{limitationsDL}
 Deep learning systems have proven themselves as excellent feature extractors and are used to fulfil various tasks in our daily lives.
@@ -236,12 +234,12 @@ The framework proposed in this thesis introduces new learning principles that ai
 
 
 \section{Neurocomputing}\seclbl{neurocomputing}
-Neurocomputing is a subfield of neuroscience that focuses on implementing learning algorithms that adhere to biological plausibility. Thus, researchers are addressing the discrepancy described in \secref{neurons} and striving to develop alternative learning principles.
+Neurocomputing is a subfield of neuroscience that focuses on implementing learning algorithms that adhere to biological plausibility. Thus, researchers are addressing the discrepancy described in \secref{neurons} and strive to develop alternative learning principles.
 
 \subsection{Hebbian Learning}\seclbl{hebbian}
 Hebbian learning, as proposed by \sideciteay{hebb_organization_1949}, implements the adaptive nature of the connections between cells in the nervous system. Hebb's description states that when an axon of cell $A$ is in close proximity to cell $B$ and consistently contributes to its firing, growth processes or metabolic changes occur in one or both cells that increase the effectiveness of cell $A$ in firing cell $B$. This description is often summarised as ``neurons that fire together wire together''.
 
-Hebbian learning describes the update of the synaptic weight $w_{ij}$ connecting neuron $i$ to neuron $j$ according to the aforementioned principle. The weight change depends on the presynaptic activity $a_i$ of neuron $i$ and postsynaptic activity $a_j$ of neuron $j$\sidenote{The presynaptic and postsynaptic activity corresponds to the output of a neuron's activation function $f(\cdot)$ in the preceding and subsequent layers.}:
+Hebbian learning implements the update of the synaptic weight $w_{ij}$ connecting neuron $i$ to neuron $j$ according to the aforementioned principle. The weight change depends on the presynaptic activity $a_i$ of neuron $i$ and postsynaptic activity $a_j$ of neuron $j$\sidenote{The presynaptic and postsynaptic activity corresponds to the output of a neuron's activation function $f(\cdot)$ in the preceding and subsequent layers.}:
 %
 \begin{align}\eqlbl{hebb_1}
 	\Delta w_{ij} = \eta a_i a_j
@@ -250,7 +248,7 @@ Hebbian learning describes the update of the synaptic weight $w_{ij}$ connecting
 where \(\eta\) is the learning rate.
 Hebbian learning is used in the proposed framework to increase the weights between frequently co-activated binary neurons (c.f. \secref{framework_hebb_updates}).
 This rule causes two cells that are constantly active together to form an ``association'' where the activation of one cell promotes the activation of the other.
-Therefore, a network trained according to Hebb's rule is able to ``auto-associate'' a pattern \cite{hebb_organization_1949}. In other words: When the pattern is activated, cells associated with that pattern are also activated. These learned patterns are called engrams \sidecite{newman_current_1985}, often related to memories in a biological context \sidecite{liu_optogenetic_2012}.
+Therefore, a network trained according to Hebb's rule is able to ``auto-associate'' a pattern \cite{hebb_organization_1949}. In other words: When some cells representing a pattern are activated, they encourage all cells associated with this pattern to activate as well. These learned patterns are called engrams \sidecite{newman_current_1985}, often related to memories in a biological context \sidecite{liu_optogenetic_2012}.
 
 The aforementioned Hebbian rule increases the weight between two binary cells that are active together and does not change when only one or none of the cells fires. Thus, the connection can only grow stronger.
 However, synapses can not only grow between cells but also disintegrate \sidecite{costandi_neuroplasticity_2016}.
@@ -300,7 +298,7 @@ When the aggregation value $z_i$ is bigger than $0$, the cell turns on or off ot
 Thus, a cell can either keep its state ($a_i[t+1] = a_i[t]$) or flip ($a_i[t+1] \neq a_i[t]$).
 A flipping state influences all other neurons and may encourage them to flip as well.
 Formal proof exists that after a finite number of timesteps, an attractor state is reached \sidecite{hopfield_neural_1982}.
-An input pattern is attracted to the closest stable pattern.
+Thereby, an input pattern is attracted to the closest stable pattern.
 Hebbian learning \sidecite{hebb_organization_1949} can be used to define what the stable patterns are:
 With a single iteration over the training patterns, the weights $w_{ij}$ and biases $b_i$ are updated so that these patterns become attractor states \sidecite{hopfield_unlearning_1983}.
 This allows using the network as an associative memory, i.e. to map an input pattern to the most similar predefined stable pattern.
@@ -310,7 +308,6 @@ However, this limitation could be resolved more than three decades after the int
 \sideciteay{krotov_dense_2016} first increased the capacity to a polynomial capacity w.r.t. $k$ and \sideciteay{demircigil_model_2017} later to exponential capacity w.r.t. $k$.
 The second limiting factor of Hopfield networks is that only binary patterns can be stored.
 Recently, Hopfield networks have been extended to continuous patterns \sidecite{ramsauer_hopfield_2021}.
-Continuous Hopfield networks can retrieve continuous patterns or a combination of several similar continuous patterns.
 
 Hopfield networks remain a niche, as they perform worse than retrieval systems \sidecite{kowalski_information_1997} and memory networks \sidecite{weston_memory_2015}.
 They also lack hierarchical pattern recognition and may require additional models to store higher-level patterns than just the input data.
@@ -325,7 +322,7 @@ The amplitude and duration of the spike matter less.
 So-called spiking neural networks (SNNs) incorporate the concept of time into a computational model \sidecite{maass_networks_1997}.
 SNNs do not transmit information in each forward pass but rather send a signal when the membrane potential reaches a threshold value\sidenote{The membrane potential is related to the electrical charge of the membrane of a biological neuron.}. 
 The most prominent models of spiking neurons are different integrate-and-fire (IF) neurons \cite{abbott_lapicques_1999, izhikevich_simple_2003, brette_adaptive_2005}.
-While each model has different mathematical properties, the concept remains the same: Each neuron has a membrane potential that is increased or decreased through spikes from other neurons and decays over time or is reset when the cell emits a spike.
+While each model has different mathematical properties, the concept remains the same: Each neuron has a membrane potential that is increased or decreased through spikes from other neurons and decays over time or is reset when the cell emits a spike after reaching a predefined threshold.
 
 The synaptic plasticity can be learned with an adapted version of Hebbian learning, called the spike-timing-dependent (STDP) plasticity rule \sidecite{bi_synaptic_2001}.
 This rule strengthens connections if the presynaptic neurons fire before the postsynaptic neuron and weakens the connection otherwise.
@@ -334,7 +331,7 @@ For a long time, SNN only worked for very shallow networks.
 In 2018, \sideciteay{kheradpisheh_stdp-based_2018} proposed a deep spiking convolutional network inspired by CNNs to overcome this limitation.
 This network uses convolutional and pooling layers with IF neurons and is trained with STDP.
 Despite these remarkable advances in SNNs, their performance is still inferior compared to equivalent artificial neural networks \sidecite{nunes_spiking_2022}. Several factors contribute to this discrepancy. First, SNNs require converting inputs like images into spike representations.
-However, this process results in losing important information, including colour and texture details. Furthermore, SNNs use non-differentiable activation functions, which makes them unsuitable for training by backpropagation of error \cite{nunes_spiking_2022}.
+This process results in losing important information, including colour and texture details. Furthermore, SNNs use non-differentiable activation functions, which makes them unsuitable for training by backpropagation of error \cite{nunes_spiking_2022}.
 
 Even though spiking neurons are biologically more plausible than neurons without time dependency, they are not used in the proposed framework.
 The reasons are that they do not provide an obvious advantage despite their plausibility and do not seem very suitable for processing a static input (e.g. an image) on a clocked machine (e.g. a CPU).
