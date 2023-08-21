@@ -1,7 +1,7 @@
 \section{Discussion}\seclbl{discussion}
 In \secref{intro_motivation}, it is discussed that the human brain can recognise the ``Gestalt'' (the entire structure) of an object within a very short time \cite{ellis_source_1938, kohler_gestalt_1992, wagemans_century_2012, hamlyn_psychology_2017} because it prevents early commitment \cite{marr_vision_2010}.
 This capability is absent in current deep learning systems.
-Since the biological system does not suffer from this issue, important neuroscientific findings responsible for the effectiveness of the biological vision system are identified in \secref{neuroscience_findings}.
+Since the biological system implements this behaviour, important neuroscientific findings responsible for the effectiveness of the biological vision system are identified in \secref{neuroscience_findings}.
 It is described that the human brain uses lateral connections \sidecite{gilbert_lateral_1990, liang_interactions_2017, stettler_lateral_2002} to build net fragments \sidecite{von_der_malsburg_theory_2022, von_der_malsburg_concerning_2018} that are mapped to reference frames using projection fibres \sidecite{tanigawa_organization_2005, greig_molecular_2013}.
 Such fibres allow object-independent mapping \sidecite{wolfrum_recurrent_2008, fernandes_self-organization_2015}, making the system highly efficient.
 
@@ -28,11 +28,13 @@ A significant difference between the proposed system and deep networks lies in t
 Deep networks optimise consistency at a single point in the network by comparing its prediction with a teaching signal.
 A global error correction algorithm such as backpropagation adjusts all components in the network to minimise inconsistencies at this specific point.
 In contrast, the proposed framework implements a model that optimises consistency between each neuron, akin to the human brain.
-Propagating the error layer-wise backwards makes the learning algorithm biologically implausible \sidecite{grossberg_competitive_1987, crick_recent_1989} and leads to early commitment \sidecite{marr_vision_2010}. Furthermore, such networks have intrinsic limitations \cite{akhtar_threat_2018, long_survey_2022, madan_when_2022, marcus_deep_2018, smith_using_2022, garcia-martin_estimation_2019, kirkpatrick_overcoming_2017, rosenbloom_defining_2023, mitchell_debate_2023}.
+Furthermore, consistency is built by the network itself in a self-organising manner without requiring an external teaching signal.
+Propagating the error layer-wise backwards makes the learning algorithm biologically implausible \sidecite{grossberg_competitive_1987, crick_recent_1989} and leads to early commitment \sidecite{marr_vision_2010} (c.f. \secref{intro_motivation}). Furthermore, such networks have intrinsic limitations \cite{akhtar_threat_2018, long_survey_2022, madan_when_2022, marcus_deep_2018, smith_using_2022, garcia-martin_estimation_2019, kirkpatrick_overcoming_2017, rosenbloom_defining_2023, mitchell_debate_2023}.
 Nevertheless, training all neurons in a way to optimise consistency at a specific point works exceptionally well for very specific tasks and can outperform human experts \sidecite{buetti-dinh_deep_2019}.
 Therefore, such systems probably also outperform models implementing a brain-like algorithm on such specialised tasks.
 
 However, building a system that optimises consistency between each connected cell pair has a different set of advantages.
+Its self-organising nature allows to prevent early commitment since it does not build feature processing chains (c.f. \secref{intro_motivation}).
 Properly implemented projection fibres can map net fragments to object prototypes even when transformed. Projection fibres allow the transfer of knowledge \sidecite{wolfrum_recurrent_2008, fernandes_self-organization_2015} much more efficiently between objects, could increase computational efficiency and allow better extrapolation of the data distribution. Furthermore, prototypes are stored in \emph{S2} in separate reference frames, thereby reducing the risk of catastrophic forgetting \sidecite{kirkpatrick_overcoming_2017} as newly acquired knowledge cannot overwrite previously learned knowledge.
 As outlined in the vision presented in \secref{biologial_inspiration_vision}, the proposed framework could interpret entire visual scenes meaningfully without requiring a teaching signal.
 For instance, each cell in the network represents a specific part of a visual scene and can predict the activity of neighbouring cells.
